@@ -28,7 +28,7 @@ Uses
 
 type
   TSelectPageDlg = class(TForm)
-
+    ButtonPanel: TPanel;
     OKBtn: TButton;
     CancelBtn: TButton;
     AllBtn: TButton;
