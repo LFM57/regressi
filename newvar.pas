@@ -45,7 +45,7 @@ type
     PageControl: TTabControl;
     VarDeriveeYCB: TComboBox;
     VarDeriveeXCB: TComboBox;
-    Label4: TLabel;
+    Label4: TLine;
     VarLisseCB: TComboBox;
     OrdreLissageSE: TSpinBox;
     Label11: TLabel;
@@ -84,7 +84,6 @@ type
     Label18: TLabel;
     Label19: TLabel;
     NbreSpinButton: TSpinBox;
-    LissageRG0: TSpinBox;
     LissageRG: TSpinBox;
     GenreGrandeurPanel: TPanel;
     GenreGrandeurRG: TListBox;

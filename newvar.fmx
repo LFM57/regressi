@@ -115,7 +115,7 @@ object NewVarDlg: TNewVarDlg
       TabHeight = 20.000000000000000000
       TabIndex = 2
       TabOrder = 4
-      TabPosition = Top
+      TabPosition = None
       Sizes = (
         393s
         111s
@@ -153,18 +153,6 @@ object NewVarDlg: TNewVarDlg
           TextSettings.WordWrap = False
           Text = 'Variable exp'#233'rimentale'
           TabOrder = 0
-        end
-        object LissageRG0: TSpinBox
-          Touch.InteractiveGestures = [LongTap, DoubleTap]
-          TabOrder = 1
-          Cursor = crIBeam
-          Max = 10.000000000000000000
-          KeyboardType = Default
-          Position.X = 100.000000000000000000
-          Position.Y = 80.000000000000000000
-          Size.Width = 100.000000000000000000
-          Size.Height = 22.000000000000000000
-          Size.PlatformDefault = False
         end
       end
       object ExpParSheet: TTabItem
@@ -250,19 +238,14 @@ object NewVarDlg: TNewVarDlg
         Text = 'D'#233'riv'#233'e'
         ExplicitSize.cx = 64.000000000000000000
         ExplicitSize.cy = 20.000000000000000000
-        object Label4: TLabel
-          AutoSize = True
-          StyledSettings = [FontColor]
+        object Label4: TLine
+          LineType = Top
           Position.X = 72.000000000000000000
-          Position.Y = 20.000000000000000000
-          Size.Width = 141.000000000000000000
-          Size.Height = 16.000000000000000000
+          Position.Y = 28.000000000000000000
+          Size.Width = 140.000000000000000000
+          Size.Height = 2.000000000000000000
           Size.PlatformDefault = False
-          StyleLookup = 'Label4Style1'
-          TextSettings.Font.StyleExt = {00070000000000000004000000}
-          TextSettings.WordWrap = False
-          Text = '-----------------------------'
-          TabOrder = 0
+          Stroke.Thickness = 1.500000000000000000
         end
         object NomDerivee: TLabel
           AutoSize = True
