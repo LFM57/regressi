@@ -201,11 +201,11 @@ function Verif(Apage : TtabItem) : boolean;
 var i : integer;
 begin
      verif := false;
-     for i := 0 to pred(Apage.childrenCount) do
-            if (Apage.children[i] is TButton) and
-               ((Apage.children[i] as TButton).tag=ord(modeleChoisi))
+     for i := 0 to pred(Apage.ControlsCount) do
+            if (Apage.Controls[i] is TButton) and
+               ((Apage.Controls[i] as TButton).tag=ord(modeleChoisi))
                    then begin
-                        (Apage.children[i]as TButton).isPressed := true;
+                        (Apage.Controls[i] as TButton).isPressed := true;
                         verif := true;
                         break;
                     end;
@@ -294,8 +294,17 @@ begin
 end;
 
 procedure TChoixModeleDlg.ModeleBtnClick(Sender: TObject);
+var i,t : integer;
+    tab : TTabItem;
 begin
-     ModeleChoisi := TgenreModeleGr((sender as Tcomponent).tag)
+     ModeleChoisi := TgenreModeleGr((sender as Tcomponent).tag);
+     for t := 0 to pred(PageControl.TabCount) do begin
+        tab := PageControl.Tabs[t];
+        if tab <> ModManuel then
+           for i := 0 to pred(tab.ControlsCount) do
+              if tab.Controls[i] is TButton then
+                 (tab.Controls[i] as TButton).IsPressed := (tab.Controls[i] = Sender);
+     end;
 end;
 
 procedure TChoixModeleDlg.NouveauBtnClick(Sender: TObject);
@@ -352,20 +361,20 @@ begin
             (equadiff2rb.ischecked)));
      if pageControl.ActiveTab<>ModManuel then begin
         trouve := false;
-        for i := 0 to pred(pageControl.ActiveTab.childrenCount) do
-            if (pageControl.ActiveTab.children[i] is TspeedButton) and
-               ((pageControl.ActiveTab.children[i] as TspeedButton).tag=ord(modeleChoisi))
+        for i := 0 to pred(pageControl.ActiveTab.ControlsCount) do
+            if (pageControl.ActiveTab.Controls[i] is TButton) and
+               ((pageControl.ActiveTab.Controls[i] as TButton).tag=ord(modeleChoisi))
                    then begin
-                        (pageControl.ActiveTab.children[i] as TspeedButton).isPressed := true;
+                        (pageControl.ActiveTab.Controls[i] as TButton).isPressed := true;
                         trouve := true;
                         break;
                     end;
          if not trouve then
-            for i := 0 to pred(pageControl.ActiveTab.childrenCount) do
-            if (pageControl.ActiveTab.children[i] is TspeedButton) and
-               (pageControl.ActiveTab.children[i] as TButton).isPressed
+            for i := 0 to pred(pageControl.ActiveTab.ControlsCount) do
+            if (pageControl.ActiveTab.Controls[i] is TButton) and
+               (pageControl.ActiveTab.Controls[i] as TButton).isPressed
                    then begin
-                        ModeleChoisi := TgenreModeleGr((pageControl.ActiveTab.children[i] as TspeedButton).tag);
+                        ModeleChoisi := TgenreModeleGr((pageControl.ActiveTab.Controls[i] as TButton).tag);
                         break;
                     end;
      end;

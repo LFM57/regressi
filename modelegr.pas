@@ -1094,7 +1094,7 @@ var ay,by,bx,ax : single;
     debut : boolean;
 
 procedure pointSuivant(I : integer);
-var x,y : single;
+var x,y,u : single;
     aPoint : TpointF;
 begin
       y := by;
@@ -1113,11 +1113,26 @@ begin
           mgLorentz : y := ay/(1+5*sqr(I/Imax-0.5))+by;
           mgEchelon1 : y := ay*(1-exp(-4*I/Imax))+by;
           mgRadio : y := ay*exp(-3*I/Imax)+by;
-          mgPasseBas1 : ;
-          mgPasseHaut1 : ;
-          mgPasseBas2 : ;
-          mgPasseHaut2 : ;
-          mgPasseBande : ;
+          mgPasseBas1 : begin
+             u := (I+0.001)/(Imax*0.35);
+             y := ay*0.85/sqrt(1+sqr(u))+by;
+          end;
+          mgPasseHaut1 : begin
+             u := (I+0.001)/(Imax*0.35);
+             y := ay*0.85*u/sqrt(1+sqr(u))+by;
+          end;
+          mgPasseBas2 : begin
+             u := (I+0.001)/(Imax*0.35);
+             y := ay*0.45/sqrt(sqr(1-sqr(u))+sqr(0.5*u))+by;
+          end;
+          mgPasseHaut2 : begin
+             u := (I+0.001)/(Imax*0.35);
+             y := ay*0.45*sqr(u)/sqrt(sqr(1-sqr(u))+sqr(0.5*u))+by;
+          end;
+          mgPasseBande : begin
+             u := (I+0.5)/(Imax*0.5);
+             y := ay*0.85/sqrt(1+sqr(3*(u-1/u)))+by;
+          end;
      end;
      if (y>arect.top) and (y<arect.bottom) then begin
         aPoint := TPointF.create(x,y);
@@ -1156,11 +1171,8 @@ begin
             ay := ay/1.2;
           end;
           mgRadio : by := by*2;
-          mgPasseBas1 : ;
-          mgPasseHaut1 : ;
-          mgPasseBas2 : ;
-          mgPasseHaut2 : ;
-          mgPasseBande : ;
+          mgPasseBas1,mgPasseHaut1,mgPasseBas2,mgPasseHaut2,mgPasseBande :
+             by := arect.bottom-2;
      end;
      debut := true;
      Imax := trunc(arect.right-arect.left);

@@ -108,6 +108,7 @@ object ChoixModeleDlg: TChoixModeleDlg
           Size.PlatformDefault = False
           TabOrder = 0
           Text = 'equa. diff. ordre 1'
+          OnChange = GenreModeleRGClick
         end
         object fonctionRB: TRadioButton
           Position.X = 12.000000000000000000
@@ -117,6 +118,7 @@ object ChoixModeleDlg: TChoixModeleDlg
           Size.PlatformDefault = False
           TabOrder = 1
           Text = 'fonction'
+          OnChange = GenreModeleRGClick
         end
         object equadiff2RB: TRadioButton
           Position.X = 270.000000000000000000
@@ -126,6 +128,7 @@ object ChoixModeleDlg: TChoixModeleDlg
           Size.PlatformDefault = False
           TabOrder = 2
           Text = 'equa. diff. ordre 2'
+          OnChange = GenreModeleRGClick
         end
       end
     end
@@ -144,6 +147,7 @@ object ChoixModeleDlg: TChoixModeleDlg
       ExplicitSize.cx = 78.000000000000000000
       ExplicitSize.cy = 20.000000000000000000
       object DroiteBtn: TButton
+        StaysPressed = True
         Position.X = 148.000000000000000000
         Position.Y = 8.000000000000000000
         Size.Width = 130.000000000000000000
@@ -166,6 +170,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton2: TButton
+        StaysPressed = True
         Tag = 1
         Position.X = 290.000000000000000000
         Position.Y = 8.000000000000000000
@@ -190,14 +195,16 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton5: TButton
+        StaysPressed = True
         Tag = 4
+        Hint = 'y = a*(1 - exp(-x/'#964'))'
         Position.X = 148.000000000000000000
         Position.Y = 58.000000000000000000
         Size.Width = 130.000000000000000000
         Size.Height = 36.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
-        Text = 'Exponentielle'
+        Text = 'Exp. croissante'
         TextSettings.HorzAlign = Trailing
         OnClick = ModeleBtnClick
         OnDblClick = ModeleBtnDblClick
@@ -214,15 +221,17 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton7: TButton
+        StaysPressed = True
         Tag = 7
         HelpType = htKeyword
+        Hint = 'y = a*exp(-x/'#964')'
         Position.X = 6.000000000000000000
         Position.Y = 58.000000000000000000
         Size.Width = 130.000000000000000000
         Size.Height = 36.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 3
-        Text = 'Exponentielle'
+        Text = 'Exp. d'#233'croissante'
         TextSettings.HorzAlign = Trailing
         OnClick = ModeleBtnClick
         OnDblClick = ModeleBtnDblClick
@@ -239,6 +248,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton1: TButton
+        StaysPressed = True
         Tag = 5
         Position.X = 6.000000000000000000
         Position.Y = 108.000000000000000000
@@ -263,6 +273,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton13: TButton
+        StaysPressed = True
         Tag = 15
         Position.X = 148.000000000000000000
         Position.Y = 108.000000000000000000
@@ -287,6 +298,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton15: TButton
+        StaysPressed = True
         Tag = 16
         Position.X = 6.000000000000000000
         Position.Y = 8.000000000000000000
@@ -311,6 +323,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton4: TButton
+        StaysPressed = True
         Tag = 17
         Position.X = 290.000000000000000000
         Position.Y = 58.000000000000000000
@@ -335,6 +348,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton11: TButton
+        StaysPressed = True
         Tag = 18
         Position.X = 290.000000000000000000
         Position.Y = 108.000000000000000000
@@ -359,6 +373,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton16: TButton
+        StaysPressed = True
         Tag = 19
         Position.X = 356.000000000000000000
         Position.Y = 108.000000000000000000
@@ -397,6 +412,7 @@ object ChoixModeleDlg: TChoixModeleDlg
       ExplicitSize.cx = 54.000000000000000000
       ExplicitSize.cy = 20.000000000000000000
       object SpeedButton6: TButton
+        StaysPressed = True
         Tag = 10
         Position.X = 8.000000000000000000
         Position.Y = 4.000000000000000000
@@ -421,6 +437,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton10: TButton
+        StaysPressed = True
         Tag = 11
         Position.X = 300.000000000000000000
         Position.Y = 4.000000000000000000
@@ -445,6 +462,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object PasseBandeBtn: TButton
+        StaysPressed = True
         Tag = 12
         Position.X = 154.000000000000000000
         Position.Y = 4.000000000000000000
@@ -469,6 +487,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton12: TButton
+        StaysPressed = True
         Tag = 13
         Position.X = 8.000000000000000000
         Position.Y = 46.000000000000000000
@@ -493,6 +512,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton14: TButton
+        StaysPressed = True
         Tag = 14
         Position.X = 270.000000000000000000
         Position.Y = 46.000000000000000000
@@ -567,6 +587,7 @@ object ChoixModeleDlg: TChoixModeleDlg
       ExplicitSize.cx = 86.000000000000000000
       ExplicitSize.cy = 20.000000000000000000
       object SinusBtn: TButton
+        StaysPressed = True
         Tag = 2
         Position.X = 8.000000000000000000
         Position.Y = 12.000000000000000000
@@ -591,6 +612,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton9: TButton
+        StaysPressed = True
         Tag = 6
         Position.X = 228.000000000000000000
         Position.Y = 12.000000000000000000
@@ -615,6 +637,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton8: TButton
+        StaysPressed = True
         Tag = 3
         Position.X = 10.000000000000000000
         Position.Y = 76.000000000000000000
@@ -639,6 +662,7 @@ object ChoixModeleDlg: TChoixModeleDlg
         end
       end
       object SpeedButton3: TButton
+        StaysPressed = True
         Tag = 9
         Position.X = 232.000000000000000000
         Position.Y = 76.000000000000000000
