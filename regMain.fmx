@@ -724,6 +724,22 @@ object FRegressiMain: TFRegressiMain
                     Font.Name = 'Segoe UI'
                     ID = ''
                     Width = 68.000000000000000000
+                  end
+                  item
+                    BorderWidth = 1
+                    FixedFont.Name = 'Segoe UI'
+                    FixedFont.StyleExt = {00070000000000000004000000}
+                    Font.Name = 'Segoe UI'
+                    ID = ''
+                    Width = 28.000000000000000000
+                  end
+                  item
+                    BorderWidth = 1
+                    FixedFont.Name = 'Segoe UI'
+                    FixedFont.StyleExt = {00070000000000000004000000}
+                    Font.Name = 'Segoe UI'
+                    ID = ''
+                    Width = 28.000000000000000000
                   end>
                 DefaultFont.Name = 'Segoe UI'
                 TopRow = 1
@@ -754,7 +770,10 @@ object FRegressiMain: TFRegressiMain
                 GlobalFont.Style = []
                 DesignTimeSampleData = True
                 OnGetCellClass = ParamGridGetCellClass
+                OnGetCellEditorType = ParamGridGetCellEditorType
                 OnGetCellEditorProperties = ParamGridGetCellEditorProperties
+                OnCellEditSetData = ParamGridCellEditSetData
+                OnCellButtonClick = ParamGridCellButtonClick
               end
             end
             object Panel1: TPanel
@@ -797,7 +816,7 @@ object FRegressiMain: TFRegressiMain
               Align = Left
               Images = ImagesData.ImagesList
               ImageIndex = 49
-              Size.Width = 80.000000000000000000
+              Size.Width = 64.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -812,8 +831,8 @@ object FRegressiMain: TFRegressiMain
               HelpType = htKeyword
               Images = ImagesData.ImagesList
               ImageIndex = 35
-              Position.X = 80.000000000000000000
-              Size.Width = 80.000000000000000000
+              Position.X = 64.000000000000000000
+              Size.Width = 66.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
@@ -827,8 +846,8 @@ object FRegressiMain: TFRegressiMain
               HelpKeyword = 'Bornes'
               Images = ImagesData.ImagesList
               ImageIndex = 7
-              Position.X = 160.000000000000000000
-              Size.Width = 80.000000000000000000
+              Position.X = 130.000000000000000000
+              Size.Width = 65.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
@@ -841,9 +860,9 @@ object FRegressiMain: TFRegressiMain
               ImageIndex = -1
               Margins.Top = 1.000000000000000000
               Margins.Bottom = 1.000000000000000000
-              Position.X = 240.000000000000000000
+              Position.X = 195.000000000000000000
               Position.Y = 1.000000000000000000
-              Size.Width = 80.000000000000000000
+              Size.Width = 65.000000000000000000
               Size.Height = 28.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 3

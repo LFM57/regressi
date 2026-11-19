@@ -1044,6 +1044,7 @@ var i,acol,arow : integer;
 begin with ParamGrid do begin
        VerifIntervalles;
        verifParametres;
+       ColumnCount := 7;
        RowCount := NbreParamGlb;
        for i := 1 to pred(columnCount) do // Button de size 24
            ColumnWidths[i] := 28;
@@ -1052,7 +1053,6 @@ begin with ParamGrid do begin
        for i := 1 to NbreParamGlb do begin
            Cells[0,i-1] := ParametresGlb[i].nom;
            Cells[3,i-1] := formatGeneral(parametresGlb[i].valCourante,3);
-           AddButton(1,i-1,'/2');
            AddButton(1,i-1,'/2');
            AddButton(5,i-1,'*2');
            AddButton(2,i-1,'↓');

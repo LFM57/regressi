@@ -334,9 +334,9 @@ type
     procedure ParamGridGetCellEditorType(Sender: TObject; ACol, ARow: Integer;
       var CellEditorType: TTMSFNCGridEditorType);
     procedure ParamGridCellEditSetData(Sender: TObject; ACol, ARow: Integer;
-      CellEditor: TFmxObject; var CellString: string);
+      CellEditor: TControl; var CellString: string);
     procedure ParamGridCellButtonClick(Sender: TObject; ACol, ARow: Integer;
-      Cell: TFmxObject);
+      ACell: TTMSFNCGridCell);
     procedure IncertItemClick(Sender: TObject);
     procedure SelectItemClick(Sender: TObject);
     procedure VitesseItemClick(Sender: TObject);
@@ -1974,6 +1974,7 @@ begin with pages[pageCourante] do begin
                if (j>parametre0) then begin // origine est bien un paramètre
                      j := IndexToParam(j);
                      ValeurParam[j] := valeurVar[indexY,debut[k]]; // inverse ?
+                     paramGrid.cells[3,j-1] := formatGeneral(valeurParam[j],3);
                end;
           end; // origine
           if FonctionTheorique[1].genreC=g_diff2 then
@@ -1994,7 +1995,7 @@ begin with pages[pageCourante] do begin
                            Pente := Pente + valeurVar[indexYp,i];
                        Pente := Pente/succ(iFin-iDebut);
                        ValeurParam[j] := pente;
-                       paramGrid.cells[3,j] := formatGeneral(valeurParam[j+1],3);
+                       paramGrid.cells[3,j-1] := formatGeneral(valeurParam[j],3);
                   end;
           end; // pente initiale
      end;// diff
@@ -2281,7 +2282,7 @@ begin
 end;
 
 procedure TFRegressiMain.ParamGridCellButtonClick(Sender: TObject; ACol,
-  ARow: Integer; Cell: TFmxObject);
+  ARow: Integer; ACell: TTMSFNCGridCell);
 
 procedure ModifParam(paramCourant : integer;coeff : double);
 begin
@@ -2317,7 +2318,7 @@ begin
 end;
 
 procedure TFRegressiMain.ParamGridCellEditSetData(Sender: TObject; ACol,
-  ARow: Integer; CellEditor: TFmxObject; var CellString: string);
+  ARow: Integer; CellEditor: TControl; var CellString: string);
 begin
     try
        convertCell(cellString);
@@ -2648,6 +2649,7 @@ var i,acol,arow : integer;
 begin with pages[pageCourante],ParamGrid do begin
        VerifIntervalles;
        verifParametres;
+       ColumnCount := 7;
        RowCount := NbreParam;
        for i := 1 to pred(columnCount) do // Button de size 24
            ColumnWidths[i] := 28;
@@ -2656,7 +2658,6 @@ begin with pages[pageCourante],ParamGrid do begin
        for i := 1 to NbreParam do begin
            Cells[0,i-1] := Parametres[i].nom;
            Cells[3,i-1] := formatGeneral(valeurParam[i],3);
-           AddButton(1,i-1,'/2');
            AddButton(1,i-1,'/2');
            AddButton(5,i-1,'*2');
            AddButton(2,i-1,'↓');
@@ -2806,7 +2807,7 @@ begin with pages[pageCourante] do begin
        then begin
           for i := 1 to NbreParam do begin
              Ajoute(ParamEtPrec(i,true));
-             paramGrid.cells[3,i] := FormatGeneral(ValeurParam[i+1],3);
+             paramGrid.cells[3,i-1] := FormatGeneral(ValeurParam[i],3);
              include(setParam,ParamToIndex(i));
           end;
        end
