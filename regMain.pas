@@ -874,8 +874,12 @@ begin
                 then keyChar := GrecMin[ord(keyChar)-ord('a')];
        GrecActif := false;
     end
-    else if (windowTab.ActiveTab=GrapheTab) and (activeControl=nil) and (keyChar=' ')  then
+    else if (windowTab.ActiveTab=GrapheTab) and (keyChar=' ') and
+            ((activeControl=nil) or (not (activeControl is TEdit) and not (activeControl is TMemo))) then begin
         BarreEspace;
+        keyChar := #0;
+        key := 0;
+    end;
 end;
 
 procedure TFRegressiMain.BarreEspace;

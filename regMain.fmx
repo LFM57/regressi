@@ -338,12 +338,12 @@ object FRegressiMain: TFRegressiMain
             end
             object EditBidon: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              Align = Right
               TabOrder = 8
               Position.X = 734.000000000000000000
               Size.Width = 100.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
+              Visible = False
               OnKeyDown = EditBidonKeyDown
             end
             object AnimationBtn: TButton
