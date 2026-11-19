@@ -184,6 +184,8 @@ type
     procedure FonctionBtnClick(Sender: TObject);
     procedure RazBtnClick(Sender: TObject);
     procedure CopierItemClick(Sender: TObject);
+    procedure CopierTableauItemClick(Sender: TObject);
+    procedure SyntaxeBtnClick(Sender: TObject);
     procedure GridParamCellEditSetData(Sender: TObject; ACol, ARow: Integer;
       CellEditor: TControl; var CellString: string);
     procedure GridVariabFixedCellButtonClick(Sender: TObject; ACol,
@@ -1107,6 +1109,21 @@ end;
 procedure TFValeurs.CopierItemClick(Sender: TObject);
 begin
   Memo.CopyToClipBoard
+end;
+
+procedure TFValeurs.CopierTableauItemClick(Sender: TObject);
+begin
+  if Feuillets.ActiveTab = ParamSheet then
+    GridParam.CopyToClipBoard
+  else if Feuillets.ActiveTab = VariabSheet then
+    GridVariab.CopyToClipBoard
+  else
+    Memo.CopyToClipBoard;
+end;
+
+procedure TFValeurs.SyntaxeBtnClick(Sender: TObject);
+begin
+  FRegressiMain.AideItemClick(Sender);
 end;
 
 procedure TFValeurs.MajBtnClick(Sender: TObject);

@@ -239,7 +239,6 @@ object FValeurs: TFValeurs
           OnClick = TriBtnClick
         end
         object PrintVarBtn: TButton
-          StaysPressed = True
           Align = Left
           Images = ImagesData.ImagesList
           ImageIndex = 40
@@ -974,6 +973,7 @@ object FValeurs: TFValeurs
         end
         object SyntaxeBtn: TButton
           Align = Left
+          HelpContext = 14
           HelpType = htKeyword
           Images = ImagesData.ImagesList
           ImageIndex = 8
@@ -984,9 +984,9 @@ object FValeurs: TFValeurs
           TabOrder = 1
           Text = 'Syntaxe'
           TextSettings.WordWrap = True
+          OnClick = SyntaxeBtnClick
         end
         object ImprimerBtn: TButton
-          StaysPressed = True
           Align = Left
           Images = ImagesData.ImagesList
           ImageIndex = 40
@@ -1222,6 +1222,7 @@ object FValeurs: TFValeurs
     end
     object CopierTableauItem: TMenuItem
       Text = 'Copier tableau'
+      OnClick = CopierTableauItemClick
     end
     object PhaseItem: TMenuItem
       Text = 'Phase continue'
