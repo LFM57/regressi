@@ -90,19 +90,6 @@ object FRegressiMain: TFRegressiMain
       TextSettings.Font.Size = 15.000000000000000000
       Text = '10/45'
     end
-    object TrigoBtn: TButton
-      Align = Left
-      HelpType = htKeyword
-      Images = ImagesData.ImagesList
-      ImageIndex = 21
-      Size.Width = 70.000000000000000000
-      Size.Height = 24.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 8
-      Text = 'Angle'
-      TextSettings.WordWrap = True
-      OnClick = TrigoBtnClick
-    end
   end
   object SaveDialog: TSaveDialog
     DefaultExt = 'rxml'
@@ -1645,14 +1632,29 @@ object FRegressiMain: TFRegressiMain
     Position.Y = 505.000000000000000000
     ShowSizeGrip = True
     Size.Width = 1094.000000000000000000
-    Size.Height = 22.000000000000000000
+    Size.Height = 24.000000000000000000
     Size.PlatformDefault = False
     object Aide: TLabel
       Align = Client
-      Size.Width = 1094.000000000000000000
-      Size.Height = 22.000000000000000000
+      Size.Width = 1002.000000000000000000
+      Size.Height = 24.000000000000000000
       Size.PlatformDefault = False
       Text = 'S'#233'lectionner Fichier Nouveau ou Ouvrir'
+    end
+    object TrigoBtn: TButton
+      Align = Right
+      HelpType = htKeyword
+      Images = ImagesData.ImagesList
+      ImageIndex = 21
+      Margins.Right = 16.000000000000000000
+      Position.X = 1002.000000000000000000
+      Size.Width = 76.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Angle'
+      TextSettings.WordWrap = False
+      OnClick = TrigoBtnClick
     end
   end
   object Lang1: TLang
