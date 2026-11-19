@@ -4,7 +4,7 @@ object FcoordonneesPhys: TFcoordonneesPhys
   BorderIcons = [biSystemMenu]
   BorderStyle = Single
   Caption = 'Coordonn'#233'es du graphe'
-  ClientHeight = 550
+  ClientHeight = 586
   ClientWidth = 570
   Position = MainFormCenter
   FormFactor.Width = 1920
@@ -24,6 +24,7 @@ object FcoordonneesPhys: TFcoordonneesPhys
     Size.PlatformDefault = False
     TabOrder = 0
     object OKBtn: TButton
+      Default = True
       Images = ImagesData.ImagesList
       ImageIndex = 10
       ModalResult = 1
@@ -37,6 +38,7 @@ object FcoordonneesPhys: TFcoordonneesPhys
       OnClick = OKBtnClick
     end
     object CancelBtn: TButton
+      Cancel = True
       Images = ImagesData.ImagesList
       ImageIndex = 53
       ModalResult = 2
@@ -89,24 +91,24 @@ object FcoordonneesPhys: TFcoordonneesPhys
     StyledSettings = [Family, Size, Style, FontColor]
     Position.Y = 468.000000000000000000
     Size.Width = 570.000000000000000000
-    Size.Height = 82.000000000000000000
+    Size.Height = 118.000000000000000000
     Size.PlatformDefault = False
     Text = 'Options g'#233'n'#233'rales'
     TabOrder = 1
     object LabelWidth: TLabel
       StyledSettings = [FontColor]
-      Position.X = 318.000000000000000000
-      Position.Y = 16.000000000000000000
-      Size.Width = 120.000000000000000000
+      Position.X = 290.000000000000000000
+      Position.Y = 21.000000000000000000
+      Size.Width = 125.000000000000000000
       Size.Height = 18.000000000000000000
       Size.PlatformDefault = False
       TextSettings.WordWrap = False
       Text = 'Epaisseur des traits'
     end
     object OrthonormeCB: TCheckBox
-      Position.X = 104.000000000000000000
-      Position.Y = 56.000000000000000000
-      Size.Width = 137.000000000000000000
+      Position.X = 120.000000000000000000
+      Position.Y = 92.000000000000000000
+      Size.Width = 155.000000000000000000
       Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
@@ -114,20 +116,20 @@ object FcoordonneesPhys: TFcoordonneesPhys
       OnChange = OrthonormeCBChange
     end
     object MemeZeroCB: TCheckBox
-      Position.X = 152.000000000000000000
-      Position.Y = 18.000000000000000000
-      Size.Width = 140.000000000000000000
-      Size.Height = 18.000000000000000000
+      Position.X = 12.000000000000000000
+      Position.Y = 68.000000000000000000
+      Size.Width = 260.000000000000000000
+      Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
       Text = 'Z'#233'ros Y identiques'
     end
     object MemeXCB: TCheckBox
       IsChecked = True
-      Position.X = 8.000000000000000000
-      Position.Y = 16.000000000000000000
-      Size.Width = 129.000000000000000000
-      Size.Height = 17.000000000000000000
+      Position.X = 12.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 260.000000000000000000
+      Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 3
       Text = 'Abscisse unique'
@@ -135,29 +137,29 @@ object FcoordonneesPhys: TFcoordonneesPhys
     end
     object AnalyseurCB: TCheckBox
       StyledSettings = [FontColor]
-      Position.X = 8.000000000000000000
-      Position.Y = 36.000000000000000000
-      Size.Width = 273.000000000000000000
-      Size.Height = 17.000000000000000000
+      Position.X = 12.000000000000000000
+      Position.Y = 44.000000000000000000
+      Size.Width = 268.000000000000000000
+      Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 4
       Text = 'Courbes s'#233'par'#233'es (et non superpos'#233'es)'
       OnChange = AnalyseurCBChange
     end
     object MemeEchelleCB: TCheckBox
-      Position.X = 416.000000000000000000
-      Position.Y = 58.000000000000000000
-      Size.Width = 150.000000000000000000
-      Size.Height = 18.000000000000000000
+      Position.X = 290.000000000000000000
+      Position.Y = 68.000000000000000000
+      Size.Width = 260.000000000000000000
+      Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 5
       Text = 'Echelles identiques'
       OnChange = MemeEchelleCBChange
     end
     object PolaireCB: TCheckBox
-      Position.X = 8.000000000000000000
-      Position.Y = 56.000000000000000000
-      Size.Width = 81.000000000000000000
+      Position.X = 12.000000000000000000
+      Position.Y = 92.000000000000000000
+      Size.Width = 100.000000000000000000
       Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 6
@@ -166,19 +168,19 @@ object FcoordonneesPhys: TFcoordonneesPhys
     end
     object GraduationZeroCB: TCheckBox
       StyledSettings = [FontColor]
-      Position.X = 248.000000000000000000
-      Position.Y = 58.000000000000000000
-      Size.Width = 170.000000000000000000
-      Size.Height = 17.000000000000000000
+      Position.X = 290.000000000000000000
+      Position.Y = 92.000000000000000000
+      Size.Width = 260.000000000000000000
+      Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 7
       Text = 'Axes passant par z'#233'ro'
     end
     object GrilleCB: TCheckBox
-      Position.X = 312.000000000000000000
-      Position.Y = 35.000000000000000000
-      Size.Width = 140.000000000000000000
-      Size.Height = 17.000000000000000000
+      Position.X = 290.000000000000000000
+      Position.Y = 44.000000000000000000
+      Size.Width = 260.000000000000000000
+      Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 8
       Text = 'Trac'#233' de grille'
@@ -191,10 +193,10 @@ object FcoordonneesPhys: TFcoordonneesPhys
       Max = 5.000000000000000000
       Value = 3.000000000000000000
       KeyboardType = Default
-      Position.X = 447.000000000000000000
-      Position.Y = 17.000000000000000000
+      Position.X = 425.000000000000000000
+      Position.Y = 19.000000000000000000
       TextSettings.Font.Size = 15.000000000000000000
-      Size.Width = 54.000000000000000000
+      Size.Width = 64.000000000000000000
       Size.Height = 20.000000000000000000
       Size.PlatformDefault = False
     end
@@ -477,7 +479,6 @@ object FcoordonneesPhys: TFcoordonneesPhys
         end
       end
       object DeleteBtn: TButton
-        Default = True
         StyledSettings = [FontColor]
         Position.X = 280.000000000000000000
         Position.Y = 16.000000000000000000
