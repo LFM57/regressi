@@ -183,11 +183,11 @@ type
     procedure RazBtnClick(Sender: TObject);
     procedure CopierItemClick(Sender: TObject);
     procedure GridParamCellEditSetData(Sender: TObject; ACol, ARow: Integer;
-      CellEditor: TFmxObject; var CellString: string);
+      CellEditor: TControl; var CellString: string);
     procedure GridVariabFixedCellButtonClick(Sender: TObject; ACol,
-      ARow: Integer; Cell: TFmxObject);
+      ARow: Integer);
     procedure GridParamFixedCellButtonClick(Sender: TObject; ACol,
-      ARow: Integer; Cell: TFmxObject);
+      ARow: Integer);
     procedure FonctionBtnMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Single);
     procedure MemoKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -217,7 +217,7 @@ type
     procedure GridParamGetCellIsFixed(Sender: TObject; ACol, ARow: Integer;
       var ACellFixed: Boolean);
     procedure GridVariabGetCellEditorProperties(Sender: TObject; ACol,
-      ARow: Integer; CellEditor: TFmxObject);
+      ARow: Integer; CellEditor: TControl);
     procedure GridVariabExit(Sender: TObject);
     procedure GridParamExit(Sender: TObject);
     procedure IncertParamBtnClick(Sender: TObject);
@@ -233,6 +233,8 @@ type
       ACell: TTMSFNCGridCell);
     procedure GridParamCellEditGetData(Sender: TObject; ACol, ARow: Integer;
       CellEditor: TControl; var CellString: string);
+    procedure GridParamGetCellData(Sender: TObject; ACol, ARow: Integer;
+      var CellString: string);
     procedure GridVariabGetCellData(Sender: TObject; ACol, ARow: Integer;
       var CellString: string);
  private
@@ -289,6 +291,7 @@ begin
     end;
     isPrec := DeltaItem.isChecked and (Acol mod 2=0);
     indexV := indexVariable(acol);
+    if indexV=grandeurInconnue then exit;
     with grandeurs[indexV] do begin
          if Arow=0
             then if isPrec
@@ -321,6 +324,7 @@ begin
     end;
     isPrec := DeltaItem.isChecked and (Acol mod 2=0);
     indexC := indexConstante(Acol);
+    if indexC=grandeurInconnue then exit;
     with grandeurs[indexC] do begin
          if Arow=0
             then if isPrec
@@ -573,15 +577,15 @@ begin
 end;
 
 procedure TFValeurs.GridVariabGetCellEditorProperties(Sender: TObject; ACol,
-  ARow: Integer; CellEditor: TFmxObject);
+  ARow: Integer; CellEditor: TControl);
 var indexV : integer;
 begin
     indexV := grandeurInconnue;
     if sender=gridVariab then indexV := indexVariable(acol);
     if sender=gridParam then indexV := indexConstante(acol);
     if indexV=grandeurInconnue then exit;
-    if grandeurs[indexV].fonct.genreC in
-       [g_experimentale,g_equation] then
+    if (grandeurs[indexV].fonct.genreC in [g_experimentale,g_equation]) and
+       (CellEditor is TTMSFNCGridEdit) then
          (CellEditor as TTMSFNCGridEdit).validChars := validCharsGrid;
 end;
 
@@ -589,7 +593,7 @@ end;
 procedure TFValeurs.GridVariabGetCellIsFixed(Sender: TObject; ACol,
   ARow: Integer; var ACellFixed: Boolean);
 begin
-    AcellFixed := not (Acol in colPermiseVariab)
+    AcellFixed := (ARow<=1) or not (Acol in colPermiseVariab)
 end;
 
 procedure TFValeurs.GridVariabGetCellReadOnly(Sender: TObject; ACol,
@@ -1111,12 +1115,16 @@ begin
 end;
 
 procedure TFValeurs.GridVariabFixedCellButtonClick(Sender: TObject; ACol,
-  ARow: Integer; Cell: TFmxObject);
+  ARow: Integer);
+var indexV : integer;
 begin
 // modif du nom, de l'unité et du format
+        if (ARow>1) or (ACol<1) then exit;
+        indexV := indexVariable(Acol);
+        if indexV=grandeurInconnue then exit;
         if gridVariab.editing then gridVariab.CancelEdit;
         modifDlg := TmodifDlg.create(self);
-        modifDlg.indexV := indexVariable(Acol);
+        modifDlg.indexV := indexV;
         CentreForm(modifDlg);
         if modifDlg.showModal=mrOk then begin
            if Acol=1 then definitGrandeurFrequence;
@@ -1282,6 +1290,12 @@ begin
      if feuillets.ActiveTab=variabSheet then incertVarBtnClick(sender);
 end;
 
+procedure TFValeurs.GridParamGetCellData(Sender: TObject; ACol, ARow: Integer;
+  var CellString: string);
+begin
+    cellString := formatGridConst(Acol,ARow);
+end;
+
 procedure TFValeurs.GridParamCellEditGetData(Sender: TObject; ACol,
   ARow: Integer; CellEditor: TControl; var CellString: string);
 begin
@@ -1289,7 +1303,7 @@ begin
 end;
 
 procedure TFValeurs.GridParamCellEditSetData(Sender: TObject; ACol,
-  ARow: Integer; CellEditor: TFmxObject; var CellString: string);
+  ARow: Integer; CellEditor: TControl; var CellString: string);
 var i,ii,page : integer;
     valeur : double;
     vide,isPrec : boolean;
@@ -1377,11 +1391,15 @@ begin
 end;
 
 procedure TFValeurs.GridParamFixedCellButtonClick(Sender: TObject; ACol,
-  ARow: Integer; Cell: TFmxObject);
+  ARow: Integer);
+var indexC : integer;
 begin // modif du nom, de l'unité et du format
+        if (ARow>1) or (ACol<1) then exit;
+        indexC := indexConstante(acol);
+        if indexC=grandeurInconnue then exit;
         if gridParam.editing then gridParam.CancelEdit;
         modifDlg := TmodifDlg.create(self);
-        modifDlg.indexV := indexConstante(acol);
+        modifDlg.indexV := indexC;
         CentreForm(modifDlg);
         if modifDlg.showModal=mrOk then begin
            resetListeGrandeurs;
@@ -1394,7 +1412,7 @@ end;
 procedure TFValeurs.GridParamGetCellIsFixed(Sender: TObject; ACol,
   ARow: Integer; var ACellFixed: Boolean);
 begin
-    AcellFixed := not (Acol in colPermiseParam)
+    AcellFixed := (ARow<=1) or not (Acol in colPermiseParam)
 end;
 
 procedure TFValeurs.GridVariabCellEditSetData(Sender: TObject; ACol,

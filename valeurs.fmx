@@ -139,6 +139,7 @@ object FValeurs: TFValeurs
         DefaultFont.Name = 'Segoe UI'
         TopRow = 1
         Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+        Appearance.FixedLayout.Font.Color = xFF1E40AF
         Appearance.FixedLayout.Font.Name = 'Segoe UI'
         Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
         Appearance.NormalLayout.Fill.Color = claNull
@@ -164,7 +165,15 @@ object FValeurs: TFValeurs
         GlobalFont.Scale = 1.000000000000000000
         GlobalFont.Style = []
         DesignTimeSampleData = False
+        OnFixedCellClick = GridParamFixedCellButtonClick
+        OnGetCellClass = TMSFNCGrid1GetCellClass
+        OnGetCellData = GridParamGetCellData
+        OnGetCellIsFixed = GridParamGetCellIsFixed
+        OnGetCellReadOnly = GridVariabGetCellReadOnly
+        OnGetCellEditorType = TMSFNCGrid1GetCellEditorType
+        OnGetCellEditorProperties = GridVariabGetCellEditorProperties
         OnCellEditGetData = GridParamCellEditGetData
+        OnCellEditSetData = GridParamCellEditSetData
       end
     end
     object VariabSheet: TTabItem
@@ -329,6 +338,7 @@ object FValeurs: TFValeurs
         DefaultFont.Name = 'Segoe UI'
         TopRow = 1
         Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+        Appearance.FixedLayout.Font.Color = xFF1E40AF
         Appearance.FixedLayout.Font.Name = 'Segoe UI'
         Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
         Appearance.NormalLayout.Fill.Color = claNull
@@ -354,10 +364,13 @@ object FValeurs: TFValeurs
         GlobalFont.Scale = 1.000000000000000000
         GlobalFont.Style = []
         DesignTimeSampleData = False
+        OnFixedCellClick = GridVariabFixedCellButtonClick
         OnGetCellClass = TMSFNCGrid1GetCellClass
         OnGetCellData = GridVariabGetCellData
+        OnGetCellIsFixed = GridVariabGetCellIsFixed
         OnGetCellReadOnly = GridVariabGetCellReadOnly
         OnGetCellEditorType = TMSFNCGrid1GetCellEditorType
+        OnGetCellEditorProperties = GridVariabGetCellEditorProperties
         OnCellEditSetData = GridVariabCellEditSetData
       end
     end
