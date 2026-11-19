@@ -1,51 +1,16 @@
 object ParamAnimationDlg: TParamAnimationDlg
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'Param'#232'tres de l'#39'animation'
   ClientHeight = 345
   ClientWidth = 640
+  Position = MainFormCenter
   FormFactor.Width = 1920
   FormFactor.Height = 1200
   FormFactor.Devices = [Desktop]
   OnActivate = FormActivate
   OnCreate = FormCreate
   DesignerMasterStyle = 1
-  object OKBtn: TButton
-    Images = ImagesData.ImagesList
-    ImageIndex = 10
-    ModalResult = 1
-    Position.X = 84.000000000000000000
-    Position.Y = 212.000000000000000000
-    Size.Width = 140.000000000000000000
-    Size.Height = 29.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 0
-    Text = 'OK'
-    TextSettings.Font.Size = 13.000000000000000000
-    OnClick = OKBtnClick
-  end
-  object CancelBtn: TButton
-    Images = ImagesData.ImagesList
-    ImageIndex = 53
-    ModalResult = 2
-    Position.X = 356.000000000000000000
-    Position.Y = 212.000000000000000000
-    Size.Width = 140.000000000000000000
-    Size.Height = 29.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 1
-    Text = 'Abandon'
-    TextSettings.Font.Size = 13.000000000000000000
-  end
-  object EchelleAutoCB: TCheckBox
-    Position.X = 8.000000000000000000
-    Position.Y = 176.000000000000000000
-    Size.Width = 241.000000000000000000
-    Size.Height = 19.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 3
-    Text = 'Ajustement automatique de l'#39#233'chelle'
-  end
   object Memo1: TMemo
     Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
     DataDetectorTypes = []
@@ -64,10 +29,65 @@ object ParamAnimationDlg: TParamAnimationDlg
     Viewport.Width = 624.000000000000000000
     Viewport.Height = 42.000000000000000000
   end
-  object ParamGrid: TTMSFNCGrid
-    Align = Top
+  object FooterPanel: TPanel
+    Align = Bottom
+    Padding.Left = 8.000000000000000000
+    Padding.Top = 6.000000000000000000
+    Padding.Right = 8.000000000000000000
+    Padding.Bottom = 6.000000000000000000
+    Position.Y = 251.000000000000000000
     Size.Width = 640.000000000000000000
-    Size.Height = 153.000000000000000000
+    Size.Height = 44.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object EchelleAutoCB: TCheckBox
+      Align = Left
+      Position.X = 8.000000000000000000
+      Position.Y = 6.000000000000000000
+      Size.Width = 260.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Ajustement automatique de l'#39#233'chelle'
+    end
+    object OKBtn: TButton
+      Align = Right
+      Default = True
+      Images = ImagesData.ImagesList
+      ImageIndex = 10
+      Margins.Left = 8.000000000000000000
+      ModalResult = 1
+      Position.X = 524.000000000000000000
+      Position.Y = 6.000000000000000000
+      Size.Width = 108.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'OK'
+      TextSettings.Font.Size = 13.000000000000000000
+      OnClick = OKBtnClick
+    end
+    object CancelBtn: TButton
+      Align = Right
+      Cancel = True
+      Images = ImagesData.ImagesList
+      ImageIndex = 53
+      Margins.Left = 8.000000000000000000
+      ModalResult = 2
+      Position.X = 408.000000000000000000
+      Position.Y = 6.000000000000000000
+      Size.Width = 108.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Abandon'
+      TextSettings.Font.Size = 13.000000000000000000
+    end
+  end
+  object ParamGrid: TTMSFNCGrid
+    Align = Client
+    Size.Width = 640.000000000000000000
+    Size.Height = 251.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 5
     Options.Editing.CalcFormat = '%g'
@@ -82,35 +102,42 @@ object ParamAnimationDlg: TParamAnimationDlg
         FixedFont.Name = 'Segoe UI'
         Font.Name = 'Segoe UI'
         ID = ''
-        Width = 68.000000000000000000
+        Width = 90.000000000000000000
       end
       item
         BorderWidth = 1
         FixedFont.Name = 'Segoe UI'
         Font.Name = 'Segoe UI'
         ID = ''
-        Width = 68.000000000000000000
+        Width = 90.000000000000000000
       end
       item
         BorderWidth = 1
         FixedFont.Name = 'Segoe UI'
         Font.Name = 'Segoe UI'
         ID = ''
-        Width = 68.000000000000000000
+        Width = 90.000000000000000000
       end
       item
         BorderWidth = 1
         FixedFont.Name = 'Segoe UI'
         Font.Name = 'Segoe UI'
         ID = ''
-        Width = 68.000000000000000000
+        Width = 90.000000000000000000
       end
       item
         BorderWidth = 1
         FixedFont.Name = 'Segoe UI'
         Font.Name = 'Segoe UI'
         ID = ''
-        Width = 68.000000000000000000
+        Width = 48.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.Name = 'Segoe UI'
+        Font.Name = 'Segoe UI'
+        ID = ''
+        Width = 48.000000000000000000
       end>
     TopRow = 1
     Appearance.FixedLayout.Fill.Color = xFFE6E6E6
@@ -136,5 +163,7 @@ object ParamAnimationDlg: TParamAnimationDlg
     Appearance.ProgressLayout.Format = '%.0f%%'
     LeftCol = 1
     ScrollMode = scmItemScrolling
+    DesignTimeSampleData = False
+    OnGetCellIsFixed = ParamGridGetCellIsFixed
   end
 end

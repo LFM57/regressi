@@ -29,6 +29,7 @@ uses
 
 type
   TParamAnimationDlg = class(TForm)
+    FooterPanel: TPanel;
     OKBtn: TButton;
     CancelBtn: TButton;
     EchelleAutoCB: TCheckBox;
@@ -70,13 +71,15 @@ end;
 
 procedure TParamAnimationDlg.FormCreate(Sender: TObject);
 begin
+     ParamGrid.ColumnCount := 6;
+     ParamGrid.cells[0,0] := 'Paramètre';
      ParamGrid.cells[1,0] := 'Début';
      ParamGrid.cells[2,0] := 'Fin';
      ParamGrid.cells[3,0] := 'Pas';
      ParamGrid.cells[4,0] := 'Actif';
      ParamGrid.cells[5,0] := 'Exp.';
-     paramGrid.columnWidths[4] := 32;
-     paramGrid.columnWidths[5] := 32;
+     paramGrid.columnWidths[4] := 48;
+     paramGrid.columnWidths[5] := 48;
 end;
 
 procedure TParamAnimationDlg.OKBtnClick(Sender: TObject);
