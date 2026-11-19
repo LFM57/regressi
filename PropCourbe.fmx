@@ -232,5 +232,6 @@ object PropCourbeForm: TPropCourbeForm
     Appearance.ProgressLayout.Format = '%.0f%%'
     LeftCol = 1
     ScrollMode = scmItemScrolling
+    DesignTimeSampleData = False
   end
 end

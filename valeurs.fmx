@@ -163,7 +163,7 @@ object FValeurs: TFValeurs
         ScrollMode = scmItemScrolling
         GlobalFont.Scale = 1.000000000000000000
         GlobalFont.Style = []
-        DesignTimeSampleData = True
+        DesignTimeSampleData = False
         OnCellEditGetData = GridParamCellEditGetData
       end
     end
@@ -353,7 +353,7 @@ object FValeurs: TFValeurs
         ScrollMode = scmItemScrolling
         GlobalFont.Scale = 1.000000000000000000
         GlobalFont.Style = []
-        DesignTimeSampleData = True
+        DesignTimeSampleData = False
         OnGetCellClass = TMSFNCGrid1GetCellClass
         OnGetCellData = GridVariabGetCellData
         OnGetCellReadOnly = GridVariabGetCellReadOnly
@@ -921,7 +921,7 @@ object FValeurs: TFValeurs
             ScrollMode = scmItemScrolling
             GlobalFont.Scale = 1.000000000000000000
             GlobalFont.Style = []
-            DesignTimeSampleData = True
+            DesignTimeSampleData = False
             OnGetCellClass = TMSFNCGrid3GetCellClass
             OnCellButtonClick = GrecGridCellButtonClick
           end

@@ -767,7 +767,7 @@ object FRegressiMain: TFRegressiMain
                 ScrollMode = scmItemScrolling
                 GlobalFont.Scale = 1.000000000000000000
                 GlobalFont.Style = []
-                DesignTimeSampleData = True
+                DesignTimeSampleData = False
                 OnGetCellClass = ParamGridGetCellClass
                 OnGetCellEditorType = ParamGridGetCellEditorType
                 OnGetCellEditorProperties = ParamGridGetCellEditorProperties
@@ -1192,7 +1192,7 @@ object FRegressiMain: TFRegressiMain
               ScrollMode = scmItemScrolling
               GlobalFont.Scale = 1.000000000000000000
               GlobalFont.Style = []
-              DesignTimeSampleData = True
+              DesignTimeSampleData = False
             end
           end
           object SplitterStat: TSplitter
@@ -1286,7 +1286,7 @@ object FRegressiMain: TFRegressiMain
             ScrollMode = scmItemScrolling
             GlobalFont.Scale = 1.000000000000000000
             GlobalFont.Style = []
-            DesignTimeSampleData = True
+            DesignTimeSampleData = False
           end
         end
         object ZoneClipBoardStat: TRectangle

@@ -164,7 +164,7 @@ object NewClavierDlg: TNewClavierDlg
       ScrollMode = scmItemScrolling
       GlobalFont.Scale = 1.000000000000000000
       GlobalFont.Style = []
-      DesignTimeSampleData = True
+      DesignTimeSampleData = False
     end
   end
   object ConstGB: TGroupBox
@@ -257,7 +257,7 @@ object NewClavierDlg: TNewClavierDlg
       ScrollMode = scmItemScrolling
       GlobalFont.Scale = 1.000000000000000000
       GlobalFont.Style = []
-      DesignTimeSampleData = True
+      DesignTimeSampleData = False
     end
   end
   object TriCB: TCheckBox
