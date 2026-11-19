@@ -568,7 +568,8 @@ object OptionCouleurDlg: TOptionCouleurDlg
         Touch.InteractiveGestures = [LongTap, DoubleTap]
         TabOrder = 3
         Cursor = crIBeam
-        Max = 10.000000000000000000
+        Min = 1.000000000000000000
+        Max = 6.000000000000000000
         Value = 1.000000000000000000
         KeyboardType = Default
         Position.X = 136.000000000000000000
@@ -833,7 +834,22 @@ object OptionCouleurDlg: TOptionCouleurDlg
           Size.Height = 23.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
-          OnClick = LigneComboClick
+          object TListBoxItem
+            TabOrder = 0
+            Text = 'Plein'
+          end
+          object TListBoxItem
+            TabOrder = 1
+            Text = 'Tirets'
+          end
+          object TListBoxItem
+            TabOrder = 2
+            Text = 'Pointill'#233's'
+          end
+          object TListBoxItem
+            TabOrder = 3
+            Text = 'Mixte'
+          end
         end
         object CouleurTangente: TTMSFNCColorPicker
           DisableFocusEffect = False
@@ -933,7 +949,22 @@ object OptionCouleurDlg: TOptionCouleurDlg
           Size.Height = 23.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          OnClick = LigneComboClick
+          object TListBoxItem
+            TabOrder = 0
+            Text = 'Plein'
+          end
+          object TListBoxItem
+            TabOrder = 1
+            Text = 'Tirets'
+          end
+          object TListBoxItem
+            TabOrder = 2
+            Text = 'Pointill'#233's'
+          end
+          object TListBoxItem
+            TabOrder = 3
+            Text = 'Mixte'
+          end
         end
         object ReticuleColor: TTMSFNCColorPicker
           DisableFocusEffect = False

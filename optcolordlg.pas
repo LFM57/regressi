@@ -173,10 +173,17 @@ var i : integer;
     abox : TcolorComboBox;
 begin
      inherited;
+     PageSE.Min := 1;
      PageSE.Max := MaxPages;
+     CourbeSE.Min := 1;
+     CourbeSE.Max := MaxOrdonnee;
+     if CourbeSE.Value < 1 then CourbeSE.Value := 1;
+     if CourbeSE.Value > MaxOrdonnee then CourbeSE.Value := MaxOrdonnee;
+     CouleurTangente.selectedColor := graphker.CouleurTangente;
+     TangenteCB.itemIndex := ord(styleTangente);
      ReticuleColor.selectedColor := CouleurReticule;
      FondReticuleColor.selectedColor := FondReticule;
-     FondColor.selectedColor := FondReticule;
+     FondColor.selectedColor := CouleurTexte;
      ReticuleCB.itemIndex := ord(PstyleReticule);
      widthEcranSE.value := penWidthEcran;
      GrilleColor.selectedColor := couleurGrille;
@@ -184,10 +191,10 @@ begin
      traitRB.IsChecked := reperePage=spStyle;
      motifRB.IsChecked := reperePage=spMotif;
      couleurRB.IsChecked := reperePage=spCouleur;
-     for i := 0 to pred(ModeleTS.ChildrenCount) do
-         if modeleTS.children[i] is TcolorComboBox
+     for i := 0 to pred(ComponentCount) do
+         if Components[i] is TcolorComboBox
             then begin
-               abox := modeleTS.children[i] as TcolorComboBox;
+               abox := Components[i] as TcolorComboBox;
                abox.color := CouleurModele[abox.tag];
             end;
      PageSEChange(Sender);
@@ -203,10 +210,12 @@ procedure TOptionCouleurDlg.OKBtnClick(Sender: TObject);
 var c : integer;
 begin
     CouleurGrille := GrilleColor.selectedColor;
+    graphker.CouleurTangente := CouleurTangente.selectedColor;
     CouleurReticule := ReticuleColor.selectedColor;
     FondReticule := FondReticuleColor.selectedColor;
-    FondReticule := FondColor.selectedColor;
-    PstyleReticule := TStrokeDash(ReticuleCB.itemIndex);
+    CouleurTexte := FondColor.selectedColor;
+    if ReticuleCB.itemIndex>=0 then
+       PstyleReticule := TStrokeDash(ReticuleCB.itemIndex);
     penWidthEcran:= widthEcranSE.value;
     if traitRB.ischecked then reperePage := spStyle;
     if couleurRB.ischecked then reperePage := spcouleur;
@@ -296,6 +305,8 @@ procedure TOptionCouleurDlg.CourbeSEClick(Sender: TObject);
 var index : integer;
 begin
      index := round(CourbeSE.value);
+     if index < 1 then index := 1;
+     if index > MaxOrdonnee then index := MaxOrdonnee;
      CouleurComboCourbe.selectedColor := couleurInit[index];
      LigneComboBis.itemIndex := ord(PstyleInit[index]);
      PointComboBis.itemIndex := ord(motifInit[index]);
