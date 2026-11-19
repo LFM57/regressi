@@ -1,0 +1,77 @@
+﻿<html>
+	
+<head>
+	<title>Page calcul&eacute;e</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Pagecalculee");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Page calcul&eacute;e</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Pages.html">Pages</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Pages.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Pages.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Pagecopiee.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="AJOUTPAGECALC"></a>
+<span class="rvts13">Menu : Pages/Nouvelle/Calculée</span></p>
+<p class="rvps5"><span class="rvts13">On peut ajouter une page calculée à partir des pages acquises soit en faisant une synthèse de toutes les pages (somme, moyenne...) soit en calculant une page de manière explicite. Par exemple, si la page 1 représente le spectre du solvant et la page 2 le spectre de la solution, pour obtenir le spectre du soluté sur la page calculée on donnera comme expression : page(2)-page(1) (cas d'un spectre en absorbance). Les calculs font intervenir uniquement les quatre opérations. La première variable est considérée comme commune (la longueur d'onde dans l'exemple ci-dessus, cela peut être le temps) et on prend la partie commune aux pages (dans l'idéal il est bien sûr souhaitable que l'échantillonnage soit identique sur les différentes pages). Les autres grandeurs expérimentales sont calculées selon votre choix. </span><span class="rvts25">Remarque importante</span><span class="rvts13"> : le calcul est fait uniquement au moment où vous définissez cette nouvelle page.</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/creer-des-livres-numeriques-epub">Générateur complet de livres électroniques ePub</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

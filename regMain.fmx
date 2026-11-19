@@ -1,0 +1,1952 @@
+object FRegressiMain: TFRegressiMain
+  Left = 171
+  Top = 279
+  Caption = 'Regressi'
+  ClientHeight = 527
+  ClientWidth = 1094
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  FormFamily = 'TForm'
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnClose = FormClose
+  OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
+  OnResize = FormResize
+  Left = 171
+  Top = 279
+  DesignerMasterStyle = 1
+  object PanelPage: TPanel
+    Align = Top
+    Size.Width = 1094.000000000000000000
+    Size.Height = 24.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object PagePrecBtn: TSpeedButton
+      Align = Left
+      Position.X = 70.000000000000000000
+      Size.Width = 20.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      Text = '<'
+      TextSettings.Font.Size = 15.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      OnClick = PagePrecClick
+    end
+    object PagesBtn: TSpeedButton
+      Align = Left
+      Images = ImagesData.ImagesList
+      ImageIndex = 38
+      Position.X = 170.000000000000000000
+      Size.Width = 70.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Select.'
+      OnClick = PageSelectItemClick
+    end
+    object PageSuivBtn: TSpeedButton
+      Align = Left
+      Position.X = 130.000000000000000000
+      Size.Width = 20.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      Text = '>'
+      TextSettings.Font.Size = 15.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      OnClick = PageSuivClick
+    end
+    object PageAddBtn: TSpeedButton
+      Align = Left
+      StyledSettings = [Family, Size, FontColor]
+      Position.X = 150.000000000000000000
+      Size.Width = 20.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      Text = '+'
+      TextSettings.Font.Size = 15.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      OnClick = PageAddBtnClick
+    end
+    object CommentaireEdit: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Client
+      TabOrder = 6
+      Size.Width = 854.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = [Style, FontColor]
+      OnChange = CommentaireEditChange
+    end
+    object PanelNumPage: TLabel
+      Align = Left
+      StyledSettings = [Family, Size, Style]
+      Position.X = 90.000000000000000000
+      Size.Width = 40.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'PanelNumPageStyle1'
+      TextSettings.Font.Size = 15.000000000000000000
+      Text = '10/45'
+    end
+    object TrigoBtn: TButton
+      Align = Left
+      HelpType = htKeyword
+      Images = ImagesData.ImagesList
+      ImageIndex = 21
+      Size.Width = 70.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 8
+      Text = 'Angle'
+      TextSettings.WordWrap = True
+      OnClick = TrigoBtnClick
+    end
+  end
+  object SaveDialog: TSaveDialog
+    DefaultExt = 'rxml'
+    Filter = 
+      'Regressi|*.rxml|Regressi Windows|*.rw3|Tableur csv|*.csv|Texte (' +
+      'Tab)|*.txt'
+    Options = [ofOverwritePrompt, ofPathMustExist, ofEnableSizing]
+    Title = 'Sauvegarde Regressi'
+    Left = 288
+    Top = 248
+  end
+  object OpenDialog: TOpenDialog
+    DefaultExt = 'rxml'
+    Filter = 
+      'Regressi|*.rxml|Regressi Windows|*.rw3|Tableur csv|*.csv|Fichier' +
+      ' son WAV|*.wav|Texte (Tab)|*.txt'
+    Options = [ofEnableSizing]
+    Left = 288
+    Top = 288
+  end
+  object WindowTab: TTabControl
+    Align = Client
+    FullSize = True
+    Size.Width = 1094.000000000000000000
+    Size.Height = 481.000000000000000000
+    Size.PlatformDefault = False
+    TabHeight = 30.000000000000000000
+    TabIndex = 3
+    TabOrder = 1
+    TabPosition = Top
+    OnChange = WindowTabChange
+    Sizes = (
+      1094s
+      451s
+      1094s
+      451s
+      1094s
+      451s
+      1094s
+      451s)
+    object ValeursTab: TTabItem
+      CustomIcon.Height = 20
+      CustomIcon.Width = 20
+      CustomIcon.TransparentColor = 16777215
+      CustomIcon = <
+        item
+          Width = 20
+          Height = 20
+          PNG = {
+            89504E470D0A1A0A0000000D49484452000000140000001408060000008D891D
+            0D000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+            00A949444154384FAD95510EC4200844B117F368D6A3793277314E43A9486B7C
+            099149709CF2D3709E546923CDF05F4B8CEE1DFDA45AEBA762A6864C08814A29
+            5DF9B0B136BD19F2408CB1AB7768D34742AEB7C879983E12623F1E98D5778609
+            E5CBFAF4182694AFEAD3C3DC217A4FE79C9B06E60ED17B3AA5D434307728B5EC
+            A12DCC1D4A2D7B688B69C215A60957301322A5D743033321527A3D34B819EEE0
+            32949FB05260F32F80E8072EADC323936FBA0C0000000049454E44AE426082}
+          FileName = '\\Mac\Home\Documents\Embarcadero\Studio\Projets\20x20\texte.BMP'
+        end>
+      IsSelected = False
+      ImageIndex = 42
+      Size.Width = 273.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Grandeurs'
+      ExplicitSize.cx = 239.000000000000000000
+      ExplicitSize.cy = 22.000000000000000000
+      object ValeursPanel: TPanel
+        Align = Client
+        Size.Width = 1094.000000000000000000
+        Size.Height = 451.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+      end
+    end
+    object GrapheTab: TTabItem
+      CustomIcon.Height = 20
+      CustomIcon.Width = 20
+      CustomIcon.TransparentColor = 16777215
+      CustomIcon = <
+        item
+          Width = 20
+          Height = 20
+          PNG = {
+            89504E470D0A1A0A0000000D49484452000000140000001408060000008D891D
+            0D000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+            00C449444154384FAD930112C2200C04413FC6D3E0653C4D734C9226146A8BAC
+            E3243264BD82C60F1136F2E2AAC418B95BC3094B29DC3D47729C1E19099F9E02
+            6432A20991AE4F78E7E955C69B2F13DA6F1EE164BC717A86B207D5D12F181998
+            26B442DD61166917BDBC0C0C135A89481DB4389281EB5BB666DB13DD47657ECB
+            3281DA31938179C25E48BD5DF25307E35BB613A8DCFF92812DFF14CBF477B8CA
+            F6842A947439E7565780EA4D82664829B53712D65A972AE66175909F3BCFDDF5
+            D319FE47085FB3AAECD22F7D11B10000000049454E44AE426082}
+          FileName = 
+            '\\Mac\Home\Documents\Embarcadero\Studio\Projets\20x20\GRPHLINE.B' +
+            'MP'
+        end>
+      IsSelected = False
+      ImageIndex = 50
+      Size.Width = 273.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Graphe'
+      ExplicitSize.cx = 240.000000000000000000
+      ExplicitSize.cy = 22.000000000000000000
+      object GraphePanel: TPanel
+        Align = Client
+        Size.Width = 1094.000000000000000000
+        Size.Height = 451.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object PanelCentral: TPanel
+          Align = Client
+          Size.Width = 834.000000000000000000
+          Size.Height = 451.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'PanelCentralStyle1'
+          TabOrder = 0
+          OnPaint = PanelCentralPaint
+          object GrapheToolBar: TToolBar
+            Size.Width = 834.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            OnKeyDown = FormKeyDown
+            object CurseurBtn: TButton
+              Align = Left
+              Images = ImagesData.ImagesList
+              ImageIndex = 49
+              Margins.Top = 1.000000000000000000
+              Margins.Bottom = 1.000000000000000000
+              Position.X = 80.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 80.000000000000000000
+              Size.Height = 28.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'CurseurBtnStyle1'
+              TabOrder = 0
+              Text = 'Outils gr.'
+              TextSettings.WordWrap = True
+              OnClick = CurseurBtnClick
+            end
+            object CoordonneesBtn: TButton
+              Align = Left
+              HelpContext = 804
+              HelpKeyword = 'Coordonn'#233'es'
+              Images = ImagesData.ImagesList
+              ImageIndex = 16
+              Position.X = 160.000000000000000000
+              Size.Width = 80.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 1
+              Text = 'Coord.'
+              TextSettings.WordWrap = True
+              OnClick = CoordonneesBtnClick
+            end
+            object ZoomAutoBtn: TButton
+              Align = Left
+              Hint = 'Echelle automatique'
+              Images = ImagesData.ImagesList
+              ImageIndex = 51
+              Position.X = 240.000000000000000000
+              Size.Width = 64.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'ZoomAutoBtnStyle1'
+              TabOrder = 2
+              Text = 'Auto'
+              TextSettings.WordWrap = True
+              OnClick = ZoomAutoBtnClick
+            end
+            object ZoomBtn: TButton
+              Align = Left
+              Images = ImagesData.ImagesList
+              ImageIndex = 48
+              Position.X = 304.000000000000000000
+              Size.Width = 80.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 3
+              Text = 'Loupe'
+              TextSettings.WordWrap = True
+              OnClick = ZoomBtnClick
+            end
+            object ZoomArrBtn: TButton
+              Align = Left
+              Images = ImagesData.ImagesList
+              ImageIndex = 51
+              Position.X = 384.000000000000000000
+              Size.Width = 80.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 4
+              Text = 'Zoom ar.'
+              TextSettings.WordWrap = True
+              OnClick = ZoomArrBtnClick
+            end
+            object VecteursBtn: TButton
+              Align = Left
+              HelpContext = 815
+              Hint = 'Trac'#233' des vecteurs vitesse / acc'#233'l'#233'ration'
+              Images = ImagesData.ImagesList
+              ImageIndex = 31
+              PopupMenu = VecteursMenu
+              Position.X = 464.000000000000000000
+              Size.Width = 80.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 6
+              Text = 'Vecteurs'
+              TextSettings.WordWrap = True
+              OnClick = VecteursBtnClick
+            end
+            object ModeleBtn: TButton
+              StaysPressed = True
+              Align = Left
+              Images = ImagesData.ImagesList
+              ImageIndex = 19
+              Margins.Top = 1.000000000000000000
+              Margins.Bottom = 1.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 80.000000000000000000
+              Size.Height = 28.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 7
+              Text = 'Mod'#233'le'
+              OnClick = ModeleBtnClick
+            end
+            object EditBidon: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Align = Right
+              TabOrder = 8
+              Position.X = 734.000000000000000000
+              Size.Width = 100.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              OnKeyDown = EditBidonKeyDown
+            end
+            object AnimationBtn: TButton
+              StaysPressed = True
+              Align = Left
+              HelpContext = 815
+              Hint = 'Trac'#233' des vecteurs vitesse / acc'#233'l'#233'ration'
+              Images = ImagesData.ImagesList
+              ImageIndex = 74
+              Position.X = 544.000000000000000000
+              Size.Width = 97.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 5
+              Text = 'Animation'
+              TextSettings.WordWrap = True
+              OnClick = AnimationBtnClick
+            end
+          end
+          object SplitterResidu: TSplitter
+            Align = Bottom
+            Cursor = crVSplit
+            MinSize = 50.000000000000000000
+            Position.Y = 441.000000000000000000
+            Size.Width = 674.000000000000000000
+            Size.Height = 8.000000000000000000
+            Size.PlatformDefault = False
+            Visible = False
+          end
+          object PaintBoxResidu: TPaintBox
+            Tag = 2
+            Align = Bottom
+            Position.X = 120.000000000000000000
+            Position.Y = 151.000000000000000000
+            Size.Width = 377.000000000000000000
+            Size.Height = 50.000000000000000000
+            Size.PlatformDefault = False
+            Visible = False
+            OnPaint = PaintBoxResiduPaint
+          end
+          object ZoneClipBoard: TRectangle
+            Align = Client
+            Fill.Kind = None
+            Size.Width = 834.000000000000000000
+            Size.Height = 421.000000000000000000
+            Size.PlatformDefault = False
+            object PaintBox1: TPaintBox
+              Tag = 1
+              Touch.InteractiveGestures = [Zoom]
+              OnGesture = PaintBox1Gesture
+              Align = Client
+              PopupMenu = MenuAxes
+              Size.Width = 834.000000000000000000
+              Size.Height = 421.000000000000000000
+              Size.PlatformDefault = False
+              OnClick = PaintBox1Click
+              OnMouseDown = PaintBox1MouseDown
+              OnMouseMove = PaintBox1MouseMove
+              OnMouseUp = PaintBox1MouseUp
+              OnPaint = PaintBox1Paint
+              Left = 1
+              Top = 1
+              object CurseurMenu: TPopupMenu
+                Left = 376
+                Top = 83
+                object SelectItem: TMenuItem
+                  GroupIndex = 1
+                  RadioItem = True
+                  Text = 'Standard'
+                  OnClick = SelectItemClick
+                end
+                object CurTexteItem: TMenuItem
+                  Tag = 1
+                  GroupIndex = 1
+                  RadioItem = True
+                  Text = 'Texte'
+                  OnClick = SelectItemClick
+                end
+                object CurLigneItem: TMenuItem
+                  Tag = 2
+                  GroupIndex = 1
+                  RadioItem = True
+                  Text = 'Ligne'
+                  OnClick = SelectItemClick
+                end
+                object CurGommesItem: TMenuItem
+                  Tag = 3
+                  GroupIndex = 1
+                  RadioItem = True
+                  Text = 'Gomme'
+                  OnClick = SelectItemClick
+                end
+                object CurReticuleItem: TMenuItem
+                  Tag = 4
+                  GroupIndex = 1
+                  RadioItem = True
+                  Text = 'R'#233'ticule libre'
+                  OnClick = SelectItemClick
+                end
+                object curDataItem: TMenuItem
+                  Tag = 5
+                  GroupIndex = 1
+                  RadioItem = True
+                  Text = 'R'#233'ticule donn'#233'es'
+                  OnClick = SelectItemClick
+                end
+                object CurOrigineItem: TMenuItem
+                  Tag = 6
+                  GroupIndex = 1
+                  RadioItem = True
+                  Text = 'Origine abscisse'
+                  OnClick = CurOrigineItemClick
+                end
+                object addModeleItem: TMenuItem
+                  Text = 'Afficher le mod'#232'le'
+                end
+                object TangenteItem: TMenuItem
+                  Tag = 10
+                  Text = 'Equivalence'
+                  OnClick = SelectItemClick
+                end
+              end
+              object MenuAxes: TPopupMenu
+                Left = 592
+                Top = 128
+                object CoordonneesItem: TMenuItem
+                  Text = 'Coordonn'#233'es'
+                  OnClick = CoordonneesBtnClick
+                end
+                object ModeleItem: TMenuItem
+                  AutoCheck = True
+                  ShortCut = 120
+                  Text = 'Mod'#233'lisation'
+                  OnClick = ModeleItemClick
+                end
+                object IncertItem: TMenuItem
+                  AutoCheck = True
+                  Text = 'Incertitudes'
+                  OnClick = IncertItemClick
+                end
+                object ProprieteCourbe: TMenuItem
+                  Text = 'Caract'#233'ristiques'
+                  OnClick = ProprieteCourbeClick
+                end
+                object PrintGraphItem: TMenuItem
+                  Text = 'Imprimer graphe'
+                  OnClick = PrintGraphItemClick
+                end
+                object SaveGraphItem: TMenuItem
+                  Text = 'Enregistrer graphe'
+                  OnClick = SaveGraphItemClick
+                end
+                object MenuItem7: TMenuItem
+                  Text = 'Copier graphe'
+                  OnClick = CopyGraphItem
+                end
+                object IntersectionBis: TMenuItem
+                  Text = 'Trac'#233' des intersections'
+                  Visible = False
+                end
+                object RazTgItem: TMenuItem
+                  Text = 'R'#224'Z tangente'
+                  OnClick = RazTgItemClick
+                end
+              end
+              object VecteursMenu: TPopupMenu
+                Left = 752
+                Top = 88
+                object VitesseItem: TMenuItem
+                  Tag = 1
+                  GroupIndex = 1
+                  RadioItem = True
+                  Text = 'Vitesse'
+                  OnClick = VitesseItemClick
+                end
+                object AccelerItem: TMenuItem
+                  Tag = 2
+                  GroupIndex = 1
+                  RadioItem = True
+                  Text = 'Acc'#233'l'#233'ration'
+                  OnClick = VitesseItemClick
+                end
+                object VitesseAccItem: TMenuItem
+                  Tag = 3
+                  GroupIndex = 1
+                  RadioItem = True
+                  Text = 'Vitesse et acc'#233'l'#233'ration'
+                  OnClick = VitesseItemClick
+                end
+                object NoVecteursItem: TMenuItem
+                  GroupIndex = 1
+                  RadioItem = True
+                  Text = 'Pas de vecteurs'
+                  OnClick = VitesseItemClick
+                end
+                object OptionsVecteursMenu: TMenuItem
+                  GroupIndex = 1
+                  Text = 'Options'
+                  OnClick = OptionsVecteursMenuClick
+                end
+              end
+              object GrapheSaveDialog: TSaveDialog
+                DefaultExt = 'PNG'
+                Options = [ofHideReadOnly, ofPathMustExist, ofEnableSizing]
+                Left = 286
+                Top = 352
+              end
+              object Cercle: TCircle
+                Fill.Kind = None
+                Position.X = 128.000000000000000000
+                Position.Y = 128.000000000000000000
+                Size.Width = 50.000000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                Stroke.Color = claCrimson
+                Stroke.Thickness = 2.000000000000000000
+                Visible = False
+              end
+              object LineX: TLine
+                LineType = Top
+                Position.X = 168.000000000000000000
+                Position.Y = 256.000000000000000000
+                Size.Width = 50.000000000000000000
+                Size.Height = 10.000000000000000000
+                Size.PlatformDefault = False
+                Stroke.Thickness = 2.000000000000000000
+                Visible = False
+              end
+              object LineY: TLine
+                LineType = Left
+                Position.X = 416.000000000000000000
+                Position.Y = 256.000000000000000000
+                Size.Width = 10.000000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                Stroke.Thickness = 2.000000000000000000
+                Visible = False
+              end
+              object PanelAnimation: TPanel
+                Align = Right
+                Position.X = 684.000000000000000000
+                Size.Width = 150.000000000000000000
+                Size.Height = 421.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                object AnimationTB: TTrackBar
+                  Align = Top
+                  CanParentFocus = True
+                  Hint = 'Vitesse de l'#39'animation'
+                  Max = 500.000000000000000000
+                  Min = 10.000000000000000000
+                  Orientation = Horizontal
+                  Size.Width = 150.000000000000000000
+                  Size.Height = 19.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                  Value = 50.000000000000000000
+                end
+                object StopAnimBtn: TButton
+                  Images = ImagesData.ImagesList
+                  ImageIndex = 73
+                  Position.X = 82.000000000000000000
+                  Position.Y = 25.000000000000000000
+                  Size.Width = 22.000000000000000000
+                  Size.Height = 22.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 4
+                  OnClick = StopAnimBtnClick
+                end
+                object PlayAnimBtn: TButton
+                  Images = ImagesData.ImagesList
+                  ImageIndex = 70
+                  Position.X = 45.000000000000000000
+                  Position.Y = 25.000000000000000000
+                  Size.Width = 22.000000000000000000
+                  Size.Height = 22.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 3
+                  OnClick = PlayAnimBtnClick
+                end
+                object PrecedentAnimBtn: TButton
+                  Images = ImagesData.ImagesList
+                  ImageIndex = 72
+                  Position.X = 8.000000000000000000
+                  Position.Y = 25.000000000000000000
+                  Size.Width = 22.000000000000000000
+                  Size.Height = 22.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 2
+                  OnClick = PrecedentAnimBtnClick
+                end
+                object SuivantAnimBtn: TButton
+                  Images = ImagesData.ImagesList
+                  ImageIndex = 71
+                  Position.X = 120.000000000000000000
+                  Position.Y = 25.000000000000000000
+                  Size.Width = 22.000000000000000000
+                  Size.Height = 22.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 1
+                  OnClick = SuivantAnimBtnClick
+                end
+                object TitreAnimCB: TCheckBox
+                  Position.X = 8.000000000000000000
+                  Position.Y = 56.000000000000000000
+                  Size.Width = 137.000000000000000000
+                  Size.Height = 19.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 5
+                  Text = 'Bandeau de valeur'
+                  OnClick = TitreAnimCBClick
+                end
+              end
+            end
+          end
+        end
+        object PanelModele: TPanel
+          Align = Left
+          Size.Width = 260.000000000000000000
+          Size.Height = 451.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object PanelAjuste: TPanel
+            Align = Top
+            HelpContext = 603
+            Position.Y = 130.000000000000000000
+            Size.Width = 260.000000000000000000
+            Size.Height = 207.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'PanelAjusteStyle1'
+            TabOrder = 0
+            object ParamScrollBox: TScrollBox
+              Align = Client
+              Size.Width = 260.000000000000000000
+              Size.Height = 183.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+              Top = 28
+              Viewport.Width = 260.000000000000000000
+              Viewport.Height = 183.000000000000000000
+              object ParamGrid: TTMSFNCGrid
+                Align = Client
+                Size.Width = 260.000000000000000000
+                Size.Height = 183.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                Options.Editing.CalcFormat = '%g'
+                Options.Grouping.CalcFormat = '%g'
+                Options.Grouping.GroupCountFormat = '(%d)'
+                Options.IO.XMLEncoding = 'ISO-8859-1'
+                Options.Mouse.ClickMargin = 0
+                Options.Mouse.ColumnSizeMargin = 6
+                Options.Mouse.RowSizeMargin = 6
+                Columns = <
+                  item
+                    BorderWidth = 1
+                    FixedFont.Name = 'Segoe UI'
+                    FixedFont.StyleExt = {00070000000000000004000000}
+                    Font.Name = 'Segoe UI'
+                    ID = ''
+                    Width = 68.000000000000000000
+                  end
+                  item
+                    BorderWidth = 1
+                    FixedFont.Name = 'Segoe UI'
+                    FixedFont.StyleExt = {00070000000000000004000000}
+                    Font.Name = 'Segoe UI'
+                    ID = ''
+                    Width = 68.000000000000000000
+                  end
+                  item
+                    BorderWidth = 1
+                    FixedFont.Name = 'Segoe UI'
+                    FixedFont.StyleExt = {00070000000000000004000000}
+                    Font.Name = 'Segoe UI'
+                    ID = ''
+                    Width = 68.000000000000000000
+                  end
+                  item
+                    BorderWidth = 1
+                    FixedFont.Name = 'Segoe UI'
+                    FixedFont.StyleExt = {00070000000000000004000000}
+                    Font.Name = 'Segoe UI'
+                    ID = ''
+                    Width = 68.000000000000000000
+                  end
+                  item
+                    BorderWidth = 1
+                    FixedFont.Name = 'Segoe UI'
+                    FixedFont.StyleExt = {00070000000000000004000000}
+                    Font.Name = 'Segoe UI'
+                    ID = ''
+                    Width = 68.000000000000000000
+                  end>
+                DefaultFont.Name = 'Segoe UI'
+                TopRow = 1
+                Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+                Appearance.FixedLayout.Font.Name = 'Segoe UI'
+                Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+                Appearance.NormalLayout.Fill.Color = claNull
+                Appearance.NormalLayout.Font.Name = 'Segoe UI'
+                Appearance.GroupLayout.Fill.Color = xFF6E93C3
+                Appearance.GroupLayout.Font.Color = claWhite
+                Appearance.GroupLayout.Font.Name = 'Segoe UI'
+                Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
+                Appearance.SummaryLayout.Font.Name = 'Segoe UI'
+                Appearance.SelectedLayout.Fill.Color = claLightsteelblue
+                Appearance.SelectedLayout.Font.Color = claWhite
+                Appearance.SelectedLayout.Font.Name = 'Segoe UI'
+                Appearance.FocusedLayout.Fill.Color = claLightsteelblue
+                Appearance.FocusedLayout.Font.Color = claWhite
+                Appearance.FocusedLayout.Font.Name = 'Segoe UI'
+                Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
+                Appearance.FixedSelectedLayout.Font.Name = 'Segoe UI'
+                Appearance.BandLayout.Fill.Color = claLightyellow
+                Appearance.BandLayout.Font.Name = 'Segoe UI'
+                Appearance.ProgressLayout.Format = '%.0f%%'
+                LeftCol = 1
+                ScrollMode = scmItemScrolling
+                GlobalFont.Scale = 1.000000000000000000
+                GlobalFont.Style = []
+                DesignTimeSampleData = True
+                OnGetCellClass = ParamGridGetCellClass
+                OnGetCellEditorProperties = ParamGridGetCellEditorProperties
+              end
+            end
+            object Panel1: TPanel
+              Align = Top
+              Size.Width = 260.000000000000000000
+              Size.Height = 24.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 1
+              object AjusteBtn: TButton
+                Align = Left
+                Images = ImagesData.ImagesList
+                ImageIndex = 2
+                Size.Width = 90.000000000000000000
+                Size.Height = 24.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                Text = 'Ajuster'
+                OnClick = AjusteBtnClick
+              end
+              object TraceAutoCB: TCheckBox
+                Align = Left
+                IsChecked = True
+                Position.X = 90.000000000000000000
+                Size.Width = 84.000000000000000000
+                Size.Height = 24.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                Text = 'Trac'#233' auto. '
+              end
+            end
+          end
+          object ModeleToolBar: TToolBar
+            ClipChildren = True
+            ClipParent = True
+            Size.Width = 260.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            object OptionsModeleBtn0: TButton
+              Align = Left
+              Images = ImagesData.ImagesList
+              ImageIndex = 49
+              Size.Width = 80.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+              Text = 'Options'
+              TextSettings.WordWrap = True
+              OnClick = OptionsModeleBtn0Click
+            end
+            object ModeleGrBtn: TButton
+              Action = ModelesAction
+              Align = Left
+              Enabled = True
+              HelpType = htKeyword
+              Images = ImagesData.ImagesList
+              ImageIndex = 35
+              Position.X = 80.000000000000000000
+              Size.Width = 80.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 1
+              TextSettings.WordWrap = True
+            end
+            object BornesBtn: TButton
+              Action = BornesAction
+              Align = Left
+              Enabled = True
+              HelpContext = 808
+              HelpKeyword = 'Bornes'
+              Images = ImagesData.ImagesList
+              ImageIndex = 7
+              Position.X = 160.000000000000000000
+              Size.Width = 80.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 2
+              TextSettings.WordWrap = True
+            end
+            object InitEquaDiffBtn: TButton
+              Action = InitEquaDiffAction
+              Align = Left
+              Enabled = True
+              ImageIndex = -1
+              Margins.Top = 1.000000000000000000
+              Margins.Bottom = 1.000000000000000000
+              Position.X = 240.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 80.000000000000000000
+              Size.Height = 28.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 3
+              TextSettings.WordWrap = True
+              Visible = False
+              OnMouseMove = InitEquaDiffBtnMouseMove
+            end
+          end
+          object PopupMenuModele: TPopupMenu
+            Left = 72
+            Top = 96
+            object FermerItem: TMenuItem
+              ShortCut = 120
+              Text = 'Fermer mod'#233'lisation '
+              OnClick = FermerItemClick
+            end
+            object PrintModele: TMenuItem
+              Text = 'Imprimer mod'#233'lisation'
+              OnClick = PrintModeleClick
+            end
+            object RaZModele: TMenuItem
+              Text = 'R'#224'Z'
+              OnClick = RaZModeleClick
+            end
+            object ResidusItem: TMenuItem
+              Text = 'Avec r'#233'sidus'
+              OnClick = ResidusItemClick
+            end
+            object OptionsModele: TMenuItem
+              Text = 'Options de mod'#233'lisation'
+            end
+            object intersectionTer: TMenuItem
+              Text = 'Trac'#233' des intersections'
+            end
+            object ModeleIncertItem: TMenuItem
+              Text = 'Incertitudes et '#967#178
+              OnClick = IncertItemClick
+            end
+          end
+          object BornesMenu: TPopupMenu
+            Left = 171
+            Top = 96
+            object Inter1: TMenuItem
+              Tag = 1
+              Text = 'Inter'
+              OnClick = Inter1Click
+            end
+            object Inter2: TMenuItem
+              Tag = 2
+              Text = 'Inter'
+              OnClick = Inter1Click
+            end
+            object Inter3: TMenuItem
+              Tag = 3
+              Text = 'Inter'
+              OnClick = Inter1Click
+            end
+            object Inter4: TMenuItem
+              Tag = 4
+              Text = 'Inter'
+              OnClick = Inter1Click
+            end
+            object RazBornes: TMenuItem
+              Text = 'R'#224'Z des bornes'
+              OnClick = RazBornesClick
+            end
+            object IntersectionItem: TMenuItem
+              Text = 'Trac'#233' des intersections'
+              Visible = False
+              OnClick = IntersectionItemClick
+            end
+          end
+          object MemoModele: TMemo
+            Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+            DataDetectorTypes = []
+            OnChange = MemoModeleChange
+            Align = Top
+            Position.Y = 30.000000000000000000
+            Size.Width = 260.000000000000000000
+            Size.Height = 100.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 2
+            Viewport.Width = 252.000000000000000000
+            Viewport.Height = 92.000000000000000000
+          end
+          object MemoResultat: TMemo
+            Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+            DataDetectorTypes = []
+            Align = Client
+            PopupMenu = PopupMenuModele
+            Size.Width = 260.000000000000000000
+            Size.Height = 114.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'MemoResultatStyle1'
+            TabOrder = 3
+            Viewport.Width = 252.000000000000000000
+            Viewport.Height = 106.000000000000000000
+          end
+        end
+      end
+    end
+    object FFTtab: TTabItem
+      CustomIcon.Height = 20
+      CustomIcon.Width = 20
+      CustomIcon.TransparentColor = 16777215
+      CustomIcon = <
+        item
+          Width = 20
+          Height = 20
+          PNG = {
+            89504E470D0A1A0A0000000D49484452000000140000001408060000008D891D
+            0D000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+            008649444154384FDD91610A80200C855D5DCCA3E9C93C5AF9648926D8DAAA1F
+            7D201B818FAF276D19F7200BCF0A11F1A6A30B8C31F2A667F865185A5AA886B0
+            7BDD1075DE95FDB6C39F1B5EBD32C225880DA5B6AA0E67B62AC399ADF995CFB6
+            66C3760735F0B00B2194A901516B0E2809DEFB72609852524DDC476A47CEE7AD
+            47FA7DE8D086733B0F56C7D6A1D699000000000049454E44AE426082}
+          FileName = 
+            '\\Mac\Home\Documents\Embarcadero\Studio\Projets\20x20\GRPHBAR.BM' +
+            'P'
+        end>
+      IsSelected = False
+      ImageIndex = 32
+      Size.Width = 273.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Fourier'
+      ExplicitSize.cx = 239.000000000000000000
+      ExplicitSize.cy = 22.000000000000000000
+      object FourierPanel: TPanel
+        Touch.InteractiveGestures = [Zoom]
+        Align = Client
+        Size.Width = 1094.000000000000000000
+        Size.Height = 451.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+      end
+    end
+    object StatTab: TTabItem
+      CustomIcon.Height = 20
+      CustomIcon.Width = 20
+      CustomIcon.TransparentColor = 16777215
+      CustomIcon = <
+        item
+          Width = 20
+          Height = 20
+          PNG = {
+            89504E470D0A1A0A0000000D49484452000000140000001408060000008D891D
+            0D000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+            00BD49444154384FD5935B0EC3200C044D7B318E0627E368A91799C83C0C247C
+            75248449CD32A18ABB18129C73A496AFF8C8BC860FAB86C11D1863946A000260
+            AE8711BA7E65092BFBAB9FCB418A6C08BBA9E103E686CA6068081ACBBD3B7C80
+            6DD89CAC0D3B5BD5FB2786DDBFDC842D51A78C0D0781D2AFF7D62DB2677A87E8
+            299B2DDA9EDE10853C2A8DAD955563D11B4AD82B78EFF44BD9B1D235C881C52E
+            8490E713BE1C12BCF78401C394D2D18C57BCE16CA96A769F635DDDE139443FDD
+            A6F3DD5DE869580000000049454E44AE426082}
+          FileName = 
+            '\\Mac\Home\Documents\Embarcadero\Studio\Projets\20x20\GRPHstat.B' +
+            'MP'
+        end>
+      IsSelected = True
+      ImageIndex = 26
+      Size.Width = 275.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Statistique'
+      ExplicitSize.cx = 239.000000000000000000
+      ExplicitSize.cy = 22.000000000000000000
+      object StatistiquePanel: TPanel
+        Align = Client
+        Size.Width = 1094.000000000000000000
+        Size.Height = 451.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object MemoVocabulaire: TMemo
+          Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+          DataDetectorTypes = []
+          Lines.Strings = (
+            
+              'm : moyenne ; '#181'xx : intervalle de confiance sur la moyenne (ICm)' +
+              ' '#224' xx %'
+            
+              #963' : '#233'cart type ; CV : coefficient de variation  = ecart type / m' +
+              'oyenne')
+          Align = Bottom
+          Position.Y = 401.000000000000000000
+          Size.Width = 1094.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Viewport.Width = 1086.000000000000000000
+          Viewport.Height = 42.000000000000000000
+          object OptionStatBtn: TButton
+            Align = Right
+            Position.X = 1022.000000000000000000
+            Size.Width = 64.000000000000000000
+            Size.Height = 42.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            Text = 'Options'
+            OnClick = OptionsStatItemClick
+          end
+        end
+        object PanelValeursStat: TGroupBox
+          Align = Left
+          Size.Width = 233.000000000000000000
+          Size.Height = 401.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Caract'#233'ristiques'
+          TabOrder = 1
+          object StatGrid: TTMSFNCGrid
+            Align = Left
+            Size.Width = 370.000000000000000000
+            Size.Height = 320.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 42
+            Options.Editing.CalcFormat = '%g'
+            Options.Grouping.CalcFormat = '%g'
+            Options.Grouping.GroupCountFormat = '(%d)'
+            Options.IO.XMLEncoding = 'ISO-8859-1'
+            Options.Mouse.ClickMargin = 0
+            Options.Mouse.ColumnSizeMargin = 6
+            Options.Mouse.RowSizeMargin = 6
+            Columns = <
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end>
+            DefaultFont.Name = 'Segoe UI'
+            TopRow = 1
+            Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+            Appearance.FixedLayout.Font.Name = 'Segoe UI'
+            Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+            Appearance.NormalLayout.Fill.Color = claNull
+            Appearance.NormalLayout.Font.Name = 'Segoe UI'
+            Appearance.GroupLayout.Fill.Color = xFF6E93C3
+            Appearance.GroupLayout.Font.Color = claWhite
+            Appearance.GroupLayout.Font.Name = 'Segoe UI'
+            Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
+            Appearance.SummaryLayout.Font.Name = 'Segoe UI'
+            Appearance.SelectedLayout.Fill.Color = claLightsteelblue
+            Appearance.SelectedLayout.Font.Color = claWhite
+            Appearance.SelectedLayout.Font.Name = 'Segoe UI'
+            Appearance.FocusedLayout.Fill.Color = claLightsteelblue
+            Appearance.FocusedLayout.Font.Color = claWhite
+            Appearance.FocusedLayout.Font.Name = 'Segoe UI'
+            Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
+            Appearance.FixedSelectedLayout.Font.Name = 'Segoe UI'
+            Appearance.BandLayout.Fill.Color = claLightyellow
+            Appearance.BandLayout.Font.Name = 'Segoe UI'
+            Appearance.ProgressLayout.Format = '%.0f%%'
+            LeftCol = 1
+            ScrollMode = scmItemScrolling
+            GlobalFont.Scale = 1.000000000000000000
+            GlobalFont.Style = []
+            DesignTimeSampleData = True
+            object PanelStatGrid: TPanel
+              Position.X = 152.000000000000000000
+              Position.Y = 256.000000000000000000
+              TabOrder = 4
+            end
+            object ListeNom: TComboBox
+              Position.X = 144.000000000000000000
+              Position.Y = 144.000000000000000000
+              TabOrder = 5
+            end
+          end
+          object DistGrid: TTMSFNCGrid
+            Align = Bottom
+            Position.Y = 320.000000000000000000
+            Size.Width = 233.000000000000000000
+            Size.Height = 81.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 43
+            Options.Editing.CalcFormat = '%g'
+            Options.Grouping.CalcFormat = '%g'
+            Options.Grouping.GroupCountFormat = '(%d)'
+            Options.IO.XMLEncoding = 'ISO-8859-1'
+            Options.Mouse.ClickMargin = 0
+            Options.Mouse.ColumnSizeMargin = 6
+            Options.Mouse.RowSizeMargin = 6
+            Columns = <
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end>
+            DefaultFont.Name = 'Segoe UI'
+            TopRow = 1
+            Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+            Appearance.FixedLayout.Font.Name = 'Segoe UI'
+            Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+            Appearance.NormalLayout.Fill.Color = claNull
+            Appearance.NormalLayout.Font.Name = 'Segoe UI'
+            Appearance.GroupLayout.Fill.Color = xFF6E93C3
+            Appearance.GroupLayout.Font.Color = claWhite
+            Appearance.GroupLayout.Font.Name = 'Segoe UI'
+            Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
+            Appearance.SummaryLayout.Font.Name = 'Segoe UI'
+            Appearance.SelectedLayout.Fill.Color = claLightsteelblue
+            Appearance.SelectedLayout.Font.Color = claWhite
+            Appearance.SelectedLayout.Font.Name = 'Segoe UI'
+            Appearance.FocusedLayout.Fill.Color = claLightsteelblue
+            Appearance.FocusedLayout.Font.Color = claWhite
+            Appearance.FocusedLayout.Font.Name = 'Segoe UI'
+            Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
+            Appearance.FixedSelectedLayout.Font.Name = 'Segoe UI'
+            Appearance.BandLayout.Fill.Color = claLightyellow
+            Appearance.BandLayout.Font.Name = 'Segoe UI'
+            Appearance.ProgressLayout.Format = '%.0f%%'
+            LeftCol = 1
+            ScrollMode = scmItemScrolling
+            GlobalFont.Scale = 1.000000000000000000
+            GlobalFont.Style = []
+            DesignTimeSampleData = True
+          end
+        end
+        object ZoneClipBoardStat: TRectangle
+          Align = Client
+          Fill.Kind = None
+          Size.Width = 861.000000000000000000
+          Size.Height = 401.000000000000000000
+          Size.PlatformDefault = False
+          object PaintBoxStat: TPaintBox
+            Align = Client
+            PopupMenu = StatPopupMenu
+            Size.Width = 861.000000000000000000
+            Size.Height = 401.000000000000000000
+            Size.PlatformDefault = False
+            OnPaint = PaintBoxStatPaint
+          end
+        end
+      end
+    end
+  end
+  object StatPopupMenu: TPopupMenu
+    Left = 457
+    Top = 128
+    object ImprimeStatItem: TMenuItem
+      Text = 'Imprimer'
+      OnClick = ImprimeStatItemClick
+    end
+    object SaveGrapheStatItem: TMenuItem
+      Text = 'Enregistrer graphe'
+      OnClick = SaveGrapheStatItemClick
+    end
+    object CopyGrapheStatItem: TMenuItem
+      Text = 'Copier graphe'
+      OnClick = CopyGrapheStatItemClick
+    end
+    object CopyGridItem: TMenuItem
+      Text = 'Copier tableau'
+      OnClick = CopyGridItemClick
+    end
+    object OptionsStatItem: TMenuItem
+      Text = 'Options'
+      OnClick = OptionsStatItemClick
+    end
+  end
+  object LineTransitionEffect1: TLineTransitionEffect
+    Progress = 30.000000000000000000
+    FuzzyAmount = 0.100000001490116100
+  end
+  object MainMenu: TMainMenu
+    Left = 528
+    Top = 128
+    object RegressiItem: TMenuItem
+      Text = 'Regressi'
+      object AboutItem: TMenuItem
+        Locked = True
+        Text = 'A propos...'
+        OnClick = AboutItemClick
+      end
+      object OptionsItem: TMenuItem
+        Locked = True
+        Text = 'Pr'#233'f'#233'rences'
+        OnClick = OptionsItemClick
+      end
+      object ExitItem: TMenuItem
+        Locked = True
+        ShortCut = 4177
+        Text = 'Quitter'
+        OnClick = FileExitItemClick
+      end
+    end
+    object FileItem: TMenuItem
+      StyleLookup = 'menubaritemstyle'
+      Text = 'Fichier'
+      OnClick = UpdateMenuItems
+      object FileNewItem: TMenuItem
+        Locked = True
+        ShortCut = 4174
+        Text = 'Nouveau'
+        object FileNewClavierItem: TMenuItem
+          Locked = True
+          Text = 'Clavier'#8230
+          OnClick = FileNewClavierItemClick
+        end
+        object FileNewClipItem: TMenuItem
+          Locked = True
+          Text = 'Presse-Papiers'
+          OnClick = FileNewClipItemClick
+        end
+        object FileNewSimulationItem: TMenuItem
+          Locked = True
+          Text = 'Simulation'
+          OnClick = FileNewSimulationItemClick
+        end
+        object VideoItem: TMenuItem
+          Locked = True
+          Text = 'Video'
+          OnClick = VideoItemClick
+        end
+        object ChronoPhotoMenu: TMenuItem
+          Locked = True
+          Text = 'Chronophotographie'
+          OnClick = ChronoPhotoMenuClick
+        end
+        object ImageItem: TMenuItem
+          Locked = True
+          Text = 'Num'#233'risation courbes'
+          OnClick = ImageItemClick
+        end
+        object ArduinoItem: TMenuItem
+          Locked = True
+          Text = 'Arduino'
+          OnClick = ArduinoItemClick
+        end
+        object OscilloArduinoItem: TMenuItem
+          Locked = True
+          Text = 'Oscillo Arduino'
+          OnClick = OscilloArduinoItemClick
+        end
+      end
+      object FileOpenItem: TMenuItem
+        Locked = True
+        ShortCut = 4175
+        Text = 'Ouvrir...'
+        OnClick = FileOpenItemClick
+      end
+      object fileCloseItem: TMenuItem
+        Locked = True
+        ShortCut = 4183
+        Text = 'Fermer'
+        OnClick = fileCloseItemClick
+      end
+      object FileSaveItem: TMenuItem
+        Locked = True
+        ShortCut = 4179
+        Text = 'Enregistrer'
+        OnClick = FileSaveItemClick
+      end
+      object FileSaveAsItem: TMenuItem
+        Locked = True
+        ShortCut = 12371
+        Text = 'Enregistrer sous...'
+        OnClick = FileSaveAsItemClick
+      end
+      object FileAddItem: TMenuItem
+        Locked = True
+        Text = 'Fusionner'
+        OnClick = FileAddItemClick
+      end
+      object FilePrintItem: TMenuItem
+        Locked = True
+        ShortCut = 4176
+        Text = 'Imprimer...'
+        OnClick = FilePrintItemClick
+      end
+      object PrintPdfItem: TMenuItem
+        Locked = True
+        Text = 'Exporter PDF...'
+        OnClick = PrintPdfItemClick
+      end
+      object MRUseparator: TMenuItem
+        Locked = True
+        Text = '-'
+      end
+      object MenuItem0: TMenuItem
+        Locked = True
+        Text = 'MenuItem0'
+        OnClick = MruItemClick
+      end
+      object MenuItem1: TMenuItem
+        Tag = 1
+        Locked = True
+        Text = 'MenuItem1'
+        OnClick = MruItemClick
+      end
+      object MenuItem2: TMenuItem
+        Tag = 2
+        Locked = True
+        Text = 'MenuItem2'
+        OnClick = MruItemClick
+      end
+      object MenuItem3: TMenuItem
+        Tag = 3
+        Locked = True
+        Text = 'MenuItem3'
+        OnClick = MruItemClick
+      end
+      object MenuItem4: TMenuItem
+        Tag = 4
+        Locked = True
+        Text = 'MenuItem4'
+        OnClick = MruItemClick
+      end
+      object MenuItem5: TMenuItem
+        Tag = 5
+        Locked = True
+        Text = 'MenuItem5'
+        OnClick = MruItemClick
+      end
+    end
+    object EditionItem: TMenuItem
+      GroupIndex = 1
+      StyleLookup = 'menubaritemstyle'
+      Text = 'Edition'
+      OnClick = EditionItemClick
+      object UndoItem: TMenuItem
+        Locked = True
+        ShortCut = 4186
+        Text = 'Annuler suppression'
+        OnClick = UndoItemClick
+      end
+      object CutItem: TMenuItem
+        Tag = 1
+        Locked = True
+        ShortCut = 4184
+        Text = 'Couper'
+      end
+      object CopyItem: TMenuItem
+        Tag = 2
+        Locked = True
+        ShortCut = 4163
+        Text = 'Copier'
+      end
+      object PasteItem: TMenuItem
+        Tag = 3
+        Locked = True
+        ShortCut = 4182
+        Text = 'Coller'
+      end
+      object DeleteItem: TMenuItem
+        Tag = 4
+        Locked = True
+        ShortCut = 16430
+        Text = 'Supprimer'
+      end
+      object N1: TMenuItem
+        Locked = True
+        Text = '-'
+      end
+      object CollerPageItem: TMenuItem
+        Locked = True
+        Text = 'Coller page'
+        OnClick = CollerPageItemClick
+      end
+      object CollerNewDocItem: TMenuItem
+        Locked = True
+        Text = 'Coller document'
+        OnClick = FileNewClipItemClick
+      end
+      object UtilisateurSepar: TMenuItem
+        Locked = True
+        Text = '-'
+      end
+      object RecupItem: TMenuItem
+        Locked = True
+        Text = 'R'#233'cup'#233'ration sauvegarde auto.'
+        OnClick = RecupItemClick
+      end
+      object GrecItem: TMenuItem
+        Action = GrecAction
+        Enabled = True
+        Locked = True
+        ImageIndex = -1
+      end
+      object FiltreItem: TMenuItem
+        Locked = True
+        Text = 'Options filtrage'
+        OnClick = MenuItem6Click
+      end
+    end
+    object PagesItem: TMenuItem
+      GroupIndex = 4
+      StyleLookup = 'PagesItemStyle1'
+      Text = 'Pages'
+      OnClick = PagesItemClick
+      object PageSuivItem: TMenuItem
+        Locked = True
+        ShortCut = 119
+        StyleLookup = 'PageSuivItemStyle1'
+        Text = 'Suivante'
+        OnClick = PageSuivClick
+      end
+      object PagePrecItem: TMenuItem
+        Locked = True
+        ShortCut = 118
+        Text = 'Pr'#233'c'#233'dente'
+        OnClick = PagePrecClick
+      end
+      object PageDelItem: TMenuItem
+        Locked = True
+        Text = 'Supprimer'
+        OnClick = PageDelClick
+      end
+      object PageNewItem: TMenuItem
+        Locked = True
+        Text = 'Nouvelle'
+        OnClick = PageAddClick
+      end
+      object PageNewClipItem: TMenuItem
+        Locked = True
+        Text = 'Presse-papiers'
+        OnClick = CollerPageItemClick
+      end
+      object PageTrierItem: TMenuItem
+        Locked = True
+        Text = 'Trier'
+      end
+      object PageSelectItem: TMenuItem
+        Locked = True
+        Text = 'Selectionner'
+        OnClick = PageSelectItemClick
+      end
+    end
+    object HelpItem: TMenuItem
+      GroupIndex = 6
+      StyleLookup = 'menubaritemstyle'
+      Text = 'Aide'
+      object AideItem: TMenuItem
+        Locked = True
+        Text = 'Aide Regressi'
+        OnClick = AideItemClick
+      end
+      object TOCitem: TMenuItem
+        Locked = True
+        Text = 'Aide PDF'
+        OnClick = TOCitemClick
+      end
+      object ListeRegItem: TMenuItem
+        Locked = True
+        Text = 'Liste Regressi'
+        OnClick = ListeRegItemClick
+      end
+      object WebItem: TMenuItem
+        Locked = True
+        Text = 'Site auteur'
+        OnClick = WebItemClick
+      end
+      object LangItem: TMenuItem
+        Locked = True
+        Text = 'Language'
+        object FrenchMenu: TMenuItem
+          Action = FrenchAction
+          Enabled = True
+          Locked = True
+          ImageIndex = -1
+        end
+        object EnglishMenu: TMenuItem
+          Action = EnglishAction
+          Enabled = True
+          Locked = True
+          ImageIndex = -1
+        end
+      end
+      object ExemplesItem: TMenuItem
+        Locked = True
+        Text = 'Exemples'
+        OnClick = ExemplesItemClick
+      end
+    end
+  end
+  object StatusBar: TStatusBar
+    Position.Y = 505.000000000000000000
+    ShowSizeGrip = True
+    Size.Width = 1094.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    object Aide: TLabel
+      Align = Client
+      Size.Width = 1094.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'S'#233'lectionner Fichier Nouveau ou Ouvrir'
+    end
+  end
+  object Lang1: TLang
+    Lang = 'fr'
+    Left = 466
+    Top = 335
+    ResourcesBin = {
+      980B00004400610072006B00740075007200710075006F006900730065000D00
+      0A00540075007200710075006F006900730065000D000A004200750074007400
+      6F006E000D000A004D0065006400690075006D00760069006F006C0065007400
+      7200650064000D000A004C0069006700680074006300790061006E000D000A00
+      590065006C006C006F00770067007200650065006E000D000A00440061007200
+      6B0073006C0061007400650067007200650079000D000A006900500061006400
+      0D000A006900500068006F006E0065000D000A006900500068006F006E006500
+      200035000D000A005000E9007200690070006800E90072006900710075006500
+      200070006500720073006F006E006E0061006C0069007300E9000D000A005600
+      61006C0065007500720073000D000A0046006F00720065007300740067007200
+      650065006E000D000A004C006100760065006E006400650072000D000A004C00
+      690067006800740073006C0061007400650067007200610079000D000A005300
+      6C0061007400650067007200610079000D000A004D0065006400690075006D00
+      70007500720070006C0065000D000A0041007100750061000D000A004F006C00
+      6900760065000D000A004400610072006B006B00680061006B0069000D000A00
+      53006100640064006C006500620072006F0077006E000D000A0052006F007900
+      61006C0062006C00750065000D000A0044006F00640067006500720062006C00
+      750065000D000A0047006F006C0064000D000A00420065006900670065000D00
+      0A004C006100760065006E0064006500720062006C007500730068000D000A00
+      4F006C0064006C006100630065000D000A00500061006C00650067006F006C00
+      640065006E0072006F0064000D000A005A006F006F006D002000610072002E00
+      0D000A0054006F006D00610074006F000D000A004C006100620065006C004400
+      65006C007400610058000D000A0047007200650079000D000A004C0069006700
+      68007400730061006C006D006F006E000D000A004400610072006B0073006500
+      610067007200650065006E000D000A004D0069006E0074006300720065006100
+      6D000D000A004300720069006D0073006F006E000D000A00560069006F006C00
+      650074000D000A004200750072006C00790077006F006F0064000D000A004400
+      610072006B006300790061006E000D000A004700720061007000680065000D00
+      0A004C0069006D0065000D000A004E000D000A0049006E006400690061006E00
+      7200650064000D000A0041006C0069006300650062006C00750065000D000A00
+      4400610072006B007200650064000D000A004C00690067006800740070006900
+      6E006B000D000A004C0069006700680074007300650061006700720065006500
+      6E000D000A00570068006500610074000D000A00440069006D00670072006500
+      79000D000A005300650061007300680065006C006C000D000A00520065006400
+      0D000A0041006E0074006900710075006500770068006900740065000D000A00
+      440065006500700073006B00790062006C00750065000D000A00410071007500
+      61006D006100720069006E0065000D000A0041007A007500720065000D000A00
+      4200690073007100750065000D000A0042006C00610063006B000D000A004200
+      6C0061006E00630068006500640061006C006D006F006E0064000D000A004200
+      6C00750065000D000A0042006C0075006500760069006F006C00650074000D00
+      0A00420072006F0077006E000D000A004300610064006500740062006C007500
+      65000D000A0043006800610072007400720065007500730065000D000A004300
+      68006F0063006F006C006100740065000D000A0043006F00720061006C000D00
+      0A0043006F0072006E0066006C006F0077006500720062006C00750065000D00
+      0A0043006F0072006E00730069006C006B000D000A004300790061006E000D00
+      0A004400610072006B0062006C00750065000D000A004400610072006B006700
+      6F006C00640065006E0072006F0064000D000A004400610072006B0067007200
+      610079000D000A004400610072006B0067007200650065006E000D000A004400
+      610072006B0067007200650079000D000A004400610072006B006D0061006700
+      65006E00740061000D000A004400610072006B006F006C006900760065006700
+      7200650065006E000D000A004400610072006B006F00720061006E0067006500
+      0D000A004400610072006B006F00720063006800690064000D000A0044006100
+      72006B00730061006C006D006F006E000D000A004400610072006B0073006C00
+      61007400650062006C00750065000D000A004400610072006B0073006C006100
+      7400650067007200610079000D000A004400610072006B00760069006F006C00
+      650074000D000A004400650065007000700069006E006B000D000A0044006900
+      6D0067007200610079000D000A00460069007200650062007200690063006B00
+      0D000A0046006C006F00720061006C00770068006900740065000D000A004600
+      7500630068007300690061000D000A004700610069006E00730062006F007200
+      6F000D000A00470068006F0073007400770068006900740065000D000A004700
+      6F006C00640065006E0072006F0064000D000A0047007200610079000D000A00
+      47007200650065006E000D000A0047007200650065006E00790065006C006C00
+      6F0077000D000A0048006F006E00650079006400650077000D000A0048006F00
+      7400700069006E006B000D000A0049006E006400690067006F000D000A004900
+      76006F00720079000D000A004B00680061006B0069000D000A004C0061007700
+      6E0067007200650065006E000D000A004C0065006D006F006E00630068006900
+      660066006F006E000D000A004C00690067006800740062006C00750065000D00
+      0A004C00690067006800740063006F00720061006C000D000A004C0069006700
+      6800740067006F006C00640065006E0072006F006400790065006C006C006F00
+      77000D000A004C00690067006800740067007200610079000D000A004C006900
+      67006800740067007200650065006E000D000A004C0069006700680074006700
+      7200650079000D000A004C00690067006800740073006B00790062006C007500
+      65000D000A004C00690067006800740073006C00610074006500670072006500
+      79000D000A004C00690067006800740073007400650065006C0062006C007500
+      65000D000A004C006900670068007400790065006C006C006F0077000D000A00
+      4C0069006D00650067007200650065006E000D000A004C0069006E0065006E00
+      0D000A004D006100670065006E00740061000D000A004D00610072006F006F00
+      6E000D000A004D0065006400690075006D0061007100750061006D0061007200
+      69006E0065000D000A004D0065006400690075006D0062006C00750065000D00
+      0A004D0065006400690075006D006F00720063006800690064000D000A004D00
+      65006400690075006D0073006500610067007200650065006E000D000A004D00
+      65006400690075006D0073006C0061007400650062006C00750065000D000A00
+      4D0065006400690075006D0073007000720069006E0067006700720065006500
+      6E000D000A004D0065006400690075006D00740075007200710075006F006900
+      730065000D000A004D00690064006E00690067006800740062006C0075006500
+      0D000A004D00690073007400790072006F00730065000D000A004D006F006300
+      63006100730069006E000D000A004E006100760061006A006F00770068006900
+      740065000D000A004E006100760079000D000A004F006C006900760065006400
+      7200610062000D000A004F00720061006E00670065000D000A004F0072006100
+      6E00670065007200650064000D000A004F00720063006800690064000D000A00
+      500061006C00650067007200650065006E000D000A00500061006C0065007400
+      75007200710075006F006900730065000D000A00500061006C00650076006900
+      6F006C00650074007200650064000D000A005000610070006100790061007700
+      6800690070000D000A005000650061006300680070007500660066000D000A00
+      50006500720075000D000A00500069006E006B000D000A0050006C0075006D00
+      0D000A0050006F00770064006500720062006C00750065000D000A0050007500
+      720070006C0065000D000A0052006F0073007900620072006F0077006E000D00
+      0A00530061006C006D006F006E000D000A00530061006E006400790062007200
+      6F0077006E000D000A0053006500610067007200650065006E000D000A005300
+      690065006E006E0061000D000A00530069006C007600650072000D000A005300
+      6B00790062006C00750065000D000A0053006C0061007400650062006C007500
+      65000D000A0053006C0061007400650067007200650079000D000A0053006E00
+      6F0077000D000A0053007000720069006E00670067007200650065006E000D00
+      0A0053007400650065006C0062006C00750065000D000A00540061006E000D00
+      0A005400650061006C000D000A00540068006900730074006C0065000D000A00
+      570068006900740065000D000A005700680069007400650073006D006F006B00
+      65000D000A00590065006C006C006F0077000D000A004E0075006C006C000D00
+      0A005400720061006300E90020006100750074006F002E0020000D000A005200
+      650067007200650073007300690020004D00610063000D000A00410075007400
+      6F000D000A004D006F006400E9006C00690073006100740069006F006E000D00
+      0A00310030002F00340035000D000A003C000D000A004C006100620065006C00
+      440065006C007400610059000D000A003E000D000A004F004B000D000A004C00
+      6100620065006C0059000D000A0041006A00750073007400650072000D000A00
+      2B000D000A0046006F00750072006900650072000D000A005600650072007300
+      69006F006E002000E00020006A006F00750072000D000A0041006E0067006C00
+      65000D000A00530065006C006500630074002E000D000A004F00750074006900
+      6C0073002000670072002E000D000A0049006E00690074002000440069006600
+      66002E000D000A00460069007800650064002000440072006F00700044006F00
+      77006E0042007500740074006F006E00200069006D006100670065000D000A00
+      5200E900730075006C00740061007400730020006400650020006C0061002000
+      6D006F006400E9006C00690073006100740069006F006E000D000A0041006900
+      640065000D000A0043006F006C0075006D006E00200044007200610067002000
+      4C00610079006F00750074000D000A00430061007200610063007400E9007200
+      690073007400690071007500650073000D000A0031000D000A00530074006100
+      740069007300740069007100750065000D000A004A00650061006E002D004D00
+      69006300680065006C0020004D0049004C004C00450054002000610073007300
+      6F00630069006100740069006F006E0020004500560041005200490053005400
+      45000D000A004F007000740069006F006E0073000D000A004C00690073007400
+      65002000520065006700720065007300730069002D00640065006D006F002000
+      E00020003A000D000A004D006F006400E8006C00650073000D000A004C006100
+      620065006C0058000D000A00450078007000720065007300730069006F006E00
+      20006400750020006D006F006400E8006C0065000D000A006800740074007000
+      3A002F002F00660072002E00670072006F007500700073002E00790061006800
+      6F006F002E0063006F006D002F00670072006F00750070002F00720065006700
+      720065007300730069002D00640065006D006F000D000A0052006F0077002000
+      440072006100670020004C00610079006F00750074000D000A004C006F007500
+      700065000D000A00560065006300740065007500720073000D000A0053006F00
+      75007200630065000D000A0042006F0072006E00650073000D000A0043006F00
+      6F00720064002E000D000A007200650067007200650073007300690040006F00
+      720061006E00670065002E00660072000D000A00430075007200730065007500
+      72000D000A005000E900720069006F00640065000D000A0053006F006E006100
+      67002E000D000A00540065006D00700073000D000A0020005200610069006500
+      73002000610066006600690063006800E9006500730020003A0020000D000A00
+      520065006300740061006E0067006C0065000D000A00480061006D006D006900
+      6E0067000D000A0054006F0069007400200070006C00610074000D000A004200
+      6C00610063006B006D0061006E000D000A0052006500630074002E0020006300
+      6F007200720069006700E90065000D000A0045006E0072006500670069007300
+      74007200650072000D000A005400720061006900740065006D0065006E007400
+      73000D000A0043006800610072006700650072000D000A004C00690073007300
+      6100670065000D000A0078003D000D000A0055006E0069007400E9000D000A00
+      5200E0005A000D000A00440069006D0065006E00730069006F006E000D000A00
+      49006E006400650078000D000A004D00650073007500720065000D000A004900
+      6E00740065006E00730069007400E9000D000A00440069007300740061006E00
+      630065000D000A00560065007200730069006F006E00200031002E0030002E00
+      370020003B002000440065006C00700068006900200058004500310030002E00
+      310020003B002000310032002F00310032002F0032003000310036000D000A00
+      4700720061006E00640065007500720073000D000A005300E9006C0065006300
+      740069006F006E006E0065007200200046006900630068006900650072002000
+      4E006F007500760065006100750020006F00750020004F007500760072006900
+      72000D000A004E006F006D006200720065000D000A0041006D0070006C006900
+      74007500640065000D000A004400E9006200750074000D000A00410062006100
+      6E0064006F006E000D000A004300690062006C0065000D000A004E006F006D00
+      0D000A0041006600660069006300680061006700650020006700720061007000
+      680069007100750065000D000A00B10032002000C3030D000A00B10033002000
+      C3030D000A00490043006D002000E000200039003500200025000D000A004900
+      43006D002000E000200039003900200025000D000A0043006F00750072006200
+      65002000640065002000470061007500730073000D000A004400690073007400
+      7200690062007500740069006F006E000D000A004D00E9006400690061006E00
+      65000D000A004D006F00790065006E006E00650020006D000D000A0044006900
+      730074007200690062007500740069006F006E00200064006500200050006F00
+      6900730073006F006E000D000A005400720061006300E9002000640065002000
+      6700720069006C006C0065000D000A0044006900730074007200690062007500
+      740069006F006E002000620069006E006F006D00690061006C0065000D000A00
+      B1002000C3030D000A004E006F0074006100740069006F006E000D000A004500
+      66006600650063007400690066000D000A004100750074006F006D0061007400
+      69007100750065000D000A004E006F006D006200720065002000640065002000
+      63006C0061007300730065007300200069006D0070006F007300E9000D000A00
+      41006D0070006C00690074007500640065002000640065007300200063006C00
+      61007300730065007300200069006D0070006F007300E90065000D000A004500
+      660066006500630074006900660020006500740020006D006F00790065006E00
+      6E006500200064006F006E006E00E90073000D000A0046007200E90071007500
+      65006E006300650020006500740020006D006F00790065006E006E0065002000
+      64006F006E006E00E900650073000D000A002A000D000A004500780070007200
+      65007300730069006F006E0073000D000A004700720061007000680065002000
+      46006F00750072006900650072000D000A005000440046000D000A0054006500
+      730074000D000A004200610063006B000D000A00020000000200000066007200
+      000000000200000065006E005A0400004C006F007500700065003D004D006100
+      67006E00690066006900650072000D000A0042006F0072006E00650073003D00
+      42006F0075006E006400610072006900650073000D000A005300740061007400
+      69007300740069007100750065003D0053007400610074006900730074006900
+      630073000D000A0041006A00750073007400650072003D0042006F0075006E00
+      64006100720079000D000A0041006900640065003D00480065006C0070000D00
+      0A007200650067007200650073007300690040006F00720061006E0067006500
+      2E00660072003D0042006F0075006E0064006100720079000D000A0056006500
+      6300740065007500720073003D0056006500630074006F00720073000D000A00
+      44006F00640067006500720062006C00750065003D0042006F0075006E006400
+      6100720079000D000A005200E0005A003D00520065007300650074000D000A00
+      540065006D00700073003D00540069006D0065000D000A0054006F0069007400
+      200070006C00610074003D0046006C0061007400200074006F0070000D000A00
+      45006E007200650067006900730074007200650072003D005300610076006500
+      0D000A0043006800610072006700650072003D004F00700065006E000D000A00
+      55006E0069007400E9003D0055006E00690074000D000A005200650067007200
+      650073007300690020004D00610063003D005200650067007200650073007300
+      69000D000A004D00650073007500720065003D004D0065006100730075007200
+      65000D000A0049006E00740065006E00730069007400E9003D0049006E007400
+      65006E0073006900740079000D000A0043006F0075006C006500750072002000
+      6400650020007400720061006300E9003D0050006C006F007400200063006F00
+      6C006F0072000D000A004D006F006400E8006C00650073003D004D006F006400
+      65006C0073000D000A00430061007200610063007400E9007200690073007400
+      690071007500650073003D004300680061007200610063007400650072006900
+      730074006900630073000D000A005200E900730075006C007400610074007300
+      20006400650020006C00610020006D006F006400E9006C006900730061007400
+      69006F006E003D0052006500730075006C00740020006F006600200066006900
+      7400740069006E0067000D000A0053006F006E00610067002E003D0053006F00
+      6E006F006700720061006D000D000A005000E900720069006F00640065003D00
+      50006500720069006F0064000D000A0043007500720073006500750072003D00
+      43007500720073006F0072000D000A005400720061006900740065006D006500
+      6E00740073003D00500072006F00630065007300730069006E0067000D000A00
+      4C006900730073006100670065003D0053006D006F006F007400680069006E00
+      67000D000A004C006F006E006700750065007500720020006400650020006C00
+      2700E9006300680065006C006C0065003D005300630061006C00650020006C00
+      65006E006700740068000D000A0045006300680065006C006C0065003D005300
+      630061006C0065000D000A004F0072006900670069006E006500200064006500
+      20006C002700E9006300680065006C006C0065003D005300630061006C006500
+      20006F0072006900670069006E000D000A00560065007200730069006F006E00
+      200031002E003400310020003B002000440065006C0070006800690020005800
+      4500310030002E00320020003B002000330030002F00300031002F0032003000
+      310038003D00520065006C006500610073006500200031002E00340031002000
+      440065006C007000680069002000580045002000310030002E00320020003300
+      31002F00300031002F0032003000310038000D000A004E006F006D0062007200
+      6500200064006500200063006C0061007300730065007300200069006D007000
+      6F007300E9003D006E0075006D0062006500720020006F006600200063006C00
+      61007300730065007300200069006D0070006F007300650064000D000A004100
+      6D0070006C00690074007500640065002000640065007300200063006C006100
+      7300730065007300200069006D0070006F007300E90065003D0069006D007000
+      6F00730065006400200063006C00610073007300200061006D0070006C006900
+      74007500640065000D000A005400720061006300E90020006400650020006700
+      720069006C006C0065003D00670072006900640020006C00610079006F007500
+      74000D000A004D006F00790065006E006E00650020006D003D004D0065006100
+      6E0020006D000D000A004D00E9006400690061006E0065003D004D0065006400
+      690061006E000D000A0043006F00750072006200650020006400650020004700
+      61007500730073003D0047006100750073007300200063007500720076006500
+      0D000A004E006F006D003D004E0061006D0065000D000A004100620061006E00
+      64006F006E003D004500730063006100700065000D000A004100750074006F00
+      6D006100740069007100750065003D004100750074006F006D00610074006900
+      63000D000A0044006900730074007200690062007500740069006F006E002000
+      64006500200050006F006900730073006F006E003D0050006F00690073007300
+      6F006E00200064006900730074007200690062007500740069006F006E000D00
+      0A00410066006600690063006800610067006500200067007200610070006800
+      69007100750065003D0047007200610070006800690063002000640069007300
+      70006C00610079000D000A004E006F006D006200720065003D004E0075006D00
+      6200650072000D000A004F007500740069006C0073002000670072002E003D00
+      54006F006F006C0073000D000A004400E9006200750074003D00530074006100
+      720074000D000A0044006900730074007200690062007500740069006F006E00
+      2000620069006E006F006D00690061006C0065003D00420069006E006F006D00
+      690061006C00200064006900730074007200690062007500740069006F006E00
+      0D000A00}
+  end
+  object TimerDemarrage: TTimer
+    Enabled = False
+    OnTimer = TimerDemarrageTimer
+    Left = 612
+    Top = 300
+  end
+  object TimerStat: TTimer
+    Enabled = False
+    Interval = 800
+    OnTimer = TimerStatTimer
+    Left = 588
+    Top = 356
+  end
+  object timerLoupe: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = TimerLoupeTimer
+    Left = 456
+    Top = 248
+  end
+  object TimerAnimation: TTimer
+    Enabled = False
+    OnTimer = TimerAnimationTimer
+    Left = 716
+    Top = 316
+  end
+  object ActionList1: TActionList
+    Left = 703
+    Top = 394
+    object InitEquaDiffAction: TAction
+      Text = 'Init Diff.'
+      Hint = 'Valeurs initiales '#233'qua. diff.'
+    end
+    object BornesAction: TAction
+      Text = 'Bornes'
+      Hint = 'red'#233'finition des bornes'
+      OnExecute = BornesBtnClick
+    end
+    object ModelesAction: TAction
+      Text = 'Mod'#232'les'
+      Hint = 'mod'#233'les pr'#233'd'#233'finis'
+      OnExecute = ModelesActionExecute
+    end
+    object GrecAction: TAction
+      Text = 'Grec'
+      ShortCut = 16455
+      OnExecute = GrecActionExecute
+    end
+    object ControlAction: TAction
+      Text = 'Control+'
+      ShortCut = 16451
+    end
+    object EnglishAction: TAction
+      Text = 'English'
+      OnExecute = EnglishActionExecute
+    end
+    object FrenchAction: TAction
+      Text = 'Fran'#231'ais'
+      OnExecute = FrenchActionExecute
+    end
+  end
+  object GestureManager1: TGestureManager
+    Sensitivity = 80.000000000000000000
+    Left = 472
+    Top = 407
+  end
+end

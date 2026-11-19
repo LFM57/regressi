@@ -1,0 +1,374 @@
+object StatOptDlg: TStatOptDlg
+  Left = 136
+  Top = 131
+  ActiveControl = OKBtn
+  BorderIcons = [biSystemMenu, biHelp]
+  BorderStyle = Single
+  Caption = 'Statistique'
+  ClientHeight = 397
+  ClientWidth = 452
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  Left = 136
+  Top = 131
+  DesignerMasterStyle = 0
+  object LabelNombre: TLabel
+    AutoSize = True
+    Position.X = 8.000000000000000000
+    Position.Y = 127.000000000000000000
+    Size.Width = 44.000000000000000000
+    Size.Height = 16.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.WordWrap = False
+    Text = 'Nombre'
+  end
+  object LabelAmplitude: TLabel
+    AutoSize = True
+    Position.X = 8.000000000000000000
+    Position.Y = 155.000000000000000000
+    Size.Width = 56.000000000000000000
+    Size.Height = 16.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.WordWrap = False
+    Text = 'Amplitude'
+  end
+  object LabelDebut: TLabel
+    AutoSize = True
+    Position.X = 7.000000000000000000
+    Position.Y = 177.000000000000000000
+    Size.Width = 33.000000000000000000
+    Size.Height = 16.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.WordWrap = False
+    Text = 'D'#233'but'
+  end
+  object OKBtn: TButton
+    StyledSettings = [FontColor]
+    Images = ImagesData.ImagesList
+    ImageIndex = 10
+    ModalResult = 1
+    Position.X = 354.000000000000000000
+    Position.Y = 10.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    Text = 'OK'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnClick = OKBtnClick
+  end
+  object CancelBtn: TButton
+    StyledSettings = [FontColor]
+    Images = ImagesData.ImagesList
+    ImageIndex = 53
+    ModalResult = 2
+    Position.X = 354.000000000000000000
+    Position.Y = 64.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    Text = 'Abandon'
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+  object HelpBtn: TButton
+    StyledSettings = [FontColor]
+    HelpContext = 803
+    Images = ImagesData.ImagesList
+    ImageIndex = 5
+    ModalResult = 9
+    Position.X = 354.000000000000000000
+    Position.Y = 119.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+    Text = 'Aide'
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+  object NombreSpin: TSpinBox
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 6
+    Cursor = crIBeam
+    Max = 10.000000000000000000
+    Value = 10.000000000000000000
+    KeyboardType = Default
+    Position.X = 76.000000000000000000
+    Position.Y = 119.000000000000000000
+    TextSettings.Font.Size = 15.000000000000000000
+    Size.Width = 70.000000000000000000
+    Size.Height = 20.000000000000000000
+    Size.PlatformDefault = False
+    StyledSettings = [Style, FontColor]
+  end
+  object EditAmplitude: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 7
+    TextSettings.Font.Size = 13.000000000000000000
+    Position.X = 76.000000000000000000
+    Position.Y = 147.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+    StyledSettings = [Size, Style, FontColor]
+  end
+  object EditCible: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 8
+    TextSettings.Font.Size = 13.000000000000000000
+    Position.X = 76.000000000000000000
+    Position.Y = 197.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+    StyledSettings = [Size, Style, FontColor]
+  end
+  object CibleCB: TCheckBox
+    Position.X = 8.000000000000000000
+    Position.Y = 202.000000000000000000
+    Size.Width = 55.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 9
+    Text = 'Cible'
+    OnClick = CibleCBClick
+  end
+  object NomGroupe: TGroupBox
+    Position.X = 230.000000000000000000
+    Size.Width = 121.000000000000000000
+    Size.Height = 150.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Nom'
+    TabOrder = 10
+    object ListeGr: TListBox
+      Align = Bottom
+      Position.Y = 16.000000000000000000
+      Size.Width = 121.000000000000000000
+      Size.Height = 134.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      DisableFocusEffect = True
+      DefaultItemStyles.ItemStyle = ''
+      DefaultItemStyles.GroupHeaderStyle = ''
+      DefaultItemStyles.GroupFooterStyle = ''
+      Viewport.Width = 121.000000000000000000
+      Viewport.Height = 134.000000000000000000
+    end
+  end
+  object EditDebut: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 11
+    TextSettings.Font.Size = 13.000000000000000000
+    Position.X = 76.000000000000000000
+    Position.Y = 172.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+    StyledSettings = [Size, Style, FontColor]
+  end
+  object GrapheGB: TGroupBox
+    Align = Bottom
+    Position.Y = 234.000000000000000000
+    Size.Width = 452.000000000000000000
+    Size.Height = 78.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Affichage graphique'
+    TabOrder = 12
+    object int2SigmaCB: TCheckBox
+      Position.X = 104.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 50.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = #177'2 '#963
+    end
+    object int3SigmaCB: TCheckBox
+      Position.X = 104.000000000000000000
+      Position.Y = 36.000000000000000000
+      Size.Width = 50.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = #177'3 '#963
+    end
+    object t95CB: TCheckBox
+      Position.X = 8.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 90.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'ICm '#224' 95 %'
+    end
+    object t99CB: TCheckBox
+      Position.X = 8.000000000000000000
+      Position.Y = 36.000000000000000000
+      Size.Width = 90.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'ICm '#224' 99 %'
+    end
+    object CourbeGaussCB: TCheckBox
+      Position.X = 276.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 150.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      Text = 'Courbe de Gauss'
+    end
+    object DistributionCB: TCheckBox
+      Position.X = 8.000000000000000000
+      Position.Y = 56.000000000000000000
+      Size.Width = 90.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      Text = 'Distribution'
+    end
+    object MedianeCB: TCheckBox
+      Position.X = 160.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 112.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 6
+      Text = 'M'#233'diane'
+    end
+    object MoyenneCB: TCheckBox
+      Position.X = 160.000000000000000000
+      Position.Y = 36.000000000000000000
+      Size.Width = 112.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 7
+      Text = 'Moyenne m'
+    end
+    object CourbePoissonCB: TCheckBox
+      Position.X = 276.000000000000000000
+      Position.Y = 56.000000000000000000
+      Size.Width = 165.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 8
+      Text = 'Distribution de Poisson'
+    end
+    object GrilleCB: TCheckBox
+      Position.X = 160.000000000000000000
+      Position.Y = 56.000000000000000000
+      Size.Width = 112.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 9
+      Text = 'Trac'#233' de grille'
+    end
+    object CourbeBinomeCB: TCheckBox
+      Position.X = 276.000000000000000000
+      Position.Y = 36.000000000000000000
+      Size.Width = 150.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 10
+      Text = 'Distribution binomiale'
+    end
+    object Int1SigmaCB: TCheckBox
+      Position.X = 104.000000000000000000
+      Position.Y = 56.000000000000000000
+      Size.Width = 50.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 11
+      Text = #177' '#963
+    end
+  end
+  object GroupBox1: TGroupBox
+    Align = Bottom
+    Position.Y = 312.000000000000000000
+    Size.Width = 452.000000000000000000
+    Size.Height = 85.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Notation'
+    TabOrder = 13
+    object Memo1: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      Lines.Strings = (
+        'ICmxx : intervalle de confiance sur la moyenne '#224' xx %'
+        #963' : '#233'cart type'
+        'inexactitude : '#233'cart entre cible et moyenne'
+        'CV : coefficient de variation  = ecart type / moyenne')
+      Align = Client
+      Size.Width = 452.000000000000000000
+      Size.Height = 85.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Viewport.Width = 452.000000000000000000
+      Viewport.Height = 85.000000000000000000
+    end
+  end
+  object EffectifGB: TGroupBox
+    Position.X = 232.000000000000000000
+    Position.Y = 152.000000000000000000
+    Size.Width = 121.000000000000000000
+    Size.Height = 57.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Effectif'
+    TabOrder = 14
+    object EffectifCB: TComboBox
+      ItemHeight = 15.000000000000000000
+      ListBoxResource = 'transparentlistboxstyle'
+      Position.X = 4.000000000000000000
+      Position.Y = 22.000000000000000000
+      Size.Width = 113.000000000000000000
+      Size.Height = 23.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+    end
+  end
+  object ClasseGroupe: TListBox
+    Position.X = 8.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 201.000000000000000000
+    Size.Height = 100.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 15
+    DisableFocusEffect = True
+    DefaultItemStyles.ItemStyle = ''
+    DefaultItemStyles.GroupHeaderStyle = ''
+    DefaultItemStyles.GroupFooterStyle = ''
+    OnChange = ClasseGroupeClick
+    Viewport.Width = 201.000000000000000000
+    Viewport.Height = 100.000000000000000000
+    object TListBoxItem
+      TabOrder = 0
+      Text = 'Automatique'
+    end
+    object TListBoxItem
+      Position.Y = 19.000000000000000000
+      TabOrder = 1
+      Text = 'Nombre de classes impos'#233
+    end
+    object TListBoxItem
+      Position.Y = 38.000000000000000000
+      TabOrder = 2
+      Text = 'Amplitude des classes impos'#233'e'
+    end
+    object TListBoxItem
+      Position.Y = 57.000000000000000000
+      TabOrder = 3
+      Text = 'Effectif et moyenne donn'#233's'
+    end
+    object TListBoxItem
+      Position.Y = 76.000000000000000000
+      TabOrder = 4
+      Text = 'Fr'#233'quence et moyenne donn'#233'es'
+    end
+  end
+end

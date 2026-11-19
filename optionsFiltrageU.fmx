@@ -1,0 +1,82 @@
+object OptionsFiltreDlg: TOptionsFiltreDlg
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Options de calcul de la FFT'
+  ClientHeight = 283
+  ClientWidth = 529
+  Position = MainFormCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object Memo1: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = []
+    Lines.Strings = (
+      
+        'Le filtrage s'#39'effectue dans l'#39'espace des fr'#233'quences '#224' partir du ' +
+        'spectre du signal initial. '
+      'Ce spectre est calcul'#233' avec une fen'#234'tre rectangulaire.'
+      
+        'Si la dur'#233'e n'#39'est pas un multiple de la p'#233'riode du signal, il y ' +
+        'a alors un artefact, dit de '
+      'non synchronisation (leakage),  qui peut '#234'tre corrig'#233'.'
+      
+        'Cette correction n'#39'est correcte (sic !) que s'#39'il y a plus d'#39'une ' +
+        'p'#233'riode (disons >5).'
+      'Cette correction agit '#233'galement sur l'#39'extraction d'#39'harmoniques'
+      'Il vous faut donc choisir entre les boutons : '
+      ''
+      'Donn'#233'es sur une p'#233'riode -> "Sans correction"'
+      
+        'Donn'#233'es sur plusieurs p'#233'riodes non compl'#232'tes -> "Avec correction' +
+        '"')
+    Align = Top
+    Size.Width = 529.000000000000000000
+    Size.Height = 201.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Viewport.Width = 529.000000000000000000
+    Viewport.Height = 201.000000000000000000
+  end
+  object BitBtn1: TButton
+    Default = True
+    ModalResult = 1
+    Position.X = 16.000000000000000000
+    Position.Y = 223.000000000000000000
+    Size.Width = 120.000000000000000000
+    Size.Height = 30.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Text = 'Sans correction'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnClick = BitBtn1Click
+  end
+  object BitBtn2: TButton
+    Default = True
+    ModalResult = 1
+    Position.X = 162.000000000000000000
+    Position.Y = 223.000000000000000000
+    Size.Width = 120.000000000000000000
+    Size.Height = 30.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'Avec correction'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnClick = BitBtn2Click
+  end
+  object BitBtn3: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 53
+    Position.X = 308.000000000000000000
+    Position.Y = 223.000000000000000000
+    Size.Width = 120.000000000000000000
+    Size.Height = 30.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    Text = 'Abandon'
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+end

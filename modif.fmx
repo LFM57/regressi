@@ -1,0 +1,246 @@
+object ModifDlg: TModifDlg
+  Left = 439
+  Top = 416
+  ActiveControl = OKBtn
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Grandeurs'
+  ClientHeight = 249
+  ClientWidth = 392
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnShow = FormShow
+  Left = 439
+  Top = 416
+  DesignerMasterStyle = 0
+  object Label1: TLabel
+    AutoSize = True
+    StyledSettings = [FontColor]
+    Position.X = 8.000000000000000000
+    Position.Y = 16.000000000000000000
+    Size.Width = 137.000000000000000000
+    Size.Height = 18.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 13.000000000000000000
+    TextSettings.WordWrap = False
+    Text = 'Symbole de la grandeur'
+  end
+  object Label2: TLabel
+    AutoSize = True
+    StyledSettings = [FontColor]
+    Position.X = 8.000000000000000000
+    Position.Y = 44.000000000000000000
+    Size.Width = 119.000000000000000000
+    Size.Height = 18.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 13.000000000000000000
+    TextSettings.WordWrap = False
+    Text = 'Unit'#233' de la grandeur'
+  end
+  object Label4: TLabel
+    AutoSize = True
+    StyledSettings = [FontColor]
+    Position.X = 8.000000000000000000
+    Position.Y = 120.000000000000000000
+    Size.Width = 41.000000000000000000
+    Size.Height = 18.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 13.000000000000000000
+    TextSettings.WordWrap = False
+    Text = 'Format'
+  end
+  object GenreLabel: TLabel
+    AutoSize = True
+    StyledSettings = [FontColor]
+    Position.X = 8.000000000000000000
+    Position.Y = 72.000000000000000000
+    Size.Width = 34.000000000000000000
+    Size.Height = 18.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 13.000000000000000000
+    TextSettings.WordWrap = False
+    Text = 'genre'
+  end
+  object LabelPrecision: TLabel
+    AutoSize = True
+    StyledSettings = [FontColor]
+    Position.X = 188.000000000000000000
+    Position.Y = 120.000000000000000000
+    Size.Width = 126.000000000000000000
+    Size.Height = 18.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 13.000000000000000000
+    TextSettings.WordWrap = False
+    Text = 'Nombre de d'#233'cimales'
+  end
+  object IncertitudeHelpBtn: TButton
+    Position.X = 363.000000000000000000
+    Position.Y = 152.000000000000000000
+    Size.Width = 23.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+  end
+  object OKBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 10
+    ModalResult = 1
+    Position.X = 280.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 6
+    Text = 'OK'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnClick = OKBtnClick
+  end
+  object CancelBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 53
+    ModalResult = 2
+    Position.X = 280.000000000000000000
+    Position.Y = 40.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 7
+    Text = 'Abandon'
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+  object HelpBtn: TButton
+    HelpContext = 814
+    Images = ImagesData.ImagesList
+    ImageIndex = 5
+    ModalResult = 9
+    Position.X = 280.000000000000000000
+    Position.Y = 72.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 8
+    Text = 'Aide'
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+  object EditNom: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 9
+    TextSettings.Font.Size = 13.000000000000000000
+    Position.X = 160.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 99.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object EditUnite: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 10
+    TextSettings.Font.Size = 13.000000000000000000
+    Position.X = 160.000000000000000000
+    Position.Y = 40.000000000000000000
+    Size.Width = 99.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object PrecisionCB: TComboBox
+    DropDownCount = 11
+    Items.Strings = (
+      'D'#233'faut'
+      'Exponentiel'
+      'Fixe'
+      'Longue dur'#233'e'
+      'Date  et heure'
+      'Date'
+      'Heure'
+      'Degr'#233' minute')
+    ItemHeight = 15.000000000000000000
+    ListBoxResource = 'transparentlistboxstyle'
+    Position.X = 56.000000000000000000
+    Position.Y = 114.000000000000000000
+    Size.Width = 121.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 11
+    OnChange = PrecisionCBChange
+  end
+  object RazIncertitudeBtn: TButton
+    Position.X = 317.000000000000000000
+    Position.Y = 149.000000000000000000
+    Size.Width = 32.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 12
+    Text = 'R'#224'Z'
+    OnClick = RazIncertitudeBtnClick
+  end
+  object AffSignifCB: TCheckBox
+    Position.X = 8.000000000000000000
+    Position.Y = 209.000000000000000000
+    Size.Width = 321.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 13
+    Text = 'Etiquette de graphe = commentaire'
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+  object PrecisionSE: TSpinBox
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 14
+    Cursor = crIBeam
+    Max = 10.000000000000000000
+    Value = 5.000000000000000000
+    KeyboardType = Default
+    Position.X = 332.000000000000000000
+    Position.Y = 119.000000000000000000
+    TextSettings.Font.Size = 15.000000000000000000
+    Size.Width = 54.000000000000000000
+    Size.Height = 20.000000000000000000
+    Size.PlatformDefault = False
+    StyledSettings = [Style, FontColor]
+  end
+  object EditComm: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 15
+    TextSettings.Font.Size = 13.000000000000000000
+    Position.X = 100.000000000000000000
+    Position.Y = 180.000000000000000000
+    Size.Width = 285.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object EditComm_LBL: TLabel
+    StyledSettings = [FontColor]
+    Position.X = 8.000000000000000000
+    Position.Y = 182.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 15.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 13.000000000000000000
+    TextSettings.WordWrap = False
+    Text = 'Commentaire'
+  end
+  object EditIncertitude: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 17
+    TextSettings.Font.Size = 13.000000000000000000
+    Position.X = 124.000000000000000000
+    Position.Y = 151.000000000000000000
+    Size.Width = 190.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object EditIncertitude_LBL: TLabel
+    AutoSize = True
+    StyledSettings = [FontColor]
+    Position.X = 8.000000000000000000
+    Position.Y = 153.000000000000000000
+    Size.Width = 93.000000000000000000
+    Size.Height = 18.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 13.000000000000000000
+    TextSettings.WordWrap = False
+    Text = 'Incertitude-type'
+  end
+end

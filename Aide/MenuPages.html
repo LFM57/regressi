@@ -1,0 +1,88 @@
+﻿<html>
+	
+<head>
+	<title>Menu Pages</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("MenuPages");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Menu Pages</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Pages.html">Pages</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Pages.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Pagecopiee.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Acquisition.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="MENU_PAGE"></a>
+<span class="rvts13">Le menu Pages permet de manipuler différents tableaux de même structure et donc d'expériences identiques mais effectuées avec des paramètres différents.</span></p>
+<p class="rvps5"><span class="rvts13">Par exemple des enregistrements de cinétique à des températures différentes ou d'une résonance d'un circuit RLC pour diverses valeurs de R.</span></p>
+<p class="rvps5"><span class="rvts13">Chaque page est caractérisée par un commentaire et par les valeurs des paramètres expérimentaux, la température ou la résistance dans les exemples ci-dessus.</span></p>
+<p class="rvps5"><span class="rvts13">Le commentaire de la page courante est visible et modifiable dans la barre d'état.</span></p>
+<p class="rvps5"><span class="rvts13">Les paramètres expérimentaux sont visibles dans la barre d'état et modifiables dans le dossier </span><a class="rvts18" href="Constantes.html">paramètres</a><span class="rvts13"> de la fenêtre grandeurs.</span></p>
+<p class="rvps5"><span class="rvts13">Les différentes pages font partie du même fichier et leur nombre est limité à 32.</span></p>
+<p class="rvps5"><span class="rvts13">Lors d'une modélisation, un changement de page permet de calculer les valeurs des paramètres de modélisation dans une autre page mais les fonctions restent les mêmes. Pour effecteur la modélisation sur les différentes pages, il faut parcourir celles-ci par F7/F8 (ou les boutons de changement de pages) et cliquer sur Ajuster pour chaque page. La modélisation étant effectuée sur les différentes pages, vous pouvez comparer les paramètres en appelant la fenêtre graphique paramètres. Dans ce graphe, les variables sont les paramètres. Cela permet d'étudier la variation de ces paramètres, la constante de vitesse en fonction de la température ou la bande passante en fonction de R dans les exemples ci-dessus.</span></p>
+<p class="rvps5"><span class="rvts13">On crée une page en sélectionnant Page Nouvelle. Si l'acquisition a été faite au clavier, on ouvre une page vierge à remplir. Si les données proviennent d'une acquisition, la sélection de Page Nouvelle basculera sur le mode acquisition avec le réglage de la page précédente. La sauvegarde des paramètres d'acquisition se fait dans un fichier de même nom que le fichier de données mais avec une extension différente.</span></p>
+<p class="rvps5"><span class="rvts13">Pour changer de page taper F7 (Page Précédente) ou F8 (Page Suivante) ou boutons de la barre d´état.</span></p>
+<p class="rvps5"><span class="rvts13">On peut sélectionner les pages actives par le menu Page/Sélection ou le bouton </span><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem80.gif"><span class="rvts13">.</span></p>
+<p class="rvps5"><span class="rvts13">On peut trier les pages selon un paramètre par le menu Page / Trier ou le bouton </span><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem79.gif"><span class="rvts13"> lorsqu´on est dans l´onglet paramètres.</span></p>
+<p class="rvps5"><span class="rvts13">On peut regrouper plusieurs fichiers en un seul, l'ajout d´un fichier créant de nouvelles pages, à l´aide du menu Fichier Fusionner. On peut faire une sélection multiple pour ajouter plusieurs fichiers simultanément.</span></p>
+<p class="rvps5"><span class="rvts13">En mode simulation, le nombre de points peut être différents dans chaque page (remplir la colonne Nbre du tableau des paramètres).</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr">Générateur gratuit de livres électroniques et documentation</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

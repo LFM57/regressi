@@ -1,0 +1,94 @@
+﻿<html>
+	
+<head>
+	<title>Options Fourier</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("OptionsFourier");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Options Fourier</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Fourier.html">Fourier</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Fourier.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Fourier.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="FenetreFourier.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="OPTIONSFOURIER"></a>
+<span class="rvts15">Onglet calcul</span></p>
+<p class="rvps6"><span class="rvts15">Fréquence réduite</span><span class="rvts13"> : tracé en fonction de f/f0 où f0 est le pas de fréquence. Dans le cas où vous avez sélectionné une période, celle-ci est la fréquence du signal, l'axe est alors gradué en numéro d'harmonique.</span></p>
+<p class="rvps6"><span class="rvts13">On suppose que les points sont répartis régulièrement entre t=0 et t final. </span></p>
+<p class="rvps6"><span class="rvts15">Lorsque </span><span class="rvts13">le nombre de points n'est pas une puissance de 2, on effectue un “ Zero padding ” i.e. qu'on complète avec des zéros jusqu'à avoir 2n points.</span></p>
+<p class="rvps6"><span class="rvts15">Fenêtre</span><span class="rvts13"> : rectangulaire ou naturelle, Hamming (pour meilleure résolution en fréquence) ou sommet plat (pour meilleure résolution en amplitude) et naturelle corrigée (avec élimination, autant que faire se peut, des artefacts liés à la non synchronisation ; cela suppose que votre signal soit une somme de fonctions périodiques de période nettement plus petite que la durée d'acquisition).</span></p>
+<p class="rvps6"><span class="rvts13">La fenêtre de Hamming est 0,54-0,46*cos(2 pi t/T).</span></p>
+<p class="rvps6"><span class="rvts13">La fenêtre à toit plat est une moyenne de 9 pics autour d'un pic i avec les coefficients suivants :</span></p>
+<p class="rvps6"><span class="rvts13">i : 1 ; i-1 : 0,934516 ; i-2 : 0,597986 ; i-3 : 0,179644 ; i-4 : 0,015458.</span></p>
+<p class="rvps5"><span class="rvts15">Onglet</span><span class="rvts13"> </span><span class="rvts15">superposition</span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps6"><span class="rvts15">Enveloppe</span><span class="rvts13"> : trace, sous forme de ligne, le spectre a un pas plus fin (calcul sur 1024 points) que l'inverse du temps d'acquisition pour mettre en évidence les problèmes liés à la non-synchronisation (leakage). Cette enveloppe ne présente de l'intérêt que pour des points expérimentaux en petit nombre. Voir le fichier d'exemple fft.rw3.</span></li>
+<li style="margin-left: 0px" class="rvps6"><span class="rvts15">Superpose page</span><span class="rvts13"> : cocher cette case pour afficher plusieurs pages simultanément. On peut choisir les pages à superposer à l'aide du bouton </span><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem.gif"><span class="rvts13"> (toutes les pages par défaut). Remarque : pour superposer des graphes de différents fichiers, fusionner d'abord ceux-ci (menu Fichier Fusionner ou Page Nouvelle Fichier).</span></li>
+</ul>
+<p class="rvps5"><span class="rvts15">Onglet</span><span class="rvts13"> </span><span class="rvts15">représentation</span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps6"><span class="rvts15">Nombre d'harmoniques</span><span class="rvts13"> : permet de limiter le nombre d'harmoniques affichées.</span></li>
+<li style="margin-left: 0px" class="rvps6"><span class="rvts15">Décalage </span><span class="rvts13">:</span><span class="rvts15"> </span><span class="rvts13">écart en pixels entre les différents spectres.</span></li>
+<li style="margin-left: 0px" class="rvps6"><span class="rvts15">Décibel</span><span class="rvts13"> : axe Y gradué en dB. Dans ce cas, mini dB permet d'éliminer du graphe les harmoniques trop faibles.</span></li>
+</ul>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr">Générateur de documentation d'aide HTML gratuit</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

@@ -1,0 +1,84 @@
+﻿<html>
+	
+<head>
+	<title>D&eacute;riv&eacute;e et int&eacute;grale</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Deriveeetintegrale");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">D&eacute;riv&eacute;e et int&eacute;grale</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Calculs.html">Calculs</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Calculs.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Complexes.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Fonctionsparticulieres.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="DERIVEE"></a>
+<span class="rvts15">diff</span><span class="rvts13">(y,x) : calcule la dérivée =d(y)/d(x) : la méthode de calcul est modifiable par l'intermédiaire du menu </span><a class="rvts18" href="Options.html">Options</a><span class="rvts13">. On effectue un lissage sur N points par un polynôme d'ordre p (N et p sont paramétrables directement dans l'expression : diff(y,x,p,N) ou dans les options, onglet calcul), puis on détermine la dérivée par calcul de la valeur de la dérivée du polynôme. Si vous avez des données avec une haute fréquence d'échantillonnage ou beaucoup de bruit, vous avez intérêt à prendre N grand. On peut aussi utiliser la syntaxe d(y)/d(x).</span></p>
+<p class="rvps5"><span class="rvts13">Le choix linéaire convient la plupart du temps. Le choix parabolique est utile pour déterminer convenablement les dérivées aux extrémités. Pour les points extrêmes, le problème est que le point courant n'est pas au centre du lissage. Cela fausse donc le résultat. Si on prend le cas d'une concavité initiale vers le bas, la valeur de la dérivée sera systématiquement affectée d'une erreur par défaut. Si on effectue un lissage parabolique, la valeur obtenue devient correcte aux extrémités pour une parabole, et cela se généralise aux courbes "raisonnables".</span></p>
+<p class="rvps5"><span class="rvts15">intg</span><span class="rvts13">(f,x) : intégrale numérique pour le point courant numéro i :</span></p>
+<p class="rvps5"><span class="rvts13">valeur en i = somme pour i variant de 2 à i de (f(i-1)+fi)/2)*(x(i-1)-xi). x étant ordonné dans le sens croissant.</span></p>
+<p class="rvps5"><span class="rvts13">Exemple : vous avez enregistré l'intensité d'une force F en fonction de la position x, vous pouvez créer Ep, énergie potentielle, en prenant comme variable x et comme fonction -F. </span><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem25.gif"></p>
+<p class="rvps5"><span class="rvts13">Ces deux fonctions doivent apparaître seules dans une définition y=diff(x,t) mais pas y=diff(x,t)*3.</span></p>
+<p class="rvps5"><span class="rvts15">intg</span><span class="rvts13">(f,x,a,b) : intégrale numérique de a à b :</span></p>
+<p class="rvps5"><span class="rvts13">Cette fonction renvoie un paramètre.</span></p>
+<p class="rvps5"><span class="rvts15">intgd</span><span class="rvts13">(a,inf,sup,f) : a est la variable </span><span class="rvts17">muette</span><span class="rvts13"> d'intégration, inf et sup sont les bornes inférieure et supérieure d'intégration et f la fonction à intégrer </span><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem24.gif"><span class="rvts13">. Cette fonction peut apparaître à l'intérieur d'une expression.</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/tour-des-fonctionnalites">Créer des documents d'aide facilement</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

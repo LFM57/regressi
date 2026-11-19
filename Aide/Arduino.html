@@ -1,0 +1,109 @@
+﻿<html>
+	
+<head>
+	<title>Arduino</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Arduino");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Arduino</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Acquisition.html">Acquisition</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Acquisition.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Images.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps2"><span class="rvts6">On peut faire des acquisitions à partir d'Arduino dans Regressi.</span></p>
+<p class="rvps2"><span class="rvts6">Le dialogue se fait par la voie série. Les données sont envoyées par ligne avec comme séparateur une virgule.</span></p>
+<p class="rvps2"><span class="rvts6">Le premier élément est censé être le temps et sera placé sur l'axe des abscisses.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Exemple : </span></p>
+<p class="rvps2"><span class="rvts6">float t,V;</span></p>
+<p class="rvps2"><span class="rvts6">Serial.print(t);</span></p>
+<p class="rvps2"><span class="rvts6">Serial.print(",");</span></p>
+<p class="rvps2"><span class="rvts6">Serial.println(V);</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Les fichiers exemples Arduino sont dans le répertoire Regressi/Arduino et sont présents si vous avez utilisé l'installateur.</span></p>
+<p class="rvps2"><span class="rvts6">Ils sont également disponible chez : </span><a class="rvts43" href="http://regressi.fr/WordPress/arduino">OVH Regressi</a></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside; list-style-type: disc;">
+<li class="rvps2"><span class="rvts6">Cas simple (sans commande)</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6">Regressi lit les données sur la voie série et les affiche. Ces données doivent arriver à un rythme lent (maximum 10 Hz).</span></p>
+<p class="rvps2"><span class="rvts6">On lance l'acquisition en cliquant sur "Acquisition" et on arrête en cliquant sur STOP.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Vous pouvez avoir un exemple d'acquisition à partir d'Arduino en cliquant sur "Options" puis sur "Exemple Arduino".</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside; list-style-type: disc;">
+<li class="rvps2"><span class="rvts6">Oscilloscope (avec commande)</span></li>
+</ul>
+<p class="rvps2"><span class="rvts6">On paramètre</span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside; list-style-type: disc;"><ul style="text-indent: 0px; margin-left: 48px; list-style-position: outside; list-style-type: circle;">
+<li style="margin-left: 0px" class="rvps20"><span class="rvts6">la base de temps (fréquence maxi pour Arduino UNO 2 kHz)</span></li>
+<li style="margin-left: 0px" class="rvps20"><span class="rvts6">le déclenchement</span></li>
+<li style="margin-left: 0px" class="rvps20"><span class="rvts6">le seuil de déclenchement</span></li>
+<li style="margin-left: 0px" class="rvps20"><span class="rvts6">le nombre de voies (1 ou 2)</span></li>
+</ul></ul>
+<p class="rvps20"><span class="rvts6">Le nombre de points est fixé à 300 (limitation Arduino Uno)</span></p>
+<p class="rvps20"><span class="rvts6">On lance (ou relance en cas de mode monocoup) en cliquant sur "Acquisition"</span></p>
+<p class="rvps20"><span class="rvts6"><br/></span></p>
+<p class="rvps20"><span class="rvts6">Les limites actuelles sont liées à l'Arduino UNO, ceci peut évoluer au prix d'un paramétrage supplémentaire. Vous pouvez m'écrire à </span><a class="rvts43" href="mailto:regressi@orange.fr">Regressi</a></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<p class="rvps2"><span class="rvts6">Vous pouvez avoir un exemple d'acquisition à partir d'Arduino et la syntaxe des commandes en cliquant sur "Options" puis sur "Lancer IDE Arduino".</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/creer-des-livres-numeriques-epub">Générateur complet de livres électroniques ePub</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

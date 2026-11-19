@@ -1,0 +1,111 @@
+object SelectPageDlg: TSelectPageDlg
+  Left = 655
+  Top = 363
+  ActiveControl = OKBtn
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Choix des pages actives'
+  ClientHeight = 230
+  ClientWidth = 469
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnShow = FormShow
+  Left = 655
+  Top = 363
+  DesignerMasterStyle = 1
+  object OKBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 10
+    ModalResult = 1
+    Position.X = 364.000000000000000000
+    Position.Y = 4.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Text = 'OK'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnClick = OKBtnClick
+  end
+  object CancelBtn: TButton
+    ModalResult = 2
+    Position.X = 364.000000000000000000
+    Position.Y = 106.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Text = 'Abandon'
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+  object AllBtn: TButton
+    Position.X = 364.000000000000000000
+    Position.Y = 146.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'Cocher tout'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnClick = AllBtnClick
+  end
+  object OneBtn: TButton
+    Position.X = 364.000000000000000000
+    Position.Y = 174.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    Text = 'Cocher une'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnClick = OneBtnClick
+  end
+  object StatusBar: TStatusBar
+    Position.Y = 207.000000000000000000
+    ShowSizeGrip = True
+    Size.Width = 469.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+  end
+  object AllOKBtn: TButton
+    ModalResult = 1
+    Position.X = 365.000000000000000000
+    Position.Y = 32.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+    Text = 'OK pour tout'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnClick = AllOKBtnClick
+  end
+  object OneOKBtn: TButton
+    ModalResult = 1
+    Position.X = 365.000000000000000000
+    Position.Y = 60.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 6
+    Text = 'OK pour une'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnClick = OneOKBtnClick
+  end
+  object CheckListBox: TListBox
+    Size.Width = 337.000000000000000000
+    Size.Height = 206.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 7
+    DisableFocusEffect = True
+    DefaultItemStyles.ItemStyle = ''
+    DefaultItemStyles.GroupHeaderStyle = ''
+    DefaultItemStyles.GroupFooterStyle = ''
+    MultiSelectStyle = Default
+    ShowCheckboxes = True
+    Viewport.Width = 337.000000000000000000
+    Viewport.Height = 206.000000000000000000
+  end
+end

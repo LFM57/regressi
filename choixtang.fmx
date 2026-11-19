@@ -1,0 +1,267 @@
+object ChoixTangenteDlg: TChoixTangenteDlg
+  Left = 403
+  Top = 167
+  Caption = 'Trac'#233' de tangentes'
+  ClientHeight = 216
+  ClientWidth = 270
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnActivate = FormActivate
+  Left = 403
+  Top = 167
+  DesignerMasterStyle = 0
+  object OptionsBtn: TButton
+    Position.X = 234.000000000000000000
+    Position.Y = 40.000000000000000000
+    Size.Width = 27.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    OnClick = OptionsBtnClick
+  end
+  object CancelBtn: TButton
+    Cancel = True
+    ModalResult = 2
+    Position.X = 124.000000000000000000
+    Position.Y = 40.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Abandon'
+  end
+  object TangenteCB: TComboBox
+    ItemIndex = 1
+    ItemHeight = 15.000000000000000000
+    ListBoxResource = 'transparentlistboxstyle'
+    Position.X = 4.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 261.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+    OnChange = TangenteCBChange
+    object ListBoxItem1: TListBoxItem
+      Size.Width = 261.000000000000000000
+      Size.Height = 15.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Equivalence'
+    end
+    object ListBoxItem2: TListBoxItem
+      IsSelected = True
+      Position.Y = 15.000000000000000000
+      Size.Width = 261.000000000000000000
+      Size.Height = 15.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Tangente'
+    end
+  end
+  object OKBtn: TButton
+    ModalResult = 1
+    Position.X = 8.000000000000000000
+    Position.Y = 40.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'OK'
+    OnClick = OKBtnClick
+  end
+  object SupprCB: TCheckBox
+    Position.X = 8.000000000000000000
+    Position.Y = 73.000000000000000000
+    Size.Width = 259.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Suppression des tangentes existantes'
+  end
+  object OptionsPC: TTabControl
+    Align = Bottom
+    Position.Y = 96.000000000000000000
+    Size.Width = 270.000000000000000000
+    Size.Height = 120.000000000000000000
+    Size.PlatformDefault = False
+    TabHeight = 20.000000000000000000
+    TabIndex = 2
+    TabPosition = Top
+    Sizes = (
+      270s
+      100s
+      270s
+      100s
+      270s
+      100s)
+    object TabSheet1: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 52.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Calcul'
+      ExplicitSize.cx = 50.000000000000000000
+      ExplicitSize.cy = 50.000000000000000000
+      object Label4: TLabel
+        AutoSize = True
+        Position.X = 3.000000000000000000
+        Position.Y = 20.000000000000000000
+        Size.Width = 137.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Nombre de points utilis'#233's'
+      end
+      object Label1: TLabel
+        AutoSize = True
+        Position.X = 3.000000000000000000
+        Position.Y = 42.000000000000000000
+        Size.Width = 142.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'pour le calcul de la d'#233'riv'#233'e'
+      end
+      object NbreEdit: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 2
+        Text = '5'
+        Position.X = 174.000000000000000000
+        Position.Y = 24.000000000000000000
+        Enabled = False
+        Size.Width = 25.000000000000000000
+        Size.Height = 27.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+    object StoechTS: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 100.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Stoechiom'#232'trie'
+      ExplicitSize.cx = 50.000000000000000000
+      ExplicitSize.cy = 50.000000000000000000
+      object Label3: TLabel
+        AutoSize = True
+        Position.X = 19.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 39.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Burette'
+      end
+      object Label5: TLabel
+        AutoSize = True
+        Position.X = 136.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 36.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Becher'
+      end
+      object Burette: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 2
+        Cursor = crIBeam
+        Max = 10.000000000000000000
+        Value = 1.000000000000000000
+        KeyboardType = Default
+        Position.X = 64.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 56.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object Becher: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 3
+        Cursor = crIBeam
+        Max = 10.000000000000000000
+        Value = 1.000000000000000000
+        KeyboardType = Default
+        Position.X = 188.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 56.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+    object TabSheet3: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = True
+      Size.Width = 70.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Affichage'
+      ExplicitSize.cx = 50.000000000000000000
+      ExplicitSize.cy = 50.000000000000000000
+      object Label6: TLabel
+        AutoSize = True
+        Position.X = 35.000000000000000000
+        Position.Y = 62.000000000000000000
+        Size.Width = 51.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Extension'
+      end
+      object ComboBoxEx1: TComboBox
+        ItemHeight = 16.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 138.000000000000000000
+        Position.Y = 31.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+      end
+      object LargeurCB: TComboBox
+        ItemHeight = 15.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 120.000000000000000000
+        Position.Y = 62.000000000000000000
+        Size.Width = 121.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+      end
+      object GridCB: TCheckBox
+        Position.X = 3.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 129.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Text = 'Tableau de valeurs'
+      end
+      object TangenteColor: TColorComboBox
+        DropDownKind = Custom
+        Color = claSlategray
+        DisableFocusEffect = False
+        ItemIndex = 131
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 8.000000000000000000
+        Position.Y = 32.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        OnChange = TangenteCBChange
+      end
+    end
+  end
+end

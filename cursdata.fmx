@@ -1,0 +1,317 @@
+object ReticuleDataDlg: TReticuleDataDlg
+  Left = 453
+  Top = 202
+  ActiveControl = OKBtn
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Curseur donn'#233'es'
+  ClientHeight = 220
+  ClientWidth = 252
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  Left = 453
+  Top = 202
+  DesignerMasterStyle = 0
+  object OKBtn: TButton
+    StyledSettings = [FontColor]
+    Images = ImagesData.ImagesList
+    ImageIndex = 10
+    ModalResult = 1
+    Position.X = 140.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'OK'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnClick = OKBtnClick
+  end
+  object CancelBtn: TButton
+    StyledSettings = [FontColor]
+    Images = ImagesData.ImagesList
+    ImageIndex = 53
+    ModalResult = 2
+    Position.X = 140.000000000000000000
+    Position.Y = 48.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    Text = 'Abandon'
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+  object HelpBtn: TButton
+    StyledSettings = [FontColor]
+    Images = ImagesData.ImagesList
+    ImageIndex = 5
+    ModalResult = 9
+    Position.X = 140.000000000000000000
+    Position.Y = 88.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    Text = 'Aide'
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+  object GroupBox1: TGroupBox
+    Align = Bottom
+    StyledSettings = [Size, Style, FontColor, Other]
+    Position.Y = 120.000000000000000000
+    Size.Width = 252.000000000000000000
+    Size.Height = 100.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Affichage'
+    TextSettings.Font.Family = 'Gill Sans MT'
+    TabOrder = 5
+    object YCB: TCheckBox
+      StyledSettings = [FontColor]
+      IsChecked = True
+      Position.X = 128.000000000000000000
+      Position.Y = 44.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Ordonn'#233'e'
+      TextSettings.Font.Size = 13.000000000000000000
+    end
+    object XCB: TCheckBox
+      StyledSettings = [FontColor]
+      IsChecked = True
+      Position.X = 8.000000000000000000
+      Position.Y = 44.000000000000000000
+      Size.Width = 81.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Abscisse'
+      TextSettings.Font.Size = 13.000000000000000000
+    end
+    object DeltaXCB: TCheckBox
+      StyledSettings = [FontColor]
+      IsChecked = True
+      Position.X = 8.000000000000000000
+      Position.Y = 68.000000000000000000
+      Size.Width = 121.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Ecart abscisse'
+      TextSettings.Font.Size = 13.000000000000000000
+    end
+    object ReticuleCB: TCheckBox
+      StyledSettings = [FontColor]
+      Position.X = 128.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 97.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      Text = 'R'#233'ticule'
+      TextSettings.Font.Size = 13.000000000000000000
+    end
+    object deltaYCB: TCheckBox
+      StyledSettings = [FontColor]
+      Position.X = 128.000000000000000000
+      Position.Y = 68.000000000000000000
+      Size.Width = 121.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      Text = 'Ecart ordonn'#233'e'
+      TextSettings.Font.Size = 13.000000000000000000
+    end
+    object penteCB: TCheckBox
+      StyledSettings = [FontColor]
+      Position.X = 8.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 97.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Pente'
+      TextSettings.Font.Size = 13.000000000000000000
+    end
+  end
+  object LigneCombo: TComboBox
+    Items.Strings = (
+      'Solid'
+      'Dash'
+      'Dot'
+      'Dash-Dot'
+      'Dash-Dot-Dot')
+    ItemHeight = 16.000000000000000000
+    ListBoxResource = 'transparentlistboxstyle'
+    Position.X = 8.000000000000000000
+    Position.Y = 49.000000000000000000
+    Size.Width = 110.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 6
+  end
+  object DeuxCurseursCB: TCheckBox
+    StyledSettings = [FontColor]
+    Position.X = 8.000000000000000000
+    Position.Y = 16.000000000000000000
+    Size.Width = 121.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 7
+    Text = 'Deux curseurs'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnChange = DeuxCurseursCBClick
+  end
+  object ReticuleColor: TTMSFNCColorPicker
+    DisableFocusEffect = False
+    Position.X = 8.000000000000000000
+    Position.Y = 88.000000000000000000
+    Size.Width = 110.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 8
+    DropDownWidth = 200.000000000000000000
+    Appearance.Stroke.Color = claDarkgray
+    Appearance.Fill.Color = xFFE9E9E9
+    Appearance.StrokeHover.Color = claLightslategray
+    Appearance.FillHover.Color = xFFBBC4CC
+    Appearance.StrokeDown.Color = claSlategray
+    Appearance.FillDown.Color = xFFB8C0C8
+    Appearance.StrokeSelected.Color = claDarkslategray
+    Appearance.FillSelected.Color = xFFB8C0C8
+    Appearance.StrokeDisabled.Color = claDarkgray
+    Appearance.FillDisabled.Color = claSilver
+    Appearance.SeparatorStroke.Color = claDarkgray
+    Appearance.Font.Name = 'Segoe UI'
+    Rows = 5
+    Columns = 8
+    Items = <
+      item
+        Color = claBlack
+      end
+      item
+        Color = xFF003399
+      end
+      item
+        Color = xFF003333
+      end
+      item
+        Color = xFF003300
+      end
+      item
+        Color = xFF663300
+      end
+      item
+        Color = claNavy
+      end
+      item
+        Color = xFF353333
+      end
+      item
+        Color = xFF333333
+      end
+      item
+        Color = claMaroon
+      end
+      item
+        Color = xFFFF6600
+      end
+      item
+        Color = claOlive
+      end
+      item
+        Color = claGreen
+      end
+      item
+        Color = claTeal
+      end
+      item
+        Color = claBlue
+      end
+      item
+        Color = xFF666699
+      end
+      item
+        Color = claGray
+      end
+      item
+        Color = claRed
+      end
+      item
+        Color = xFFFF9900
+      end
+      item
+        Color = xFF99CC00
+      end
+      item
+        Color = xFF339966
+      end
+      item
+        Color = xFF33CCCC
+      end
+      item
+        Color = xFF3366FF
+      end
+      item
+        Color = claPurple
+      end
+      item
+        Color = xFF999999
+      end
+      item
+        Color = claFuchsia
+      end
+      item
+        Color = xFFFFCC00
+      end
+      item
+        Color = claYellow
+      end
+      item
+        Color = claLime
+      end
+      item
+        Color = claAqua
+      end
+      item
+        Color = xFF00CCFF
+      end
+      item
+        Color = xFF993366
+      end
+      item
+        Color = claSilver
+      end
+      item
+        Color = xFFFF99CC
+      end
+      item
+        Color = xFFFFCC99
+      end
+      item
+        Color = xFFFFFF99
+      end
+      item
+        Color = xFFCCFFCC
+      end
+      item
+        Color = xFFCCFFFF
+      end
+      item
+        Color = xFF99CCFF
+      end
+      item
+        Color = xFFCC99FF
+      end
+      item
+        Color = claWhite
+      end>
+    Mode = csmExtended
+  end
+end

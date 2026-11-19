@@ -1,0 +1,397 @@
+object OptionLigneDlg: TOptionLigneDlg
+  Left = 662
+  Top = 161
+  ActiveControl = OKBtn
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Trac'#233' de lignes'
+  ClientHeight = 350
+  ClientWidth = 291
+  Position = MainFormCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnShow = FormShow
+  Left = 662
+  Top = 161
+  DesignerMasterStyle = 0
+  object OKBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 10
+    ModalResult = 1
+    Position.X = 189.000000000000000000
+    Position.Y = 83.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Text = 'OK'
+    OnClick = OKBtnClick
+  end
+  object CancelBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 53
+    ModalResult = 2
+    Position.X = 189.000000000000000000
+    Position.Y = 167.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'Abandon'
+  end
+  object PenBar: TPanel
+    Align = Left
+    Size.Width = 185.000000000000000000
+    Size.Height = 350.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object PenSize: TLabel
+      AutoSize = True
+      Position.X = 448.000000000000000000
+      Position.Y = 12.000000000000000000
+      Size.Width = 7.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.WordWrap = False
+      Text = '1'
+    end
+    object Label1: TLabel
+      AutoSize = True
+      Position.X = 8.000000000000000000
+      Position.Y = 70.000000000000000000
+      Size.Width = 73.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.WordWrap = False
+      Text = 'Taille du texte'
+    end
+    object LabelTaille: TLabel
+      AutoSize = True
+      StyledSettings = [Style, FontColor]
+      Position.X = 8.000000000000000000
+      Position.Y = 99.000000000000000000
+      Size.Width = 92.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.WordWrap = False
+      Text = 'Epaisseur du trait'
+    end
+    object PenWidth: TScrollBar
+      Min = 1.000000000000000000
+      Value = 1.000000000000000000
+      SmallChange = 0.000000000000000000
+      Orientation = Horizontal
+      Position.X = 320.000000000000000000
+      Position.Y = 12.000000000000000000
+      Size.Width = 121.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object SpinEditHauteur: TSpinBox
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 3
+      Cursor = crIBeam
+      Max = 10.000000000000000000
+      Value = 3.000000000000000000
+      KeyboardType = Default
+      Position.X = 111.000000000000000000
+      Position.Y = 64.000000000000000000
+      TextSettings.Font.Size = 15.000000000000000000
+      Size.Width = 70.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = [Style, FontColor]
+    end
+    object LigneCombo: TComboBox
+      ItemHeight = 16.000000000000000000
+      ListBoxResource = 'transparentlistboxstyle'
+      Position.X = 8.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 97.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      object ListBoxItem9: TListBoxItem
+        Size.Width = 79.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Plein'
+      end
+      object ListBoxItem10: TListBoxItem
+        Position.Y = 16.000000000000000000
+        Size.Width = 79.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Tirets'
+      end
+      object ListBoxItem11: TListBoxItem
+        Position.Y = 32.000000000000000000
+        Size.Width = 79.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Pointill'#233's'
+      end
+      object ListBoxItem12: TListBoxItem
+        Position.Y = 48.000000000000000000
+        Size.Width = 79.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Text = 'Mixte'
+      end
+    end
+    object GroupBox3: TGroupBox
+      Align = Bottom
+      Position.Y = 235.000000000000000000
+      Size.Width = 185.000000000000000000
+      Size.Height = 115.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Ornement'
+      TabOrder = 5
+      object SansRB: TRadioButton
+        Position.X = 8.000000000000000000
+        Position.Y = 19.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Sans'
+      end
+      object DoubleFlecheRB: TRadioButton
+        Position.X = 8.000000000000000000
+        Position.Y = 65.000000000000000000
+        Size.Width = 110.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Double fl'#233'che'
+      end
+      object Fleche1RB: TRadioButton
+        Position.X = 8.000000000000000000
+        Position.Y = 42.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Fl'#233'che d'#233'but'
+      end
+      object Fleche2RB: TRadioButton
+        Position.X = 8.000000000000000000
+        Position.Y = 88.000000000000000000
+        TabOrder = 3
+        Text = 'Fl'#233'che fin'
+      end
+    end
+    object GroupBox4: TGroupBox
+      Align = Bottom
+      Position.Y = 135.000000000000000000
+      Size.Width = 185.000000000000000000
+      Size.Height = 100.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'L'#233'gende'
+      TabOrder = 6
+      object OptionsRG: TListBox
+        Align = Bottom
+        Size.Width = 185.000000000000000000
+        Size.Height = 100.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        DisableFocusEffect = True
+        DefaultItemStyles.ItemStyle = ''
+        DefaultItemStyles.GroupHeaderStyle = ''
+        DefaultItemStyles.GroupFooterStyle = ''
+        Viewport.Width = 181.000000000000000000
+        Viewport.Height = 96.000000000000000000
+        object TListBoxItem
+          TabOrder = 0
+          Text = 'sans'
+        end
+        object TListBoxItem
+          Position.Y = 19.000000000000000000
+          TabOrder = 1
+          Text = 'pente'
+        end
+        object TListBoxItem
+          Position.Y = 38.000000000000000000
+          TabOrder = 2
+          Text = #233'quation'
+        end
+        object TListBoxItem
+          Position.Y = 57.000000000000000000
+          TabOrder = 3
+          Text = #233'cart X'
+        end
+        object TListBoxItem
+          Position.Y = 76.000000000000000000
+          TabOrder = 4
+          Text = #233'cart Y'
+        end
+      end
+    end
+    object CouleurCombo: TTMSFNCColorPicker
+      DisableFocusEffect = False
+      Position.X = 8.000000000000000000
+      Position.Y = 40.000000000000000000
+      Size.Width = 97.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 7
+      DropDownWidth = 200.000000000000000000
+      Appearance.Stroke.Color = claDarkgray
+      Appearance.Fill.Color = xFFE9E9E9
+      Appearance.StrokeHover.Color = claLightslategray
+      Appearance.FillHover.Color = xFFBBC4CC
+      Appearance.StrokeDown.Color = claSlategray
+      Appearance.FillDown.Color = xFFB8C0C8
+      Appearance.StrokeSelected.Color = claDarkslategray
+      Appearance.FillSelected.Color = xFFB8C0C8
+      Appearance.StrokeDisabled.Color = claDarkgray
+      Appearance.FillDisabled.Color = claSilver
+      Appearance.SeparatorStroke.Color = claDarkgray
+      Appearance.Font.Name = 'Segoe UI'
+      Rows = 5
+      Columns = 8
+      Items = <
+        item
+          Color = claBlack
+        end
+        item
+          Color = xFF003399
+        end
+        item
+          Color = xFF003333
+        end
+        item
+          Color = xFF003300
+        end
+        item
+          Color = xFF663300
+        end
+        item
+          Color = claNavy
+        end
+        item
+          Color = xFF353333
+        end
+        item
+          Color = xFF333333
+        end
+        item
+          Color = claMaroon
+        end
+        item
+          Color = xFFFF6600
+        end
+        item
+          Color = claOlive
+        end
+        item
+          Color = claGreen
+        end
+        item
+          Color = claTeal
+        end
+        item
+          Color = claBlue
+        end
+        item
+          Color = xFF666699
+        end
+        item
+          Color = claGray
+        end
+        item
+          Color = claRed
+        end
+        item
+          Color = xFFFF9900
+        end
+        item
+          Color = xFF99CC00
+        end
+        item
+          Color = xFF339966
+        end
+        item
+          Color = xFF33CCCC
+        end
+        item
+          Color = xFF3366FF
+        end
+        item
+          Color = claPurple
+        end
+        item
+          Color = xFF999999
+        end
+        item
+          Color = claFuchsia
+        end
+        item
+          Color = xFFFFCC00
+        end
+        item
+          Color = claYellow
+        end
+        item
+          Color = claLime
+        end
+        item
+          Color = claAqua
+        end
+        item
+          Color = xFF00CCFF
+        end
+        item
+          Color = xFF993366
+        end
+        item
+          Color = claSilver
+        end
+        item
+          Color = xFFFF99CC
+        end
+        item
+          Color = xFFFFCC99
+        end
+        item
+          Color = xFFFFFF99
+        end
+        item
+          Color = xFFCCFFCC
+        end
+        item
+          Color = xFFCCFFFF
+        end
+        item
+          Color = xFF99CCFF
+        end
+        item
+          Color = xFFCC99FF
+        end
+        item
+          Color = claWhite
+        end>
+      Mode = csmExtended
+    end
+  end
+  object SpinEditWidth: TSpinBox
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 0
+    Cursor = crIBeam
+    Max = 10.000000000000000000
+    Value = 3.000000000000000000
+    KeyboardType = Default
+    Position.X = 111.000000000000000000
+    Position.Y = 99.000000000000000000
+    TextSettings.Font.Size = 15.000000000000000000
+    Size.Width = 70.000000000000000000
+    Size.Height = 20.000000000000000000
+    Size.PlatformDefault = False
+    StyledSettings = [Style, FontColor]
+  end
+end

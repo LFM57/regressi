@@ -1,0 +1,1412 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Condition="Exists('$(BDS)\bin\CodeGear.Deployment.targets')" Project="$(BDS)\bin\CodeGear.Deployment.targets"/>
+    <ProjectExtensions>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+    <PropertyGroup/>
+    <ItemGroup Condition="'$(Platform)'=='Win64'">
+        <DeployFile Include="$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM\Assets\</RemoteDir>
+            <RemoteName>Logo44x44.png</RemoteName>
+            <DeployClass>UWP_DelphiLogo44</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Win64\Release\AppxManifest.xml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM\</RemoteDir>
+            <RemoteName>AppxManifest.xml</RemoteName>
+            <DeployClass>ProjectUWPManifest</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Win64\Release\regressiM.exe" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM\</RemoteDir>
+            <RemoteName>regressiM.exe</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM\Assets\</RemoteDir>
+            <RemoteName>Logo150x150.png</RemoteName>
+            <DeployClass>UWP_DelphiLogo150</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+    </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='iOSDevice64'"/>
+    <ItemGroup Condition="'$(Platform)'=='iOSDevice32'"/>
+    <ItemGroup Condition="'$(Platform)'=='Win32'">
+        <DeployFile Include="Win32\Release\regressiM.exe" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM\</RemoteDir>
+            <RemoteName>regressiM.exe</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+        <DeployFile Include="Win32\Debug\regressiM.exe" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM\</RemoteDir>
+            <RemoteName>regressiM.exe</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM\Assets\</RemoteDir>
+            <RemoteName>Logo44x44.png</RemoteName>
+            <DeployClass>UWP_DelphiLogo44</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Win32\Release\AppxManifest.xml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM\</RemoteDir>
+            <RemoteName>AppxManifest.xml</RemoteName>
+            <DeployClass>ProjectUWPManifest</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM\Assets\</RemoteDir>
+            <RemoteName>Logo150x150.png</RemoteName>
+            <DeployClass>UWP_DelphiLogo150</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+    </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='OSX32'">
+        <DeployFile Include="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libcgunwind.1.0.dylib</RemoteName>
+            <DeployClass>DependencyModule</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+    </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='OSX64'">
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Expressions.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Expressions.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\FichierImprimer.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>FichierImprimer.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Origine1.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Origine1.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="regressiM.icns" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\</RemoteDir>
+            <RemoteName>regressiM.icns</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Suppressiondepoints.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Suppressiondepoints.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libavdevice.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libavdevice.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Options.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Options.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Methode-Gran-AgICl.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Methode-Gran-AgICl.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Parametrevolatil.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Parametrevolatil.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Fenetregrandeurs.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Fenetregrandeurs.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Arduino\simpleTemps\simpleTemps.ino" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\Arduino\simpleTemps\</RemoteDir>
+            <RemoteName>simpleTemps.ino</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libavcodec.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libavcodec.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Generalitessurlamodelisation.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Generalitessurlamodelisation.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Deriveeetintegrale.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Deriveeetintegrale.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\MenuEdition.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>MenuEdition.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Optionsdesvecteurs.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Optionsdesvecteurs.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Regressi.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Regressi.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\.DS_Store" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>.DS_Store</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Animation.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Animation.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Modlisation.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Modlisation.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Video.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Video.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Arduino\oscillo\oscillo.ino" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\Arduino\oscillo\</RemoteDir>
+            <RemoteName>oscillo.ino</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Chronophotographie.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Chronophotographie.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OSX64\Debug\regressiM.dSYM" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF\</RemoteDir>
+            <RemoteName>regressiM</RemoteName>
+            <DeployClass>ProjectOSXDebug</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Exemples.ini" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Exemples.ini</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Comete-Halley.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Comete-Halley.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Liens.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Liens.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Optionsstatistique.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Optionsstatistique.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Pagecalculee.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Pagecalculee.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Bobine-Helmholtz.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Bobine-Helmholtz.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Editeur.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Editeur.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Diode.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Diode.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Phase.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Phase.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Fourier.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Fourier.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\OptionsFourier.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>OptionsFourier.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Pagecopiee.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Pagecopiee.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Filtre-Bode.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Filtre-Bode.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libSDL_mixer.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libSDL_mixer.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\EditionCollerdonnees.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>EditionCollerdonnees.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\MethodedEulersimulation.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>MethodedEulersimulation.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OSX64\Debug\regressiM.info.plist" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\Contents\</RemoteDir>
+            <RemoteName>Info.plist</RemoteName>
+            <DeployClass>ProjectOSXInfoPList</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Ecartmodelisationexperience.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Ecartmodelisationexperience.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Impression.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Impression.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Arduino.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Arduino.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Resonance-Pendule-Torsion.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Resonance-Pendule-Torsion.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\FichierEnregistrer.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>FichierEnregistrer.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Outilsgraphiques.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Outilsgraphiques.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Modele-Equa-Diff.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Modele-Equa-Diff.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Barredetat.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Barredetat.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\MenuFichier.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>MenuFichier.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Originegraphique.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Originegraphique.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OSX64\Debug\regressiM.entitlements" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\..\</RemoteDir>
+            <RemoteName>Entitlements.plist</RemoteName>
+            <DeployClass>ProjectOSXEntitlements</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Oscillateur-Wien.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Oscillateur-Wien.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libavdevice.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libavdevice.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Divergencedunemodelisation.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Divergencedunemodelisation.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Aire.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Aire.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\FichierNouveauSimulation.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>FichierNouveauSimulation.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libswresample.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libswresample.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libavformat.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libavformat.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Incertitudesgraphiques.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Incertitudesgraphiques.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Incertitudes.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Incertitudes.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Fonctionsdegestiondesdates.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Fonctionsdegestiondesdates.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Interferences.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Interferences.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libavformat.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libavformat.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Dosage-Glycine.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Dosage-Glycine.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libavcodec.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libavcodec.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Coordonnees.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Coordonnees.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Mouvement-Parabolique-Bille.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Mouvement-Parabolique-Bille.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Barredoutils.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Barredoutils.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Aide\Regressi.pdf" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Regressi.Help\</RemoteDir>
+            <RemoteName>Regressi.pdf</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Bornes.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Bornes.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Dosage-Acide-Acetique.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Dosage-Acide-Acetique.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\Redist\osx64\libcgsqlite3.dylib">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libcgsqlite3.dylib</RemoteName>
+            <DeployClass>DependencyModule</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Arduino\oscilloDue\oscilloDue.ino" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\Arduino\oscilloDue\</RemoteDir>
+            <RemoteName>oscilloDue.ino</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Modelisation1.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Modelisation1.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Trigonometrie.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Trigonometrie.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\MenuPages.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>MenuPages.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Pages.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Pages.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Fenetregraphe.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Fenetregraphe.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Magnum.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Magnum.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Equations.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Equations.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libswscale.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libswscale.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libavutil.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libavutil.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Complexes.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Complexes.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Erreurdedomainededefinition.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Erreurdedomainededefinition.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Calculs.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Calculs.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\FenetreFourier.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>FenetreFourier.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\FichierFusionner.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>FichierFusionner.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libavfilter.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libavfilter.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Unites.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Unites.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\bin\delphi_PROJECTICNS.icns" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\Contents\Resources\</RemoteDir>
+            <RemoteName>regressiM.icns</RemoteName>
+            <DeployClass>ProjectOSXResource</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OSX64\Release\regressiM.info.plist" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\</RemoteDir>
+            <RemoteName>Info.plist</RemoteName>
+            <DeployClass>ProjectOSXInfoPList</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Residus.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Residus.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\IndexRegressi.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>IndexRegressi.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libavfilter.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libavfilter.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\toc.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>toc.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OSX64\Release\regressiM" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>regressiM</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Entreededonneesauclavier.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Entreededonneesauclavier.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Simulation-Dosage.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Simulation-Dosage.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Arduino\tempsArduino\tempsArduino.ino" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Startup\Arduino\tempsArduino\</RemoteDir>
+            <RemoteName>tempsArduino.ino</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Optionsdemodelisation.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Optionsdemodelisation.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Numerisationdunecourbe.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Numerisationdunecourbe.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\FFT-Filtrage.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>FFT-Filtrage.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libswresample.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libswresample.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Fonctions.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Fonctions.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\FFT-Leakage.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>FFT-Leakage.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libSDL_mixer.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libSDL_mixer.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Oscillateurs-Couples.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Oscillateurs-Couples.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\H3PO4.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>H3PO4.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libSDL.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libSDL.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Fenetregrandeurs1.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Fenetregrandeurs1.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Sonagramme.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Sonagramme.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Fonctionsparticulieres.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Fonctionsparticulieres.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Arduino\simplePoint\simplePoint.ino" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\Arduino\simplePoint\</RemoteDir>
+            <RemoteName>simplePoint.ino</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Acquisition.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Acquisition.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Constantes.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Constantes.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Charge-Condensateur.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Charge-Condensateur.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Arduino\oscilloCurie101\oscilloCurie101.ino" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\Arduino\oscilloCurie101\</RemoteDir>
+            <RemoteName>oscilloCurie101.ino</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Driveetintgrale.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Driveetintgrale.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Optionstexte.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Optionstexte.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Statistiques.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Statistiques.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Optionsgraphe.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Optionsgraphe.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Arduino\etalon\etalon.ino" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\Arduino\etalon\</RemoteDir>
+            <RemoteName>etalon.ino</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Valeurs.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Valeurs.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Dosage-H3PO4.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Dosage-H3PO4.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Filtres.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Filtres.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Fonctionsstatistiques.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Fonctionsstatistiques.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Fenetreparametres.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Fenetreparametres.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Methode-Gran-AgI.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Methode-Gran-AgI.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OSX64\Release\regressiM.entitlements" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\..\</RemoteDir>
+            <RemoteName>regressiM.entitlements</RemoteName>
+            <DeployClass>ProjectOSXEntitlements</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libSDL.dylib" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libSDL.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Modele-Charge-RC.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Modele-Charge-RC.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Graphique.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Graphique.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\FichierOuvrir.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>FichierOuvrir.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\General.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>General.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OSX64\Debug\regressiM" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>regressiM</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libswscale.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libswscale.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Grandeurs.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Grandeurs.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Timeout.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Timeout.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\..\..\AideRegressiMac\Fenetrestatistique.html" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\Aide\</RemoteDir>
+            <RemoteName>Fenetrestatistique.html</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\ffmpegfmx\Bin\OSX64\libavutil.dylib" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>regressiM.app\Contents\MacOS\</RemoteDir>
+            <RemoteName>libavutil.dylib</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="ExemplesXML\Periode-Pendule-Pesant.rxml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>regressiM.app\Contents\Resources\StartUp\</RemoteDir>
+            <RemoteName>Periode-Pendule-Pesant.rxml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+    </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='Android'"/>
+    <ItemGroup Condition="'$(Platform)'=='iOSSimulator'">
+        <DeployFile Include="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib">
+            <RemoteDir>regressiM.app\</RemoteDir>
+            <RemoteName>libcgunwind.1.0.dylib</RemoteName>
+            <DeployClass>DependencyModule</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\Redist\iossimulator\libpcre.dylib">
+            <RemoteDir>regressiM.app\</RemoteDir>
+            <RemoteName>libpcre.dylib</RemoteName>
+            <DeployClass>DependencyModule</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+    </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='Android64'"/>
+</Project>

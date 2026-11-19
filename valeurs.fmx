@@ -1,0 +1,1298 @@
+object FValeurs: TFValeurs
+  Left = 195
+  Top = 144
+  Caption = 'Grandeurs'
+  ClientHeight = 578
+  ClientWidth = 907
+  Position = Default
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDeactivate = FormDeactivate
+  OnDestroy = FormDestroy
+  Left = 195
+  Top = 144
+  DesignerMasterStyle = 1
+  object Feuillets: TTabControl
+    Align = Client
+    EnableDragHighlight = False
+    FullSize = True
+    HelpContext = 500
+    Size.Width = 907.000000000000000000
+    Size.Height = 578.000000000000000000
+    Size.PlatformDefault = False
+    TabHeight = 30.000000000000000000
+    TabIndex = 1
+    TabOrder = 0
+    TabPosition = Top
+    OnChange = FeuilletsChange
+    Sizes = (
+      907s
+      548s
+      907s
+      548s
+      907s
+      548s)
+    object ParamSheet: TTabItem
+      CustomIcon = <
+        item
+        end>
+      EnableDragHighlight = False
+      HelpContext = 701
+      IsSelected = False
+      ImageIndex = 42
+      Size.Width = 302.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Param'#232'tres'
+      ExplicitSize.cx = 84.000000000000000000
+      ExplicitSize.cy = 20.000000000000000000
+      object ToolBar2: TToolBar
+        Size.Width = 907.000000000000000000
+        Size.Height = 30.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object AddParamBtn: TButton
+          Align = Left
+          Images = ImagesData.ImagesList
+          ImageIndex = 0
+          Size.Width = 80.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'Ajouter'
+          TextSettings.WordWrap = True
+          OnClick = AddBtnClick
+        end
+        object IncertParamBtn: TButton
+          StaysPressed = True
+          Align = Left
+          Images = ImagesData.ImagesList
+          ImageIndex = 45
+          Position.X = 80.000000000000000000
+          Size.Width = 100.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'Incertitudes'
+          TextSettings.WordWrap = True
+          OnClick = IncertParamBtnClick
+        end
+      end
+      object GridParam: TTMSFNCGrid
+        Align = Client
+        Size.Width = 907.000000000000000000
+        Size.Height = 518.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Options.Editing.CalcFormat = '%g'
+        Options.Grouping.CalcFormat = '%g'
+        Options.Grouping.GroupCountFormat = '(%d)'
+        Options.IO.XMLEncoding = 'ISO-8859-1'
+        Options.Mouse.ClickMargin = 0
+        Options.Mouse.ColumnSizeMargin = 6
+        Options.Mouse.RowSizeMargin = 6
+        Columns = <
+          item
+            BorderWidth = 1
+            FixedFont.Name = 'Segoe UI'
+            FixedFont.StyleExt = {00070000000000000004000000}
+            Font.Name = 'Segoe UI'
+            ID = ''
+            Width = 68.000000000000000000
+          end
+          item
+            BorderWidth = 1
+            FixedFont.Name = 'Segoe UI'
+            FixedFont.StyleExt = {00070000000000000004000000}
+            Font.Name = 'Segoe UI'
+            ID = ''
+            Width = 68.000000000000000000
+          end
+          item
+            BorderWidth = 1
+            FixedFont.Name = 'Segoe UI'
+            FixedFont.StyleExt = {00070000000000000004000000}
+            Font.Name = 'Segoe UI'
+            ID = ''
+            Width = 68.000000000000000000
+          end
+          item
+            BorderWidth = 1
+            FixedFont.Name = 'Segoe UI'
+            FixedFont.StyleExt = {00070000000000000004000000}
+            Font.Name = 'Segoe UI'
+            ID = ''
+            Width = 68.000000000000000000
+          end
+          item
+            BorderWidth = 1
+            FixedFont.Name = 'Segoe UI'
+            FixedFont.StyleExt = {00070000000000000004000000}
+            Font.Name = 'Segoe UI'
+            ID = ''
+            Width = 68.000000000000000000
+          end>
+        DefaultFont.Name = 'Segoe UI'
+        TopRow = 1
+        Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+        Appearance.FixedLayout.Font.Name = 'Segoe UI'
+        Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+        Appearance.NormalLayout.Fill.Color = claNull
+        Appearance.NormalLayout.Font.Name = 'Segoe UI'
+        Appearance.GroupLayout.Fill.Color = xFF6E93C3
+        Appearance.GroupLayout.Font.Color = claWhite
+        Appearance.GroupLayout.Font.Name = 'Segoe UI'
+        Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
+        Appearance.SummaryLayout.Font.Name = 'Segoe UI'
+        Appearance.SelectedLayout.Fill.Color = claLightsteelblue
+        Appearance.SelectedLayout.Font.Color = claWhite
+        Appearance.SelectedLayout.Font.Name = 'Segoe UI'
+        Appearance.FocusedLayout.Fill.Color = claLightsteelblue
+        Appearance.FocusedLayout.Font.Color = claWhite
+        Appearance.FocusedLayout.Font.Name = 'Segoe UI'
+        Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
+        Appearance.FixedSelectedLayout.Font.Name = 'Segoe UI'
+        Appearance.BandLayout.Fill.Color = claLightyellow
+        Appearance.BandLayout.Font.Name = 'Segoe UI'
+        Appearance.ProgressLayout.Format = '%.0f%%'
+        LeftCol = 1
+        ScrollMode = scmItemScrolling
+        GlobalFont.Scale = 1.000000000000000000
+        GlobalFont.Style = []
+        DesignTimeSampleData = True
+        OnCellEditGetData = GridParamCellEditGetData
+      end
+    end
+    object VariabSheet: TTabItem
+      Tag = 1
+      CustomIcon.Height = 20
+      CustomIcon.Width = 20
+      CustomIcon = <
+        item
+          Width = 20
+          Height = 20
+          PNG = {
+            89504E470D0A1A0A0000000D49484452000000140000001408060000008D891D
+            0D000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+            007649444154384FED90410E80300804C18F8B2FD76E8596A451128BB7CE69B7
+            4D3613F82C5022759099B5CE01B7362822FA4C25EF9ADE113934214B1DDCB4A7
+            D10CB13E836D0C83FD9EE851BEEF061E07BF621BC30DF1619651B6EE5986B195
+            CFD63DCB30B6F2D9BAE77FC3599A610630AC83DA1320BA000446796F7F37003C
+            0000000049454E44AE426082}
+          FileName = '\\Mac\Home\Documents\Embarcadero\Studio\Projets\20x20\TABLE.BMP'
+        end>
+      EnableDragHighlight = False
+      HelpContext = 704
+      IsSelected = True
+      ImageIndex = 42
+      PopupMenu = PopupMenuGrid
+      Size.Width = 302.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Tableau'
+      ExplicitSize.cx = 79.000000000000000000
+      ExplicitSize.cy = 20.000000000000000000
+      object ToolBar1: TToolBar
+        Size.Width = 907.000000000000000000
+        Size.Height = 30.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object Button1: TButton
+          Align = Left
+          Images = ImagesData.ImagesList
+          ImageIndex = 0
+          Size.Width = 80.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'Ajouter'
+          TextSettings.WordWrap = True
+          OnClick = AddBtnClick
+        end
+        object TriVarBtn: TButton
+          Align = Left
+          HelpType = htKeyword
+          Images = ImagesData.ImagesList
+          ImageIndex = 37
+          Position.X = 80.000000000000000000
+          Size.Width = 64.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Trier'
+          TextSettings.WordWrap = True
+          OnClick = TriBtnClick
+        end
+        object PrintVarBtn: TButton
+          StaysPressed = True
+          Align = Left
+          Images = ImagesData.ImagesList
+          ImageIndex = 40
+          Position.X = 144.000000000000000000
+          Size.Width = 85.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'Imprimer'
+          TextSettings.WordWrap = True
+          OnClick = ImprimeBtnClick
+        end
+        object IncertVarBtn: TButton
+          StaysPressed = True
+          Align = Left
+          Images = ImagesData.ImagesList
+          ImageIndex = 45
+          Position.X = 229.000000000000000000
+          Size.Width = 100.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          Text = 'Incertitudes'
+          TextSettings.WordWrap = True
+          OnClick = IncertVarBtnClick
+        end
+        object RadDegTabBtn: TButton
+          StaysPressed = True
+          Align = Left
+          Images = ImagesData.ImagesList
+          ImageIndex = 39
+          Position.X = 329.000000000000000000
+          Size.Width = 65.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 4
+          Text = 'Angle'
+          TextSettings.WordWrap = True
+          OnClick = RadDegTabBtnClick
+        end
+      end
+      object GridVariab: TTMSFNCGrid
+        Align = Client
+        Size.Width = 907.000000000000000000
+        Size.Height = 518.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Options.Editing.CalcFormat = '%g'
+        Options.Grouping.CalcFormat = '%g'
+        Options.Grouping.GroupCountFormat = '(%d)'
+        Options.IO.XMLEncoding = 'ISO-8859-1'
+        Options.Mouse.ClickMargin = 0
+        Options.Mouse.ColumnSizeMargin = 6
+        Options.Mouse.RowSizeMargin = 6
+        Columns = <
+          item
+            BorderWidth = 1
+            FixedFont.Name = 'Segoe UI'
+            FixedFont.StyleExt = {00070000000000000004000000}
+            Font.Name = 'Segoe UI'
+            ID = ''
+            Width = 68.000000000000000000
+          end
+          item
+            BorderWidth = 1
+            FixedFont.Name = 'Segoe UI'
+            FixedFont.StyleExt = {00070000000000000004000000}
+            Font.Name = 'Segoe UI'
+            ID = ''
+            Width = 68.000000000000000000
+          end
+          item
+            BorderWidth = 1
+            FixedFont.Name = 'Segoe UI'
+            FixedFont.StyleExt = {00070000000000000004000000}
+            Font.Name = 'Segoe UI'
+            ID = ''
+            Width = 68.000000000000000000
+          end
+          item
+            BorderWidth = 1
+            FixedFont.Name = 'Segoe UI'
+            FixedFont.StyleExt = {00070000000000000004000000}
+            Font.Name = 'Segoe UI'
+            ID = ''
+            Width = 68.000000000000000000
+          end
+          item
+            BorderWidth = 1
+            FixedFont.Name = 'Segoe UI'
+            FixedFont.StyleExt = {00070000000000000004000000}
+            Font.Name = 'Segoe UI'
+            ID = ''
+            Width = 68.000000000000000000
+          end>
+        DefaultFont.Name = 'Segoe UI'
+        TopRow = 1
+        Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+        Appearance.FixedLayout.Font.Name = 'Segoe UI'
+        Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+        Appearance.NormalLayout.Fill.Color = claNull
+        Appearance.NormalLayout.Font.Name = 'Segoe UI'
+        Appearance.GroupLayout.Fill.Color = xFF6E93C3
+        Appearance.GroupLayout.Font.Color = claWhite
+        Appearance.GroupLayout.Font.Name = 'Segoe UI'
+        Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
+        Appearance.SummaryLayout.Font.Name = 'Segoe UI'
+        Appearance.SelectedLayout.Fill.Color = claLightsteelblue
+        Appearance.SelectedLayout.Font.Color = claWhite
+        Appearance.SelectedLayout.Font.Name = 'Segoe UI'
+        Appearance.FocusedLayout.Fill.Color = claLightsteelblue
+        Appearance.FocusedLayout.Font.Color = claWhite
+        Appearance.FocusedLayout.Font.Name = 'Segoe UI'
+        Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
+        Appearance.FixedSelectedLayout.Font.Name = 'Segoe UI'
+        Appearance.BandLayout.Fill.Color = claLightyellow
+        Appearance.BandLayout.Font.Name = 'Segoe UI'
+        Appearance.ProgressLayout.Format = '%.0f%%'
+        LeftCol = 1
+        ScrollMode = scmItemScrolling
+        GlobalFont.Scale = 1.000000000000000000
+        GlobalFont.Style = []
+        DesignTimeSampleData = True
+        OnGetCellClass = TMSFNCGrid1GetCellClass
+        OnGetCellData = GridVariabGetCellData
+        OnGetCellReadOnly = GridVariabGetCellReadOnly
+        OnGetCellEditorType = TMSFNCGrid1GetCellEditorType
+        OnCellEditSetData = GridVariabCellEditSetData
+      end
+    end
+    object ExpSheet: TTabItem
+      Tag = 2
+      CustomIcon.Height = 20
+      CustomIcon.Width = 20
+      CustomIcon.TransparentColor = 16777215
+      CustomIcon = <
+        item
+          Width = 20
+          Height = 20
+          PNG = {
+            89504E470D0A1A0A0000000D49484452000000140000001408060000008D891D
+            0D000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+            00A749444154384FED94DB0EC3200886652F2E3CB90306463AB46DEAC52EF625
+            44F0F05781141A5336F2B2711BBF2F38CD210198774E1D24D6828816ADA9B59A
+            C78860064B99778FCB3904A06E44A473324A1C30E10022861BF2DBD51C8FC564
+            EF483F2502BE38FA4731271313F4C9594543A227647B5450CB2E15BD58D515A1
+            6D7AABB085DEB2C4B7F6B991C7FEFD69DB7831B2DCF0F16ECE3116BEAA2C824F
+            F8FFBE9EB359B094376F7986DF7954177D0000000049454E44AE426082}
+          FileName = '\\Mac\Home\Documents\Embarcadero\Studio\Projets\20x20\MATHEM.BMP'
+        end>
+      EnableDragHighlight = False
+      HelpContext = 703
+      HelpKeyword = 'Expressions'
+      HelpType = htKeyword
+      IsSelected = False
+      ImageIndex = 34
+      PopupMenu = PopupMenuExpr
+      Size.Width = 303.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Expressions'
+      ExplicitSize.cx = 102.000000000000000000
+      ExplicitSize.cy = 20.000000000000000000
+      object Memo: TMemo
+        Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+        DataDetectorTypes = []
+        TextSettings.Font.Size = 14.000000000000000000
+        OnChange = MemoChange
+        Align = Client
+        PopupMenu = PopupMenuExpr
+        Size.Width = 757.000000000000000000
+        Size.Height = 438.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnKeyUp = MemoKeyUp
+        OnKeyDown = MemoKeyDown
+        Viewport.Width = 749.000000000000000000
+        Viewport.Height = 430.000000000000000000
+      end
+      object Panel1: TPanel
+        Align = Left
+        Position.Y = 110.000000000000000000
+        Size.Width = 150.000000000000000000
+        Size.Height = 438.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object Expander1: TExpander
+          Align = Client
+          ShowCheck = False
+          Size.Width = 150.000000000000000000
+          Size.Height = 60.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Grandeurs'
+          TabOrder = 0
+          ContentSize = '35'
+          object ListGrandeurs: TListBox
+            Align = Client
+            Size.Width = 150.000000000000000000
+            Size.Height = 35.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            DisableFocusEffect = True
+            DefaultItemStyles.ItemStyle = ''
+            DefaultItemStyles.GroupHeaderStyle = ''
+            DefaultItemStyles.GroupFooterStyle = ''
+            OnChange = ListGrandeursChange
+            Viewport.Width = 146.000000000000000000
+            Viewport.Height = 31.000000000000000000
+          end
+        end
+        object Expander3: TExpander
+          Align = Top
+          ShowCheck = False
+          Size.Width = 150.000000000000000000
+          Size.Height = 224.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Fonctions'
+          TabOrder = 1
+          ContentSize = '199'
+          object TreeView1: TTreeView
+            Align = Client
+            Size.Width = 150.000000000000000000
+            Size.Height = 199.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            Viewport.Width = 138.000000000000000000
+            Viewport.Height = 195.000000000000000000
+            object TreeViewItem1: TTreeViewItem
+              IsChecked = False
+              IsExpanded = False
+              IsSelected = False
+              TabOrder = 0
+              Text = 'Statistique'
+              object TreeViewItem2: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 0
+                Text = 'Min'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem3: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 1
+                Text = 'Max'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem37: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 2
+                Text = 'Mean'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem38: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 3
+                Text = 'Erf'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+            end
+            object TreeViewItem4: TTreeViewItem
+              IsChecked = False
+              IsExpanded = False
+              IsSelected = False
+              TabOrder = 1
+              Text = 'Classique'
+              object TreeViewItem8: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 0
+                Text = 'Sin'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem7: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 1
+                Text = 'Tan'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem18: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 2
+                Text = 'Abs'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem31: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 3
+                Text = 'Cos'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem32: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 4
+                Text = 'Log'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem33: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 5
+                Text = 'Ln'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem34: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 6
+                Text = 'Exp'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem35: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 7
+                Text = 'Sqrt'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem36: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 8
+                Text = 'Sinc'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+            end
+            object TreeViewItem5: TTreeViewItem
+              IsChecked = False
+              IsExpanded = False
+              IsSelected = False
+              TabOrder = 2
+              Text = 'Signal'
+              object TreeViewItem9: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 0
+                Text = 'RMS'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem10: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 1
+                Text = 'Freq'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem11: TTreeViewItem
+                Tag = 2
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 2
+                Text = 'Phase'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem23: TTreeViewItem
+                Tag = 3
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 3
+                Text = 'Creneau'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem24: TTreeViewItem
+                Tag = 3
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 4
+                Text = 'Triangle'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem25: TTreeViewItem
+                Tag = 2
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 5
+                Text = 'Filtre'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem26: TTreeViewItem
+                Tag = 2
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 6
+                Text = 'Lisse'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem27: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 7
+                Text = 'Ech'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem28: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 8
+                Text = 'Env'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem29: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 9
+                Text = 'Avg'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem30: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 10
+                Text = 'Sign'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+            end
+            object TreeViewItem6: TTreeViewItem
+              IsChecked = False
+              IsExpanded = True
+              IsSelected = False
+              TabOrder = 3
+              Text = 'Divers'
+              object TreeViewItem12: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 0
+                Text = 'Frac'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem13: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 1
+                Text = 'Atan'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem14: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 2
+                Text = 'Asin'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem15: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 3
+                Text = 'Acos'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem16: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 4
+                Text = 'Noise'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem17: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 5
+                Text = 'Arg'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem19: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 6
+                Text = 'CH'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem20: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 7
+                Text = 'SH'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem21: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 8
+                Text = 'Re'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+              object TreeViewItem22: TTreeViewItem
+                Tag = 1
+                IsChecked = False
+                IsExpanded = False
+                IsSelected = False
+                TabOrder = 9
+                Text = 'Im'
+                OnClick = FonctionBtnClick
+                OnMouseMove = FonctionBtnMouseMove
+              end
+            end
+          end
+        end
+        object GrecExpander: TExpander
+          Align = Top
+          Position.Y = 224.000000000000000000
+          ShowCheck = False
+          Size.Width = 150.000000000000000000
+          Size.Height = 154.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Grec'
+          TabOrder = 2
+          ContentSize = '129'
+          object GrecGrid: TTMSFNCGrid
+            Align = Client
+            Size.Width = 150.000000000000000000
+            Size.Height = 129.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            Options.Editing.CalcFormat = '%g'
+            Options.Grouping.CalcFormat = '%g'
+            Options.Grouping.GroupCountFormat = '(%d)'
+            Options.IO.XMLEncoding = 'ISO-8859-1'
+            Options.Mouse.ClickMargin = 0
+            Options.Mouse.ColumnSizeMargin = 6
+            Options.Mouse.RowSizeMargin = 6
+            Columns = <
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 68.000000000000000000
+              end>
+            DefaultFont.Name = 'Segoe UI'
+            TopRow = 1
+            Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+            Appearance.FixedLayout.Font.Name = 'Segoe UI'
+            Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+            Appearance.NormalLayout.Fill.Color = claNull
+            Appearance.NormalLayout.Font.Name = 'Segoe UI'
+            Appearance.GroupLayout.Fill.Color = xFF6E93C3
+            Appearance.GroupLayout.Font.Color = claWhite
+            Appearance.GroupLayout.Font.Name = 'Segoe UI'
+            Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
+            Appearance.SummaryLayout.Font.Name = 'Segoe UI'
+            Appearance.SelectedLayout.Fill.Color = claLightsteelblue
+            Appearance.SelectedLayout.Font.Color = claWhite
+            Appearance.SelectedLayout.Font.Name = 'Segoe UI'
+            Appearance.FocusedLayout.Fill.Color = claLightsteelblue
+            Appearance.FocusedLayout.Font.Color = claWhite
+            Appearance.FocusedLayout.Font.Name = 'Segoe UI'
+            Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
+            Appearance.FixedSelectedLayout.Font.Name = 'Segoe UI'
+            Appearance.BandLayout.Fill.Color = claLightyellow
+            Appearance.BandLayout.Font.Name = 'Segoe UI'
+            Appearance.ProgressLayout.Format = '%.0f%%'
+            LeftCol = 1
+            ScrollMode = scmItemScrolling
+            GlobalFont.Scale = 1.000000000000000000
+            GlobalFont.Style = []
+            DesignTimeSampleData = True
+            OnGetCellClass = TMSFNCGrid3GetCellClass
+            OnCellButtonClick = GrecGridCellButtonClick
+          end
+        end
+      end
+      object ExpressionsToolBar: TToolBar
+        Size.Width = 907.000000000000000000
+        Size.Height = 30.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object AddBtn: TButton
+          Align = Left
+          Images = ImagesData.ImagesList
+          ImageIndex = 0
+          Size.Width = 80.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'Ajouter'
+          TextSettings.WordWrap = True
+          OnClick = AddBtnClick
+        end
+        object SyntaxeBtn: TButton
+          Align = Left
+          HelpType = htKeyword
+          Images = ImagesData.ImagesList
+          ImageIndex = 8
+          Position.X = 180.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Syntaxe'
+          TextSettings.WordWrap = True
+        end
+        object ImprimerBtn: TButton
+          StaysPressed = True
+          Align = Left
+          Images = ImagesData.ImagesList
+          ImageIndex = 40
+          Position.X = 260.000000000000000000
+          Size.Width = 90.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'Imprimer'
+          TextSettings.WordWrap = True
+          OnClick = ImprimeBtnClick
+        end
+        object ZoomAutoBtn: TButton
+          Align = Left
+          Images = ImagesData.ImagesList
+          ImageIndex = 12
+          Position.X = 350.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          Text = 'Copier'
+          TextSettings.WordWrap = True
+          OnClick = CopierItemClick
+        end
+        object RadDegExpBtn: TButton
+          StaysPressed = True
+          Align = Left
+          Hint = 'Choix degr'#233'/radian'
+          Images = ImagesData.ImagesList
+          ImageIndex = 21
+          Position.X = 430.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 4
+          Text = 'Angle'
+          TextSettings.WordWrap = True
+          OnClick = RadDegTabBtnClick
+        end
+        object MajBtn: TButton
+          Align = Left
+          Images = ImagesData.ImagesList
+          ImageIndex = 10
+          Position.X = 80.000000000000000000
+          Size.Width = 100.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 5
+          Text = 'Mise '#224' jour'
+          TextSettings.WordWrap = True
+          OnClick = MajBtnClick
+        end
+      end
+      object SimulationGB: TGroupBox
+        Align = Top
+        StyledSettings = [Family, Size, Style]
+        Position.Y = 30.000000000000000000
+        Size.Width = 907.000000000000000000
+        Size.Height = 80.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Variable de contr'#244'le'
+        TabOrder = 3
+        object Label1: TLabel
+          AutoSize = True
+          Position.X = 320.000000000000000000
+          Position.Y = 24.000000000000000000
+          Size.Width = 53.500000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.WordWrap = False
+          Text = 'Nombre'
+        end
+        object NombreXSB: TSpinBox
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 1
+          Cursor = crIBeam
+          DecimalDigits = 0
+          Min = 16.000000000000000000
+          Max = 4096.000000000000000000
+          Value = 128.000000000000000000
+          Increment = 8.000000000000000000
+          Position.X = 380.000000000000000000
+          Position.Y = 24.000000000000000000
+          OnChange = NombreXSBChange
+          OnExit = NombreXSBExit
+        end
+        object LogBox: TCheckBox
+          Hint = 'pour trac'#233' logarithmique !'
+          Position.X = 320.000000000000000000
+          Position.Y = 50.000000000000000000
+          Size.Width = 185.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'Remplissage exponentiel'
+          OnChange = LogBoxChange
+        end
+        object nomXedit: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 6
+          Text = 't'
+          Position.X = 50.000000000000000000
+          Position.Y = 22.000000000000000000
+          OnChange = nomXeditChange
+          OnExit = nomXeditExit
+        end
+        object UniteXedit: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 5
+          Text = 's'
+          Position.X = 50.000000000000000000
+          Position.Y = 50.000000000000000000
+          OnChange = UniteXeditChange
+          OnExit = UniteXeditExit
+        end
+        object MiniXEdit: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 4
+          Text = '0'
+          Position.X = 200.000000000000000000
+          Position.Y = 22.000000000000000000
+          OnChange = MaxiXeditChange
+          OnKeyDown = MaxiXeditKeyDown
+          OnExit = MiniXEditExit
+        end
+        object MaxiXedit: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 3
+          Text = '1'
+          Position.X = 200.000000000000000000
+          Position.Y = 50.000000000000000000
+          OnChange = MaxiXeditChange
+          OnKeyDown = MaxiXeditKeyDown
+          OnExit = MiniXEditExit
+        end
+        object Label2: TLabel
+          AutoSize = True
+          Position.X = 8.000000000000000000
+          Position.Y = 22.000000000000000000
+          Size.Width = 34.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.WordWrap = False
+          Text = 'Nom'
+        end
+        object Label3: TLabel
+          AutoSize = True
+          Position.X = 8.000000000000000000
+          Position.Y = 50.000000000000000000
+          Size.Width = 36.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.WordWrap = False
+          Text = 'Unit'#233
+        end
+        object Label4: TLabel
+          AutoSize = True
+          Position.X = 160.000000000000000000
+          Position.Y = 22.000000000000000000
+          Size.Width = 30.500000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.WordWrap = False
+          Text = 'Mini'
+        end
+        object Label5: TLabel
+          AutoSize = True
+          Position.X = 160.000000000000000000
+          Position.Y = 50.000000000000000000
+          Size.Width = 33.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.WordWrap = False
+          Text = 'Maxi'
+        end
+      end
+    end
+  end
+  object PopupMenuExpr: TPopupMenu
+    Left = 221
+    Top = 162
+    object CompileItem: TMenuItem
+      ShortCut = 113
+      Text = 'Mise '#224' jour'
+      OnClick = CompileItemClick
+    end
+    object CreerGrandeurItem: TMenuItem
+      Text = 'Cr'#233'er grandeur'
+      OnClick = AddBtnClick
+    end
+    object CopierItem: TMenuItem
+      ShortCut = 4163
+      Text = 'Copier'
+      OnClick = CopierItemClick
+    end
+    object CollerItem: TMenuItem
+      ShortCut = 4182
+      Text = 'Coller'
+      OnClick = CollerItemClick
+    end
+    object RazItem: TMenuItem
+      Text = 'R'#224'Z'
+      OnClick = MajBtnClick
+    end
+    object Phase: TMenuItem
+      Text = 'Phase continue'
+      OnClick = PhaseItemClick
+    end
+    object ImprimeMenu: TMenuItem
+      Text = 'Imprimer'
+      OnClick = ImprimeBtnClick
+    end
+  end
+  object PopupMenuGrid: TPopupMenu
+    Left = 477
+    Top = 164
+    object CreerGrandeurGrid: TMenuItem
+      Text = 'Cr'#233'er grandeur'
+      OnClick = AddBtnClick
+    end
+    object DelGrandeurItem: TMenuItem
+      Text = 'Supprimer grandeur'
+      OnClick = DeleteBtnClick
+    end
+    object TrierItem: TMenuItem
+      Text = 'Trier'
+      OnClick = TriBtnClick
+    end
+    object DelSelectItem: TMenuItem
+      Text = 'Supprimer lignes'
+      OnClick = DelSelectItemClick
+    end
+    object CopierTableauItem: TMenuItem
+      Text = 'Copier tableau'
+    end
+    object PhaseItem: TMenuItem
+      Text = 'Phase continue'
+      OnClick = PhaseItemClick
+    end
+    object MenuItem1: TMenuItem
+      Text = 'Copier'
+      OnClick = CopierItemClick
+    end
+    object ImprimeGridMenu: TMenuItem
+      Text = 'Imprimer'
+      OnClick = ImprimeBtnClick
+    end
+    object RazGridItem: TMenuItem
+      Text = 'R'#224'Z'
+      OnClick = RazBtnClick
+    end
+    object DeltaItem: TMenuItem
+      AutoCheck = True
+      Text = 'Incertitudes'
+      OnClick = DeltaBtnClick
+    end
+  end
+  object Lang1: TLang
+    Lang = 'fr'
+    Left = 589
+    Top = 368
+    ResourcesBin = {
+      A503000031000D000A003C000D000A004E000D000A00530065006C0065006300
+      74002E000D000A003E000D000A002B000D000A00310030002F00340035000D00
+      0A0041006E0067006C0065000D000A00560061006C0065007500720073000D00
+      0A004700720061007000680065000D000A004F007500740069006C0073002000
+      670072002E000D000A0043006F006F00720064002E000D000A00410075007400
+      6F000D000A004C006F007500700065000D000A005A006F006F006D0020006100
+      72002E000D000A00560065006300740065007500720073000D000A004D006F00
+      6400E9006C00690073006100740069006F006E000D000A004C00610062006500
+      6C00440065006C007400610058000D000A004C006100620065006C0044006500
+      6C007400610059000D000A0041006A00750073007400650072000D000A005400
+      720061006300E90020006100750074006F002E0020000D000A005200E9007300
+      75006C00740061007400730020006400650020006C00610020006D006F006400
+      E9006C00690073006100740069006F006E000D000A004F007000740069006F00
+      6E0073000D000A004D006F006400E8006C00650073000D000A0042006F007200
+      6E00650073000D000A0049006E0069007400200044006900660066002E000D00
+      0A0046006F00750072006900650072000D000A00530074006100740069007300
+      740069007100750065000D000A00430061007200610063007400E90072006900
+      73007400690071007500650073000D000A0041006900640065000D000A005200
+      650067007200650073007300690020004D00610063000D000A004A0065006100
+      6E002D004D0069006300680065006C0020004D0049004C004C00450054002000
+      6100730073006F00630069006100740069006F006E0020004500560041005200
+      49005300540045000D000A00560065007200730069006F006E00200031002E00
+      310020003B002000440065006C00700068006900200058004500310030002E00
+      320020003B002000320031002F00300034002F0032003000310036000D000A00
+      7200650067007200650073007300690040006F00720061006E00670065002E00
+      660072000D000A004C0069007300740065002000520065006700720065007300
+      730069002D00640065006D006F002000E00020003A000D000A00680074007400
+      70003A002F002F00660072002E00670072006F007500700073002E0079006100
+      68006F006F002E0063006F006D002F00670072006F00750070002F0072006500
+      6700720065007300730069002D00640065006D006F000D000A004F004B000D00
+      0A00560065007200730069006F006E002000E00020006A006F00750072000D00
+      0A0050006100720061006D00E80074007200650073000D000A0041006A006F00
+      75007400650072000D000A005400610062006C006500610075000D000A005400
+      72006900650072000D000A0049006D007000720069006D00650072000D000A00
+      49006E0063006500720074006900740075006400650073000D000A0045007800
+      7000720065007300730069006F006E0073000D000A004700720061006E006400
+      65007500720073000D000A0046006F006E006300740069006F006E0073000D00
+      0A004D0069006E000D000A004D00610078000D000A004D00650061006E000D00
+      0A004500720066000D000A0043006C0061007300730069007100750065000D00
+      0A00530069006E000D000A00540061006E000D000A004100620073000D000A00
+      43006F0073000D000A004C006F0067000D000A004C006E000D000A0045007800
+      70000D000A0053007100720074000D000A00530069006E0063000D000A005300
+      690067006E0061006C000D000A0052004D0053000D000A004600720065007100
+      0D000A00500068006100730065000D000A004300720065006E00650061007500
+      0D000A0054007200690061006E0067006C0065000D000A00460069006C007400
+      720065000D000A004C0069007300730065000D000A004500630068000D000A00
+      45006E0076000D000A004100760067000D000A005300690067006E000D000A00
+      4400690076006500720073000D000A0046007200610063000D000A0041007400
+      61006E000D000A004100730069006E000D000A00410063006F0073000D000A00
+      4E006F006900730065000D000A004100720067000D000A00430048000D000A00
+      530048000D000A00520065000D000A0049006D000D000A004700720065006300
+      0D000A004D006900730065002000E00020006A006F00750072000D000A005300
+      79006E0074006100780065000D000A0043006F0070006900650072000D000A00
+      5600610072006900610062006C006500200064006500200063006F006E007400
+      7200F4006C0065000D000A004E006F006D006200720065000D000A0052006500
+      6D0070006C0069007300730061006700650020006500780070006F006E006500
+      6E007400690065006C000D000A004E006F006D000D000A0055006E0069007400
+      E9000D000A004D0069006E0069000D000A004D006100780069000D000A005300
+      6F0075007200630065000D000A00020000000200000066007200000000000200
+      000065006E00CB0000004700720061007000680065003D004700720061007000
+      68000D000A00560061006C0065007500720073003D00560061006C0075006500
+      73000D000A004C006F007500700065003D004D00610067006E00690066006900
+      650072000D000A0041006A00750073007400650072003D00410064006A007500
+      730074000D000A0041006900640065003D00480065006C0070000D000A005200
+      650067007200650073007300690020004D00610063003D005200650067007200
+      65007300730069000D000A0049006D007000720069006D00650072003D005000
+      720069006E0074000D000A0041006A006F0075007400650072003D0041006400
+      64000D000A0050006100720061006D00E80074007200650073003D0050006100
+      720061006D00650074006500720073000D000A005400610062006C0065006100
+      75003D0047007200690064000D000A00460069006C007400720065003D004600
+      69006C007400650072000D000A0043006F0070006900650072003D0043006F00
+      700079000D000A0055006E0069007400E9003D0055006E00690074000D000A00}
+  end
+end

@@ -1,0 +1,1758 @@
+object ChronoBitmapForm: TChronoBitmapForm
+  Left = 0
+  Top = 0
+  Caption = 'Lecture de bitmap'
+  ClientHeight = 473
+  ClientWidth = 1504
+  WindowState = wsMaximized
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnClose = FormClose
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 1
+  object OpenDialog: TOpenDialog
+    DefaultExt = '.mov'
+    Filter = 'Images|*.bmp;*.jpg;*.png;*.gif;*.tif;*.tga;*.jpeg'
+    Left = 40
+    Top = 114
+  end
+  object TMSFMXToolBar1: TTMSFMXToolBar
+    Version = '1.0.1.3'
+    Appearance.Fill.Gradient.Points = <
+      item
+        Color = claWhite
+        Offset = 0.000000000000000000
+      end
+      item
+        Color = xFFE6E6E6
+        Offset = 1.000000000000000000
+      end>
+    OptionsMenu.ShowButton = False
+    Align = Top
+    DisableFocusEffect = False
+    TabOrder = 6
+    Size.Width = 1504.000000000000000000
+    Size.Height = 30.000000000000000000
+    Size.PlatformDefault = False
+    object OpenBtn: TTMSFMXToolBarButton
+      ClipChildren = True
+      DisableFocusEffect = False
+      Position.X = 9.000000000000000000
+      Position.Y = 3.000000000000000000
+      TabOrder = 1
+      OnClick = OpenButtonClick
+      Size.Width = 72.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Ouvrir'
+      TextVisible = True
+      BitmapVisible = True
+      BitmapContainer = TMSFMXBitmapContainer1
+      BitmapName = 'Open'
+      Appearance.NormalFill.Gradient.Points = <
+        item
+          Color = xFFF9FBFC
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFE6EBEB
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCDCEC
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCE1EC
+          Offset = 1.000000000000000000
+        end>
+      Appearance.HoverFill.Gradient.Points = <
+        item
+          Color = xFFE5E7E8
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFD2D7D7
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8C8D8
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8CDD8
+          Offset = 1.000000000000000000
+        end>
+      Appearance.DownFill.Gradient.Points = <
+        item
+          Color = xFFDBDDDE
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFC8CDCD
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEBECE
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEC3CE
+          Offset = 1.000000000000000000
+        end>
+    end
+    object MesureBtn: TTMSFMXToolBarButton
+      ClipChildren = True
+      DisableFocusEffect = False
+      Position.X = 84.000000000000000000
+      Position.Y = 3.000000000000000000
+      TabOrder = 2
+      OnClick = MesureBtnClick
+      Size.Width = 72.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Mesurer'
+      TextVisible = True
+      BitmapVisible = True
+      BitmapContainer = TMSFMXBitmapContainer1
+      BitmapName = 'Collect'
+      Appearance.NormalFill.Gradient.Points = <
+        item
+          Color = xFFF9FBFC
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFE6EBEB
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCDCEC
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCE1EC
+          Offset = 1.000000000000000000
+        end>
+      Appearance.HoverFill.Gradient.Points = <
+        item
+          Color = xFFE5E7E8
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFD2D7D7
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8C8D8
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8CDD8
+          Offset = 1.000000000000000000
+        end>
+      Appearance.DownFill.Gradient.Points = <
+        item
+          Color = xFFDBDDDE
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFC8CDCD
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEBECE
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEC3CE
+          Offset = 1.000000000000000000
+        end>
+    end
+    object RazBtn: TTMSFMXToolBarButton
+      ClipChildren = True
+      DisableFocusEffect = False
+      Position.X = 159.000000000000000000
+      Position.Y = 3.000000000000000000
+      TabOrder = 7
+      OnClick = RazBtnClick
+      Size.Width = 60.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'R'#224'Z'
+      TextVisible = True
+      BitmapVisible = True
+      BitmapContainer = TMSFMXBitmapContainer1
+      BitmapName = 'Raz'
+      Appearance.NormalFill.Gradient.Points = <
+        item
+          Color = xFFF9FBFC
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFE6EBEB
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCDCEC
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCE1EC
+          Offset = 1.000000000000000000
+        end>
+      Appearance.HoverFill.Gradient.Points = <
+        item
+          Color = xFFE5E7E8
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFD2D7D7
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8C8D8
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8CDD8
+          Offset = 1.000000000000000000
+        end>
+      Appearance.DownFill.Gradient.Points = <
+        item
+          Color = xFFDBDDDE
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFC8CDCD
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEBECE
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEC3CE
+          Offset = 1.000000000000000000
+        end>
+    end
+    object RegressiBtn: TTMSFMXToolBarButton
+      ClipChildren = True
+      DisableFocusEffect = False
+      Position.X = 222.000000000000000000
+      Position.Y = 3.000000000000000000
+      TabOrder = 5
+      OnClick = RegressiBtnClick
+      Size.Width = 72.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Traiter'
+      TextVisible = True
+      BitmapVisible = True
+      BitmapContainer = TMSFMXBitmapContainer1
+      BitmapName = 'graphe'
+      Appearance.NormalFill.Gradient.Points = <
+        item
+          Color = xFFF9FBFC
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFE6EBEB
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCDCEC
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCE1EC
+          Offset = 1.000000000000000000
+        end>
+      Appearance.HoverFill.Gradient.Points = <
+        item
+          Color = xFFE5E7E8
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFD2D7D7
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8C8D8
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8CDD8
+          Offset = 1.000000000000000000
+        end>
+      Appearance.DownFill.Gradient.Points = <
+        item
+          Color = xFFDBDDDE
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFC8CDCD
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEBECE
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEC3CE
+          Offset = 1.000000000000000000
+        end>
+    end
+    object Separator1: TTMSFMXToolBarSeparator
+      DisableFocusEffect = False
+      Position.X = 297.000000000000000000
+      Position.Y = 3.000000000000000000
+      TabOrder = 10
+      Size.Width = 3.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object TracePointsCB: TCheckBox
+      IsChecked = True
+      Position.X = 303.000000000000000000
+      Position.Y = 3.000000000000000000
+      Size.Width = 60.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 9
+      Text = 'Points'
+      OnChange = TracePointsCBChange
+    end
+    object CouleurPointCB: TTMSFMXToolBarColorPicker
+      ClipChildren = True
+      DisableFocusEffect = False
+      Position.X = 366.000000000000000000
+      Position.Y = 3.000000000000000000
+      TabOrder = 3
+      Size.Width = 40.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      AutoOptionsMenuText = 'Color'
+      DropDownKind = ddkDropDownButton
+      DropDownHeight = 130.000000000000000000
+      DropDownWidth = 150.000000000000000000
+      Appearance.NormalFill.Gradient.Points = <
+        item
+          Color = xFFF9FBFC
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFE6EBEB
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCDCEC
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCE1EC
+          Offset = 1.000000000000000000
+        end>
+      Appearance.HoverFill.Gradient.Points = <
+        item
+          Color = xFFE5E7E8
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFD2D7D7
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8C8D8
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8CDD8
+          Offset = 1.000000000000000000
+        end>
+      Appearance.DownFill.Gradient.Points = <
+        item
+          Color = xFFDBDDDE
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFC8CDCD
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEBECE
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEC3CE
+          Offset = 1.000000000000000000
+        end>
+      OnColorSelected = CouleurPointCBColorSelected
+      SelectedColor = claBlack
+      SelectedItemIndex = 1
+      Items = <
+        item
+          ColumnSpan = 8
+          Text = 'Automatic'
+        end
+        item
+          Color = claBlack
+        end
+        item
+          Color = xFF003399
+        end
+        item
+          Color = xFF003333
+        end
+        item
+          Color = xFF003300
+        end
+        item
+          Color = xFF663300
+        end
+        item
+          Color = claNavy
+        end
+        item
+          Color = xFF353333
+        end
+        item
+          Color = xFF333333
+        end
+        item
+          Color = claMaroon
+        end
+        item
+          Color = xFFFF6600
+        end
+        item
+          Color = claOlive
+        end
+        item
+          Color = claGreen
+        end
+        item
+          Color = claTeal
+        end
+        item
+          Color = claBlue
+        end
+        item
+          Color = xFF666699
+        end
+        item
+          Color = claGray
+        end
+        item
+          Color = claRed
+        end
+        item
+          Color = xFFFF9900
+        end
+        item
+          Color = xFF99CC00
+        end
+        item
+          Color = xFF339966
+        end
+        item
+          Color = xFF33CCCC
+        end
+        item
+          Color = xFF3366FF
+        end
+        item
+          Color = claPurple
+        end
+        item
+          Color = xFF999999
+        end
+        item
+          Color = claFuchsia
+        end
+        item
+          Color = xFFFFCC00
+        end
+        item
+          Color = claYellow
+        end
+        item
+          Color = claLime
+        end
+        item
+          Color = claAqua
+        end
+        item
+          Color = xFF00CCFF
+        end
+        item
+          Color = xFF993366
+        end
+        item
+          Color = claSilver
+        end
+        item
+          Color = xFFFF99CC
+        end
+        item
+          Color = xFFFFCC99
+        end
+        item
+          Color = xFFFFFF99
+        end
+        item
+          Color = xFFCCFFCC
+        end
+        item
+          Color = xFFCCFFFF
+        end
+        item
+          Color = xFF99CCFF
+        end
+        item
+          Color = xFFCC99FF
+        end
+        item
+          Color = claWhite
+        end
+        item
+          CanSelect = False
+          ColumnSpan = 8
+          Text = 'More Colors...'
+        end
+        item
+          Visible = False
+          Color = claBlack
+        end>
+    end
+    object TraceEchCB: TCheckBox
+      IsChecked = True
+      Position.X = 409.000000000000000000
+      Position.Y = 3.000000000000000000
+      Size.Width = 50.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 8
+      Text = 'Axes'
+      OnChange = TraceEchCBChange
+    end
+    object CouleurAxeCB: TTMSFMXToolBarColorPicker
+      ClipChildren = True
+      DisableFocusEffect = False
+      Position.X = 462.000000000000000000
+      Position.Y = 3.000000000000000000
+      TabOrder = 4
+      Size.Width = 40.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      AutoOptionsMenuText = 'Color'
+      DropDownKind = ddkDropDownButton
+      DropDownHeight = 130.000000000000000000
+      DropDownWidth = 150.000000000000000000
+      Appearance.NormalFill.Gradient.Points = <
+        item
+          Color = xFFF9FBFC
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFE6EBEB
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCDCEC
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCE1EC
+          Offset = 1.000000000000000000
+        end>
+      Appearance.HoverFill.Gradient.Points = <
+        item
+          Color = xFFE5E7E8
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFD2D7D7
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8C8D8
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8CDD8
+          Offset = 1.000000000000000000
+        end>
+      Appearance.DownFill.Gradient.Points = <
+        item
+          Color = xFFDBDDDE
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFC8CDCD
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEBECE
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEC3CE
+          Offset = 1.000000000000000000
+        end>
+      OnColorSelected = CouleurAxeCBColorSelected
+      SelectedColor = claBlack
+      SelectedItemIndex = 1
+      Items = <
+        item
+          ColumnSpan = 8
+          Text = 'Automatic'
+        end
+        item
+          Color = claBlack
+        end
+        item
+          Color = xFF003399
+        end
+        item
+          Color = xFF003333
+        end
+        item
+          Color = xFF003300
+        end
+        item
+          Color = xFF663300
+        end
+        item
+          Color = claNavy
+        end
+        item
+          Color = xFF353333
+        end
+        item
+          Color = xFF333333
+        end
+        item
+          Color = claMaroon
+        end
+        item
+          Color = xFFFF6600
+        end
+        item
+          Color = claOlive
+        end
+        item
+          Color = claGreen
+        end
+        item
+          Color = claTeal
+        end
+        item
+          Color = claBlue
+        end
+        item
+          Color = xFF666699
+        end
+        item
+          Color = claGray
+        end
+        item
+          Color = claRed
+        end
+        item
+          Color = xFFFF9900
+        end
+        item
+          Color = xFF99CC00
+        end
+        item
+          Color = xFF339966
+        end
+        item
+          Color = xFF33CCCC
+        end
+        item
+          Color = xFF3366FF
+        end
+        item
+          Color = claPurple
+        end
+        item
+          Color = xFF999999
+        end
+        item
+          Color = claFuchsia
+        end
+        item
+          Color = xFFFFCC00
+        end
+        item
+          Color = claYellow
+        end
+        item
+          Color = claLime
+        end
+        item
+          Color = claAqua
+        end
+        item
+          Color = xFF00CCFF
+        end
+        item
+          Color = xFF993366
+        end
+        item
+          Color = claSilver
+        end
+        item
+          Color = xFFFF99CC
+        end
+        item
+          Color = xFFFFCC99
+        end
+        item
+          Color = xFFFFFF99
+        end
+        item
+          Color = xFFCCFFCC
+        end
+        item
+          Color = xFFCCFFFF
+        end
+        item
+          Color = xFF99CCFF
+        end
+        item
+          Color = xFFCC99FF
+        end
+        item
+          Color = claWhite
+        end
+        item
+          CanSelect = False
+          ColumnSpan = 8
+          Text = 'More Colors...'
+        end
+        item
+          Visible = False
+          Color = claBlack
+        end>
+    end
+    object Separator2: TTMSFMXToolBarSeparator
+      DisableFocusEffect = False
+      EnableDragHighlight = False
+      Position.X = 505.000000000000000000
+      Position.Y = 3.000000000000000000
+      TabOrder = 13
+      Size.Width = 3.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object UndoBtn: TTMSFMXToolBarButton
+      ClipChildren = True
+      DisableFocusEffect = False
+      Position.X = 511.000000000000000000
+      Position.Y = 3.000000000000000000
+      TabOrder = 6
+      OnClick = UndoBtnClick
+      Size.Width = 72.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'D'#233'faire'
+      TextVisible = True
+      BitmapVisible = True
+      BitmapContainer = TMSFMXBitmapContainer1
+      BitmapName = 'undo'
+      Appearance.NormalFill.Gradient.Points = <
+        item
+          Color = xFFF9FBFC
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFE6EBEB
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCDCEC
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFDCE1EC
+          Offset = 1.000000000000000000
+        end>
+      Appearance.HoverFill.Gradient.Points = <
+        item
+          Color = xFFE5E7E8
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFD2D7D7
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8C8D8
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFC8CDD8
+          Offset = 1.000000000000000000
+        end>
+      Appearance.DownFill.Gradient.Points = <
+        item
+          Color = xFFDBDDDE
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFC8CDCD
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEBECE
+          Offset = 0.500000000000000000
+        end
+        item
+          Color = xFFBEC3CE
+          Offset = 1.000000000000000000
+        end>
+    end
+    object Separator3: TTMSFMXToolBarSeparator
+      DisableFocusEffect = False
+      Position.X = 586.000000000000000000
+      Position.Y = 3.000000000000000000
+      TabOrder = 14
+      Size.Width = 3.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object Label1: TLabel
+      Position.X = 592.000000000000000000
+      Position.Y = 3.000000000000000000
+      Size.Width = 55.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Loupe x'
+      TabOrder = 17
+    end
+    object LoupeSB: TSpinBox
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 18
+      Cursor = crIBeam
+      Min = 1.000000000000000000
+      Max = 5.000000000000000000
+      Value = 1.000000000000000000
+      Position.X = 650.000000000000000000
+      Position.Y = 3.000000000000000000
+      Size.Width = 60.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      OnChange = LoupeSBChange
+    end
+    object EchelleLabel: TLabel
+      Position.X = 713.000000000000000000
+      Position.Y = 3.000000000000000000
+      Size.Width = 70.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Echelle/m :'
+      TabOrder = 16
+    end
+    object EchelleEdit: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 12
+      Text = '1'
+      Position.X = 786.000000000000000000
+      Position.Y = 3.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      OnKeyDown = EchelleEditKeyDown
+    end
+    object Label2: TLabel
+      Position.X = 869.000000000000000000
+      Position.Y = 3.000000000000000000
+      Size.Width = 70.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = #948't/s :'
+      TabOrder = 15
+    end
+    object DeltatEdit: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 11
+      Text = '0.04'
+      Position.X = 942.000000000000000000
+      Position.Y = 3.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      OnKeyDown = EchelleEditKeyDown
+    end
+  end
+  object PanelPreview: TPanel
+    Align = Client
+    Size.Width = 1504.000000000000000000
+    Size.Height = 443.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 12
+    OnResize = PanelPreviewResize
+    object ImgPreview: TImage
+      MultiResBitmap = <
+        item
+        end>
+      RotationCenter.X = 0.000000000000000000
+      RotationCenter.Y = 0.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      OnClick = ImgPreviewClick
+      OnMouseDown = FormMouseDown
+      OnMouseMove = FormMouseMove
+      OnMouseUp = FormMouseUp
+    end
+  end
+  object TMSFMXBitmapContainer1: TTMSFMXBitmapContainer
+    Items = <
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          04BE494441546843ED9A5D4C935718C76929058B1FCB1289996E7A811017C612
+          173F32FCB850375DE2E207245020BDD8D625CBE68557464D083726C63B636244
+          622494142DF835352C7A8321CE65732A609619E6C512B6B191D10D0BF252A8FF
+          A7E791283DA77DFBF51E62FC2527CFC75BDAF7DFE79CF39E734ACEAB828DADE5
+          B8DDEE0F60BE8844226B609BFD7EFFC9E88514B1B3B50C08585E5B5B7BC366B3
+          FD84F6A5DD6E5F8D369F2FA78CA5426A6A6A768E8F8FF7C2DD2A320254E52F76
+          53C63221A842E5E8E868A7CBE55AC8A9197273737F6037652C192310513A3636
+          7617220A39F5220FDBDADADE838D883035ACAAC8298508EA5627C8882875B22E
+          04837B13CC6611C570777070B099FDB4C8BA10CC4CB5ECCEE6099AB7BBBB3B2C
+          C2F4C8BA90A9A9A90DECCE80DCE8F4F4F40E8C8D9F39953659178219A984DDE7
+          7CEF703856E301D8C37146486BD6AAAEAE7E0B37BA0403D6969797F75B4B4B4B
+          902FCD80198B7221B41FD1CE1886712D10084CD135A2AEAEAE08D5799B7CBC4F
+          A8A4A4E4516363E374F46212242D0483B702C68BBEBF0376713429A099E73EDA
+          15749DCBEDEDEDF7A2D959343434D80706062A70D3BBF01E3B915A29AE08C2E1
+          701015EB84DB82AE47553335A39916525F5FFF0EBE399A2AE9C3CDF01837FB2D
+          6EF61EEC20EC12E4685DB51B2D5A8144E0EF6EA0E29FB7B6B6FECE2925A684A0
+          FCDBF0A601B88B44C63AF020FDBFB0B0D0E3F3F92E714A4A2E5B2510B13D180C
+          5E2D28287071CA5230F6F261F69495953DE8EFEF7F24B2B1C4AD0806EABBE8EF
+          7750DE059CD206BAF503A7D3B91E13CA534EBD8472FAF57ABD79F8E373734104
+          38393232B24E2582500A0985421EEC13CA38D4C951CC5E5F7575754D702C452A
+          A4AAAA8AC6CE211169E5BBE2E2E283ECC7452A04F3F85A981522D246183D629F
+          D987A35408DEE06376757211CF0FE52C351BD51859CF5627E7D99A422A0453AE
+          A9276F36C13DDC66D7145221987297B2AB8B70696969520712AAAE358FAD3692
+          5D01AB848CB3D585C3E3F1BCC1BE295442944F50AB989C9C2C67D7142A217FB0
+          D509ED774C23158225FB4376B581FDCB67959595A6C7AAAA22BFB2D5C9E2FCFC
+          FCAFD94F8854089EEC691F6166026CAA1AB01F7A9FC3B848850C0F0FDFA2231B
+          0EB541A79386615CC5367BF6494C0C5221B464461FBDC9A156B0435C867D510F
+          36799F724A8A6A8C50F7BAC0EE5C804E6B2E434C97DBEDA603EF18944250525A
+          B40D89686E303434B40DCB27E911AB5248201030300D67E4803953141515D1D2
+          FE170E5F422984398D6608573B118CDBA3ECC710F738A8AFAFEFBFF2F2723A06
+          DA28325A69C6DEFD14FB3124AA088D952330BA972CC313131307D897925008C6
+          CA1394F430875AC0583DD4D1D1F12F8752129E3412BDBDBDF7D1C556C1B5FC78
+          08CF900EBFDF1FB71A44C28A3C07A5FD064BEB3F39B4047CDEDF7492C2615C4C
+          0B4169FF713A9D1FD1B13FA7B20A7D0E3E6F0B06B8A92FCFB410C2E7F3F5E31B
+          A2DF0433F2BB5F1C0C87C351479FC77142921242A0BF5E87D98EA67CEA539780
+          398E41FA09268A95B06F52437FFF10F946B4C7F43A0534436E4525AE89D01C29
+          FFF4467B6ADCF07EDCDC5E2C1B68754A5DEE0E6EFC2C56AD579A9A9A26A32F94
+          63C39A690B2CFD534D05AAECC26A9BC643271689C7643FE1BDE6355AC8C97906
+          66BDA4B39188097F0000000049454E44AE426082}
+        Name = 'Apple'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          005A494441546843EDCFA115C330100541396DAA3ED5E910D1841878ED3743FE
+          C1DB0100171C7B7F9A739EFBBCD55AEBEFAF9FBD8F27A446488D901A2135426A
+          84D408A9115223A446488D901A2135426A84D408A9110200EF31C617B6270444
+          7313AF090000000049454E44AE426082}
+        Name = 'Stop'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          050A494441546843ED996F681B7518C793F6929A96C25037D4266E6B294E5F54
+          37D721585626FEC3E22AB4D8364DADA08681F807417DB1175DF746D83BD99C32
+          51DA26FD07C5B9175337A5DA2A4C543669411493C2CA46ED446669EDDF34F1FB
+          DCEFB992DBE52ED7CB2566980FFC78FEA4BDBBE79EE7F7DCEF7EE72850A04081
+          9B0A274B43DADBDB1BD6D7D78F17171727E2F1F82B8383839FF14F2AF0777742
+          3C8EF118C6768CDB7914632430AE604430C69D4EE7D970384CBA2D980D641AC2
+          272CC7E5FEFEFE1DAC3B82C1A06B7E7EFE59A8AF151515D50AAF692E2512891E
+          97CB75AAB7B777997D962862990E250882EE34E144802F22880802085B0882D8
+          8DCCBCBBB4B4F47B2010780EB6A91B9B0AB319A1B2D8606565655B4949C94750
+          9F161EDB1847F9FAFBFAFAAEB26D1AB31951E176BB27203441CCCECEC621BE42
+          B9BC0DB90F7207C6AD3460DF055907F93AE49790EB1837B27F7979F9226EDC43
+          6C9BC6524652B08A267012E3C4F0F070947D86B4B4B4F870F70FA3B45E802909
+          AF607171F19FB2B2B2836806A3EC4A8B1D815C42477B7E686888B2B4693A3A3A
+          EEC5FF9F40408FB04B06BE79CCBBFD0303033FB3CB10BB32424C19B56623EAEB
+          EB25AFD77B12EA4BC223C0F1A62549DA130A85FE62972E96E6880E95B8837431
+          9B666C6C2C86961E84DA2D3C021CEF6E04434D252D76064264743C0473048D20
+          CCA642232AE220EBBAD81608EEDC558C436C5A6675753588E35C645306F3E558
+          575797E1B55A7E0065136EBF17842540A69A30F13F615383DDA5650B28B1EF91
+          95D36C2A18663B2F032130D1DF615506EDF9407373F3563635E46D20C8CA8F98
+          1BC9AB6309CBA24759D790B78110C8CAE7ACCAF0122725791D08AFC936807D1F
+          AB1AF23A10F02B4B1964A88A550DBA81A00536B4B6B64E4146DBDADA9E62774E
+          F1783C7FB02A8339B385550D4619791FABD39D9096971E99128D46975895C1F5
+          7858D5A01BC8C2C24272ABDBDED9D9790BEB39A3AAAA4A75E1C8882AB0647403
+          292D2D55AD38F180DAC66ACEC02BF01DACCA20237FB3AAC1A8B4A658CA20905D
+          ACE612D539710DBA2F6DBA81605EA85E94D0FAEA59CD19789AD3B6D206B07F61
+          55836E20F8A7AF5995C1DD6883C8E5221397E07C8675856F586AD00D04173E3A
+          3737B7C626D5E74EBFDF7F3F9B59076D7F2F44F236540C4BFCCD078225F3F5F2
+          F2F2336C2A74B1CC3A28E5A3ACCAC03E373232F2279B1A8C263BCD930F599541
+          AA1B919587D9CC1AF43E82733DC9A6C2C72C5362180856A0E7217E10960CD5ED
+          F16C3E53B054F7A0ACDF635306CF8FDFAAABAB3F65332586811048E99B248425
+          B37B6D6D4D95293B71BBDDA750097BD894C1FC7CABBBBB9B36FF74A15D724326
+          27272FD7D4D4D0A6F503C223A705AE9A387E1B67972DA0A48EE0D8AFB2A97006
+          95A1DA5D4945DA4088DADADAD1582CD68493DCC62EE20082F15554549C8B4422
+          A9B63F4D43FB5A7575751F407D43780428B16964A3616262427769A260FAB980
+          15F02EA4FC5BA8F4BD23990BA8E14337C54EA3023AD68338E117506F0C8632D2
+          83131F0D8542F42D252DFFC9DE6F32A8E37B20CE62A47AC9A12F5A3FE1E24E63
+          7C87BB1A9D9999B9463F78BDDEAD681C95F0EF856C80A40C684A1B8DE49ACBE5
+          6AA49D147699C2D29203ED770BE64C0FD446E1B10DCBDF47325A3B05028126DC
+          DD63502B85C71AC8C215B4DDC328A5104C331BE61A320A84A08EE3F3F9FC08E8
+          6598FB84D734B67D43CC389064B8B33D01959631D5283F9F2449F4B58AB88E91
+          B5AFBA050A14F85FE070FC0BC965E7C80BC49ECD0000000049454E44AE426082}
+        Name = 'gauche'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          01AB494441546843ED95414AC350108693905A74E742F000555CB8103C801B97
+          5DB68B3401413447D0AD852E74A36E2DAEB421E7F0042E5C79040F104184C63F
+          7D41B4641A93BEBC17C37C30646642E89BCEFF2706C3300B31D3EB37AEEBC669
+          5A6B8220F875762BBDFE7BC88DCC4FAC6B53D4391ABB91E64BABEEB0D9D9EC8A
+          60B3EB86CDCE66574415839C22DE44AA0E525A654956EEFBFE5A144567289358
+          9DDD908C12698DC7E377FCD005D26DC423A2727F911BA14C96C7FC73098EE31C
+          5896758B744F74FE0E750E251B99270CC3A74EA7B36F9AE611CA4AFCA3ECAD35
+          1C0EA793C9E4C1B6ED1D9457711C7F883B7220A555962C696501B96D416ED748
+          BBA2530C2DD2CA622AF84CCBA5213742992C8FBC8DF47ABD8D76BB3D427A8CB0
+          67CD0550E7D0B6917EBFBF02399D638857943E227788222819643018745BADD6
+          0B3C7189725D74E5424AAB2C3F57EE79DE2EDE4E37480F45471E4AA495F8007F
+          C81D867846297D882CC88D5026CB03873FC165848FDFA6E82C8736B363807B59
+          431441DB774436A4B4EA8E12B3EB80DC4859B3CB469BD975C166D70D9B9DCDAE
+          0836BB6E1A2B2D86611661185FE6BDCF1B7B5BB2730000000049454E44AE4260
+          82}
+        Name = 'Film'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          02E3494441546843ED99BB8B135114C6F37018D660932031368AC512454110B5
+          4C9B6E9B6070922C56A96D7C558A36568AD805EC26134340C5FF2096CA3E7051
+          960517AC420AD1226EB1C964FCCECCD9BB33C918771BE7DE253FD8BDE79EDDC0
+          7C39E7BB8F243667CE9C99C4798CD5EB756D30183C8EC7E337313DE365FF8EE3
+          385B8944E29E699AEF381529091E632CE23EC27F8A20F0BF8BE3F1F8B5611897
+          39152942081E6C99C30383D7E818AC52A9B4E065A2430801A7793C1410735ED7
+          F5673C8D0CE1914AA5E270282BDFF163A552A9878D4663E8A5F6F1574476C8BB
+          0FE0E547DE34884A425CD0CAB7380CA09C1010EA65158584726484CC5CB5B0E1
+          BD454FBE44B86E59D64F2F2B27B384DC6E369B2F38969E5021A8C4FB56ABB554
+          2C16F5743AFD0455B981F4818E2EFF19B1B7847A0487C1E7346632193A7FDD41
+          28A30842EC2D61426C28FC48014EB8873E7F45C168345A0E13F20547809D72B9
+          7C16D538C539A9D1344D9F12822AB8D5482693D7DD8402E09957C22AF2897EA1
+          1A57DD991AAC4E09C18AE50AC178CD4D2800DEF4B580103CFC4EAFD7DB28140A
+          C730BDE265E507660F0AC1B2BBD6ED7647B95CEE02E2E39C961A88F8D56EB7B7
+          275B6BCFE8CAB415DEF0750CCEA410D71F4019A3C31FAB34068420B9274429A3
+          D32884A0D77E98A6F9AD5AADA630BDE465E5C7B6EDA010F882AAE160E5A2CFA9
+          926E5272689585904D8AFDADE51A1D28D356D8D13F773A1D9B62BF10E58C8E15
+          CB353A2184C0342B3C2A67744208C16DB057ABD53208CF7919F9416B4D0B21F0
+          076A2B716B949CDDE170B8C1F1941065DA0A7C85D177390E0A01CA18DDDF56C4
+          A410652E537EA3134288611874913FE9CDE40715114B2FE1AF8832FEE8F7FB63
+          3EF50AFC4294F147369BDDC2B9F0374F5D84109536C249A31342084EBF173954
+          81803F0821042AC59A2C39F4D1EE1B2FDC4708D134ED1587B2F3D4B2AC6D8E05
+          E2DE91CFE73F6025A0165BC4DDE404A76501D70E7B133EBE0B11917F833C678E
+          7AC4627F00F87FED8688F513D10000000049454E44AE426082}
+        Name = 'Open'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          005F494441546843EDCF310E02310C00C170DFCCFBF24EAE49090829CD82661A
+          BBB1A51D0070E0B1E7D7E69CCFBD7EB4D67AF9FBF4FE9D6BCF9F27A446488D90
+          1A2135426A84D408A9115223A446488D901A2135426A84D408A9110200FF638C
+          1B0854084400042C2E0000000049454E44AE426082}
+        Name = 'Pause'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          02C0494441546843ED97CD8B526114C655CC2208B3A295AD6A51B41A62163191
+          04112EDA8AF85182EB5097531B9B36313B8DFE023F316757508B60B2A8A0EF18
+          199A70882844170642107EF7BC734F608DD6BDDEF7BEF70EDD1F1C5EDF33E0F0
+          DCF3DC738E1613131393DF0885428B5EAF77375D0D878D4E39DC74B95C9BE170
+          F832DD0D8595CE7F828A8CE82363D56AB5C672B95C95EEBAA3A422E39C1B8D46
+          6F212EEDF3F99C94D395598530EC8898CD66DB84A078329954F35DAA51FDCFED
+          76FB411CA95AADF62210089C96B2E2E1F9144FA13A4F519D0C1AC261CA0983B7
+          1D58F3B8D4EBF53698DD3C1E0FB39F1034F135ECB61F47CAED76AF41D00529AB
+          2DB3B65FA5DC4397BB5228143ED39D3BA23ACD450859C7C3B81E8944F6508E2B
+          A28458D008F6E248F6FBFD6A3018F449597E88B2D6241E22E2F97C7E5DBAAA43
+          58452670BEDD6EBFC3034A47A3D17D949B193D85589C4EE72E1CB14EA7F38196
+          51D90EF9133DAD3589C7B48CBEA7BB6C74ADC804CE361A8D37786819AC3B8728
+          270BA355649C6F881BDD6EF776B95C1E48A9E918AD22E31C40A41C0EC74BB4EB
+          0529351D230BF9C51CDE9B2770C41DBFDF7F8472DBD8094218566C067FB5F64E
+          10F21C5BC13CF6347FA954FA42B96D18594813968A60F22F64B3D957949B8A11
+          857411CBF829701CF32483CFB2BAA5A1DA2F5E8307A8420255D8A0946C0C2164
+          30187C828078B158BC4B29C5E86DAD1F8825ACF627D58860E859912CE21A6CF4
+          55BAAA43B890E17058658B21DAE92AA5B820D25A6D44A25EAFCFF116C1D05C48
+          B3D91CE2B885A17614364A572A95BEF417BE686A2DB4D36738988D5E4B19EDD0
+          AA225B531902CE8810C1E02D844DE525FC8638A6642AF380A7B5EEE33D48602F
+          FA4877A1A816C2632AF3408DB5BE63262CF298CA3C9855089BCA272060796565
+          85AD19BAA3D45A6B8818E6C1A3ADA481505291ABAD566BDE88224C4C4CFE1B2C
+          969FFA4E00C89815AEB80000000049454E44AE426082}
+        Name = 'Play'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          0671494441546843ED9A7F4C5B5514C729B4FC46A58B3A27A2CE399D13A27126
+          4266488C33A8C91263690A1499D391E96614A3FFA999897F1213E3E60FA671A4
+          ED289645DDA641831ADCB2C4C4A0C21437A79338F04718BAF1AB2D05FC9EFBCE
+          BB7B8FD7D2F2A3E5C5EC93BCDC734E79ED39F79C7BDFBDF79176119361E13629
+          D4D6D66E46B31B57BE30A4A59D9B9999F919ED098BC5D205F9F3FDFBF7FFA37C
+          B438921DC8009A558A1695295C9FE1DA170E873F0C040261615D00E9DC2685C9
+          C9C9781D9581EB7E5C6DC8D02F3535358D0E8723477C324FE40F69CAE01A6188
+          CFEFD3D3D33B5A5B5B0FB16E80BE13E5F3369C5CC9A6B84C4D4D9D4E4F4F6F44
+          C97DC4A684D00612AF0C0C2090010452C46A4CD0D385281D8BD56A2D82936B60
+          BA0BC1DD83F60EF107D17937140A3DD5DEDE3EC1FA9CC8409C4EE7A0CD66BB8A
+          D584F1F97C0B1E67757575EB229148433018DC969B9B9BC7662DDF2143957EBF
+          FF2FD66322C70882D88E32F893D594E0F178FA90D1C6ECECECEBF0DBAFC31451
+          3E91DC96919171040117B31E93397BD3ED765F811F380AF146C562643119998D
+          CBE5BA1DA5E743D9AD6393003E9C84FD6EAFD7FB379B0CC49CB52A2B2BB390D6
+          C3106306B1D4A084BECDCFCFDF80B1F7019B04086C2D6C1F934F6C32103310BB
+          DDDE845EB89355153FB749A3B9B9797C7070D0892C78D92440301BC827560D44
+          0DA4BABAFA01DCB8935595C37979798FB09C54BABABA220303038F42D44DEDF0
+          690766D7FB58D56108A4BEBE3E1BBD41CF13094AEC477C890BBD35C9A6A443C1
+          60BA76A2A4BE67136181BE1763D730C31902C174F824668AEB592568267163A0
+          8D296AEA68696909A2BCB742A4A58C007A3182696055A20BA4A1A1C1863F7A96
+          5501B2F3260D4256530E66C56EF2815501AAE339AA1C5605BA40464747AB10F1
+          D5AC52498DE089BC8BD5650381BC8C6654D104ABE0D7C32C0B6697D6166E0528
+          B1F7B0441866558085E01F2C1283DC26153C3487D0BCA5680AC88A9B45810CA4
+          AAAAEA527C58C1AACA1BDC4AD415005D28C3ED6C4E3AA88E7D2C0AE0EBBDE433
+          ABBA45A3034D40D194990A63633DABA6003E1E47237D42476E5657DF3223E861
+          DD4A1465F5098BA6013E76B228C078DEC8A26E8C9470ABD2CDAD6940391D6351
+          45AEC964204813ED1324B8A99745D3009F4EB02840F9AF65F1422028A5CB5854
+          89B9D25C2EE0386DFE24F0D9CEA26E8CE802191A1A3AC7A269C0AAE33C8B02F8
+          7C098B170241DA74FB8AE2E2E269164DC3C8C848CCBD8F76B06B9F9C69C3C3C3
+          052C9A86C2C2429D4FE87B99211908EA4FF704C7F6735E0711A90063422E9F08
+          ADCFDAC17E9245959BB8350D18133A9FB43E6B4BAB8F5B016E2A63D134C0A772
+          1655A4CFDAC14E870C5A36716B1AF0ACD3F9045DFA2C030906835FA1911B1850
+          EA72B94CB3D6AAA9A9294129DDC22A81D938423E0B6420BC5CFF52D11470E363
+          2C9A019D2F28B3CE4020209F75DA3142E5E56151655B5D5DDD0A96970D87C371
+          F9C4C4C4E3AC0A1088EE94451708CA8B96F1DAE3C97CA4EF0596978DCCCCCC97
+          661DA90EC2768065812E103A3046A4AFB22AC0527927C64A29AB29874E1F5129
+          BA0D1C7C6CA283095605BA40083CD15FC38346BBCAB4E23A804D8D5CD7A40ADA
+          01629C5295900F0204D187EDF61E562586403A3A3A42C84223AB027CD91A7C41
+          4B454585FCC26443BF85F2A1317B836211CCC0B7A7A3BDD9A23746067A7B7B4F
+          9596965E09511E9922BD37171414ACB6DBED87FAFBFB93BAA0A463A99C9C1CDA
+          A3D3F65B82CEDCE3F3F97487872A868CA858AD563ADFD29D672118775151D1C1
+          64961995D3D8D818EDC36B158B021E7EDD369BED79560DCCF94AA0BEBE7E6528
+          143A42A5C526017A868EF99D5EAF577B9CB9686860A3797FF6EF81DF7095231B
+          DAA3281D71DF6DE0897A2D7AA333CA974760DF8DCCBDE2F178CEB26D41D07302
+          E3E14564FC09A8B3C7613F2D4D5A5B5BE9B5764CE20642A094E8955C07AE68D3
+          F02832D48C6B2F7EEC27B6254482AFDE1EF4FBFD710F02130A84A0D7C6E8B526
+          EEB5A8F721986FF0F91768BF462F9E82936778E963C1FD852979199A286EB77B
+          131CA5E3CBD58A656941064EA38C9FC17838C8A684883AFDCE454F4FCFAF6565
+          65EF84C3E17F11D07AF4EC92CC6078C89D41B676A1DDDAD6D6F6039B1366DE19
+          D182A9321353E24310B72020DA2BCCB76368DBF029AE96C5FE0BC7A202D142F3
+          3FC6D04664A91C4195A0446E458DAFC02016191B1F1F3F9F9595751665731C7F
+          D383EB1832701425A43BE2B9C8FF83B4B4FF003A3D92FA4B617FF80000000049
+          454E44AE426082}
+        Name = 'Droite'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          05B8494441546843ED986B685C5510C7776F3649934D890DD8500D55A8C60453
+          AB9414A4D5D40A6D90821F84BCD3A0607C50C42F56B4603EA8A0604941AB34F6
+          4BC8E6B1241FC48AA868E36A41D48AA69218DBE013425A8926CD3BD924FEE6EC
+          B961D3DDCDDEBBBD2109EC1F8699398F7B67CECC9973EE75BBE2A0B2B2B2DB30
+          8CFD5ABD212C2E2E9E6B6B6B7B58AB8E624547AAAAAA6E73BBDD7F68D5110483
+          C1ED7EBFFF6FAD3A0643F308949696A6C34E8534E7E0F1784EE96727110D5153
+          CBC97D110B4EEF97A8A9B5DA4E08D87B07B4E80862EE918D86A423EB0D4947D6
+          1B928E2491C4CA887A45A9AEAE5ED4E2AAA2B5B535EE6784552437FB7AC3BA4D
+          ADFAFAFACCF1F1F165DF2DDC96FFD362046239F2356C5F485B357C8523255A56
+          E0BD076147A107A16C690B0757FF19A897DB7927FC74B8638E6DB61B815EFD33
+          5CED2B75535CE0C810E3CB580C59F4D88EAC767A85A715EF6A85558534EB989C
+          9C9CC8C8C8D847647E5AF3CDCED7E821986D27049999995EA27246E4B8115958
+          589884F59397FDF05E26FE3A3F3F3F081F4C4D4DBDD2DCDC3C2DE304F2532127
+          272793FE1C8FC7730B4D7942A44121540415A4A4A46C96B1664478CF07B04745
+          BE0EDF41476767677B78D6BDC8EF6043B1EA89C4FD311DA9A9A9299D9B9BEBF7
+          FBFD7FA23A9666F28B09830A7D3EDF27A29795955D6141B6AACE30E0F40E52E6
+          37AD8A3D77D07659ABCB40FB8B311D31515252E2C9CBCBCB4794152D82CB03B7
+          61CCCD382AE49510ABC12ED728748D280A97A8C9861C42BE4CDBC56030D8D7D9
+          D9392E030518E71D1A1ABA969B9B1B91E28CCF6F6F6F5F329CC8DD0593AC8800
+          F6F89639D2D0D0600C0C0CEC4514DAC9C3EE96D5434E937E072091FD1DFA191A
+          806461648F44C3450C7C16DE07173BDE45DEA97A22D1BDE4486D6D6D212BD6CE
+          845DBA69C38005EF4911A1BCBCFC7652E03CB443F56C3060F79CCA4DAAC2EBB0
+          5C913728B20C3955C9C1C7748355C8D5C00AD906B6CC902A2711F7B0C019C3C3
+          C39B68BB0FFD04342B63A220D52D0712FB429542AB30CF00A968C2038140309A
+          9EC0ED402ADD2394E61EAD2F03A57B37FD1F22CA19158E59838E84FFBF5296E7
+          84B41AA1DB8144C27482C2B35D0E4A2808CD416729D5459C2B3F70D81E96B17A
+          9A89147144C2B61ED0643A416A7D83B1819999996DD8772BF2979CF09FE1505E
+          4747C78FB49DD67314A8B663B2D9EF0CA96B06B59F30AE45149C68C4F04656BF
+          B1ABABEB1F9CBB8A7C82FD7252FA640C63DB849BA06FC4907B91D6D704ECB71C
+          4DDFEBA6835C597C2210810BD0B722E3846F7A7A5ABE575C6969697DC2C33062
+          7089CBD0CA9A800DBC45486E15A273355F20A5948CF16344475D69B0D3C08105
+          91C7C654262D817123D230125213C2BC2613D7EB71419AFC2BC4D5688FE87C5F
+          9CC3E8232273D77A88B4328BD111DABF108188C9D5660954DD4137A1FB05B920
+          D4640DAC92A5741403B518173CF36D8C7E8EE3A080740F60ACEC9576DD5DC586
+          7E3E3D3DFD819696964BD8FC1E6D4F87BA148E1B84456EA7B660AE623CD2C3AD
+          A29E12BB8B28F463B07C7714F38C0B4238544C5AED15272A2A2AA4CA3EA16668
+          D0DF2B117913F958A8C912EC9ED85B34B782840E448291EFA6F3309D67755B2C
+          4CE1F5716AB94F4AA26EB30456792B2FAA9D9898782D2B2B6B936E8E09DE2307
+          6333735AE0BDA4583ADF3C85C815A3A3A38F676767A7EAA126A6B06BB3BBAEAE
+          EE26F26F908698D58B87BF40FEBE25B25418D56811CC531164DE318C91E83B8D
+          6E4AF701836F6EA95AEF87DAA223BCAE634CD4FD108BC2CF01E10E6391E7AAC5
+          51F5D8EBF5BE040B881C0D386B1684DD9ADB812AAB5C2D24EA4EE3658AC3A722
+          28479A9A9A26B92E1F22859E413D4F4E5E859B5771BB9B7B25843F332122027F
+          C13F86EF27A5DE405688FBF3211CA449427F5378A1ADF7248265477D3CB00AF2
+          8FCB16129993086C39023ED7DC0E1299631BB61CE1747D0AF691D47A565A0EAD
+          5790EF914F522191A157A14BF44D419DDC8F9E84AF325CAEFF01EA63C7326AA5
+          9B4A0000000049454E44AE426082}
+        Name = 'Photo'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          03F4494441546843ED98DB4B545114C69D993303416553D195B20C2B0AB3A888
+          226A26A93122BAE0303ADEC007FFA85E44BC1C27A787A8B01A51138A6E4F5D1E
+          4A30CBEEF550C954E6AD6FB9D7110B63F63E679F630FF383C35AFB13E17CB3F6
+          65ED5390278F3BF8387A4E535353309BCD5E405AEAF7FBCFB7B6B6BE127FB1C7
+          82182113A3A3A3291838C7D210F2A813339E1B89C7E3217011E919A1CC323431
+          311149A552233C56C2CFD1132A2B2B1719867105E9DF268862FCED762291D8C2
+          63253CAB082AB11895B88AF4A850FEC9C8F4F474A4A3A36388C7527852113671
+          0D692E13C40618E94B2693C53C96C27523349D60228DF48850728385BF11A19B
+          D6935072E3AA11367119694C28F2F87CBEC270386CF03027018EDA696C6C5C82
+          70032F14118A3C5353536F028140A4B9B9F93D4B397165B1D7D4D42CC53CEF86
+          89432C49432610A2A6690E0A450EED46C804C2753C07670405EC9A20B4AE11AC
+          89E508BD783C35416833422682C16006E95EA1C8333E3EFE1AC1B60942CBD4AA
+          ABAB5B815F944CEC118A12C3684DA2684D86796C0BC746D8440FD2DD4251428B
+          09C2D1F65B5D5DBD12C1B6096A453A3B3B5FF2D811B6D78813139393932FB89F
+          D26282B065A4A1A1610DCE8801B412652C494326E8EEA1D304A1BC46704EAC45
+          A02D76FB8CA0805B2608A58A545555AD43B06D02DBB3D6E93417E98A5826D003
+          6D138A128EAFB2B990AE080C98764CD06187EDB9C24D1384CAD4FAC551094CA7
+          1F78BEF3D035A48D60973A8B704B8C94284155EED4D6D66EE6B12B481B696B6B
+          CBC2CC29A4034291876E7C747D4D24129B58D28ED2AE4566104E6307BA2B1425
+          8A0CC3E877CB8C9211A2BDBDFD1B167D0CBFF03D965428425533F5F5F5EB79AC
+          0DDB4D633C1E2FC422A6ABEC019654184455A9CF7ACB63C72857C4A2ABABEB2B
+          16317D54B82F14254AB06EFAF86CD282E3369E2A83B99FC18BED67491A4CCFE7
+          3863A23A2A63BB22165499502874022FF4802569302DB722F472FFE608C715B1
+          4047BC0C532D8397DBC79234582FCFB08144B191BC634919C715B1686969F982
+          C57F1CD3E5214BD270EBD34BD703A1A8A3AD2216C964324C5B2C52E58F10E011
+          A668B9699A9F792C8D762304DD1EB1F8A9DD2F158A12B6CC689B5A73A197181B
+          1B2B47FA58284AECC2D3431F35C4500E578C10E974FA131671056DB12C49836A
+          96A12A977828856B46083A1FE89C40AAFCE10DFFF77F54C482CC60F11F46FA54
+          28B9818927D8C9686A4AE3CA629F0FDC4756619AD106B05328F3639940A7FD91
+          25293C3342A0B75A8D40F7FE1D42F913BB2608D7A7D65C30CD3EE0D03C495F54
+          589A8536053C313B26084F2B62814393EE25FD48672E59D4A2201C73D23C2E88
+          11826E8AE89A6F22FD8927E6A4CFCA93C7350A0A7E037D228DEAA717D9320000
+          000049454E44AE426082}
+        Name = 'Left'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          03FC494441546843ED99D94F534114C629051A2DC435E202E2866B7C306E2F8A
+          A5A0262A1A130885B2BCF147F162203485D0C418374C4DD1E083411F54146390
+          B8A0C42D441F14DB52F03B9DD30795D07BE6CEAD89E92FB999395FD3E47E3D67
+          CECCBD2DC893C7195C3C6AD3D8D8B8CCE3F18431DD8FEB4C28147A91FE20C714
+          F2A8455757D7F2E2E2E2AB985EC0B50D57ACBDBD7D277D966BB433D2D6D6E64D
+          A552D70A0B0B7D2C65989E9F9FF785C3E1098E73825646504EAB171616EE2E62
+          82D80883F70281C03E8E7382D8084A670DCA298AE941A5FC0D3E5F87ACC482C1
+          E05E961C47545A64023748260E28252B1F71F9D100C655E81CA28CC0C4250C56
+          4D10E5F8CE4DACA7AD1C3B86C808D64582A796C13ADA8CEF0D3737376F61C911
+          444666666682B8A9EB1C4AA8C2F74690991D1C1B4764646868289E48249A30BD
+          AD14EBA00154E0BB9499ED2C19456B1FA1DD9C3642944D1D4B12A6E6E6E66A07
+          060626393682B8FD12914864B6ACACEC3CCA25C69284CAA2A2A2E1D6D6563A09
+          1843CB08D1DDDDFDA3B4B4B401D361A588A8A40660D28CB61182CC78BDDE7368
+          B17758B24CA69B996ACDB64FBFC412E7AEACE04778EB76BB7D7D7D7DAF58D2C2
+          881182CC706B3EA114116FD0007C6800AF391663CC08C1666E605AA31411B6CC
+          D85A237F82F2F88EA10165765F2922AA5C2E57B4A3A36313C7228C6624435353
+          D30AEC33B7706347599230813553DBDBDBFB9E634B18CD4886C1C1C16FC964F2
+          34A6A34A11518D8C0E4B33E34846325066B0F945D1CD0EB3246102867CFDFDFD
+          D31C2F892319C9C099398BE998524454A3C4A80B5AFAB11D354260C34C629855
+          919855C8AAA57B74D4484B4BCB5A9C7869D73FA214119328C91A6435C5F19238
+          B6463A3B3BD7A3AC62E85C7B589230C927E4298EB3E288916030B801039D8C77
+          A7050158E02FB1A9FA252608E3A565D704ED215213845123814080DE69D1B15E
+          C7C4B8C7E3391E0A85DEB124C2586991090C31FCA2BB94621D3281C18F3D835E
+          1F69E1E6D116B40BD3B305BACC3F3141D82E2D3241E584EEA4F3F2FA192EDB26
+          085B46B0B02B784D542BC53A78A07A0AF3464C10DA46F885DB082E2D13584B75
+          38F67F62C9365A8B9D9EB3694D605AA5141163C844BD491384D808BDF9C08DD0
+          3EA165221E8FD7452291CF1C1B43545A64C246269E386582101941262ED36B1C
+          0E2D432D16CF25A79D3241888C201BE2B7F120DD627B7A7A3EA8D0194446F01C
+          7E12661E72981574A707C8C431532D7629C48B1DC7F395389E47516687585A14
+          32515252720A99F8CA92A368B55F0B6646694DE4CA04A17D68C421B11C031D12
+          7FFBC31399788CA13E1C0E7F514A6ED0DED9B9EEFD5833CF9592E6113251976B
+          1384764632D0232D1E4BAF60FA13FBC445B4D819F5499E3CFF010505BF006CF7
+          AB24E249D61F0000000049454E44AE426082}
+        Name = 'right'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          04DB494441546843ED994B6F1B5514C76D374191F2DCE42110DF208F4D94CF80
+          40EA236011BF9A261B8210620362C102C102B1AA102D024585D236B6430BDDF4
+          6B74155BCDA615082442C826C9D61A9BFF7F7C6674C79D3B73E785BCC84F1ADD
+          738FED99FBBFF79E73EE24F95C86542A95CB686ED3EE76BB1F349BCD27B4B3A0
+          206D567C8FEB75B9686746D6425E95365728145E133313B216F2BF712164D8B8
+          10326C24AE236AADE8F57A9F341A8D5F68137CD613D3A65EAFBBCFC367EFA0B9
+          493B8D1A93C68AB8B5229FCFD74BA552C5F60600115534FBB852AB318985743A
+          1D75552FA15EDC0B1223227EC675C97600FC26F1CE706F16979595953FB112EB
+          309D4929A07F657171F185F85D9697975FA0F1880016B6E476ABD53A947E2C52
+          396B55ABD5B74F4F4F9BD3D3D3A3E2228C8FC1FB7B7C6767679D999999D2DEDE
+          DE6FE28A4DE21521070707876B6B6BCF30B06B636363CE3DFD26C923626A6A6A
+          0309E0B1B81291CA8A383036182330C32688DBE93A325C43FA894965451CDAED
+          766B6969E93962E32ABABA4492BA0812BA226A9D001F632B3C145B4BB95C5E3F
+          3F3FDF57630683CFC1676F276808DD4E51EB8C49FA55DF291A186499CE203850
+          0EF8F8F8B82BAEDCC9C949D75484A4EF48752654C8609DC0B6B98F076D485F0B
+          073C3737C7EF59BC6667674D57A234186726752654C8C8C8C8476838180716BD
+          07589877A5AF05037F84A686AD51153B1099A007B8D4D8654C7D28B616A3ACE5
+          5727B86D161616B65003EE8B2B1158894DDCF3A7F9F9797772A3D419A3ACE557
+          2726262638099791A57E47553EA02F2E98A8EB107137AE0862B4220E9A0ACEA5
+          DFC2D6E1967029168BAF8C8E8E7E81982A89AB313E3EFEF9EEEE6E47FA36D8A2
+          357CE72E4C7752A38A207925BD323B448229158370ABB41ACCB8EFD7683EEDF7
+          FAE0FB5FE13B9F493757ABD58A474747FBEA4AC4E02FA667DEC049AF91A108C2
+          1562DDC0E0AFD98E3E35695D2064534CBBD66000CD8422889D9E0B03E9353610
+          C353EFA474C94BF16759963B687E17C2928AB0617A2E601FEFE086FF882F2E16
+          06B63D90C1580B3C209533166C7042B887016CC3F4BC45468563C7CAEE445A0D
+          E4F9F7F1F0EF60BABF637C6035CA18D8AFE2B261B0832F6172B0E48E5FB0633B
+          F228D2C435623BFAF4E45862FCE6682C248A88A8A421C6A88E642982A00E3DC3
+          DBE321EEE9799F016FE24DF35F9CAA9F8A4F4BA81064972244FC08530D4C0B0F
+          DC82081EEC02C16C973098450CA62D2E5F28667575F50F0C9EE5C07916C5BC81
+          A2DB0E7B150ECD1AB8D1376854C13C77DD8088BD7E570F2661074D1D13D180A0
+          F7FA5E3D2CAA08DE2D989EB31D7CDF8AAD2554C8407AB6B06F374D456012B8BF
+          F97B5E3F88B040E4847003972B0613A18EC19750214E7A96AB82E0ABCB475A30
+          E03244382F632EF471AB49578B4CD486F35CA6D7FE277A4295464544B09EE8E2
+          2F93575DA3AC650AB21BFFF8102482F0047095EFF608E096F812939A1049D177
+          60866E574031EB10730C2DA1A9D5845484E8EA8C52136C067CD0927FCBB44E84
+          61327B81202458676EC154E3CD9A9C9C641AF58002CAE38A9A5AF3FC2DEEE1F9
+          D36A1C120BC1ACBE546798A2FDB29B64234F6A054675228CC442FCEA4C508AF6
+          138355499C3D130B895367E2D4893052AF232A287EDAFF58A54DE21519162E84
+          0C1B1742868D4C85A0C61C8949FE9636133215A2D698346A859E5CEE3F3BA469
+          2E08CA3C980000000049454E44AE426082}
+        Name = 'Collect'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          0576494441546843ED996B681C5514C737EFBA1B2234C6D86A6D221A3FF88A5A
+          B05524BE8845D10F369BB74484AE81FAF8228A681B032AD20F964451AAA2A4C9
+          269B0435565AF4839540A914AD55938A498BDA76631BAA5434596B9EFECECCC9
+          3693EC6CF625DDE2FEE072CF39B33B33FFFBBE771C2952A4F87F90A679DCB8DD
+          EE8CACACACB569696977CCCECEAE215D999E9E7EA95E764C4E4E8EE34B1AE437
+          5FCFCCCCEC2D2929D9D7DCDC3CA33F898BB885D4D6D65E41F624A98A17BCC408
+          46CE7104FBF85FABD7EBF56BCC425D5DDD83646F888DF84D5D5D5D9F88BD9098
+          85F0801564AF901E2665482C56C6C6C6CEB85CAEED887A8917FD4DC3063C6784
+          6CA5D80819E1FA65622F245DF3A8E0E6F58140E047CC47487189107273739751
+          2B4FD1EC7EA086AB343C87214298DF5417129590B2B2B24C44BC85D9EE743AF3
+          CCA885D394EAFBBCD4A3D8EB32333357E02F97343535554CFC36ECC7B9D6393D
+          3DFD97F10F2B05FCC68798F7E4591A8B88889B564343C3325EE603CCFBCC8885
+          43BCC0D68C8C8C9EB6B6B6331A0B8BDE4F4ABF99B4DA085AD94D73738F83FA06
+          F4A590EF1C91108FC793C5FDFA302D22A46DD32CB6F8FDFE6DFDFDFD531A8E8A
+          F5EBD7E7E4E7E73F83F90229DB082AD4DE2E0AE87E750DE2124255B772C327D4
+          9DE327620F7574747CA77E5C5457575F4FD647AD169B91D0D80959B28FD0272A
+          428838C008724BA244083E9FEF7BFAD45ACC0366243AC2D6487D7DFDC554EF20
+          6681193138CCE8B1AEBDBDFD77F5E382829A9B275619812588A94628F5CD64F3
+          45FC8DB00D8912A1C82818918870D80AA1A464E2D9687A2688D8D2D9D939A06E
+          4260E912513F5D0A5B21BCB487BE91A3AE8371FF0823548BBA0983F55923CF3A
+          A9EE22B8A65678EC4A23ADB2B2F2180F99BF1CD848FB7C57EDA423648D30DCDE
+          345F84CCC2D44E97BA49494821BCF45D6A1AE07FC6506B9961930DBB3E72B3E6
+          060CB75FA899B48414C2B07B959A06F807D54C5AEC9A5670E92CD05F8EA999B4
+          D835AD3F3577B042FDA3B8B8F884BAE704D9A3D4D4D4F899DB7EC6BE47C316EC
+          846C62A292ADE72916718D89DA57C7425353533A2D64BB6EAA8AB05F37AF5849
+          C8ACFA5F525555B58AC564B06953C0277A7A7A2C4D5FB0AB91A40111456A1AD0
+          42421E5224BD1028D5DC802636ACA685F341C8DD9ACFF18DE616925A88DBEDBE
+          90ACDCF44C5844EE51D342520BA17FD4925D607A06BFB08DF8566D0BB6A31663
+          7664EB6787E33833BFED0960ACE8298B9C9D054F58A88D171122A72E8B48448D
+          C8EE4E7679098561F659B2A00839B1A1C0DE5177115109B1DBE4309224743E62
+          F69645EB73A667E272B9DEF4F97CBFAABB88A88430ABAA7516D9DD51528DEAC6
+          4D7575F54A9EF31129B83B85D189898997D50E49AC7DE4109BADF27025140B15
+          1515053939399F635E67464C28AC0DF48D0FD50D49AC7DE41A66D87D7AA89610
+          B8D78D8C52FB312D2260DB5222846884ECD67C8ED588F98A9ADB2C238CC6A246
+          FECB3D9EA79F7DB9F0949126BBD3EFF7CB71EA9244DCB468B3B954B1ECDB1F30
+          2367E18123BCC4AB5CDFE1F57A835B8070783C1EE7F8F8B87C5B914EBDE8109B
+          7BED621F5411E9A178C442E4844F3EAF656767BF862B5FA8422107787D88DE8B
+          B883D847F3F2F24E0D0D0DCD1615155DC4BC200BC01B48E58140E05EA7D3E932
+          FE656596FFB6F0DBA77B7B7BA735B62451095153AEC931E7DBA442239020107E
+          92E4896572B5ED23B2EE5753B08C4E88DA49A95D8BD9CA83FF31A3B1C3BD0264
+          5BA9C9AB635D21D87E362B2D2D3DCC4BDE893946FED8E0E0A065F98C1F181818
+          F894DFEDE0FA0CC22FA79F84FA8A158EA3A416E688BAEEEEEE8FB95FCC8562DB
+          B4A245B6A4C3C3C3B752AAB793D630CFC8109D3F3A3ABABCB0B0506AFEB40C0A
+          5C3B4292CFD37B4A4A4AF69FCB6D748A1429CE3B1C8E7F013FF62750E3F28CA8
+          0000000049454E44AE426082}
+        Name = 'Raz'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          091C494441546843BD9A6B705D5515C7EFA3496AA04929D61613A08F9801625B
+          1AC599A04C69C510A82D5852D3A4E964701C75B040F50B3A8E53CAA85FFDE0D0
+          71824462D33C4C4404A1D352DA4642194790B67980B1D442339284097934D392
+          B7BFFF39FBDEDE7B73CF3DF755FF3367F65EEB9C7BF6FAEFB5F6DA6B9FC4EB01
+          15151537FAFDFE66BAF5535353CFB6B6B6CE48FFFFC2F6EDDBFD1919191BBD5E
+          EF4388778E8E8EDE9A9B9B9B61DFF59C9F9D9DFD69535393EC7384B7BABABA60
+          6E6EEE18FD1B6D95E7DFC83F6B6C6C6C35F25503047233333377D3FD3E5760FC
+          6878FAE0C1837ACE11FEA2A2A25799895B8C2C5C8FBC7DEDDAB55FE6FA676767
+          E790D1A70D7BF7EEF5E5E5E53DBA60C1823F236EE6CAB56E4401DE789D2879B8
+          A7A767D2A8A2C2BF66CD1A3F86EB6591281C181878A4A4A4A4A0B8B8F8CDD3A7
+          4F8F1B7D4A282F2F5F4AE8BCC8988F207EC6D63AA20312F713EAAE63FB162D5A
+          F43B42E95D238761D9B2653E9A5D939393F5B62635ECDCB9333F2B2BEB4D486C
+          32AA58788367E32221F86A6B6BA77C3E5FCCF863E0FF986ED2282B2BCB224CFE
+          4A77B5AD7106137B1212F7D5D5D55D342A5768C63D0D0D0D5AECAFA8EF8073A6
+          4D1A4B962C799C095B67C45890C7122221584484E9E9E9C79889092386817B8F
+          2ABB193119609B57992926F0D82512C0FD64A831A38A1B7ED37ABABBBB87C952
+          CA1E77DA9A2B608FC961D16D5BBF7EFD4B67CE9CF9C4A8E386F629BCF194111D
+          313838E827A45ABBBABAFA8D2A2698DC9564DD16EC9E087A44C023BFE23AC6A5
+          04F06354EFDB773C1E36AC7C74AF565555DD6C54718359CE33DD98507261D28E
+          30C6ED46E5089E593533337382092AC5DB8F593BBB1376ECD8B18CE6182FBFCD
+          D6783C78A68F4D6C23EBEAAC51B9428631D83B467405A13CC4F3DF686E6E8EFA
+          1B3CBC9AC9394E37B0890E87792412BC68806613CC7B6C8DED19D2F1F144D60C
+          CFFF8B66DA96DC8191D733794749D7C5461584A9444ED00D5602972E5DF2C724
+          22A4834C5B5BDB6516728711E3C5122E85F2976CD1E3A9ACACFC82C6D5F84665
+          61E1C2852331432B14A98619A41F6626EB8C980886B91E20D4C698CC975913D1
+          D6DB2BAE1E0920E0198C0956018978263B3BBB81E6035B4A08D771FD8D714F39
+          9010DE889B882032189F1419E258F5DC0DB69476BC901011A1BEBEBE1F3797E2
+          E66038B99161D15643BE8D6EA6AD491F78EF4936D09E848908FCB08FB5B2311E
+          32C80F51ED6A6D0437DF740222FBD526454488878C0E4E0C54ABD31EADCA1FAD
+          91B8D3701CE864CFB14E8E4913110264E8865500013294E0A310D8CAB59B0C77
+          0DCFAF181A1ABA96C7F6A8AEB27F913478EDDCE3816379DCE93716544B999D36
+          58A247A6E60D1B362C58BE7CF90DFDFDFD1FB5B7B74FB32794A03E4A26CAD6FD
+          241076FC4D0B11211619DA69EE1D42750BB3F82EE1786F4B4BCB0592C01E74BF
+          B61E4E0C47F1FA66BC113CFEA6145AA19061C4EBBD742FD81A3BCCD01D80844A
+          0AEBBB0019EF56649DD555B66B6FB1404298A2E9B4256730117FE0F75B424908
+          6923C2ECE640E67D0CFF2AA27510C3D00F315C355158C58CD16BF501A2B0B0F0
+          938181815991C8C9C9D941A8ACE337653CF22C06F7D2CEE979FA4A148775AFB1
+          B1B1862DE053E9439196D0D23E41B8EC27DE1F60A0E3BB76EDBA89411BB9B592
+          EBF3D64321E05E1724D6EDDBB76F8E5AEA17907D0B1296974241D6CBA422C8C6
+          F011A37244CA443064DBD8D858B349B1BB21F234755911D9EC356EAB3E73424B
+          5F5F5FB516BE9153424A44F0C4B7088B1691C02317B9AE63023308AF6E6EAFB2
+          9F7206C47F4FD388472EE01195FA49236922EC130F8E8C8CFC31F06913123DD4
+          6245E8BF8881AE8B360A3A784705EFF8AF9113425244D80376B21EF4AD2B5876
+          8C8F8F7FCA5135677878D84B587573B956C49180C8596DB078A7CFA8E2464C22
+          E6E3F21A5C9FC72C67730D426005B76AB9E61580DCFF1E6BE419BCB292FEF384
+          5D11D9E8AC52AE79C415C992894A44E50599E5090C7810F1B3B6D61D1871911C
+          5FC66E7ED2A8ACEFBCBDBDBDCF3001DF31AA50FC964B5FE0975A92413264C288
+          A88CC8CFCFFF2533F9A390CFFA89E232DEF83993D088211F4961C8D441A6C67A
+          02F0CC7EBCF743B29E3CAE0C9712992011BC700D2F7F89AE8AC074621FC63C49
+          862BA57FD85659F898F1BE0E99CE749009ECEC5E7EF41C6DBA49688FE85207A3
+          07D58660A98C1709911129741FDBB76C404209E384EA385BE30C8B082FABC1ED
+          E596267D98C6B82A665327430FC69E420EAE1D035732C0FA86E546C6575353B3
+          9097C5FA9CF91E03FC86C5BF15AF15ABA2357A47A876A2A9C4B8B0BF7A31C395
+          34911F20D242C64BEC6EA5FD8B2D5E012FFC3B039447C6272F5B8DF78E71DD64
+          54611089C58B175792B9FE64546160BC7C26E4B8099B20A8064630B694F1FE41
+          AD56C8C4E9481059A7A9C2DEA8E2D4C841F830788BE98701122F445B647A09F7
+          B496A27EDA21DBED712221E89D5AC05AC8466501128B31F20844EF3870E0402F
+          13A531227779EBCCA3C93472103E8C72DAAC8E98761E0881730C749F11C3C0C4
+          B8168157838C16FB72BB7B05AC83C182828253468C0A0C8EFA8D8A89896B0315
+          99ACACACBB784FD89FFD9225E323162F9B7E10942587392BCC1A312AF89D16E5
+          3C4024EE3FD2E81B198D3C7BDE5218880CCDCB4A002203591DB6221380C81CD1
+          D9478242CBDA7D4381CB4BB4288DE884BB4D1B06082654BD12A61F60E8DD8C19
+          F977CA78B2D92AA2E71035E1B522D26E9441988C7232DAA2122099C3EFBE62C4
+          50CC4C4E4EBE6EFA71436414426E6490AD3D2914D87A9BFEE9C0AB8778F88CD1
+          47E21C33B14903D157AA5E4F5B8A6E0BBF99F7273AD041ECDF65FA09035B6E56
+          DAC5381D9143214F2813FEC092E6E31DABD6C240D558DF543F0ACE6378070BB0
+          94B5F339A38B0A8CD8DCD4D414EBAFC3AE50CC132E27A2907104B68D046AAD27
+          B8E62D7A8315CC7EB51B0970285512028BFB43C6D2FA8BFB4FE22CFA518B08E1
+          D083B155FA3463DD4910C4760FA9B4C2882943644CDA8D8B0C91F05AD8798410
+          ABA6D1E9CFED7F4442F136836ED3E0464E1BCC6725952A8E1F3208FB09AEDB03
+          A16501CF34E01965A3D0738313C679C193B8F56B57838410E2197D95898649EC
+          FD2E21FD5ED4A3AE8077EEA0D131F41E2E2D3CFD33816A2FBDF4C5898989E7DB
+          DADA22F3FA558139F4FD84EBDB18AE2D61144FB5D37F8A8C4A05E2F1FC0FA65D
+          C96F7919CB790000000049454E44AE426082}
+        Name = 'Tools'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          065C494441546843ED986D4CD5551CC7E5DECB4D1E0CA16E0E71DA03581982C6
+          84D64CD285A0996BED120286A5F5C66AEB9D595B445BE67C67D60B57B6401E94
+          AEAF746E568298A991CD05624D28C75A938789903C0CC6439FDFB9871BD7FBBF
+          977B05E1BAF86EE79EDFF9FDCFFFFCCFF7FC1ECE3977D60C66F03F82DD6E8FD1
+          A2DF30EB3A68909F9FBFDD62B19C5ABA74E98DFAFAFA9FB47A5C0415112141F5
+          192504642527275FAFABABAB550FC741D010C9CBCB2B67F23B4646468484A8E4
+          675D5252523B96F95914BE1014447273730F984CA6029135895148633D6ED60A
+          990B4E9531DCDE9A0E40221F12A5BAE90D439457CACACA2A9C4D4F98743D2D20
+          26B6B4B7B797888C4BF52BA531CCADADADA59B376F565633C2B45904122F5395
+          512C90F818AB1C1F1E1E3E816B45AA0EC610CBBC8A653C2C386D1661F2895416
+          567A98C9D799CDE63FD175389F7A85B9ABABEB2B2CF3A26EBB30E5449844B2D4
+          E5E5E51F30F15DF3E6CD9339940D0E0E9EC72A0B878686AE62995EE96384A8A8
+          A8D0CECECE4AB2DC6AAD5298D2AC253181058EA7A5A5455FBA74E90499A88A8C
+          D4874532793C176217AC56EB4A88D4A2B3A3339CDFECD9B3459FB964C992CA86
+          86867F44376544744C144746469A99E45310B00A11CA8FC89276E7F07C6D6969
+          6927BA2BEC1FB5DDDDDDD910B3A8016E01FD23298BE95B2EED29213236B0596D
+          874C80920E81504DA666C58A15152525255DEA0580EE0F74BF40C6EE83CCE2C4
+          C4C45358B7F98E13C197B3F9A0AC9A64A78F2A2A2AB643A003DD7ACA2A56BE83
+          49D75EBC7871C0F9C67FE078D294929272857E2FD1F416CF7378BFF28EA45F36
+          B99504EE36C4504A0E459120C00BB14E2CED2ACA63940626B906776A43F60AC6
+          DBC178BB75D30D24879B04BF6DD28960811C2627795EB9436F6F6F4F5858D83E
+          48ECCCC9C979504EB6A817496087868666141717774A3F5F484F4FB72C58B0E0
+          32628253E381E726D5B5209137968480C95A99F4C265CB969D63551DA8E259C5
+          CBE832D9D8AE3B7BF9467373F330EE18C3D8CF6A951B18EBCCA4ED2370785393
+          F0581CBD3F2877E2A3BF51AF3974E850AB7AE82718E3572D1A61FEA41061937B
+          ADADADED5344AFAECA44C2C59F21BB25501202B29DAFB39875C24408DE8D2D2D
+          2D5FEA1DDA273886C85E5129B1E2D4F80F16E2112D7A80C5690988082BFF002E
+          B467D3A64DE72020B73919E4A4CD663BAD3AF80709F86AC659A4DB7E016BBEA0
+          450F3087BFFCCE5A63338E53A382EC3DB2D127108CE043C75835C3603402FDAF
+          D27F35EF376B9557307E06DFFA56376FC5607F7FFFF8EE202828288883F57788
+          6EAB886E179679977DA007B7D9801F0B510539D56AD110F47F88FED52C905797
+          1140229E7EEACE62049E9D73381C1DE3A65F21C1EA55B37A5E7338BB733FA9B4
+          9A14EB60E0A7FBFAFA6CD1D1D1593C93DD3A45F53200634653F278FF465C5C5C
+          43535393DC3714B2B2B2EE494D4DDD8A789805B339B59EC052EF7344A9F7E95A
+          A32410BD91188B9D90D92D6EC6871F3F78F0A0DCB143B0D87EEA37540F1FE018
+          DF89EBD6200A792BED74DA73D543EFA88B8F8F5F5E545434EC9508013D1FF38B
+          ABF84362148A8C96150A0B0B4D8D8D8DFB21F7BA564D160629197C4FB9B32111
+          BBDD6E6347AEC2EC728B0B04587A642B01FCB56E8F22842CB517326FEBF684C1
+          77DEE23B9FEBA6E789522CC1B1F9CC6D901030D790855A1E8B9184848477F8F8
+          3EDD9E101867EF581202378B70CABC1F022711939C9ADBC22ACCFD83963D40CC
+          E4521DA084294560E8A36C637C8FBF855C16C9CECE8EA2FA9E3211127B7C9110
+          C82458D134C4634E8DDF388AB5538D48085C16C187BF9860400A891D5AF60B78
+          402ADFB45364D796FB891BC89897493847F11287CE825EE122426CFCCE4B8FEA
+          66A00898C4AD903B476C6CEC7D4C3A82BDA8E7DAB56BD76B6A6A2433F9051711
+          F2FF694CFE8C6E06820993980CA81821009FECE9E951FF370588A02021306109
+          09BCAAF0F0F07B31E929AEA6EA7F223F50142C2404A6818101B97EAA8CC5B120
+          332222621D4176533DF50E21F1A196830226CE33674580C47282FD094EB267D1
+          C981AF5BF406083A128210F60F2B13FF866CB191B6FC899C8145FE86D47964B7
+          9B1CC960373BEA4EDD0C2AA8AC2564C011C40D941B1069D3A9B891223BBD895C
+          7F186BC91F08410957FA95F37F4C4CCC1126FCBCB46533A20AF8DF8EE982EB62
+          25971A2E3747C85E0FD3ECC0421B8985BB82C40C66308319DC6D9835EB5F1E1D
+          9444D4EA499A0000000049454E44AE426082}
+        Name = 'Micrometer'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          03DB494441546843ED9A4B4F135114C7A785122CAC29688C8909115F3171A171
+          A9AEDC939002A1AEFA1974A3E24613133F002B09A50189F11BA88921BA332E7C
+          2E8C0A3E2AF1519D62AD7DF83F774E6FEE9DA18F2933656AFA4B26E73FB7C370
+          FE73EEB9BD2D185DBAF84388A320994C464CD3BC1A0A85E238DD678D068E7738
+          D203030397E7E6E6FE5A438611E62860131720836A82A0DC2E22D72BD6A98566
+          A4582C2658061E3CF0F32C059A91482432C2B213D8CD51A019E964FC30721A65
+          3FCBBA6D786DA4B4B8B8F820954ADDCB6432651E6B0B5E1B297034868686E4D2
+          D80E7C3382E9D5D146D4E4A5A976E05B45C0FF31B5FE02966DC1B7A98537D7CE
+          9D5AE572F90F4BA2738D60A5CAB12454ED3B9E1AA9542A264BA291114F77005E
+          F7889ABC6ACA4EB1BA03802E5943DBC35323E170F8174B7B7534363737652FD9
+          FAAA6576646AF5F5F5E55992F9E019014D4DADDEDE5E993CCC07D2884C1E8D5C
+          D348A95492C9E33A599DEDE067456A4EAD9E9E9EA6A6A01BBC36F293234D19D9
+          F876D0E03F5812AA6E99568CD45BFFBF7324546DA7D9EB9AC695116A4C65FD77
+          6C4160B0A904719DAC02EED9FE8A200139758AC5A263EA6029FDC652D35BB0B3
+          1501D2089650879142A12093B2554743AD08D8911EF9C49150B500AB91AC023E
+          8ED4AC089A3DC3925075CBB835F28123B1CE5140DF9A8C8E8E66F994DE2B6A56
+          0486EB3E9056706BE423476A52A989582C969D9D9D2D2793C9E8F8F8F8AE9595
+          9502F654B5DE2364F2E8A5CF2CEDB8DA1DBB6DF6372C095593B10D8AD96C76A4
+          BFBF7F9874341A156376709F4615F95D5D1D4DD36CEA9DDF6D455E71A427F99A
+          A50046D628E2236E0C3A26060DE33D47954A3E9F9755E06956B1CE2CD043B2BF
+          060707EBAD7E125746D0C02F59D22F7BC1520063C208A02FC2AB5F86D3DF3234
+          D03B6F69DACDCCCCEC492412C3F3F3F3F4C435C3B897BC371ECA339675716364
+          637979799D7A800E34F61ADE4BBEF26B84687E181CAE56A45A251524F99C220C
+          8D61B93E20060D438C55C1CF3D6249AC72AC8B1B230F715472B9DC291C27A8B1
+          312D684CA0247D08C7614B1A0E2340248D3E39488718310CF5A99770AF346B32
+          9C42DF79FFD5D2D4D4D44D1C37F8D4C1E4E4E42A5E97066B816BEEE0B8CDA70E
+          709FFDD3D3D3C7F8B421DADF101B815F7C1C4BEA7D7CC22BE3699E595A5A7AC2
+          2F09E2F1F818A6CE53D28847171616B405A10A123C82AA3EC6AA464D7E122B94
+          36B5262626F662E770179589E2F45C3A9D76F49A1DCD0812D5568FA0830720F3
+          77BBFC0696AE91A0A1194173D5DAF704116DAF67AFC82D8E81070F5DCB553382
+          7DCD255C701D72CBCD5E10C036E90BC235E4AAFDE743972EBE6018FF00019991
+          73051C9DB30000000049454E44AE426082}
+        Name = 'spectre'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          023E494441546843ED98CD4AC34010C79BB63996F62CF8489EAC9434013F4E8A
+          08BE4B11AF7E348D1E7C04F15D04C1637B0E6DFC4F98849866936C529B8DEC0F
+          869D6C7667FAEF7E4C6947A3D1C861DB7640C68FADA1CB6DEB91166259D6C774
+          3A7DE74721FB1E272DA4DBEDF60DC3E8F3A390A6C6C5E833D2305A886A6821AA
+          D11A21B849C7B04F32D49423EE8EF91321285C932829F9DC5D19C471D0BCC00E
+          D9EE61BF901652546129290A970B374C4A3EE6D8E1CB0CCAC443F300EB851D00
+          C5D16037465A485E85CD4A0A7A98F328125321DE3A08821BF663B694617258D5
+          5DD7DD7A9787206992F566B339F53C8F56AB109108518C9D9C115152B688DC95
+          49222B82A82D041FEC0ACD132C4EBA5AAD7C6C970919F9DC4D9098679E93495E
+          BCBCD5AC258492E283DDC18DB721251D8D46D67C3E7F23233F25C6A03959628A
+          E27157269585944D5A564C1D11C4D6812E73D8AB24751CE778B95C7AC3E1D0E4
+          2E22C0BEBF26A78E08427A45E82022E90C6E52E87A30189CE725A57710710137
+          7901D0CACCAAC44B2325A4CA6D9204AB3C477306FB759BB145485DD311A585F0
+          7E2E7D9B607C66C5263119B75948957811A584543913182FACD834277D01D489
+          4724F76548FAB0E35B3841000F6EEDE54F835C63FCDCA0F341DC2E168B57F6A5
+          291482E72F3407E4333B11B16B0AB796EFFB49B14A8A200A8598A67989E5FF66
+          B3551491096DAD687BB509A93AA2325A886A480B29AAB011FB1E272DA4A8C246
+          34352E46DF5A0DA385A88616A21AC29FF1AA93FE73E4DFAC8846A3C9A3D3F901
+          E7317B307274511C0000000049454E44AE426082}
+        Name = 'graphe'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D49484452000000320000003208060000001E3F88
+          B1000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          056E494441546843ED995B685C5514869B4C26D124560C92D422A82435A84F42
+          C54BEB05FB12ABB52D266672236D941445455029D4F890FA20A5A00F56B1F182
+          9ADB84444BC5BB88065B2C8A52B088B6228548315A0D8993FB24F15B7BAF39CC
+          49669299A4E7CC4B3E38ACF5EF4926E73F7BEDDBC99A5556596551B2EAEAEAE6
+          24E9ECECCC322D09E067AE9C9B9B6B21DD9E9595B58E38343B3B7B84EBF99E9E
+          9EB3E687324CB6C6A4D4D4D46C239CC2C01E35215C969D9DDD343535758ACFEB
+          B42DA32C6AA4BEBEFE366EBE97F452DBE2263F3FBF0043EDF4D81E6DCA18498D
+          6839BD8F913C6D320C0F0F4F6B1A434AF2157A66AB959921A911EAFF25428955
+          86198CEDBE18C877718D9B564B407A26140AAD57ED3B098DF074377363952A0D
+          98D8D7D5D5F5766F6FEF0C13C33B34EDE08A9A0F2D458140E0B0E6BE93D00826
+          5ED034C6714C1CD4DC8099CF09FBAC72B82F5325B6C0484343C346C266AB0C32
+          3D3FADD105B3D68B846FADB2D07307ABAAAA022A7D638111C6C6139A1AB8B1CF
+          78FA2754BA9032233C363838386B5B182C81C0F5B9B9B93B55FA86CB0833D5DA
+          482452A5D2C0AC7548D38460F2C7E2E2E20E9506CC4B0FFA8ACB0837BDA3B0B0
+          F02295C2D9B2B2B24F344F0ABF7780E0941EFA66993054FA82CB084F32A4698C
+          EED6D656A76C9241AFFC4C701966C2F0B5571C230CD0428CDCADD280EED63415
+          64E03B306EB631715CABD2731C23C160704BFC2A3E3333F31B53EE4F2A97845E
+          F99270D22A56D29292EC6834FA884ACF718C60A2425303B3CFC79AA60CDF21BB
+          010774C8AFA9D831420FDCA1A981B2FA54D3946113D9C7F7FCA7528CAC632ADE
+          A2D2531C23F4C0759A0AD1E9E9E96F344F99B6B6B63106799F4A030FA441534F
+          718C8073B0E28F9F64B18BA84C0B7AA15353C3F8F8F84E9948547A46BC91788E
+          6B4C1BB62D5FF320FE5469CE2C9497E7FBAF844678AAC7344D1BDDB6F4586561
+          DBE3F929D239B35F0864CA0E87C31BF8CE9B90DFD956C31463673D479991D1D1
+          D1BFD1094F9C2B2159692D0B268C32B626B7B2A67C8FA95FB559C8455731194C
+          5376694FEBA990D25B94E5C0F73E47D86F95E1187FE376CD970DDFFB24C159AF
+          28DB0FBABBBBB75FD01E8987272FB3577CD96EAAAEAEBE5AF395E05AB829D9AF
+          4C34CA03D8DEFC4E885F8BB272727256B4A6E87EF02E95067AE423899E1911B4
+          57E2599111A6F13B99515DFB41CAEA8CE49E1A61F0BF4798B2CAB021140ADDA8
+          79DAF060E69795BC3730786AA4BDBDFD1F82EB9C823979959436B2F9A437E69F
+          5E9D19D05323027FAC5D53C3D8D8D8AEA6A6A64B54A68C6E3EE3DFB30DB18BF8
+          4273EF8D0C0C0C1C956095D9B2AC9D98987858653ACCFF1D3611BD4ED97A6EA4
+          BFBF5F5EE2BD6E958599E6F1E6E6E6A0CA256191BD9CF171BFCA18AED3ABE746
+          04CAEB702412995029E3E41AB62A8D2A978441BD3B7EB6C2D46916D77E95065F
+          8C747474FC555050F086CA182D959595F21E7951E8B97CC2535639480FBBF688
+          BE181178A2077892932A85ABF2F2F29ED13C29F4E4A304679033598C30C8DF52
+          E9E09B114AE10FC26B5659182B7BD93B95AB5C009F5DC10390FF9439B0833ED4
+          D7D7F7AF4A07DF8C28ADD16854D61603B59F4F2F75545454B8FE071383CF5E26
+          385B7EE90DC697EBB5530C5F8DB0FF1AE246F6AA34F0C437161515BD3BFF6D4B
+          6D6D6D0B9F3DA0D2C0387B5617D905F8DD2362E64D4AEA884A0337FC603018FC
+          B0BEBEBE4C164B4CECA72DFE0820FBAA13A5A5A5AFAA5C80EF46046EF221C22F
+          565968ABA094CE4C4E4E8E90CB5926FE7C741EA38D8BBDBECD881129316EFA5E
+          5267C55F04799BB395923A6D656232624490F30AE5728B948C3625E21C65788F
+          1C9D55272563468470387CAEBCBC7C13A5D4480FC99BCDF35C435C3F70B57010
+          BB81F3C6B2DFE8ACB2CA2A31D6ACF91F53EAF3FDB2A0750D0000000049454E44
+          AE426082}
+        Name = 'sinus'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D4948445200000034000000340806000000C5781B
+          EB000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          0705494441546843D5997D4C557518C72F970B6840AC3F026C94BDCD7C09D4CD
+          14DA1A9BE5CAA62B0B14106396D15FB965A5AEF2A5B296A6B55AE5728D52F082
+          83B5B69CFD9335566B95CE2C42CDCDE5144565D350B80BEE05FA3CE73C9CCE45
+          B89C73EF05F1B39D9DDFF3DC97F3FBFE9EE7F77A123C31505252724B6262E24C
+          8A77734DE0BA49FC70A9AFAFEF6C4242C209CA8776EFDEDD6ABA471ED782962E
+          5D7A0FB70A2AFC24159E647A23D3D3D3F397D7EB6D40FCAEEAEAEAE3EA1E111C
+          0B221AD310B0B1ADADED89ACAC2CAFBA5D71FEFCF9DECCCCCC061A63436D6DED
+          3175C795610511911BB9BDCDF51C974F7CB1D2DEDE1ECCC8C8D89E9292F25A55
+          55D51575C7858882CACACA66F4F6F6D6932AD247C2088542FFF87CBEAF89DAB7
+          B4F851D2EA1469D52D9FF19B64FC13B1A7F0D9439417E2CE90CFEC482A725B5C
+          5757F787E9899D2105959797CFA3325F524C333D16CDF837272525D5EFDCB9F3
+          5FF545A4A2A2621C955F8CD0B5889BA26E03FC5768B0450C1CFBD51513830A52
+          317B29269B1E0369FD0D2D2D2D5B1B1B1B43A6CB1D858585BE9C9C9CD5A4DC46
+          522E49DD1E9ED545341FADA9A9F94E5D517395203A7F1EB71F69B574D3E3F104
+          83C10B44A48856FC415D31515A5A5A88807A8A379B1E8F2710085CA64FDD4FFA
+          35AB2B2AC204151717A721E420970CCDFD34F1F0050CB7A7D48E0B4B962CB99D
+          3E285930CDF41834A7A6A6CEDEB16347406DD7840DBFC9C9C96F0D1073821C9F
+          176F31C29E3D7B4E4A9A916EE7D4254CEBECEC7C43CB5161454846343AEC418A
+          8962D38103D8F97EBFBF49ECE16078EFD3A201E939E4806387DFE57774747C9F
+          9696364E5D211A7146B4A9674588CAAFE366881168BD754EC5C402C27F468CCC
+          73FDF8C812A94B541882C8E7BB98C51F373C401A1C6734FB50CD11A7BBBBFBFD
+          01A957C4487B87965D6108A2459E1AB09CD912EDD01C0DF5F5F51D64C89B6A0A
+          89082CD7B22B0C11F49722C30299E848815A35470DA2B48B5B87691958757283
+          974E39810859B3377D676F2CC366B44894B87D635A06B9A45DA6961DE3253AB3
+          B85B2312A18F79B68E16D2CCFEEC04ECFBB4EC1802E29DAC650304C66DA1E816
+          04FCAEC57EEC73A22312987FB61195556A7BBABABA321B1A1ADAD4B41838CFC4
+          CA60F314CBAE2CD2DF3EDA6DE57B2F6BD9115EC484ADA699E42E6B71D4612DD7
+          AE45032266AD279D22A35C584BA5A7A7C73512B140633B5A6DD81141F6A1525A
+          E5AA8DD86841BA0F7CB6EB6C49A06F488E6E314D635098C37EFF57351D13ED5A
+          CE0EDB8A0206A99FD4145EE47FDED3B22364D80E3BACE00F653F744D20C3A66B
+          B11FD9A2BB42866D59615BAD4BCACDD5E2A88320FBB3FBB00F68D9315E42DACA
+          72E7A8DA92720B2A2B2B6F5073D490CD25B7F9A665D0C496FC82961D63ACE588
+          52836101F3403A4377A99AA3065BFC326EF629C4AA931B0C414468971C021A1E
+          93D572A0A1E51187E8C8B1D71A35851EEC1A2DBBC210C476F804DB87AF0C0FF0
+          679372727256AA39E2F87CBE17B8DD695A060DA4DBDF5A76852148603090FD48
+          8F69196C62189DADE51143B6E0814060A39A826CC1ED7B235784CD15FCF907DC
+          ACC80483C156A23587089E56575C59B66CD96D54FE179E91AD2E611B03D54B5A
+          768D1521814DD6AB3CC01AFBE9A8131830F6C983D51537E4188B11759F5D0CE5
+          23A9A9A9EBD58C8A3041BAC95A8C28EB001D41F7B2243940F41E5057CCC84123
+          FD465623F6333999322EF22CFBE0E49A419727118E82B710C5CD2ADC3572C61D
+          0A85D6B6B7B7BF32E02858A2A39647CED33FC197872F80C84637AF5E865C6F0D
+          75582FFD8A545C4F6AF89D6ED565A2EEECEC2CA128E934D1703A27443D9EF6FB
+          FDD56A4724E2021251D369513F93ED547559D07201D251DE18ECA77C98871EC3
+          B6BF4E998C3D13BFBC4E9125CD78F9CC0EDFFB93FF3ECD77EC2B84C1E02B7DCF
+          23EA63B58724A220A1A8A8683C1BAF0DA4C92A7B9AC44837157C97486F62C80E
+          72AF4674C4D589BEFD7B06515FA86B508615D40F83C2545AF4F59178254926CC
+          C537ECFB2127A21C0BEA0761717F69CCA8B786CFDF513322222A3B3B7B052B89
+          CFD515866B4176E2F55ABFACACAC92EF7EAAA613646BB112511FA96D1193A078
+          812059C71DA19229A667782452A4FEB3345695BA0CACB70DD792A6A6A64BB9B9
+          B92D087A0CD35123A7A5A525206A617E7EFE197EFF9BBAC78620814A1D46D431
+          44C95B1047838E88828579797917F9BD710E3266040954AA99CAB5D2F20BA4B2
+          EA1E0E89D4C30505052D12A931D18706C248BA824A7EEA667A60109237E9B3C6
+          5484FAA1A50FD1E2324F2DE272248AD4F3212A382605099A7E67A4E33B4D3F04
+          B58C594182F409E91B4E451125F7A79BD7029646CBCF9D3BF759A43EC5B2EC0C
+          7D68EA75214860F22D26027E8A839D469D45D083B23E1CD3296787F43BC23C75
+          12518F60DA57FD27592BCEAFABAB330E4BAF9B08F5A38BE3E55CB7721D6607BD
+          FDFF1DB4C7F31FD16C121E1A37A8BC0000000049454E44AE426082}
+        Name = 'zoom'
+        Tag = 0
+      end
+      item
+        Bitmap.PNG = {
+          89504E470D0A1A0A0000000D4948445200000018000000180806000000E0773D
+          F8000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+          01F449444154484B6318F280194AE304313131713A3A3A1F2E5FBEFC112A4412
+          6082D25841545454C6FFFFFF17FCFBF76F3FD0226EA8304900A705D1D1D1F98C
+          8C8CD3DEBC79F39F8989A969C992255FA1522401AC16005D9E07A4FA41860B0B
+          0B272F5BB66C01448674C008A5E1006438D0E513A8613808A058000C965C2035
+          915A868300DC02A0CB93DFBE7D3B4B4444046FC46303BF7FFF7EC5CCCCFC1018
+          579B7FFEFC3963CD9A35AFA152883800060B3F398683002B2BAB18D0705320B3
+          899D9DFD1E3024C22032684104F4452AD01733A016552E5DBAB40322831F00F5
+          090293B31ED09105401C0014FA0FA48380296F034624036D4F01C6C14C522D81
+          81C8C8C872A06F407ADE03834B0523270373EC397373F3A7409FF8707171B9EA
+          E9E9FD048A1D814A130457AE5C390AD4630664EA01E3E53BD6A20268E0790B0B
+          8B27409FF8926389AEAEEE736010C503B100CE480506CD3C60520565B8FF7FFF
+          FE4D23A5A8E0E0E03803A281FA94F1A61A603E980A744502304C1D49292A8061
+          0F8F5B8C48A6060026146720B507882F9095EE090090A38B410C60D2C54CA694
+          02609E6804066BDD9F3F7F3EB0B1B1A950C5829090104E606E36031A0CCF6840
+          1C0C4C28EB512C00861D48029482C0E2C4F29101D0E56F81E91F54506E04F1A9
+          1207C01AEF1B109F0632EB8086ABC20C1F0E80810100EBE8D234C31D376E0000
+          000049454E44AE426082}
+        Name = 'Undo'
+        Tag = 0
+      end>
+    Version = '1.5.0.0'
+    Left = 496
+    Top = 303
+  end
+end

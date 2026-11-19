@@ -1,0 +1,77 @@
+﻿<html>
+	
+<head>
+	<title>Fichier|Nouveau|Simulation</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("FichierNouveauSimulation");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Fichier|Nouveau|Simulation</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="General.html">G&eacute;n&eacute;ral</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="General.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Liens.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="FichierFusionner.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="FILENEWSIMUL"></a>
+<span class="rvts13">Permet de transformer Regressi en grapheur. La variable de contrôle (temps en mécanique, volume pour un dosage...) se trouve dans le panneau au-dessus des expressions et les différentes options (nom, limites...) sont modifiables. On crée ensuite les fonctions normalement. Vous pouvez créer des constantes et modifier leurs valeurs dans le dossier constantes. L'ajout d'une ligne supplémentaire dans ce tableau crée une page supplémentaire et donc un graphe (qui est d'office en mode superposition de page). Les </span><a class="rvts18" href="Equations.html">équations différentielles</a><span class="rvts13"> sont permises dans ce mode (avec création automatique de la dérivée première pour une équation du second ordre : non de la variable suivi de ´). </span></p>
+<p class="rvps5"><span class="rvts13">Remarque sur le remplissage : le premier point est le mini, le pas est défini par (maxi-mini)/(nombre de points), le dernier point a, par conséquent, la valeur (maxi-pas). Ce n'est pas une erreur : le but n'est pas ici de calculer combien il faut de piquets distants de un mètre pour réaliser une clôture de dix mètres, mais de placer N points échantillonnés tous les pas pour couvrir (maxi-mini), le point situé à maxi est en fait le début de la séquence suivante.</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/tour-des-fonctionnalites">Générateur d'aide complet</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

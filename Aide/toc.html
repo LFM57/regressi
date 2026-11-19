@@ -1,0 +1,716 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+	<title>Regressi- Table of Contents</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/silver-theme/jquery-ui-1.8.12.custom.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/dynatree/chm/ui.dynatree.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="css/toc.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#tabs .ui-widget-header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="js/jquery.dynatree.min.js"></script>
+	<script type="text/javascript" src="js/hndjsse.js"></script>
+	<script type="text/javascript">
+	
+		window.bSearchDataLoaded = false;
+		var sHelpIdToActivate = '';
+	
+		$(document).ready(function()
+		{
+			var sAnchorName = '';
+			try { sAnchorName = top.location.href.substring(top.location.href.lastIndexOf("#") + 1, top.location.href.length); }
+			catch(err) { sAnchorName = ''; }
+			var nSelectedTab = 0;
+			if (sAnchorName == '_index') nSelectedTab = 1
+			else if (sAnchorName == '_search') nSelectedTab = 2;			
+			$("#tabs").tabs({
+				selected: nSelectedTab,
+				select: function(event, ui) { HideKwPopup(); }
+			});
+			
+			// Toc
+			if ($("#tab-toc").length) {
+				$("#tab-toc").dynatree({
+					clickFolderMode: 1,
+					debugLevel: 0,
+					imagePath: 'css/dynatree/chm/',
+					onActivate: function(node){
+						if ($("#tab-keywords").length && $("#tab-keywords").dynatree && $("#tab-keywords").dynatree("getTree") && $("#tab-keywords").dynatree("getTree").activateKey)
+							$("#tab-keywords").dynatree("getTree").activateKey(null);
+						if(node.data.href && node.data.href != '#'){
+							window.open(node.data.href, node.data.target);
+						}
+					}
+				});
+				// Expand all nodes if required
+				$("#tab-toc").dynatree("getRoot").visit(function(node){
+						node.expand(true);
+					});
+				// Select the active help id
+				if (sHelpIdToActivate != '') $("#tab-toc").dynatree("getTree").activateKey(sHelpIdToActivate);
+			}
+			
+			// Keywords
+			
+			if ($("#tab-keywords").length) {
+				$("#tab-keywords").dynatree({
+					clickFolderMode: 1,
+					debugLevel: 0,
+					imagePath: 'css/dynatree/chm/',
+					onClick: function(node, event){
+						HideKwPopup();
+						if (node.data && node.data.click)
+						{
+							var aRefList = null;
+							eval('aRefList=' + node.data.click);
+							if (ShowKwPopup(node.li, aRefList))
+							{
+								if ($("#tab-toc") && $("#tab-toc").dynatree && $("#tab-toc").dynatree("getTree") && $("#tab-toc").dynatree("getTree").activateKey)
+									$("#tab-toc").dynatree("getTree").activateKey(null);
+								if(node.data.href && node.data.href != '#'){
+									window.open(node.data.href, node.data.target);
+								}
+							}
+						}
+					}
+				});
+				// Expand all nodes if required
+				$("#tab-keywords").dynatree("getRoot").visit(function(node){
+						node.expand(true);
+					});
+				}
+			
+			// Load search data
+			(function() {
+				var se = document.createElement('script'); se.type = 'text/javascript'; se.async = true;
+				se.src = 'js/hndsd.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(se, s);
+			})();
+		});
+		
+		$('body').click(function() {
+			HideKwPopup();
+		});
+		
+		function SelectTocItem(sHelpId)
+		{
+			if ($("#tab-toc").length && $("#tab-toc").dynatree && $("#tab-toc").dynatree("getTree") && $("#tab-toc").dynatree("getTree").getNodeByKey) {
+				$("#tab-toc").dynatree("getTree").getNodeByKey(sHelpId).activateSilently();
+			}
+			else {
+				sHelpIdToActivate = sHelpId;
+			}
+		}
+		
+		function HideKwPopup()
+		{
+			if($("#popupMenu")) $("#popupMenu").remove();
+		}
+		
+		function ShowKwPopup(oSender, aLinks)
+		{
+			HideKwPopup();
+			if (!aLinks || !aLinks.length || aLinks.length == 0) return false
+			else if (aLinks.length == 1) return true
+			else
+			{
+				var oParentDiv = document.createElement("DIV");
+				oParentDiv.id = "popupMenu";
+				var oLink = null;
+				// Close button
+				oLink = document.createElement("SPAN");
+				oLink.className = "close-button";
+				oLink.innerHTML = "X";
+				oLink.href = "#";
+				oLink.onclick = HideKwPopup;
+				oParentDiv.appendChild(oLink);
+				// Items
+				for (var nCnt=0; nCnt<aLinks.length; nCnt++)
+				{
+					oLink = document.createElement("A");
+					oLink.innerHTML = aLinks[nCnt][0];
+					oLink.href = aLinks[nCnt][1];
+					oLink.target = "FrameMain";
+					oLink.onclick = HideKwPopup;
+					oParentDiv.appendChild(oLink);
+				}
+				document.body.appendChild(oParentDiv);
+				var pos = $(oSender).offset(); 
+				var height = $(oSender).height();
+				$(oParentDiv).css({
+					"left": (pos.left+20) + "px",
+					"top": (pos.top + height + 5) + "px"
+				});
+				$(oParentDiv).show();
+				return false;
+			}
+		}
+		
+		function PerformSearch()
+		{
+			if (!window.bSearchDataLoaded) {
+				$("#search_results").html("Search engine data hasn't been fully loaded yet or an error occurred while loading it. This usually happens when documentation is browsed locally.");
+				return;
+			}
+			sValue = $("#search_value").val();
+			$("#search_results").html('Searching...');
+			var oSearchEngine = new HndJsSe;
+			oSearchEngine.ParseInput(sValue);			
+			oSearchEngine.PerformSearch();
+			if (!oSearchEngine.aResults || !oSearchEngine.aResults.length)
+			{
+				$("#search_results").html('No results found.');
+			}
+			else
+			{
+				$("#search_results").html('<div id="search_results_content"></div>');
+				var oUl = $("#search_results_content").append("<ul id='lr'></ul>").find("ul");
+				for (var nCnt = 0; nCnt < oSearchEngine.aResults.length; nCnt++)
+				{
+					if (oSearchEngine.aResults[nCnt][0] < aTl.length)
+					{
+						oUl.append("<li><a href='" + aTl[oSearchEngine.aResults[nCnt][0]][0] + "?search=" + escape(sValue) + "' target='FrameMain'>" + unescape(aTl[oSearchEngine.aResults[nCnt][0]][1]) + "</a></li>");
+					}
+				}
+				// Tree
+				$("#search_results_content").dynatree({
+					clickFolderMode: 1,
+					debugLevel: 0,
+					imagePath: 'css/dynatree/chm/',
+					onActivate: function(node){
+						if ($("#search_results_content") && $("#search_results_content").dynatree && $("#search_results_content").dynatree("getTree") && $("#search_results_content").dynatree("getTree").activateKey)
+							$("#search_results_content").dynatree("getTree").activateKey(null);
+						if(node.data.href && node.data.href != '#'){
+							window.open(node.data.href, node.data.target);
+						}
+					}
+				});
+			}
+		}
+	</script>
+</head>
+
+<body>
+
+	<div id="tabs">
+		<ul>
+			<li><a href="#tab-toc">Contents</a></li>
+			<li><a href="#tab-keywords">Index</a></li>
+			<li><a href="#tab-search">Search</a></li>
+			</ul>
+		<div id="tab-toc">
+			<ul id="toc" class="">
+
+				<li class="folder" id="Calculs" data="">
+							<a
+							href="Calculs.html"
+							target="FrameMain">
+								Calculs</a>
+
+				<ul><li class="" id="Fonctionsdegestiondesdates" data="">
+							<a
+							href="Fonctionsdegestiondesdates.html"
+							target="FrameMain">
+								Fonctions de gestion des dates</a>
+
+				</li><li class="" id="Complexes" data="">
+							<a
+							href="Complexes.html"
+							target="FrameMain">
+								Complexes</a>
+
+				</li><li class="" id="Deriveeetintegrale" data="">
+							<a
+							href="Deriveeetintegrale.html"
+							target="FrameMain">
+								D&eacute;riv&eacute;e et int&eacute;grale</a>
+
+				</li><li class="" id="Fonctionsparticulieres" data="">
+							<a
+							href="Fonctionsparticulieres.html"
+							target="FrameMain">
+								Fonctions particuli&egrave;res</a>
+
+				</li><li class="" id="Fonctions" data="">
+							<a
+							href="Fonctions.html"
+							target="FrameMain">
+								Fonctions</a>
+
+				</li><li class="" id="Equations" data="">
+							<a
+							href="Equations.html"
+							target="FrameMain">
+								Equations</a>
+
+				</li><li class="" id="Trigonometrie" data="">
+							<a
+							href="Trigonometrie.html"
+							target="FrameMain">
+								Trigonom&egrave;trie</a>
+
+				</li><li class="" id="Filtres" data="">
+							<a
+							href="Filtres.html"
+							target="FrameMain">
+								Filtres</a>
+
+				</li><li class="" id="MethodedEulersimulation" data="">
+							<a
+							href="MethodedEulersimulation.html"
+							target="FrameMain">
+								M&eacute;thode d'Euler (simulation)</a>
+
+				</li><li class="" id="Gestiondesunites" data="">
+							<a
+							href="Gestiondesunites.html"
+							target="FrameMain">
+								Gestion des unit&eacute;s</a>
+
+				</li></ul></li><li class="folder" id="Fourier" data="">
+							<a
+							href="Fourier.html"
+							target="FrameMain">
+								Fourier</a>
+
+				<ul><li class="" id="OptionsFourier" data="">
+							<a
+							href="OptionsFourier.html"
+							target="FrameMain">
+								Options Fourier</a>
+
+				</li><li class="" id="FenetreFourier" data="">
+							<a
+							href="FenetreFourier.html"
+							target="FrameMain">
+								Fen&ecirc;tre Fourier</a>
+
+				</li></ul></li><li class="folder" id="Modelisation1" data="">
+							<a
+							href="Modelisation1.html"
+							target="FrameMain">
+								Mod&eacute;lisation</a>
+
+				<ul><li class="" id="Sauvegardedelamodelisation" data="">
+							<a
+							href="Sauvegardedelamodelisation.html"
+							target="FrameMain">
+								Sauvegarde de la mod&eacute;lisation</a>
+
+				</li><li class="" id="Optionsdemodelisation" data="">
+							<a
+							href="Optionsdemodelisation.html"
+							target="FrameMain">
+								Options de mod&eacute;lisation</a>
+
+				</li><li class="" id="Modelisation" data="">
+							<a
+							href="Modelisation.html"
+							target="FrameMain">
+								Mod&eacute;lisation</a>
+
+				</li><li class="" id="Bornes" data="">
+							<a
+							href="Bornes.html"
+							target="FrameMain">
+								Bornes</a>
+
+				</li><li class="" id="Residus" data="">
+							<a
+							href="Residus.html"
+							target="FrameMain">
+								R&eacute;sidus</a>
+
+				</li><li class="" id="Divergencedunemodelisation" data="">
+							<a
+							href="Divergencedunemodelisation.html"
+							target="FrameMain">
+								Divergence d&acute;une mod&eacute;lisation</a>
+
+				</li><li class="" id="Erreurdedomainededefinition" data="">
+							<a
+							href="Erreurdedomainededefinition.html"
+							target="FrameMain">
+								Erreur de domaine de d&eacute;finition</a>
+
+				</li><li class="" id="Ecartmodelisationexperience" data="">
+							<a
+							href="Ecartmodelisationexperience.html"
+							target="FrameMain">
+								Ecart mod&eacute;lisation exp&eacute;rience</a>
+
+				</li><li class="" id="Modelisationgraphique" data="">
+							<a
+							href="Modelisationgraphique.html"
+							target="FrameMain">
+								Mod&eacute;lisation graphique</a>
+
+				</li><li class="" id="Timeout" data="">
+							<a
+							href="Timeout.html"
+							target="FrameMain">
+								Time-out</a>
+
+				</li><li class="" id="Tableau" data="">
+							<a
+							href="Tableau.html"
+							target="FrameMain">
+								Tableau</a>
+
+				</li><li class="" id="Parametrevolatil" data="">
+							<a
+							href="Parametrevolatil.html"
+							target="FrameMain">
+								Param&egrave;tre &quot;volatil&quot;</a>
+
+				</li><li class="" id="Principe" data="">
+							<a
+							href="Principe.html"
+							target="FrameMain">
+								Principe</a>
+
+				</li></ul></li><li class="folder" id="Statistiques" data="">
+							<a
+							href="Statistiques.html"
+							target="FrameMain">
+								Statistiques</a>
+
+				<ul><li class="" id="Optionsstatistique" data="">
+							<a
+							href="Optionsstatistique.html"
+							target="FrameMain">
+								Options statistique</a>
+
+				</li><li class="" id="Fenetrestatistique" data="">
+							<a
+							href="Fenetrestatistique.html"
+							target="FrameMain">
+								Fen&ecirc;tre statistique</a>
+
+				</li><li class="" id="Fonctionsstatistiques" data="">
+							<a
+							href="Fonctionsstatistiques.html"
+							target="FrameMain">
+								Fonctions statistiques</a>
+
+				</li></ul></li><li class="folder" id="Graphique" data="">
+							<a
+							href="Graphique.html"
+							target="FrameMain">
+								Graphique</a>
+
+				<ul><li class="" id="Optionsgraphe" data="">
+							<a
+							href="Optionsgraphe.html"
+							target="FrameMain">
+								Options graphe</a>
+
+				</li><li class="" id="Outilsgraphiques" data="">
+							<a
+							href="Outilsgraphiques.html"
+							target="FrameMain">
+								Outils graphiques</a>
+
+				</li><li class="" id="Optionstexte" data="">
+							<a
+							href="Optionstexte.html"
+							target="FrameMain">
+								Options texte</a>
+
+				</li><li class="" id="Optionsdesvecteurs" data="">
+							<a
+							href="Optionsdesvecteurs.html"
+							target="FrameMain">
+								Options des vecteurs</a>
+
+				</li><li class="" id="SauvegardePosition" data="">
+							<a
+							href="SauvegardePosition.html"
+							target="FrameMain">
+								Sauvegarde Position</a>
+
+				</li><li class="" id="Coordonnees" data="">
+							<a
+							href="Coordonnees.html"
+							target="FrameMain">
+								Coordonn&eacute;es</a>
+
+				</li><li class="" id="Fenetregraphe" data="">
+							<a
+							href="Fenetregraphe.html"
+							target="FrameMain">
+								Fen&ecirc;tre graphe</a>
+
+				</li><li class="" id="Animation" data="">
+							<a
+							href="Animation.html"
+							target="FrameMain">
+								Animation</a>
+
+				</li><li class="" id="Origine" data="">
+							<a
+							href="Origine.html"
+							target="FrameMain">
+								Origine</a>
+
+				</li><li class="" id="MethodedeCornishBowden" data="">
+							<a
+							href="MethodedeCornishBowden.html"
+							target="FrameMain">
+								M&eacute;thode de Cornish-Bowden</a>
+
+				</li><li class="" id="Suppressiondepoints" data="">
+							<a
+							href="Suppressiondepoints.html"
+							target="FrameMain">
+								Suppression de points</a>
+
+				</li><li class="" id="Axes" data="">
+							<a
+							href="Axes.html"
+							target="FrameMain">
+								Axes</a>
+
+				</li></ul></li><li class="folder" id="Fenetregrandeurs" data="">
+							<a
+							href="Fenetregrandeurs.html"
+							target="FrameMain">
+								Fen&ecirc;tre grandeurs</a>
+
+				<ul><li class="" id="Valeurs" data="">
+							<a
+							href="Valeurs.html"
+							target="FrameMain">
+								Valeurs</a>
+
+				</li><li class="" id="Grandeurs" data="">
+							<a
+							href="Grandeurs.html"
+							target="FrameMain">
+								Grandeurs</a>
+
+				</li><li class="" id="Constantes" data="">
+							<a
+							href="Constantes.html"
+							target="FrameMain">
+								Constantes</a>
+
+				</li><li class="" id="Expressions" data="">
+							<a
+							href="Expressions.html"
+							target="FrameMain">
+								Expressions</a>
+
+				</li><li class="" id="Entreededonneesauclavier" data="">
+							<a
+							href="Entreededonneesauclavier.html"
+							target="FrameMain">
+								Entr&eacute;e de donn&eacute;es au clavier</a>
+
+				</li></ul></li><li class="folder" id="General" data="">
+							<a
+							href="General.html"
+							target="FrameMain">
+								G&eacute;n&eacute;ral</a>
+
+				<ul><li class="" id="IndexRegressi" data="">
+							<a
+							href="IndexRegressi.html"
+							target="FrameMain">
+								Index Regressi</a>
+
+				</li><li class="" id="MenuFichier" data="">
+							<a
+							href="MenuFichier.html"
+							target="FrameMain">
+								Menu Fichier</a>
+
+				</li><li class="" id="Barredoutils" data="">
+							<a
+							href="Barredoutils.html"
+							target="FrameMain">
+								Barre d&acute;outils</a>
+
+				</li><li class="" id="MenuEdition" data="">
+							<a
+							href="MenuEdition.html"
+							target="FrameMain">
+								Menu Edition</a>
+
+				</li><li class="" id="Barredetat" data="">
+							<a
+							href="Barredetat.html"
+							target="FrameMain">
+								Barre d&acute;&eacute;tat</a>
+
+				</li><li class="" id="Unites" data="">
+							<a
+							href="Unites.html"
+							target="FrameMain">
+								Unit&eacute;s</a>
+
+				</li><li class="" id="Options" data="">
+							<a
+							href="Options.html"
+							target="FrameMain">
+								Options</a>
+
+				</li><li class="" id="EditionCollerdonnees" data="">
+							<a
+							href="EditionCollerdonnees.html"
+							target="FrameMain">
+								Edition|Coller donn&eacute;es</a>
+
+				</li><li class="" id="Editeur" data="">
+							<a
+							href="Editeur.html"
+							target="FrameMain">
+								Editeur</a>
+
+				</li><li class="" id="Fenetregrandeurs1" data="">
+							<a
+							href="Fenetregrandeurs1.html"
+							target="FrameMain">
+								Fen&ecirc;tre grandeurs</a>
+
+				</li><li class="" id="FichierOuvrir" data="">
+							<a
+							href="FichierOuvrir.html"
+							target="FrameMain">
+								Fichier|Ouvrir</a>
+
+				</li><li class="" id="Fenetreparametres" data="">
+							<a
+							href="Fenetreparametres.html"
+							target="FrameMain">
+								Fen&ecirc;tre param&egrave;tres</a>
+
+				</li><li class="" id="Liens" data="">
+							<a
+							href="Liens.html"
+							target="FrameMain">
+								Liens</a>
+
+				</li><li class="" id="FichierNouveauSimulation" data="">
+							<a
+							href="FichierNouveauSimulation.html"
+							target="FrameMain">
+								Fichier|Nouveau|Simulation</a>
+
+				</li><li class="" id="FichierFusionner" data="">
+							<a
+							href="FichierFusionner.html"
+							target="FrameMain">
+								Fichier|Fusionner</a>
+
+				</li><li class="" id="Impression" data="">
+							<a
+							href="Impression.html"
+							target="FrameMain">
+								Impression</a>
+
+				</li><li class="" id="FichierImprimer" data="">
+							<a
+							href="FichierImprimer.html"
+							target="FrameMain">
+								Fichier|Imprimer</a>
+
+				</li><li class="" id="FichierNouveauClavier" data="">
+							<a
+							href="FichierNouveauClavier.html"
+							target="FrameMain">
+								Fichier|Nouveau|Clavier</a>
+
+				</li></ul></li><li class="folder" id="Pages" data="">
+							<a
+							href="Pages.html"
+							target="FrameMain">
+								Pages</a>
+
+				<ul><li class="" id="Pagecalculee" data="">
+							<a
+							href="Pagecalculee.html"
+							target="FrameMain">
+								Page calcul&eacute;e</a>
+
+				</li><li class="" id="Pagecopiee" data="">
+							<a
+							href="Pagecopiee.html"
+							target="FrameMain">
+								Page copi&eacute;e</a>
+
+				</li><li class="" id="MenuPages" data="">
+							<a
+							href="MenuPages.html"
+							target="FrameMain">
+								Menu Pages</a>
+
+				</li></ul></li><li class="folder" id="Acquisition" data="">
+							<a
+							href="Acquisition.html"
+							target="FrameMain">
+								Acquisition</a>
+
+				<ul><li class="" id="Video" data="">
+							<a
+							href="Video.html"
+							target="FrameMain">
+								Video</a>
+
+				</li><li class="" id="Son" data="">
+							<a
+							href="Son.html"
+							target="FrameMain">
+								Son</a>
+
+				</li><li class="" id="Images" data="">
+							<a
+							href="Images.html"
+							target="FrameMain">
+								Images</a>
+
+				</li><li class="" id="Arduino" data="">
+							<a
+							href="Arduino.html"
+							target="FrameMain">
+								Arduino</a>
+
+				</li></ul></li></ul>
+		</div>
+		
+		<div id="tab-keywords">
+			<ul id="keywords">
+
+				</ul>
+		</div>
+		
+		<div id="tab-search">
+			<form onsubmit="PerformSearch(); return false;">
+				<label for="search_value">Search:</label>
+				<input id="search_value" name="search_value"></input>
+				<input type="submit" value="Search"/>
+			</form>
+			<div id="search_results"></div>
+		</div>
+		
+		</div>
+    
+</body>
+
+</html>
+

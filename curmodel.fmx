@@ -1,0 +1,110 @@
+object CurseurModeleDlg: TCurseurModeleDlg
+  Left = 338
+  Top = 163
+  ClientHeight = 335
+  ClientWidth = 386
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnActivate = FormActivate
+  Left = 338
+  Top = 163
+  DesignerMasterStyle = 0
+  object FermeBtn: TButton
+    Cancel = True
+    ModalResult = 8
+    Position.X = 288.000000000000000000
+    Position.Y = 4.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Fermer'
+    OnClick = FermeBtnClick
+  end
+  object HelpBtn: TButton
+    Position.X = 288.000000000000000000
+    Position.Y = 36.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+  end
+  object Tableau: TStringGrid
+    CanFocus = True
+    ClipChildren = True
+    Position.Y = 8.000000000000000000
+    Size.Width = 282.000000000000000000
+    Size.Height = 217.000000000000000000
+    Size.PlatformDefault = False
+    StyleLookup = 'gridstyle'
+    RowHeight = 21.000000000000000000
+    RowCount = 10
+    Viewport.Width = 278.000000000000000000
+    Viewport.Height = 192.000000000000000000
+  end
+  object GroupBox1: TGroupBox
+    Align = Bottom
+    Position.Y = 230.000000000000000000
+    Size.Width = 386.000000000000000000
+    Size.Height = 105.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Commentaire '#224' imprimer'
+    object Memo: TMemo
+      DataDetectorTypes = []
+      Align = Client
+      Size.Width = 386.000000000000000000
+      Size.Height = 105.000000000000000000
+      Size.PlatformDefault = False
+      Viewport.Width = 382.000000000000000000
+      Viewport.Height = 101.000000000000000000
+    end
+  end
+  object RazBtn: TButton
+    ModalResult = 1
+    Position.X = 288.000000000000000000
+    Position.Y = 68.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'R'#224'Z'
+    OnClick = RazBtnClick
+  end
+  object PrintBtn: TButton
+    Default = True
+    Position.X = 288.000000000000000000
+    Position.Y = 100.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Imprimer'
+  end
+  object CopyBtn: TButton
+    Default = True
+    Position.X = 288.000000000000000000
+    Position.Y = 132.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Copier'
+    OnClick = CopyBtnClick
+  end
+  object TriBtn: TButton
+    Position.X = 288.000000000000000000
+    Position.Y = 164.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Trier'
+  end
+  object LigneCombo: TComboBox
+    ItemHeight = 16.000000000000000000
+    ListBoxResource = 'transparentlistboxstyle'
+    Position.X = 284.000000000000000000
+    Position.Y = 194.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 24.000000000000000000
+    Size.PlatformDefault = False
+    OnClick = LigneComboClick
+  end
+end

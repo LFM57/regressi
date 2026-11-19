@@ -1,0 +1,69 @@
+object ConstanteUnivDlg: TConstanteUnivDlg
+  Left = 338
+  Top = 163
+  Caption = 'Constantes universelles'
+  ClientHeight = 312
+  ClientWidth = 472
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  Left = 338
+  Top = 163
+  DesignerMasterStyle = 0
+  object HelpBtn: TButton
+    ModalResult = 9
+    Position.X = 353.000000000000000000
+    Position.Y = 164.000000000000000000
+    Size.Width = 110.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+  end
+  object Tableau: TStringGrid
+    CanFocus = True
+    ClipChildren = True
+    Size.Width = 345.000000000000000000
+    Size.Height = 257.000000000000000000
+    Size.PlatformDefault = False
+    StyleLookup = 'gridstyle'
+    RowHeight = 21.000000000000000000
+    RowCount = 20
+    Viewport.Width = 341.000000000000000000
+    Viewport.Height = 232.000000000000000000
+  end
+  object SaveBtn: TButton
+    Position.X = 352.000000000000000000
+    Position.Y = 20.000000000000000000
+    Size.Width = 110.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Enregistrer'
+    OnClick = SaveBtnClick
+  end
+  object DefautBtn: TButton
+    Position.X = 352.000000000000000000
+    Position.Y = 92.000000000000000000
+    Size.Width = 110.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'D'#233'faut'
+    OnClick = DefautBtnClick
+  end
+  object Memo1: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = []
+    Lines.Strings = (
+      'La valeur doit '#234'tre '#233'crite sous la forme'
+      'nom=valeur_unit'
+      '')
+    Align = Bottom
+    Position.Y = 261.000000000000000000
+    Size.Width = 472.000000000000000000
+    Size.Height = 51.000000000000000000
+    Size.PlatformDefault = False
+    Viewport.Width = 452.000000000000000000
+    Viewport.Height = 47.000000000000000000
+  end
+end

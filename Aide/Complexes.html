@@ -1,0 +1,83 @@
+﻿<html>
+	
+<head>
+	<title>Complexes</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Complexes");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Complexes</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Calculs.html">Calculs</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Calculs.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Fonctionsdegestiondesdates.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Deriveeetintegrale.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="COMPLEXES"></a>
+<span class="rvts13">Le système reconnaît j (j^2=-1) et les fonction suivantes:</span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside; list-style-type: disc;">
+<li class="rvps5"><span class="rvts13">RE partie réelle</span></li>
+<li class="rvps5"><span class="rvts13">IM partie imaginaire</span></li>
+<li class="rvps5"><span class="rvts13">ARG argument Arg(x+j*y) renvoie l'angle entre -</span><span class="rvts14">π</span><span class="rvts13"> et +</span><span class="rvts14">π </span><span class="rvts13">en radian ou -180 +180 en degré</span></li>
+<li class="rvps5"><span class="rvts13">ABS module, norme</span></li>
+</ul>
+<p class="rvps5"><span class="rvts13">En argument de ces fonctions vous ne pouvez utiliser que les quatre opérations et la carré SQR. Le résultat final doit être réel ! Ex : modélisation d'un filtre passe-bas d'ordre 2 : G(f)=G0/abs(1+j*f/f0/Q-sqr(f/f0)). Cas particulier vous pouvez définir G=filtre(G0/(1+j*f/f0/Q-sqr(f/f0))) qui est une grandeur complexe mais qui ne sera accessible telle quelle que dans le graphe de Fourier, et qui dans le graphe temporel vous donnera la réponse impulsionnelle du filtre.</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/tour-des-fonctionnalites">Créer des documents d'aide CHM facilement</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

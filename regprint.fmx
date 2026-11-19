@@ -1,0 +1,177 @@
+object PrintDlg: TPrintDlg
+  Left = 467
+  Top = 189
+  BorderIcons = [biSystemMenu, biHelp]
+  BorderStyle = Single
+  Caption = 'Impression'
+  ClientHeight = 268
+  ClientWidth = 264
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnActivate = FormActivate
+  OnShow = FormShow
+  Left = 467
+  Top = 189
+  DesignerMasterStyle = 0
+  object PanelOption: TPanel
+    Align = Right
+    Position.X = 132.000000000000000000
+    Size.Width = 132.000000000000000000
+    Size.Height = 168.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object PrintBtn: TButton
+      Images = ImagesData.ImagesList
+      ImageIndex = 40
+      ModalResult = 1
+      Position.X = 14.000000000000000000
+      Position.Y = 3.000000000000000000
+      Size.Width = 108.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Imprimer'
+      TextSettings.Font.Size = 13.000000000000000000
+      OnClick = PrintBtnClick
+    end
+    object CancelBtn: TButton
+      Images = ImagesData.ImagesList
+      ImageIndex = 53
+      ModalResult = 2
+      Position.X = 14.000000000000000000
+      Position.Y = 47.000000000000000000
+      Size.Width = 108.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Abandon'
+      TextSettings.Font.Size = 13.000000000000000000
+    end
+    object HelpBtn: TButton
+      HelpContext = 807
+      Images = ImagesData.ImagesList
+      ImageIndex = 5
+      ModalResult = 9
+      Position.X = 14.000000000000000000
+      Position.Y = 91.000000000000000000
+      Size.Width = 108.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Aide'
+      TextSettings.Font.Size = 13.000000000000000000
+    end
+  end
+  object Panel1: TPanel
+    Align = Client
+    Size.Width = 132.000000000000000000
+    Size.Height = 168.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object GrandeursCB: TCheckBox
+      IsChecked = True
+      Position.X = 8.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 110.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Expressions'
+    end
+    object GrapheFourierCB: TCheckBox
+      Position.X = 8.000000000000000000
+      Position.Y = 31.000000000000000000
+      Size.Width = 110.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Graphe Fourier'
+    end
+    object GrapheVariabCB: TCheckBox
+      IsChecked = True
+      Position.X = 8.000000000000000000
+      Position.Y = 77.000000000000000000
+      Size.Width = 110.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Graphe'
+    end
+    object ModeleVariabCB: TCheckBox
+      Position.X = 8.000000000000000000
+      Position.Y = 54.000000000000000000
+      Size.Width = 110.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Mod'#233'lisation'
+    end
+    object GrapheStatCB: TCheckBox
+      Position.X = 8.000000000000000000
+      Position.Y = 100.000000000000000000
+      Size.Width = 110.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      Text = 'Statistique'
+    end
+  end
+  object GroupBox2: TGroupBox
+    Align = Bottom
+    StyledSettings = [FontColor]
+    Position.Y = 218.000000000000000000
+    Size.Width = 264.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'En-t'#234'te d'#39'impression'
+    TextSettings.Font.Size = 13.000000000000000000
+    TabOrder = 2
+    object EnteteEdit: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 0
+      Position.X = 2.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 255.000000000000000000
+      Size.Height = 23.000000000000000000
+      Size.PlatformDefault = False
+    end
+  end
+  object ImprimanteGB: TGroupBox
+    Align = Bottom
+    StyledSettings = [FontColor]
+    Position.Y = 168.000000000000000000
+    Size.Width = 264.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Imprimante'
+    TextSettings.Font.Size = 13.000000000000000000
+    TabOrder = 3
+    object PrinterBtn: TButton
+      Images = ImagesData.ImagesList
+      ImageIndex = 40
+      Position.X = 232.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 25.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      OnClick = PrinterBtnClick
+    end
+    object PrintCB: TComboBox
+      ListBoxResource = 'transparentlistboxstyle'
+      Position.X = 8.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 214.000000000000000000
+      Size.Height = 23.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      OnChange = PrintCBChange
+    end
+  end
+  object PrinterSetupDialog: TPrinterSetupDialog
+    Left = 152
+    Top = 128
+  end
+end

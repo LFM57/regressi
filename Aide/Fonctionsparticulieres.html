@@ -1,0 +1,91 @@
+﻿<html>
+	
+<head>
+	<title>Fonctions particuli&egrave;res</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Fonctionsparticulieres");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Fonctions particuli&egrave;res</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Calculs.html">Calculs</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Calculs.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Deriveeetintegrale.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Fonctions.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="FONCTIONSPARTICULIERES"></a>
+<span class="rvts15">Ech</span><span class="rvts13">(x) : échelon vaut 0 si x<0 et 1 si x>0</span></p>
+<p class="rvps5"><span class="rvts15">Creneau</span><span class="rvts13">(exp,f,r) : signal créneau, considéré comme fonction de l'expression exp, symétrique (±1), de fréquence f et de rapport cyclique r (durée à l'état haut divisée par la période), vaut +1 si exp modulo la période est inférieur au rapport cyclique, -1 sinon. Le créneau débute à 0. E</span><span class="rvts19">xemples :</span></p>
+<p class="rvps2"><span class="rvts19">creneau(t,1000,0.5)</span></p>
+<p class="rvps2"><span class="rvts19">creneau(t-0.2,1000,0.5) pour décaler le début du créneau</span></p>
+<p class="rvps5"><span class="rvts15">Triangle</span><span class="rvts13">(exp,f,r) : signal triangulaire, considéré comme fonction de l'expression exp, alternatif d'amplitude 1, de fréquence f et de rapport cyclique r (durée avec pente positive divisée par la période)</span></p>
+<p class="rvps5"><span class="rvts15">Rand</span><span class="rvts13">(x) renvoie une valeur aléatoire entre 0 et x avec une répartition uniforme</span></p>
+<p class="rvps5"><span class="rvts15">Noise</span><span class="rvts13">(x) : valeur aléatoire centrée d'écart-type x avec une répartition gaussienne</span></p>
+<p class="rvps5"><span class="rvts15">If</span><span class="rvts13">(test,expression si test vrai, expression sinon) : Fonction conditionnelle. Exemple : dosage d'une base faible par un acide fort pH=IF(v<ve,pKa+log(ve-v)/v),a-log((v-ve)/(v+v0))). On peut utiliser XOR OR AND. voir les fichiers d'exemple </span><a class="rvts16" href="H3PO4.rw3">H3PO4</a><span class="rvts13"> et </span><a class="rvts16" href="ACAC.rw3">acide acétique</a><span class="rvts13">. On peut utiliser si à la place de if.</span></p>
+<p class="rvps5"><span class="rvts15">PieceWise</span><span class="rvts13">([test,expression si test vrai], expression sinon), le terme entre crochets pouvant être répété. Exemple :  z=IF(x<5,2,x<10,2*x,x<20,3*x,-10). On peut utiliser XOR OR AND.</span></p>
+<p class="rvps5"><span class="rvts15">Aire</span><span class="rvts13">(y,x) donne la surface à l'intérieur de la courbe x(y) calculé par une méthode des trapèzes : </span><br/><span class="rvts13">z[i] := z[i-1]+(y[i]+y[i-1])/2)*(x[i]-x[i-1]). Le résultat est un paramètre.</span></p>
+<p class="rvps5"><span class="rvts13">Le calcul se fait entre le premier point et le point qui permet d'effectuer un tour (égal au premier point à mieux que 1/16 de l'étendue des mesures)  </span></p>
+<p class="rvps5"><span class="rvts15">Lisse</span><span class="rvts13">(y) : supprime les points “ incorrects ” puis effectue un lissage de y par filtrage numérique d'ordre 1 avec comme temps caractéristique N fois la période d'échantillonnage. Sous la forme lisse(y,N), on peut imposer N, sinon cette valeur de N est paramétrable dans les options, onglet calcul (N entier entre 1 et 32).</span></p>
+<p class="rvps5"><span class="rvts15">Init</span><span class="rvts13">(x) : valeur initiale de x. Le résultat est un paramètre.</span></p>
+<p class="rvps5"><span class="rvts15">Pos</span><span class="rvts13">(x,expression,option) : renvoie la valeur de x tel que l'expression soit nulle. Le troisième terme, facultatif, peut être up (resp. down) ce qui signifiera que l'équation doit être vérifiée et x croisant (resp. décroissant). Si le troisième terme est mini (resp. maxi), pos donne la valeur de x correspondant au mini (resp. maxi) de l'expression.</span></p>
+<p class="rvps5"><span class="rvts15">Sign</span><span class="rvts13">(x) : signe =-1 si x<0 et +1 si x>0.</span></p>
+<p class="rvps5"><span class="rvts15">Peigne</span><span class="rvts13">(t,dt) : peigne de Dirac de pas dt.</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/creer-des-livres-numeriques-epub">Écrire des livres électroniques ePub pour l'iPad</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

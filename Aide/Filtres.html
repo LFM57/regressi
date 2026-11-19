@@ -1,0 +1,91 @@
+﻿<html>
+	
+<head>
+	<title>Filtres</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Filtres");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Filtres</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Calculs.html">Calculs</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Calculs.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Trigonometrie.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="MethodedEulersimulation.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="FILTRES"></a>
+<span class="rvts15">filtre</span><span class="rvts13">(x,G(f)) : filtre la variable x dans l'espace des fréquences G(f) étant le gain du filtre.</span></p>
+<p class="rvps5"><span class="rvts13">Ex 1 : z=filtre(x,1/(1+j*f/1000)) qui traverse un passe-bas de fréquence de coupure 1 kHz.</span></p>
+<p class="rvps5"><span class="rvts13">Ex 2 : z=filtre(x,exp(j*pi/6)) qui déphase toutes les harmoniques de pi/6 (même spectre mais pas même fonction !).</span></p>
+<p class="rvps5"><span class="rvts13">Si vous “ oubliez ” la variable x, F=filtre(1/(1+j*f/1000)), cela définit un filtre : il est alors possible de tracer la courbe de réponse en norme dans la fenêtre FFT. Dans la fenêtre temporelle vous aurez la réponse impulsionnelle du filtre.Vous pouvez utiliser ensuite ce filtre : z=filtre(x,F).</span></p>
+<p class="rvps5"><span class="rvts13">Voir le fichier d'exemple filtre.rw3</span></p>
+<p class="rvps5"><span class="rvts15">env(x)</span><span class="rvts13"> : détermine l'enveloppe haute d'un signal x par dérivation pour repérer les maxima. Pour le lissage éventuellement nécessaire, cette fonction utilise les paramètres de la dérivée. Env(x,FFT) fait de même par une FFT : module du signal analytique.</span></p>
+<p class="rvps5"><span class="rvts15">env(x,mini)</span><span class="rvts13"> : détermine l'enveloppe basse d'un signal x.</span></p>
+<p class="rvps5"><span class="rvts13">Ces fonctions doivent apparaître seules dans une définition y=env(x) mais pas y=env(x)*3.</span></p>
+<p class="rvps5"><span class="rvts13">Voir le fichier d'exemple osccoup.rw3</span></p>
+<p class="rvps5"><span class="rvts15">env(x,equation)</span><span class="rvts13"> : détermine les valeurs d'une fonction lissée entre les points obéissant à l'équation.</span></p>
+<p class="rvps5"><span class="rvts15">harm</span><span class="rvts13">(x,debut,fin) : reconstitue un signal obtenu par un filtre idéal coupant les composantes de Fourier en dehors de l'intervalle début à fin. Début et fin sont des entiers et représentent le numéro de l'harmonique.</span></p>
+<p class="rvps5"><span class="rvts13">Exemple 1 : harm(x,1,1) donne le fondamental de x si la FFT est effectuée sur une période.</span></p>
+<p class="rvps5"><span class="rvts13">Exemple 2 : harm(x,1,5) somme les cinq premières harmoniques de x si la FFT est effectuée sur une période.</span></p>
+<p class="rvps5"><span class="rvts13">Voir le fichier d'exemple harm.rw3</span></p>
+<p class="rvps5"><span class="rvts15">corr</span><span class="rvts13">(x,y) : fonction de corrélation de x et y. Le résultat de cette fonction est relatif au décalage t. Pour que la courbe soit interprétée correctement, il faut donc utiliser en abscisse ce décalage qui est fourni par la fonction </span><span class="rvts15">tcorr(t)</span><span class="rvts13"> : si le temps, supposé être la première colonne, va de t1 à t1+duree, le retard va de –duree/2 à +duree/2. Voir les fichiers d'exemple </span><a class="rvts16" href="RTL.rw3">RTL </a><span class="rvts13">et </span><a class="rvts16" href="phase.rw3">phase</a></p>
+<p class="rvps5"><span class="rvts13">ATTENTION : pour ces fonctions, on utilise une FFT, si vous voulez avoir des résultats qui aient un sens ne pas oublier les conditions d'utilisation de la FFT. Souvenez-vous en particulier qu'une FFT suppose implicitement que le signal est périodique de période la durée d'acquisition : en cas de résultat bizarre, essayer de vous représenter votre fonction périodisée. On peut définir la période du signal et le fenêtrage en ouvrant la </span><a class="rvts16" href="FenetreFourier.htm">fenêtre Fourier</a><span class="rvts13">, modifier les paramètres de FFT.</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/outils-creation-aide">Environnement de création d'aide complet</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

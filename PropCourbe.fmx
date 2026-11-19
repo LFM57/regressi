@@ -1,0 +1,236 @@
+object PropCourbeForm: TPropCourbeForm
+  Left = 446
+  Top = 247
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Information'
+  ClientHeight = 375
+  ClientWidth = 318
+  Position = OwnerFormCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  Left = 446
+  Top = 247
+  DesignerMasterStyle = 0
+  object LissageGB: TGroupBox
+    Align = Top
+    Position.Y = 23.000000000000000000
+    Size.Width = 318.000000000000000000
+    Size.Height = 49.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Lissage'
+    TabOrder = 1
+    object Label2: TLabel
+      AutoSize = True
+      Position.X = 8.000000000000000000
+      Position.Y = 24.000000000000000000
+      Size.Width = 97.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.WordWrap = False
+      Text = 'Nombre de points'
+    end
+    object OrdreLissageSE: TSpinBox
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 1
+      Cursor = crIBeam
+      Max = 10.000000000000000000
+      Value = 3.000000000000000000
+      KeyboardType = Default
+      Position.X = 200.000000000000000000
+      Position.Y = 20.000000000000000000
+      TextSettings.Font.Size = 15.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = [Style, FontColor]
+      OnChange = OrdreLissageSEChange
+    end
+  end
+  object DeriveGB: TGroupBox
+    Align = Top
+    Position.Y = 121.000000000000000000
+    Size.Width = 318.000000000000000000
+    Size.Height = 71.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'M'#233'thode de calcul de la d'#233'riv'#233'e'
+    TabOrder = 2
+    object Label1: TLabel
+      AutoSize = True
+      Position.X = 8.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 137.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.WordWrap = False
+      Text = 'Nombre de points utilis'#233's'
+    end
+    object ExtrapoleDerCB: TCheckBox
+      Position.X = 8.000000000000000000
+      Position.Y = 43.000000000000000000
+      Size.Width = 297.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Calcul de la d'#233'riv'#233'e aux points extr'#234'mes'
+      OnClick = ExtrapoleDerCBClick
+    end
+    object NbreDeriveeSB: TSpinBox
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 2
+      Cursor = crIBeam
+      Min = 1.000000000000000000
+      Max = 15.000000000000000000
+      Value = 1.000000000000000000
+      Increment = 2.000000000000000000
+      KeyboardType = Default
+      Position.X = 200.000000000000000000
+      Position.Y = 20.000000000000000000
+      TextSettings.Font.Size = 15.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = [Style, FontColor]
+    end
+  end
+  object SplineGB: TGroupBox
+    Align = Top
+    Position.Y = 72.000000000000000000
+    Size.Width = 318.000000000000000000
+    Size.Height = 49.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Lissage par une B-spline'
+    TabOrder = 3
+    object Label3: TLabel
+      AutoSize = True
+      Position.X = 8.000000000000000000
+      Position.Y = 24.000000000000000000
+      Size.Width = 87.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.WordWrap = False
+      Text = 'Ordre de lissage'
+    end
+    object OrdreSplineSE: TSpinBox
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 1
+      Cursor = crIBeam
+      Max = 10.000000000000000000
+      Value = 3.000000000000000000
+      KeyboardType = Default
+      Position.X = 200.000000000000000000
+      Position.Y = 20.000000000000000000
+      TextSettings.Font.Size = 15.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = [Style, FontColor]
+      OnChange = OrdreSplineSEChange
+    end
+  end
+  object BitBtn1: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 24
+    ModalResult = 8
+    Position.X = 80.000000000000000000
+    Position.Y = 339.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    Text = 'Fermer'
+    OnClick = BitBtn1Click
+  end
+  object CourbeEdit: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Align = Top
+    TabOrder = 5
+    Text = 'CourbeEdit'
+    Size.Width = 318.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Grid: TTMSFNCGrid
+    Position.X = 176.000000000000000000
+    Position.Y = 240.000000000000000000
+    Size.Width = 370.000000000000000000
+    Size.Height = 270.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 6
+    Options.Editing.CalcFormat = '%g'
+    Options.Grouping.CalcFormat = '%g'
+    Options.Grouping.GroupCountFormat = '(%d)'
+    Options.IO.XMLEncoding = 'ISO-8859-1'
+    Options.Mouse.ColumnSizeMargin = 6
+    Options.Mouse.RowSizeMargin = 6
+    Columns = <
+      item
+        BorderWidth = 1
+        FixedFont.Name = 'Segoe UI'
+        FixedFont.StyleExt = {00070000000000000004000000}
+        Font.Name = 'Segoe UI'
+        ID = ''
+        Width = 68.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.Name = 'Segoe UI'
+        FixedFont.StyleExt = {00070000000000000004000000}
+        Font.Name = 'Segoe UI'
+        ID = ''
+        Width = 68.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.Name = 'Segoe UI'
+        FixedFont.StyleExt = {00070000000000000004000000}
+        Font.Name = 'Segoe UI'
+        ID = ''
+        Width = 68.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.Name = 'Segoe UI'
+        FixedFont.StyleExt = {00070000000000000004000000}
+        Font.Name = 'Segoe UI'
+        ID = ''
+        Width = 68.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.Name = 'Segoe UI'
+        FixedFont.StyleExt = {00070000000000000004000000}
+        Font.Name = 'Segoe UI'
+        ID = ''
+        Width = 68.000000000000000000
+      end>
+    TopRow = 1
+    Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+    Appearance.FixedLayout.Font.Name = 'Segoe UI'
+    Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+    Appearance.NormalLayout.Fill.Color = claNull
+    Appearance.NormalLayout.Font.Name = 'Segoe UI'
+    Appearance.GroupLayout.Fill.Color = xFF6E93C3
+    Appearance.GroupLayout.Font.Color = claWhite
+    Appearance.GroupLayout.Font.Name = 'Segoe UI'
+    Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
+    Appearance.SummaryLayout.Font.Name = 'Segoe UI'
+    Appearance.SelectedLayout.Fill.Color = claLightsteelblue
+    Appearance.SelectedLayout.Font.Color = claWhite
+    Appearance.SelectedLayout.Font.Name = 'Segoe UI'
+    Appearance.FocusedLayout.Fill.Color = claLightsteelblue
+    Appearance.FocusedLayout.Font.Color = claWhite
+    Appearance.FocusedLayout.Font.Name = 'Segoe UI'
+    Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
+    Appearance.FixedSelectedLayout.Font.Name = 'Segoe UI'
+    Appearance.BandLayout.Fill.Color = claLightyellow
+    Appearance.BandLayout.Font.Name = 'Segoe UI'
+    Appearance.ProgressLayout.Format = '%.0f%%'
+    LeftCol = 1
+    ScrollMode = scmItemScrolling
+  end
+end

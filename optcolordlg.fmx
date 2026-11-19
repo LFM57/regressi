@@ -1,0 +1,1160 @@
+object OptionCouleurDlg: TOptionCouleurDlg
+  Left = 452
+  Top = 210
+  ActiveControl = OKBtn
+  BorderIcons = [biSystemMenu, biHelp]
+  BorderStyle = Single
+  Caption = 'Choix des couleurs par d'#233'faut'
+  ClientHeight = 322
+  ClientWidth = 406
+  Position = DesktopCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnActivate = FormActivate
+  Left = 452
+  Top = 210
+  DesignerMasterStyle = 0
+  object OKBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 10
+    ModalResult = 1
+    Position.X = 304.000000000000000000
+    Position.Y = 36.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Text = 'OK'
+    OnClick = OKBtnClick
+  end
+  object CancelBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 53
+    ModalResult = 2
+    Position.X = 304.000000000000000000
+    Position.Y = 120.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Text = 'Abandon'
+  end
+  object HelpBtn: TButton
+    HelpContext = 802
+    Images = ImagesData.ImagesList
+    ImageIndex = 5
+    ModalResult = 9
+    Position.X = 304.000000000000000000
+    Position.Y = 204.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'Aide'
+  end
+  object PageControl1: TTabControl
+    Align = Left
+    Size.Width = 289.000000000000000000
+    Size.Height = 322.000000000000000000
+    Size.PlatformDefault = False
+    TabHeight = 20.000000000000000000
+    TabIndex = 3
+    TabOrder = 3
+    TabPosition = Top
+    Sizes = (
+      289s
+      302s
+      289s
+      302s
+      289s
+      302s
+      289s
+      302s)
+    object PageTS: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 51.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Pages'
+      ExplicitSize.cx = 54.000000000000000000
+      ExplicitSize.cy = 20.000000000000000000
+      object Label1: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 6.000000000000000000
+        Size.Width = 90.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Num'#233'ro de page'
+        TabOrder = 0
+      end
+      object Label2: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 99.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = '(0 = page inactive)'
+        TabOrder = 1
+      end
+      object ResetBtn: TButton
+        StyledSettings = [Style, FontColor]
+        Position.X = 8.000000000000000000
+        Position.Y = 146.000000000000000000
+        Size.Width = 134.000000000000000000
+        Size.Height = 27.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'R'#224'Z'
+        OnClick = ResetBtnClick
+      end
+      object LigneCombo: TComboBox
+        ItemHeight = 16.000000000000000000
+        Position.X = 8.000000000000000000
+        Position.Y = 56.000000000000000000
+        Size.Width = 121.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        OnClick = LigneComboClick
+        object ListBoxItem1: TListBoxItem
+          TabOrder = 0
+          Text = 'Plein'
+        end
+        object ListBoxItem2: TListBoxItem
+          TabOrder = 1
+          Text = 'Tirets'
+        end
+        object ListBoxItem3: TListBoxItem
+          TabOrder = 2
+          Text = 'Pointill'#233's'
+        end
+        object ListBoxItem4: TListBoxItem
+          TabOrder = 3
+          Text = 'Mixte'
+        end
+      end
+      object PointCombo: TComboBox
+        ItemHeight = 16.000000000000000000
+        Position.X = 8.000000000000000000
+        Position.Y = 86.000000000000000000
+        Size.Width = 121.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        OnClick = PointComboClick
+        object ListBoxItem15: TListBoxItem
+          TabOrder = 0
+          Text = 'Croix'
+        end
+        object ListBoxItem16: TListBoxItem
+          TabOrder = 1
+          Text = 'Croix diag.'
+        end
+        object Cercle: TListBoxItem
+          TabOrder = 2
+          Text = 'Cercle'
+        end
+        object ListBoxItem18: TListBoxItem
+          TabOrder = 3
+          Text = 'Carr'#233
+        end
+        object Losange: TListBoxItem
+          TabOrder = 4
+          Text = 'Losange'
+        end
+        object ListBoxItem20: TListBoxItem
+          TabOrder = 5
+          Text = 'Disque'
+        end
+      end
+      object PageSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 5
+        Cursor = crIBeam
+        Max = 10.000000000000000000
+        Value = 1.000000000000000000
+        KeyboardType = Default
+        Position.X = 128.000000000000000000
+        Position.Y = 8.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 56.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyledSettings = [Style, FontColor]
+        OnChange = PageSEChange
+        OnClick = PageSEChange
+      end
+      object ReperePageGB: TGroupBox
+        Align = Bottom
+        StyledSettings = [Style, FontColor, Other]
+        Position.Y = 216.000000000000000000
+        Size.Width = 289.000000000000000000
+        Size.Height = 86.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Rep'#233'rage des pages'
+        TabOrder = 6
+        object TraitRB: TRadioButton
+          Position.X = 16.000000000000000000
+          Position.Y = 16.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'Trait'
+        end
+        object MotifRB: TRadioButton
+          Position.X = 16.000000000000000000
+          Position.Y = 36.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Motif'
+        end
+        object CouleurRB: TRadioButton
+          Position.X = 16.000000000000000000
+          Position.Y = 56.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'Couleur'
+        end
+      end
+      object CouleurComboPage: TTMSFNCColorPicker
+        DisableFocusEffect = False
+        Position.X = 8.000000000000000000
+        Position.Y = 116.000000000000000000
+        Size.Width = 121.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 7
+        Appearance.Stroke.Color = claDarkgray
+        Appearance.Fill.Color = xFFE9E9E9
+        Appearance.StrokeHover.Color = claLightslategray
+        Appearance.FillHover.Color = xFFBBC4CC
+        Appearance.StrokeDown.Color = claSlategray
+        Appearance.FillDown.Color = xFFB8C0C8
+        Appearance.StrokeSelected.Color = claDarkslategray
+        Appearance.FillSelected.Color = xFFB8C0C8
+        Appearance.StrokeDisabled.Color = claDarkgray
+        Appearance.FillDisabled.Color = claSilver
+        Appearance.SeparatorStroke.Color = claDarkgray
+        Appearance.Font.Name = 'Segoe UI'
+        Items = <
+          item
+            Color = claBlack
+          end
+          item
+            Color = claMaroon
+          end
+          item
+            Color = claGreen
+          end
+          item
+            Color = claOlive
+          end
+          item
+            Color = claNavy
+          end
+          item
+            Color = claPurple
+          end
+          item
+            Color = claTeal
+          end
+          item
+            Color = claSilver
+          end
+          item
+            Color = claGray
+          end
+          item
+            Color = claRed
+          end
+          item
+            Color = claLime
+          end
+          item
+            Color = claYellow
+          end
+          item
+            Color = claBlue
+          end
+          item
+            Color = claFuchsia
+          end
+          item
+            Color = claAqua
+          end
+          item
+            Color = claWhite
+          end>
+        OnColorSelected = CouleurComboPageColorSelected
+      end
+    end
+    object ModeleTS: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 66.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Mod'#233'les'
+      ExplicitSize.cx = 69.000000000000000000
+      ExplicitSize.cy = 20.000000000000000000
+      object Label5: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 51.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Mod'#233'le 1'
+        TabOrder = 0
+      end
+      object Label6: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 58.000000000000000000
+        Size.Width = 51.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Mod'#233'le 3'
+        TabOrder = 1
+      end
+      object Label7: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 118.000000000000000000
+        Size.Width = 84.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Superposition 1'
+        TabOrder = 2
+      end
+      object Label8: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 143.000000000000000000
+        Size.Width = 84.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Superposition 2'
+        TabOrder = 3
+      end
+      object Label9: TLabel
+        AutoSize = True
+        StyledSettings = [Style, FontColor]
+        Position.X = 8.000000000000000000
+        Position.Y = 168.000000000000000000
+        Size.Width = 84.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Superposition 3'
+        TabOrder = 4
+      end
+      object Label10: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 193.000000000000000000
+        Size.Width = 84.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Superposition 4'
+        TabOrder = 5
+      end
+      object Label12: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 33.000000000000000000
+        Size.Width = 51.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Mod'#233'le 2'
+        TabOrder = 6
+      end
+      object Label13: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 83.000000000000000000
+        Size.Width = 51.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Mod'#233'le 4'
+        TabOrder = 7
+      end
+      object ColorComboBox1: TColorComboBox
+        Tag = 1
+        DropDownKind = Native
+        Color = claNull
+        DisableFocusEffect = False
+        ItemIndex = 147
+        Position.X = 100.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 8
+        OnChange = ColorModeleChange
+      end
+      object ColorComboBox2: TColorComboBox
+        Tag = -1
+        DropDownKind = Native
+        Color = claNull
+        DisableFocusEffect = False
+        ItemIndex = 147
+        Position.X = 100.000000000000000000
+        Position.Y = 118.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 9
+        OnChange = ColorModeleChange
+      end
+      object ColorComboBox3: TColorComboBox
+        Tag = 4
+        DropDownKind = Native
+        Color = claNull
+        DisableFocusEffect = False
+        ItemIndex = 147
+        Position.X = 100.000000000000000000
+        Position.Y = 83.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 10
+        OnChange = ColorModeleChange
+      end
+      object ColorComboBox4: TColorComboBox
+        Tag = -2
+        DropDownKind = Native
+        Color = claNull
+        DisableFocusEffect = False
+        ItemIndex = 147
+        Position.X = 100.000000000000000000
+        Position.Y = 143.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 11
+        OnChange = ColorModeleChange
+      end
+      object ColorComboBox5: TColorComboBox
+        Tag = 3
+        DropDownKind = Native
+        Color = claNull
+        DisableFocusEffect = False
+        ItemIndex = 147
+        Position.X = 100.000000000000000000
+        Position.Y = 58.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 12
+        OnChange = ColorModeleChange
+      end
+      object ColorComboBox6: TColorComboBox
+        Tag = 2
+        DropDownKind = Native
+        Color = claNull
+        DisableFocusEffect = False
+        ItemIndex = 147
+        Position.X = 100.000000000000000000
+        Position.Y = 33.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
+        OnChange = ColorModeleChange
+      end
+      object ColorComboBox7: TColorComboBox
+        Tag = -3
+        DropDownKind = Native
+        Color = claNull
+        DisableFocusEffect = False
+        ItemIndex = 147
+        Position.X = 100.000000000000000000
+        Position.Y = 168.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 14
+        OnChange = ColorModeleChange
+      end
+      object ColorComboBox8: TColorComboBox
+        Tag = -4
+        DropDownKind = Native
+        Color = claNull
+        DisableFocusEffect = False
+        ItemIndex = 147
+        Position.X = 100.000000000000000000
+        Position.Y = 193.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 15
+        OnChange = ColorModeleChange
+      end
+    end
+    object CourbeTS: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 64.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Courbes'
+      ExplicitSize.cx = 68.000000000000000000
+      ExplicitSize.cy = 20.000000000000000000
+      object Label3: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 150.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Couleur de la grille'
+        TabOrder = 0
+      end
+      object Label4: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 14.000000000000000000
+        Size.Width = 101.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Num'#233'ro de courbe'
+        TabOrder = 1
+      end
+      object LabelWidth: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 180.000000000000000000
+        Size.Width = 101.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Epaisseur des traits'
+        TabOrder = 2
+      end
+      object CourbeSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 3
+        Cursor = crIBeam
+        Max = 10.000000000000000000
+        Value = 1.000000000000000000
+        KeyboardType = Default
+        Position.X = 136.000000000000000000
+        Position.Y = 16.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 56.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyledSettings = [Family, Style, FontColor]
+        OnChange = CourbeSEClick
+        OnClick = CourbeSEClick
+      end
+      object LigneComboBis: TComboBox
+        ItemHeight = 16.000000000000000000
+        Position.X = 8.000000000000000000
+        Position.Y = 40.000000000000000000
+        Size.Width = 121.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        OnClick = LigneComboBisClick
+        object ListBoxItem5: TListBoxItem
+          TabOrder = 0
+          Text = 'Plein'
+        end
+        object ListBoxItem6: TListBoxItem
+          TabOrder = 1
+          Text = 'Tirets'
+        end
+        object ListBoxItem7: TListBoxItem
+          TabOrder = 2
+          Text = 'Pointill'#233's'
+        end
+        object ListBoxItem8: TListBoxItem
+          TabOrder = 3
+          Text = 'Mixte'
+        end
+      end
+      object PointComboBis: TComboBox
+        ItemHeight = 16.000000000000000000
+        Position.X = 8.000000000000000000
+        Position.Y = 68.000000000000000000
+        Size.Width = 121.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        OnClick = PointComboBisClick
+        object ListBoxItem9: TListBoxItem
+          TabOrder = 0
+          Text = 'Croix'
+        end
+        object ListBoxItem10: TListBoxItem
+          TabOrder = 1
+          Text = 'Croix diag.'
+        end
+        object ListBoxItem11: TListBoxItem
+          TabOrder = 2
+          Text = 'Cercle'
+        end
+        object ListBoxItem12: TListBoxItem
+          TabOrder = 3
+          Text = 'Carr'#233
+        end
+        object ListBoxItem13: TListBoxItem
+          TabOrder = 4
+          Text = 'Losange'
+        end
+        object ListBoxItem14: TListBoxItem
+          TabOrder = 5
+          Text = 'Disque'
+        end
+      end
+      object WidthEcranSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 6
+        Cursor = crIBeam
+        Max = 10.000000000000000000
+        Value = 3.000000000000000000
+        KeyboardType = Default
+        Position.X = 130.000000000000000000
+        Position.Y = 182.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 56.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyledSettings = [Family, Style, FontColor]
+      end
+      object ColorAnimation1: TColorAnimation
+        Duration = 0.200000002980232200
+        StartValue = claWhite
+        StopValue = claNull
+      end
+      object CouleurComboCourbe: TTMSFNCColorPicker
+        DisableFocusEffect = False
+        Position.X = 8.000000000000000000
+        Position.Y = 100.000000000000000000
+        Size.Width = 121.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 7
+        Appearance.Stroke.Color = claDarkgray
+        Appearance.Fill.Color = xFFE9E9E9
+        Appearance.StrokeHover.Color = claLightslategray
+        Appearance.FillHover.Color = xFFBBC4CC
+        Appearance.StrokeDown.Color = claSlategray
+        Appearance.FillDown.Color = xFFB8C0C8
+        Appearance.StrokeSelected.Color = claDarkslategray
+        Appearance.FillSelected.Color = xFFB8C0C8
+        Appearance.StrokeDisabled.Color = claDarkgray
+        Appearance.FillDisabled.Color = claSilver
+        Appearance.SeparatorStroke.Color = claDarkgray
+        Appearance.Font.Name = 'Segoe UI'
+        Items = <
+          item
+            Color = claBlack
+          end
+          item
+            Color = claMaroon
+          end
+          item
+            Color = claGreen
+          end
+          item
+            Color = claOlive
+          end
+          item
+            Color = claNavy
+          end
+          item
+            Color = claPurple
+          end
+          item
+            Color = claTeal
+          end
+          item
+            Color = claSilver
+          end
+          item
+            Color = claGray
+          end
+          item
+            Color = claRed
+          end
+          item
+            Color = claLime
+          end
+          item
+            Color = claYellow
+          end
+          item
+            Color = claBlue
+          end
+          item
+            Color = claFuchsia
+          end
+          item
+            Color = claAqua
+          end
+          item
+            Color = claWhite
+          end>
+        OnColorSelected = CouleurComboCourbeColorSelected
+      end
+      object GrilleColor: TTMSFNCColorPicker
+        DisableFocusEffect = False
+        Position.X = 130.000000000000000000
+        Position.Y = 148.000000000000000000
+        Size.Width = 89.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 8
+        Appearance.Stroke.Color = claDarkgray
+        Appearance.Fill.Color = xFFE9E9E9
+        Appearance.StrokeHover.Color = claLightslategray
+        Appearance.FillHover.Color = xFFBBC4CC
+        Appearance.StrokeDown.Color = claSlategray
+        Appearance.FillDown.Color = xFFB8C0C8
+        Appearance.StrokeSelected.Color = claDarkslategray
+        Appearance.FillSelected.Color = xFFB8C0C8
+        Appearance.StrokeDisabled.Color = claDarkgray
+        Appearance.FillDisabled.Color = claSilver
+        Appearance.SeparatorStroke.Color = claDarkgray
+        Appearance.Font.Name = 'Segoe UI'
+        Items = <
+          item
+            Color = claBlack
+          end
+          item
+            Color = claMaroon
+          end
+          item
+            Color = claGreen
+          end
+          item
+            Color = claOlive
+          end
+          item
+            Color = claNavy
+          end
+          item
+            Color = claPurple
+          end
+          item
+            Color = claTeal
+          end
+          item
+            Color = claSilver
+          end
+          item
+            Color = claGray
+          end
+          item
+            Color = claRed
+          end
+          item
+            Color = claLime
+          end
+          item
+            Color = claYellow
+          end
+          item
+            Color = claBlue
+          end
+          item
+            Color = claFuchsia
+          end
+          item
+            Color = claAqua
+          end
+          item
+            Color = claWhite
+          end>
+      end
+    end
+    object TabSheet1: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = True
+      Size.Width = 62.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'R'#233'ticule'
+      ExplicitSize.cx = 66.000000000000000000
+      ExplicitSize.cy = 20.000000000000000000
+      object GroupBox2: TGroupBox
+        Align = Top
+        StyledSettings = [Style, FontColor, Other]
+        Position.Y = 57.000000000000000000
+        Size.Width = 289.000000000000000000
+        Size.Height = 84.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Tangente'
+        TabOrder = 0
+        object TangenteCB: TComboBox
+          ItemHeight = 16.000000000000000000
+          Position.X = 60.000000000000000000
+          Position.Y = 48.000000000000000000
+          Size.Width = 100.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          OnClick = LigneComboClick
+        end
+        object CouleurTangente: TTMSFNCColorPicker
+          DisableFocusEffect = False
+          Position.X = 60.000000000000000000
+          Position.Y = 16.000000000000000000
+          Size.Width = 100.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Appearance.Stroke.Color = claDarkgray
+          Appearance.Fill.Color = xFFE9E9E9
+          Appearance.StrokeHover.Color = claLightslategray
+          Appearance.FillHover.Color = xFFBBC4CC
+          Appearance.StrokeDown.Color = claSlategray
+          Appearance.FillDown.Color = xFFB8C0C8
+          Appearance.StrokeSelected.Color = claDarkslategray
+          Appearance.FillSelected.Color = xFFB8C0C8
+          Appearance.StrokeDisabled.Color = claDarkgray
+          Appearance.FillDisabled.Color = claSilver
+          Appearance.SeparatorStroke.Color = claDarkgray
+          Appearance.Font.Name = 'Segoe UI'
+          Items = <
+            item
+              Color = claBlack
+            end
+            item
+              Color = claMaroon
+            end
+            item
+              Color = claGreen
+            end
+            item
+              Color = claOlive
+            end
+            item
+              Color = claNavy
+            end
+            item
+              Color = claPurple
+            end
+            item
+              Color = claTeal
+            end
+            item
+              Color = claSilver
+            end
+            item
+              Color = claGray
+            end
+            item
+              Color = claRed
+            end
+            item
+              Color = claLime
+            end
+            item
+              Color = claYellow
+            end
+            item
+              Color = claBlue
+            end
+            item
+              Color = claFuchsia
+            end
+            item
+              Color = claAqua
+            end
+            item
+              Color = claWhite
+            end>
+        end
+      end
+      object GroupBox3: TGroupBox
+        Align = Bottom
+        StyledSettings = [Style, FontColor, Other]
+        Position.Y = 177.000000000000000000
+        Size.Width = 289.000000000000000000
+        Size.Height = 125.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'R'#233'ticule'
+        TabOrder = 1
+        object Label11: TLabel
+          AutoSize = True
+          Position.X = 11.000000000000000000
+          Position.Y = 69.000000000000000000
+          Size.Width = 74.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.WordWrap = False
+          Text = 'Fond du texte'
+        end
+        object ReticuleCB: TComboBox
+          ItemHeight = 16.000000000000000000
+          Position.X = 60.000000000000000000
+          Position.Y = 48.000000000000000000
+          Size.Width = 100.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          OnClick = LigneComboClick
+        end
+        object ReticuleColor: TTMSFNCColorPicker
+          DisableFocusEffect = False
+          Position.X = 60.000000000000000000
+          Position.Y = 24.000000000000000000
+          Size.Width = 100.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Appearance.Stroke.Color = claDarkgray
+          Appearance.Fill.Color = xFFE9E9E9
+          Appearance.StrokeHover.Color = claLightslategray
+          Appearance.FillHover.Color = xFFBBC4CC
+          Appearance.StrokeDown.Color = claSlategray
+          Appearance.FillDown.Color = xFFB8C0C8
+          Appearance.StrokeSelected.Color = claDarkslategray
+          Appearance.FillSelected.Color = xFFB8C0C8
+          Appearance.StrokeDisabled.Color = claDarkgray
+          Appearance.FillDisabled.Color = claSilver
+          Appearance.SeparatorStroke.Color = claDarkgray
+          Appearance.Font.Name = 'Segoe UI'
+          Items = <
+            item
+              Color = claBlack
+            end
+            item
+              Color = claMaroon
+            end
+            item
+              Color = claGreen
+            end
+            item
+              Color = claOlive
+            end
+            item
+              Color = claNavy
+            end
+            item
+              Color = claPurple
+            end
+            item
+              Color = claTeal
+            end
+            item
+              Color = claSilver
+            end
+            item
+              Color = claGray
+            end
+            item
+              Color = claRed
+            end
+            item
+              Color = claLime
+            end
+            item
+              Color = claYellow
+            end
+            item
+              Color = claBlue
+            end
+            item
+              Color = claFuchsia
+            end
+            item
+              Color = claAqua
+            end
+            item
+              Color = claWhite
+            end>
+        end
+        object FondReticuleColor: TTMSFNCColorPicker
+          DisableFocusEffect = False
+          Position.X = 60.000000000000000000
+          Position.Y = 88.000000000000000000
+          Size.Width = 100.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          Appearance.Stroke.Color = claDarkgray
+          Appearance.Fill.Color = xFFE9E9E9
+          Appearance.StrokeHover.Color = claLightslategray
+          Appearance.FillHover.Color = xFFBBC4CC
+          Appearance.StrokeDown.Color = claSlategray
+          Appearance.FillDown.Color = xFFB8C0C8
+          Appearance.StrokeSelected.Color = claDarkslategray
+          Appearance.FillSelected.Color = xFFB8C0C8
+          Appearance.StrokeDisabled.Color = claDarkgray
+          Appearance.FillDisabled.Color = claSilver
+          Appearance.SeparatorStroke.Color = claDarkgray
+          Appearance.Font.Name = 'Segoe UI'
+          Items = <
+            item
+              Color = claBlack
+            end
+            item
+              Color = claMaroon
+            end
+            item
+              Color = claGreen
+            end
+            item
+              Color = claOlive
+            end
+            item
+              Color = claNavy
+            end
+            item
+              Color = claPurple
+            end
+            item
+              Color = claTeal
+            end
+            item
+              Color = claSilver
+            end
+            item
+              Color = claGray
+            end
+            item
+              Color = claRed
+            end
+            item
+              Color = claLime
+            end
+            item
+              Color = claYellow
+            end
+            item
+              Color = claBlue
+            end
+            item
+              Color = claFuchsia
+            end
+            item
+              Color = claAqua
+            end
+            item
+              Color = claWhite
+            end>
+        end
+      end
+      object GroupBox1: TGroupBox
+        Align = Top
+        StyledSettings = [Style, FontColor, Other]
+        Size.Width = 289.000000000000000000
+        Size.Height = 57.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Etiquette'
+        TabOrder = 2
+        object FondColor: TTMSFNCColorPicker
+          DisableFocusEffect = False
+          Position.X = 60.000000000000000000
+          Position.Y = 24.000000000000000000
+          Size.Width = 100.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Appearance.Stroke.Color = claDarkgray
+          Appearance.Fill.Color = xFFE9E9E9
+          Appearance.StrokeHover.Color = claLightslategray
+          Appearance.FillHover.Color = xFFBBC4CC
+          Appearance.StrokeDown.Color = claSlategray
+          Appearance.FillDown.Color = xFFB8C0C8
+          Appearance.StrokeSelected.Color = claDarkslategray
+          Appearance.FillSelected.Color = xFFB8C0C8
+          Appearance.StrokeDisabled.Color = claDarkgray
+          Appearance.FillDisabled.Color = claSilver
+          Appearance.SeparatorStroke.Color = claDarkgray
+          Appearance.Font.Name = 'Segoe UI'
+          Items = <
+            item
+              Color = claBlack
+            end
+            item
+              Color = claMaroon
+            end
+            item
+              Color = claGreen
+            end
+            item
+              Color = claOlive
+            end
+            item
+              Color = claNavy
+            end
+            item
+              Color = claPurple
+            end
+            item
+              Color = claTeal
+            end
+            item
+              Color = claSilver
+            end
+            item
+              Color = claGray
+            end
+            item
+              Color = claRed
+            end
+            item
+              Color = claLime
+            end
+            item
+              Color = claYellow
+            end
+            item
+              Color = claBlue
+            end
+            item
+              Color = claFuchsia
+            end
+            item
+              Color = claAqua
+            end
+            item
+              Color = claWhite
+            end>
+        end
+      end
+    end
+  end
+end

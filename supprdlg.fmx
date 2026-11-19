@@ -1,0 +1,96 @@
+object SuppressionDlg: TSuppressionDlg
+  Left = 520
+  Top = 142
+  ActiveControl = OKBtn
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Suppression'
+  ClientHeight = 218
+  ClientWidth = 253
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnShow = FormShow
+  Left = 520
+  Top = 142
+  DesignerMasterStyle = 0
+  object Label1: TLabel
+    AutoSize = True
+    StyledSettings = [Style, FontColor]
+    Position.X = 8.000000000000000000
+    Position.Y = 144.000000000000000000
+    Size.Width = 8.000000000000000000
+    Size.Height = 18.000000000000000000
+    Size.PlatformDefault = False
+    StyleLookup = 'Label1Style1'
+    TextSettings.Font.Size = 13.000000000000000000
+    TextSettings.WordWrap = False
+    Text = '1'
+  end
+  object Label2: TLabel
+    AutoSize = True
+    StyledSettings = [Style, FontColor]
+    Position.X = 8.000000000000000000
+    Position.Y = 168.000000000000000000
+    Size.Width = 8.000000000000000000
+    Size.Height = 18.000000000000000000
+    Size.PlatformDefault = False
+    StyleLookup = 'Label2Style1'
+    TextSettings.Font.Size = 13.000000000000000000
+    TextSettings.WordWrap = False
+    Text = '2'
+  end
+  object OKBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 10
+    ModalResult = 1
+    Position.X = 142.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'OK'
+    OnClick = OKBtnClick
+  end
+  object CancelBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 53
+    ModalResult = 2
+    Position.X = 142.000000000000000000
+    Position.Y = 88.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    Text = 'Abandon'
+    OnClick = CancelBtnClick
+  end
+  object ListeVariableBox: TListBox
+    Position.X = 4.000000000000000000
+    Position.Y = 4.000000000000000000
+    Size.Width = 121.000000000000000000
+    Size.Height = 124.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    DisableFocusEffect = True
+    ItemHeight = 15.000000000000000000
+    DefaultItemStyles.ItemStyle = ''
+    DefaultItemStyles.GroupHeaderStyle = ''
+    DefaultItemStyles.GroupFooterStyle = ''
+    Viewport.Width = 121.000000000000000000
+    Viewport.Height = 124.000000000000000000
+  end
+  object TriCB: TCheckBox
+    StyledSettings = [Style, FontColor]
+    Position.X = 8.000000000000000000
+    Position.Y = 192.000000000000000000
+    Size.Width = 237.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+    Text = 'Ne plus trier les donn'#233'es ensuite'
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+end

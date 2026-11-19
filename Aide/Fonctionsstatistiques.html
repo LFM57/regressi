@@ -1,0 +1,91 @@
+﻿<html>
+	
+<head>
+	<title>Fonctions statistiques</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Fonctionsstatistiques");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Fonctions statistiques</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Statistiques.html">Statistiques</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Statistiques.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Fenetrestatistique.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Graphique.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="FONCTIONSSAT"></a>
+<span class="rvts13">si y=ax+b </span><span class="rvts15">pente</span><span class="rvts13">(x,y)=a </span><span class="rvts15">origine</span><span class="rvts13">(x,y)=b</span></p>
+<p class="rvps5"><span class="rvts13">Autres fonctions : </span><span class="rvts15">eff</span><span class="rvts13">(x) valeur efficace de x ;</span><span class="rvts15"> init</span><span class="rvts13">(x) valeur initiale; </span><span class="rvts15">pos</span><span class="rvts13">(x,expression,min/max) donne la valeur de x correspondant au mini ou maxi de l'expression.</span></p>
+<p class="rvps5"><span class="rvts13">Autres fonctions :</span><span class="rvts15"> max</span><span class="rvts13">(exp) ; </span><span class="rvts15">min</span><span class="rvts13">(exp) ; </span><span class="rvts15">moy</span><span class="rvts13">(exp) valeur moyenne d'une expression; </span><span class="rvts15">stdev</span><span class="rvts13">(exp) écart-type ; </span><span class="rvts15">somme</span><span class="rvts13">(exp). La notation type calculatrice est permise : mean (pour moyenne) et sum (pour somme). Pour faire une moyenne de x pondérée par n taper xm=somme(x*n)/somme(n).</span></p>
+<p class="rvps5"><span class="rvts13">Attention valeur efficace est à prendre au sens signal : on considère que le signal est périodique, on cherche deux passages de seuil montant et on effectue le calcul entre ces deux seuils. En cas d'impossibilité le calcul est fait sur l'ensemble des données.</span></p>
+<p class="rvps5"><span class="rvts15">freq</span><span class="rvts13">(x) : fréquence du signal x le temps étant la première colonne</span></p>
+<p class="rvps5"><span class="rvts15">phase</span><span class="rvts13">(x,y) : phase de y para rapport à x = f(y)-f(x)</span></p>
+<p class="rvps5"><span class="rvts15">Gauss</span><span class="rvts13">(x, moyenne, écart type) : gaussienne</span></p>
+<p class="rvps5"><span class="rvts15">Poisson</span><span class="rvts13">(n, paramètre) : distribution de Poisson</span></p>
+<p class="rvps5"><span class="rvts15">Cnp</span><span class="rvts13">(n,p : integer) : coefficient binomial</span></p>
+<p class="rvps5"><span class="rvts15">Binom</span><span class="rvts13">(a : reel;n,m : integer) : distribution binomiale</span></p>
+<p class="rvps5"><span class="rvts13">Méthode de calcul de fréquence, phase et valeur efficace : cela fonctionne comme sur les oscilloscopes numériques :</span></p>
+<p class="rvps5"><span class="rvts13">Etape 1 : on cherche les maxi et mini, on détermine la référence = (maxi+mini)2.</span></p>
+<p class="rvps5"><span class="rvts13">Etape 2 : on cherche un front montant t0 au passage par la référence puis le front montant suivant t1.</span></p>
+<p class="rvps5"><span class="rvts13">Freq(x) : 1/(t1-t0) ; Phase(x,y) : t0y – t0x traduit en phase</span></p>
+<p class="rvps5"><span class="rvts13">Si t1 existe (nécessité de deux périodes pour en être sûr), on applique la définition des valeurs efficace entre t0 et t1. Sinon on effectue le calcul sur l'ensemble des points Remarque : avoir un grand nombre de points permet d'avoir des t0 et t1 précis et de pouvoir confondre la moyenne discrète et la moyenne continue.</span></p>
+<p class="rvps5"><span class="rvts13">Voir aussi la </span><a class="rvts18" href="Fenetrestatistique.html">fenêtre statistique</a><span class="rvts13">.</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/tour-des-fonctionnalites/creer-ebooks-pour-kindle-amazon">Produire facilement des livres électroniques Kindle</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

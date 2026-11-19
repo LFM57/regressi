@@ -1,0 +1,108 @@
+﻿<html>
+	
+<head>
+	<title>M&eacute;thode d'Euler (simulation)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("MethodedEulersimulation");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">M&eacute;thode d'Euler (simulation)</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Calculs.html">Calculs</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Calculs.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Filtres.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Gestiondesunites.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="EULERSIMUL"></a>
+<span class="rvts13">On peut programmer la méthode d'Euler en utilisant la syntaxe z[i], i étant le point courant, i=0 étant le premier point. z[0]= permet d'initialiser z et de même z[2] pour une équation d'ordre 2). i étant le point courant, ne peut intervenir dans la partie gauche à affecter que des termes en [i] ; de même dans la partie droite à calculer, ne peuvent intervenir des termes en [i+1] non encore connus.</span></p>
+<p class="rvps5"><span class="rvts13">On peut omettre du côté gauche [i] : z=x[i]+x[i-1] est équivalent à z[i]=x[i]+x[i-1]</span></p>
+<p class="rvps5"><span class="rvts13">La boucle "for i := 1 to N-1 do begin … end;" qui est sous-entendue s'étend de la première ligne contenant un terme du type z[i] jusqu'à la dernière ligne du même type.</span></p>
+<p class="rvps5"><span class="rvts13">On peut écrire explicitement la boucle mais c'est juste pour faire “ joli ” : le memo expressions (i.e. expressions des diverses grandeurs) n'est pas un memo programme. Seuls [0], [1], [2], ou [i] sont possibles du côté gauche (grandeur à affecter). Le symbole = signifie affecter (:= du Pascal). Tout ceci est à taper directement dans le mémo "expressions" (ne pas utiliser le bouton Y+ pour créer v ou y).</span></p>
+<p class="rvps5"><span class="rvts13">Exemples :</span></p>
+<p class="rvps5"><span class="rvts13">´Chute ; y étant l'axe vertical orienté vers le haut</span></p>
+<p class="rvps5"><span class="rvts13">g=-9.81_m/s2 => g=-9.81 m/s²</span></p>
+<p class="rvps5"><span class="rvts13">´t est rempli automatiquement de manière régulière</span></p>
+<p class="rvps2"><span class="rvts21">Δ</span><span class="rvts13">t=t[1]-t[0]_s</span></p>
+<p class="rvps5"><span class="rvts13">´Initialisation</span></p>
+<p class="rvps5"><span class="rvts13">y[0]=0_m => y[0]=0 m</span></p>
+<p class="rvps5"><span class="rvts13">v[0]=0_m/s => v[0]=0 m/s</span></p>
+<p class="rvps5"><span class="rvts13">´sous-entendu ou explicite</span></p>
+<p class="rvps5"><span class="rvts13">´for i := 1 to N-1 do begin</span></p>
+<p class="rvps5"><span class="rvts13">v[i]=v[i-1]+g*</span><span class="rvts21">Δ</span><span class="rvts13">t_m/s</span></p>
+<p class="rvps5"><span class="rvts13">y[i]=y[i-1]+v[i-1]*</span><span class="rvts21">Δ</span><span class="rvts13">t_m</span></p>
+<p class="rvps5"><span class="rvts13">´sous-entendu ou explicite</span></p>
+<p class="rvps5"><span class="rvts13">´end;</span></p>
+<p class="rvps5"><span class="rvts13">yth=y[0]+v[0]*t+g*t*t/2_m</span></p>
+<p class="rvps5"><span class="rvts13">Remarque (méthode de Heun) : on peut prendre </span></p>
+<p class="rvps5"><span class="rvts13">y[i]=y[i-1]+(v[i-1]+v[i])*</span><span class="rvts21">Δ</span><span class="rvts13">t/2</span><br/><span class="rvts13">au lieu de </span><br/><span class="rvts13">y[i]=y[i-1]+v[i-1]*</span><span class="rvts21">Δ</span><span class="rvts13">t</span></p>
+<p class="rvps5"><span class="rvts13"></span><br/><span class="rvts13">w0=1_rad/s</span></p>
+<p class="rvps2"><span class="rvts21">Δ</span><span class="rvts13">t=t[1]-t[0]_s</span></p>
+<p class="rvps5"><span class="rvts13">´Initialisation</span></p>
+<p class="rvps5"><span class="rvts13">y[0]=1_m => y[0]=1 m</span></p>
+<p class="rvps5"><span class="rvts13">v[0]=0_m/s => v[0]=0 m/s</span></p>
+<p class="rvps5"><span class="rvts13">´Prédéfinition de y (forward) car utilisée par le calcul de la vitesse v</span></p>
+<p class="rvps5"><span class="rvts13">y=</span></p>
+<p class="rvps5"><span class="rvts13">´for i := 1 to N-1 do begin</span></p>
+<p class="rvps5"><span class="rvts13">v[i]=v[i-1]-sqr(w0)*y[i-1]*</span><span class="rvts21">Δ</span><span class="rvts13">t</span></p>
+<p class="rvps5"><span class="rvts13">y[i]=y[i-1]+v[i-1]*</span><span class="rvts21">Δ</span><span class="rvts13">t_m</span></p>
+<p class="rvps5"><span class="rvts13">´end;</span></p>
+<p class="rvps5"><span class="rvts13">yth=cos(w0*t)</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/creer-des-livres-numeriques-epub">Écrire des livres électroniques ePub pour l'iPad</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

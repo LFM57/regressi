@@ -1,0 +1,98 @@
+﻿<html>
+	
+<head>
+	<title>Video</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Video");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Video</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Acquisition.html">Acquisition</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Acquisition.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Acquisition.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Son.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps16"><span class="rvts13">Il existe deux modules vidéo, l'un (vidéo VLC) lit la vidéo à l'aide de VLC.dll, l'autre (vidéo VLC auto) transforme d'abord, grâce à VLC.exe, la vidéo en suite d'images. Ce deuxième module est nettement plus lent et lourd en terme d'occupation du disque, même si l'espace occupé est libéré à la fin, mais permet plus de souplesse : retour en arrière, création de chronophotographie et suivi automatique d'un mobile.</span></p>
+<p class="rvps16"><span class="rvts13"><br/></span></p>
+<p class="rvps16"><span class="rvts13">Ce module s'appuie sur VLC qui doit être présent sur l'ordinateur : http://www.videolan.org/vlc/</span></p>
+<p class="rvps16"><img width="20" height="20" alt="" style="vertical-align: text-bottom; padding : 1px;" src="lib/NouvelElement8.png"><span class="rvts13"> permet de charger un fichier AVI MPEG ou MOV.</span></p>
+<p class="rvps16"><span class="rvts13">On modifie si nécessaire le nombre d'images par seconde du fichier.</span></p>
+<p class="rvps16"><span class="rvts13">On donne tout à fait à gauche le nombre de points que l'on veut pointer sur chaque image.</span></p>
+<p class="rvps16"><span class="rvts13">Un clic droit sur l'image permet de choisir la couleur du curseur de repérage</span></p>
+<p class="rvps16"><span class="rvts13">Les cases à cocher "axes" et "points" dans la barre de bouton supérieure permettent de laisser ou non des traces des points et de l'échelle. Les couleurs de tracé des axes et des points enregistrés sont réglables dans la barre de bouton supérieure. S'il y a plusieurs points par image, on peut imposer des couleurs différentes : lorsque vous changez la couleur, vous imposez la couleur du prochain point acquis.</span></p>
+<p class="rvps16"><img width="20" height="20" alt="" style="vertical-align: text-bottom; padding : 1px;" src="lib/NouvelElement7.png"><span class="rvts13"> permet d'indiquer l'origine unique. En cliquant sur la flèche à côté, on peut choisir d'avoir une origine mobile : dans ce cas pour chaque image, on clique d'abord sur l'origine puis sur les points à repérer.</span><br/><span class="rvts13">Remarque : une fois les points acquis dans un mode vous pouvez basculer dans l'autre mode, le point origine mobile devenant un point supplémentaire du mode origine fixe, et réciproquement le premier point du mode origine fixe devenant l'origine mobile.</span></p>
+<p class="rvps16"><img width="20" height="20" alt="" style="vertical-align: text-bottom; padding : 1px;" src="lib/NouvelElement6.png"><span class="rvts13"> permet d'indiquer l'échelle. Pour cela, après avoir cliquer sur le bouton, cliquer sur le début de l'échelle puis sur la fin et enfin indiquer la longueur correspondante qui pourra être corrigée dans la zone d'édition du bandeau du milieu. Le logiciel suppose l'image orthonormée. On peut aussi utiliser le mode glisser déplacer. On peut de même choisir d'avoir un axe vertical vers le bas ou le haut.</span></p>
+<p class="rvps16"><span class="rvts13">On peut enfin faire un zoom grâce à la liste déroulante adéquate.</span></p>
+<p class="rvps16"><img width="20" height="20" alt="" style="vertical-align: text-bottom; padding : 1px;" src="lib/NouvelElement5.png"><span class="rvts13"> permet de commencer les mesures. Un deuxième clic sur ce même bouton permet d'arrêter.</span></p>
+<p class="rvps16"><img width="13" height="13" alt="" style="vertical-align: text-bottom; padding : 1px;" src="lib/NouvelElement4.png"><span class="rvts13">   permet d'envoyer les données vers Regressi une fois dès qu'il y a suffisamment de points acquis.</span></p>
+<p class="rvps16"><img width="20" height="20" alt="" style="vertical-align: text-bottom; padding : 1px;" src="lib/NouvelElement2.png"><span class="rvts13"> permet de quitter.</span></p>
+<p class="rvps16"><span class="rvts13">Le bouton origine "t=0" permet d'indiquer l'origine des temps en cliquant :</span></p>
+<p class="rvps16"><span class="rvts13">       soit sur le point sur le graphe qui correspond à t=0</span></p>
+<p class="rvps16"><span class="rvts13">       soit sur la ligne du tableau qui correspond à t=0.</span></p>
+<p class="rvps16"><span class="rvts13">Sur la droite se trouve un tableau indiquant les coordonnées des points acquis. Vous pouvez changer la taille du tableau en déplaçant la bordure (apparition d'un curseur </span><img width="23" height="23" alt="" style="vertical-align: text-bottom; padding : 1px;" src="lib/NouvelElement.png"><span class="rvts13">).</span></p>
+<p class="rvps16"><span class="rvts13"><br/></span></p>
+<p class="rvps16"><span class="rvts13">Un certains nombre de fichiers sont disponibles à :</span></p>
+<p class="rvps16"><span class="rvts38">http://www.ac-strasbourg.fr/microsites/phychi_01/lycee/avimeca/avimeca2.htm</span></p>
+<p class="rvps16"><span class="rvts38">http://www.ac-nantes.fr/peda/disc/scphy/html/charg0p.htm#1p</span></p>
+<p class="rvps16"><span class="rvts13"><br/></span></p>
+<p class="rvps17"><span class="rvts37"><br/></span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/creer-des-livres-numeriques-epub">Éditeur complet de livres électroniques ePub</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

@@ -1,0 +1,97 @@
+﻿<html>
+	
+<head>
+	<title>Fen&ecirc;tre Fourier</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("FenetreFourier");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Fen&ecirc;tre Fourier</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Fourier.html">Fourier</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Fourier.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="OptionsFourier.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Modelisation1.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="FENETREFOURIER"></a>
+<span class="rvts13">Le calcul de FFT est </span><span class="rvts15">TOUJOURS </span><span class="rvts13">effectué sans vérification d'aucune sorte. La variable temporelle est supposée être la première variable. La variable fréquentielle est appelée f (pour graduation des axes et utilisation dans la fonction filtre). Le résultat peut être aberrant si vos données ne respectent pas un minimum de précaution. Si l'option complément à zéro est activée, on complète les mesures effectuées par des zéros de manière à avoir un nombre de points égal à une puissance de 2 (c'est le mode de fonctionnement "normal" d'une FFT et c'est la valeur par défaut), sinon on effectue une </span><span class="rvts15">INTERPOLATION</span><span class="rvts13"> (pour que l'interpolation soit correcte on doit être très </span><span class="rvts15">LOIN</span><span class="rvts13"> de la limite de Shannon). On effectue la FFT sur le résultat.</span></p>
+<p class="rvps5"><span class="rvts13">Le menu local (clic droit) et la barre de boutons permettent :</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem91.gif"><span class="rvts15"> variables</span><span class="rvts13"> : choix des variables à représenter.</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem90.gif"><span class="rvts13"> </span><span class="rvts15">zoom</span><span class="rvts13"> : fonctionne uniquement sur l'axe des fréquences.</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem89.gif"><span class="rvts13"> </span><span class="rvts15">copie le tableau</span><span class="rvts13"> des raies dans le presse-papiers pour récupération dans un traitement de texte.</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem88.gif"><span class="rvts15"> copie le spectre</span><span class="rvts13"> dans le presse-papiers au format WMF pour récupération dans un traitement de texte.</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem87.gif"><span class="rvts13"> copie de même le graphe temporel.</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem86.gif"><span class="rvts13"> </span><span class="rvts15">fonction du temps</span><span class="rvts13"> : affiche la fonction du temps correspondante. Fonctionne en bascule. On peut modifier la hauteur par glissement de la ligne séparant les deux graphes. On peut définir la zone sur laquelle s'effectue la FFT en glissant les lignes verticales.</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem84.gif"><span class="rvts13"> </span><span class="rvts15">tableau</span><span class="rvts13"> : affiche le tableau de valeurs correspondant. Fonctionne en bascule. On peut modifier la largeur par glissement de la ligne séparant le tableau des graphes. Les phases affichées respectent la convention : signal réel=partie réelle de a.exp(jf).exp(jwt), autrement dit a.cos(jwt+f). La phase est donc celle d'un cosinus.</span></p>
+<p class="rvps5"><span class="rvts13">Le menu coordonnées : choix des variables à représenter.</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem83.gif"><span class="rvts13"> </span><span class="rvts15">période</span><span class="rvts13"> : recherche automatique (donc ne marche pas à tous les coups !) de la période.</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem82.gif"><span class="rvts13"> sélection de tous les points dans l'espace temporel pour calculer la FFT.</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem81.gif"><span class="rvts13"> </span><a class="rvts18" href="OptionsFourier.html">options</a><span class="rvts13"> : permet de choisir le type de fenêtrage, le nombre maximum d'harmoniques à afficher, l'ordre du lissage. Ces options agissent aussi sur les </span><a class="rvts18" href="Filtres.html">fonctions</a><span class="rvts13"> utilisant la FFT : filtre, harm, corr, env.</span></p>
+<p class="rvps5"><span class="rvts13">On peut choisir un curseur fréquence qui indique la valeur du point le plus proche du pointeur de la souris. S'il y a plusieurs grandeurs superposées, pour choisir la grandeur active cliquer sur le nom de celle-ci au sommet de l'axe des Y. La frappe de la touche F10 (ou le menu local "enregistrer la fréquence") permet de sauvegarder la valeur de la fréquence courant dans un paramètre. Après avoir cliqué sur "OK" dans la boite de dialogue, ces valeurs pourront être retrouvées dans la fenêtre "Grandeurs", onglet "Paramètres". Un clic garde l'état actuel comme référence et permet d'indiquer l'écart entre le curseur et la référence. Un deuxième clic désactive cette référence.</span></p>
+<p class="rvps5"><span class="rvts15">Conseils d'utilisation :</span></p>
+<p class="rvps5"><span class="rvts13">Mes conclusions PERSONNELLES : suite aux différents articles du BUP à ce sujet, je pense qu´il faut distinguer deux utilisations :</span></p>
+<ul style="text-indent: 0px; margin-left: 0px; list-style-position: inside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13">calcul de série de Fourier : dans ce cas il faut une période, un fenêtrage rectangulaire, un lissage à 0 et l'interpolation ne devrait pas poser de problème. Remarque : dans ce cas, on élimine autant que faire se peut les artefacts liés à la non synchronisation.</span></li>
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13">analyse spectrale (modulation, musique ...) : dans ce cas le signal n'est même pas périodique en pratique (Par exemple porteuse et signal de pulsation non commensurables), il faut un grand nombre de périodes de la porteuse, et un fenêtrage et un lissage peut être utile (remarque : n(spectror)=2*n(Regressi)+1). On risque d'être près de la limite de Shannon.</span></li>
+</ul>
+<p class="rvps5"><span class="rvts13">La boite liste permet de choisir entre différents modes :</span></p>
+<p class="rvps5"><span class="rvts13">Le curseur fréquence indique la valeur du point le plus proche du pointeur de la souris.</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/outils-creation-aide">Environnement de création d'aide complet</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

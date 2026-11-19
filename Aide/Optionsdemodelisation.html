@@ -1,0 +1,89 @@
+﻿<html>
+	
+<head>
+	<title>Options de mod&eacute;lisation</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Optionsdemodelisation");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Options de mod&eacute;lisation</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Modelisation1.html">Mod&eacute;lisation</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Modelisation1.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Sauvegardedelamodelisation.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Modelisation.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="OPTIONSMODELE"></a>
+<span class="rvts13">Ces options sont accessibles soit par clic droit dans la zone de modélisation soit par clic sur </span><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem10.gif"><span class="rvts13"> suivi du choix "options de modélisation".</span></p>
+<ul style="text-indent: 0px; margin-left: 0px; list-style-position: inside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps7"><span class="rvts15"> Tracé des ellipses d'incertitude</span><span class="rvts13"> : accessible uniquement si les incertitudes des grandeurs expérimentales sont définies.</span></li>
+<li style="margin-left: 0px" class="rvps7"><span class="rvts15"> Inter/Extrapolation </span><span class="rvts13">de la modélisation : si la case est cochée trace le modèle en dehors des bornes de définition de celui-ci et entre les points expérimentaux. On peut extrapoler quand la variable explicative est la 1ère colonne même si ce n'est pas l'abscisse : on définit les bornes d'extrapolation dans la dernière ligne, marquée (Mod) de la boite de dialogue « échelle manuelle ».</span></li>
+</ul>
+<p class="rvps5"><span class="rvts13">sinon la fonction n'est calculée que pour les points expérimentaux et ces points sont joints par des segments de droite.</span></p>
+<ul style="text-indent: 0px; margin-left: 0px; list-style-position: inside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps7"><span class="rvts15"> Échelle selon modélisation </span><span class="rvts13">: si la case est cochée détermine l'échelle du graphe selon le modèle courant</span></li>
+<li style="margin-left: 0px" class="rvps7"><span class="rvts15"> Coeff. de corrélation</span><span class="rvts13"> : affichage de celui-ci et des P-valeurs correspondantes</span></li>
+<li style="margin-left: 0px" class="rvps7"><span class="rvts15"> Bande de confiance </span><span class="rvts13">: affichage des bandes de confiance et de prédiction</span><br/><span class="rvts13">bande de confiance = intervalle de confiance de la droite de régression</span><br/><span class="rvts13">bande de prédiction = intervalle de confiance d'observation individuelle</span></li>
+<li style="margin-left: 0px" class="rvps7"><span class="rvts15"> P-valeur</span><span class="rvts13"> : affiche dans la zone de résultats les P-valeurs des coefficients </span></li>
+<li style="margin-left: 0px" class="rvps7"><span class="rvts15"> Pages indépendantes</span><span class="rvts13"> : l'expression des modèles peut être différente selon la page concernée </span><span class="rvts15">Valeur initiale </span><span class="rvts13">: dans le cas d'une modélisation par équation différentielle, si la case est décochée, la valeur initiale est la valeur expérimentale ; si cochée, on considère la valeur initiale comme un paramètre à déterminer</span></li>
+<li style="margin-left: 0px" class="rvps7"><span class="rvts15"> Levenberg-Marquardt </span><span class="rvts13">: utilisation de cette méthode de recherche au lieu de Newton-Gauss. Après test, cette méthode s'est avérée plus fiable dans un cas : la fonction puissance y=a*x^n avec n comme paramètre.</span></li>
+</ul>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr">Générateur de documentation et EPub facile</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

@@ -1,0 +1,1139 @@
+object FcoordonneesPhys: TFcoordonneesPhys
+  Left = 277
+  Top = 180
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Coordonn'#233'es du graphe'
+  ClientHeight = 550
+  ClientWidth = 570
+  Position = MainFormCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  Left = 277
+  Top = 180
+  DesignerMasterStyle = 0
+  object Panel1: TPanel
+    Align = Right
+    Position.X = 418.000000000000000000
+    Size.Width = 152.000000000000000000
+    Size.Height = 378.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object OKBtn: TButton
+      Images = ImagesData.ImagesList
+      ImageIndex = 10
+      ModalResult = 1
+      Position.X = 4.000000000000000000
+      Position.Y = 44.000000000000000000
+      Size.Width = 140.000000000000000000
+      Size.Height = 29.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'OK'
+      OnClick = OKBtnClick
+    end
+    object CancelBtn: TButton
+      Images = ImagesData.ImagesList
+      ImageIndex = 53
+      ModalResult = 2
+      Position.X = 4.000000000000000000
+      Position.Y = 84.000000000000000000
+      Size.Width = 140.000000000000000000
+      Size.Height = 29.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Abandon'
+    end
+    object HelpBtn: TButton
+      HelpContext = 804
+      Images = ImagesData.ImagesList
+      ImageIndex = 5
+      ModalResult = 9
+      Position.X = 4.000000000000000000
+      Position.Y = 124.000000000000000000
+      Size.Width = 140.000000000000000000
+      Size.Height = 29.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Aide'
+    end
+    object FinModeleBtn: TButton
+      HelpContext = 804
+      Position.X = 4.000000000000000000
+      Position.Y = 204.000000000000000000
+      Size.Width = 140.000000000000000000
+      Size.Height = 29.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Sans mod'#233'lisation'
+      OnClick = FinModeleBtnClick
+    end
+    object AddBtn: TButton
+      Images = ImagesData.ImagesList
+      Position.X = 4.000000000000000000
+      Position.Y = 4.000000000000000000
+      Size.Width = 140.000000000000000000
+      Size.Height = 29.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      Text = 'Ajouter une courbe'
+      OnClick = AddBtnClick
+    end
+  end
+  object GroupBoxOptions: TGroupBox
+    Align = Bottom
+    StyledSettings = [Family, Size, Style, FontColor]
+    Position.Y = 468.000000000000000000
+    Size.Width = 570.000000000000000000
+    Size.Height = 82.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Options g'#233'n'#233'rales'
+    TabOrder = 1
+    object LabelWidth: TLabel
+      StyledSettings = [FontColor]
+      Position.X = 318.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 120.000000000000000000
+      Size.Height = 18.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.WordWrap = False
+      Text = 'Epaisseur des traits'
+    end
+    object OrthonormeCB: TCheckBox
+      Position.X = 104.000000000000000000
+      Position.Y = 56.000000000000000000
+      Size.Width = 137.000000000000000000
+      Size.Height = 19.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Axes orthonorm'#233's'
+      OnChange = OrthonormeCBChange
+    end
+    object MemeZeroCB: TCheckBox
+      Position.X = 152.000000000000000000
+      Position.Y = 18.000000000000000000
+      Size.Width = 140.000000000000000000
+      Size.Height = 18.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Z'#233'ros Y identiques'
+    end
+    object MemeXCB: TCheckBox
+      IsChecked = True
+      Position.X = 8.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 129.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Abscisse unique'
+      OnClick = MemeXCBClick
+    end
+    object AnalyseurCB: TCheckBox
+      StyledSettings = [FontColor]
+      Position.X = 8.000000000000000000
+      Position.Y = 36.000000000000000000
+      Size.Width = 273.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      Text = 'Courbes s'#233'par'#233'es (et non superpos'#233'es)'
+      OnChange = AnalyseurCBChange
+    end
+    object MemeEchelleCB: TCheckBox
+      Position.X = 416.000000000000000000
+      Position.Y = 58.000000000000000000
+      Size.Width = 150.000000000000000000
+      Size.Height = 18.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      Text = 'Echelles identiques'
+      OnChange = MemeEchelleCBChange
+    end
+    object PolaireCB: TCheckBox
+      Position.X = 8.000000000000000000
+      Position.Y = 56.000000000000000000
+      Size.Width = 81.000000000000000000
+      Size.Height = 19.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 6
+      Text = 'Polaire'
+      OnClick = PolaireCBClick
+    end
+    object GraduationZeroCB: TCheckBox
+      StyledSettings = [FontColor]
+      Position.X = 248.000000000000000000
+      Position.Y = 58.000000000000000000
+      Size.Width = 170.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 7
+      Text = 'Axes passant par z'#233'ro'
+    end
+    object GrilleCB: TCheckBox
+      Position.X = 312.000000000000000000
+      Position.Y = 35.000000000000000000
+      Size.Width = 140.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 8
+      Text = 'Trac'#233' de grille'
+    end
+    object WidthEcranSE: TSpinBox
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 9
+      Cursor = crIBeam
+      Min = 1.000000000000000000
+      Max = 5.000000000000000000
+      Value = 3.000000000000000000
+      KeyboardType = Default
+      Position.X = 447.000000000000000000
+      Position.Y = 17.000000000000000000
+      TextSettings.Font.Size = 15.000000000000000000
+      Size.Width = 54.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+    end
+  end
+  object pagesGB: TGroupBox
+    Align = Bottom
+    Position.Y = 378.000000000000000000
+    Size.Width = 570.000000000000000000
+    Size.Height = 90.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Gestion des pages'
+    TabOrder = 2
+    object PagesBtn: TButton
+      Position.X = 8.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 105.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'S'#233'lection'
+      OnClick = PagesBtnClick
+    end
+    object PagePrecBtn: TButton
+      StyledSettings = [Family, FontColor]
+      Position.X = 116.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 26.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = '<'
+      TextSettings.Font.Size = 15.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      OnClick = PagePrecBtnClick
+    end
+    object PageSuivBtn: TButton
+      StyledSettings = [Family, FontColor]
+      Position.X = 504.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 25.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = '>'
+      TextSettings.Font.Size = 15.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      OnClick = PageSuivBtnClick
+    end
+    object CommentaireEdit: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 3
+      Position.X = 144.000000000000000000
+      Position.Y = 16.000000000000000000
+      Enabled = False
+      Size.Width = 356.000000000000000000
+      Size.Height = 23.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object ReperePageGB: TGroupBox
+      Align = Bottom
+      StyledSettings = [FontColor]
+      Position.Y = 50.000000000000000000
+      Size.Width = 570.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Rep'#233'rage des pages'
+      TabOrder = 4
+      object TraitRB: TRadioButton
+        Position.X = 56.000000000000000000
+        Position.Y = 16.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Trait'
+      end
+      object MotifRB: TRadioButton
+        Position.X = 216.000000000000000000
+        Position.Y = 16.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Motif'
+      end
+      object CouleurRB: TRadioButton
+        Position.X = 400.000000000000000000
+        Position.Y = 16.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Couleur'
+      end
+    end
+  end
+  object Panel3: TPanel
+    Align = Client
+    Size.Width = 418.000000000000000000
+    Size.Height = 378.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object VariableLB: TTabControl
+      Align = Top
+      FullSize = True
+      Size.Width = 418.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabHeight = 20.000000000000000000
+      TabIndex = 5
+      TabOrder = 0
+      TabPosition = Top
+      OnChange = VariableLBChange
+      Sizes = (
+        418s
+        2s
+        418s
+        2s
+        418s
+        2s
+        418s
+        2s
+        418s
+        2s
+        418s
+        2s)
+      object TabItem1: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 69.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'TabItem1'
+        ExplicitSize.cx = 72.000000000000000000
+        ExplicitSize.cy = 20.000000000000000000
+      end
+      object TabItem2: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 69.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'TabItem2'
+        ExplicitSize.cx = 74.000000000000000000
+        ExplicitSize.cy = 20.000000000000000000
+      end
+      object TabItem3: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 69.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'TabItem3'
+        ExplicitSize.cx = 74.000000000000000000
+        ExplicitSize.cy = 20.000000000000000000
+      end
+      object TabItem4: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 69.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'TabItem4'
+        ExplicitSize.cx = 74.000000000000000000
+        ExplicitSize.cy = 20.000000000000000000
+      end
+      object TabItem5: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 69.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'TabItem5'
+        ExplicitSize.cx = 74.000000000000000000
+        ExplicitSize.cy = 20.000000000000000000
+      end
+      object TabItem6: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = True
+        Size.Width = 71.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'TabItem6'
+        ExplicitSize.cx = 74.000000000000000000
+        ExplicitSize.cy = 20.000000000000000000
+      end
+    end
+    object AbscisseGB: TGroupBox
+      Align = Top
+      StyledSettings = [FontColor]
+      Position.Y = 22.000000000000000000
+      Size.Width = 418.000000000000000000
+      Size.Height = 54.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object LabelGradX: TLabel
+        AutoSize = True
+        StyledSettings = [FontColor]
+        Position.X = 166.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 65.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Graduations'
+      end
+      object ListeX: TComboBox
+        Tag = 1
+        DropDownCount = 10
+        ItemHeight = 15.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 8.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        OnChange = ListeXChange
+      end
+      object ZeroXCB: TCheckBox
+        Position.X = 98.000000000000000000
+        Position.Y = 28.000000000000000000
+        Size.Width = 50.000000000000000000
+        Size.Height = 15.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Z'#233'ro'
+        OnChange = ZeroXCBChange
+      end
+      object GraduationX: TComboBox
+        ItemIndex = 0
+        ItemHeight = 15.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 156.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        OnChange = GraduationXChange
+        object ListBoxItem1: TListBoxItem
+          IsSelected = True
+          Size.Width = 78.000000000000000000
+          Size.Height = 15.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'Lin'#233'aire'
+        end
+        object ListBoxItem2: TListBoxItem
+          Position.Y = 15.000000000000000000
+          Size.Width = 78.000000000000000000
+          Size.Height = 15.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Log.'
+        end
+      end
+      object DeleteBtn: TButton
+        Default = True
+        StyledSettings = [FontColor]
+        Position.X = 280.000000000000000000
+        Position.Y = 16.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 29.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        Text = 'Supprimer'
+        OnClick = DeleteBtnClick
+      end
+    end
+    object OrdonneeGB: TGroupBox
+      Align = Top
+      StyledSettings = [FontColor]
+      Position.Y = 76.000000000000000000
+      Size.Width = 418.000000000000000000
+      Size.Height = 54.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      object labelZeroY: TLabel
+        AutoSize = True
+        StyledSettings = [FontColor]
+        Position.X = 90.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 58.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Z'#233'ro inclus'
+      end
+      object LabelAxeY: TLabel
+        AutoSize = True
+        StyledSettings = [FontColor]
+        Position.X = 260.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 37.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Echelle'
+      end
+      object LabelGradY: TLabel
+        AutoSize = True
+        StyledSettings = [FontColor]
+        Position.X = 166.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 65.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Graduations'
+      end
+      object ListeY: TComboBox
+        Tag = 1
+        DropDownCount = 10
+        ItemHeight = 15.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 8.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        OnChange = ListeYChange
+      end
+      object ZeroYCB: TCheckBox
+        Tag = 1
+        Position.X = 98.000000000000000000
+        Position.Y = 26.000000000000000000
+        Size.Width = 50.000000000000000000
+        Size.Height = 15.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        Text = 'Z'#233'ro'
+        OnChange = ZeroYCBChange
+      end
+      object MondeCB: TComboBox
+        Tag = 1
+        ItemIndex = 0
+        ItemHeight = 15.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 242.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 87.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        OnChange = MondeCBChange
+        object ListBoxItem9: TListBoxItem
+          IsSelected = True
+          Size.Width = 78.000000000000000000
+          Size.Height = 15.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = #224' gauche'
+        end
+        object ListBoxItem10: TListBoxItem
+          Position.Y = 15.000000000000000000
+          Size.Width = 78.000000000000000000
+          Size.Height = 15.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = #224' droite'
+        end
+        object ListBoxItem11: TListBoxItem
+          Position.Y = 30.000000000000000000
+          Size.Width = 78.000000000000000000
+          Size.Height = 15.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'sans'
+        end
+      end
+      object GraduationY: TComboBox
+        Tag = 1
+        ItemIndex = 0
+        ItemHeight = 15.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 156.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 6
+        OnChange = GraduationYChange
+        object ListBoxItem3: TListBoxItem
+          IsSelected = True
+          Size.Width = 78.000000000000000000
+          Size.Height = 15.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'Lin'#233'aire'
+        end
+        object ListBoxItem4: TListBoxItem
+          Position.Y = 15.000000000000000000
+          Size.Width = 78.000000000000000000
+          Size.Height = 15.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Log.'
+        end
+        object ListBoxItem5: TListBoxItem
+          Position.Y = 30.000000000000000000
+          Size.Width = 78.000000000000000000
+          Size.Height = 15.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'dB'
+        end
+      end
+      object MinidBEdit: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 7
+        Cursor = crIBeam
+        Max = 10.000000000000000000
+        Increment = 20.000000000000000000
+        KeyboardType = Default
+        Position.X = 336.000000000000000000
+        Position.Y = 24.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 74.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyledSettings = [Style, FontColor]
+        OnChange = MinidBEditChange
+      end
+    end
+    object OptionsGB: TGroupBox
+      Align = Top
+      Position.Y = 130.000000000000000000
+      Size.Width = 418.000000000000000000
+      Size.Height = 168.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Options de repr'#233'sentation'
+      TabOrder = 3
+      object LabelDimPoint: TLabel
+        AutoSize = True
+        Position.X = 192.000000000000000000
+        Position.Y = 104.000000000000000000
+        Size.Width = 27.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Taille'
+      end
+      object Label5: TLabel
+        AutoSize = True
+        Position.X = 296.000000000000000000
+        Position.Y = 104.000000000000000000
+        Size.Width = 18.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Pas'
+      end
+      object LigneCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 60.000000000000000000
+        Size.Width = 57.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Ligne'
+        OnChange = LigneCBChange
+      end
+      object PointCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 104.000000000000000000
+        Size.Width = 49.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Text = 'Point'
+        OnChange = PointCBChange
+      end
+      object OrdreLissageSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 4
+        Cursor = crIBeam
+        Min = 1.000000000000000000
+        Max = 9.000000000000000000
+        Value = 3.000000000000000000
+        KeyboardType = Default
+        Position.X = 242.000000000000000000
+        Position.Y = 60.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 54.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyledSettings = [Style, FontColor]
+      end
+      object DimPointSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 5
+        Cursor = crIBeam
+        Min = 1.000000000000000000
+        Max = 9.000000000000000000
+        Value = 3.000000000000000000
+        KeyboardType = Default
+        Position.X = 234.000000000000000000
+        Position.Y = 102.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 54.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyledSettings = [Style, FontColor]
+      end
+      object LigneRG: TComboBox
+        ItemIndex = 0
+        ItemHeight = 15.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 150.000000000000000000
+        Position.Y = 60.000000000000000000
+        Size.Width = 90.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 6
+        OnChange = LigneRGChange
+        object ListBoxItem6: TListBoxItem
+          IsSelected = True
+          Size.Width = 72.000000000000000000
+          Size.Height = 15.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'Segments'
+        end
+        object ModeleItem: TListBoxItem
+          Position.Y = 15.000000000000000000
+          Size.Width = 72.000000000000000000
+          Size.Height = 15.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Mod'#232'le'
+        end
+        object SplineItem: TListBoxItem
+          Position.Y = 30.000000000000000000
+          Size.Width = 72.000000000000000000
+          Size.Height = 15.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'Spline'
+        end
+        object Shannon: TListBoxItem
+          Position.Y = 45.000000000000000000
+          Size.Width = 72.000000000000000000
+          Size.Height = 15.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          Text = 'Shannon'
+        end
+      end
+      object PasPointSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 7
+        Cursor = crIBeam
+        Min = 1.000000000000000000
+        Max = 9.000000000000000000
+        Value = 3.000000000000000000
+        KeyboardType = Default
+        Position.X = 334.000000000000000000
+        Position.Y = 102.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 54.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyledSettings = [Style, FontColor]
+      end
+      object PointCombo: TComboBox
+        DropDownCount = 12
+        ItemIndex = 0
+        ItemHeight = 16.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 72.000000000000000000
+        Position.Y = 102.000000000000000000
+        Size.Width = 98.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 8
+        OnChange = PointComboChange
+        object ListBoxItem12: TListBoxItem
+          IsSelected = True
+          Size.Width = 80.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'Croix'
+        end
+        object ListBoxItem13: TListBoxItem
+          Position.Y = 16.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Croix diag.'
+        end
+        object ListBoxItem14: TListBoxItem
+          Position.Y = 32.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'Cercle'
+        end
+        object ListBoxItem15: TListBoxItem
+          Position.Y = 48.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          Text = 'Carr'#233
+        end
+        object ListBoxItem16: TListBoxItem
+          Position.Y = 64.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 4
+          Text = 'Losange'
+        end
+        object ListBoxItem17: TListBoxItem
+          Position.Y = 80.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 5
+          Text = 'Disque'
+        end
+        object ListBoxItem18: TListBoxItem
+          Position.Y = 96.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 6
+          Text = 'Carr'#233' plein'
+        end
+        object ListBoxItem19: TListBoxItem
+          Position.Y = 112.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 7
+          Text = 'Losange plein'
+        end
+        object ListBoxItem20: TListBoxItem
+          Position.Y = 128.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 8
+          Text = 'Incertitude'
+        end
+        object ListBoxItem21: TListBoxItem
+          Position.Y = 144.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 9
+          Text = 'Histogramme'
+        end
+      end
+      object LigneCombo: TComboBox
+        ItemIndex = 0
+        ItemHeight = 16.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 302.000000000000000000
+        Position.Y = 60.000000000000000000
+        Size.Width = 100.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 9
+        OnChange = LigneComboChange
+        object ListBoxItem22: TListBoxItem
+          IsSelected = True
+          Size.Width = 82.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'Plein'
+        end
+        object ListBoxItem23: TListBoxItem
+          Position.Y = 16.000000000000000000
+          Size.Width = 82.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Tirets'
+        end
+        object ListBoxItem24: TListBoxItem
+          Position.Y = 32.000000000000000000
+          Size.Width = 82.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'Pointill'#233's'
+        end
+        object ListBoxItem25: TListBoxItem
+          Position.Y = 48.000000000000000000
+          Size.Width = 82.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          Text = 'Mixte'
+        end
+        object ListBoxItem26: TListBoxItem
+          Position.Y = 64.000000000000000000
+          Size.Width = 82.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 4
+          Text = 'DashDotDot'
+        end
+      end
+      object SuperPagesCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 140.000000000000000000
+        Size.Width = 233.000000000000000000
+        Size.Height = 14.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 10
+        Text = 'Superposition des pages'
+        OnChange = SuperPagesCBChange
+      end
+      object CouleurCombo: TTMSFNCColorPicker
+        DisableFocusEffect = False
+        Position.X = 8.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 25.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 12
+        DropDownWidth = 200.000000000000000000
+        Appearance.Stroke.Color = claDarkgray
+        Appearance.Fill.Color = xFFE9E9E9
+        Appearance.StrokeHover.Color = claLightslategray
+        Appearance.FillHover.Color = xFFBBC4CC
+        Appearance.StrokeDown.Color = claSlategray
+        Appearance.FillDown.Color = xFFB8C0C8
+        Appearance.StrokeSelected.Color = claDarkslategray
+        Appearance.FillSelected.Color = xFFB8C0C8
+        Appearance.StrokeDisabled.Color = claDarkgray
+        Appearance.FillDisabled.Color = claSilver
+        Appearance.SeparatorStroke.Color = claDarkgray
+        Appearance.Font.Name = 'Segoe UI'
+        Rows = 5
+        Columns = 8
+        Items = <
+          item
+            Color = claBlack
+          end
+          item
+            Color = xFF003399
+          end
+          item
+            Color = xFF003333
+          end
+          item
+            Color = xFF003300
+          end
+          item
+            Color = xFF663300
+          end
+          item
+            Color = claNavy
+          end
+          item
+            Color = xFF353333
+          end
+          item
+            Color = xFF333333
+          end
+          item
+            Color = claMaroon
+          end
+          item
+            Color = xFFFF6600
+          end
+          item
+            Color = claOlive
+          end
+          item
+            Color = claGreen
+          end
+          item
+            Color = claTeal
+          end
+          item
+            Color = claBlue
+          end
+          item
+            Color = xFF666699
+          end
+          item
+            Color = claGray
+          end
+          item
+            Color = claRed
+          end
+          item
+            Color = xFFFF9900
+          end
+          item
+            Color = xFF99CC00
+          end
+          item
+            Color = xFF339966
+          end
+          item
+            Color = xFF33CCCC
+          end
+          item
+            Color = xFF3366FF
+          end
+          item
+            Color = claPurple
+          end
+          item
+            Color = xFF999999
+          end
+          item
+            Color = claFuchsia
+          end
+          item
+            Color = xFFFFCC00
+          end
+          item
+            Color = claYellow
+          end
+          item
+            Color = claLime
+          end
+          item
+            Color = claAqua
+          end
+          item
+            Color = xFF00CCFF
+          end
+          item
+            Color = xFF993366
+          end
+          item
+            Color = claSilver
+          end
+          item
+            Color = xFFFF99CC
+          end
+          item
+            Color = xFFFFCC99
+          end
+          item
+            Color = xFFFFFF99
+          end
+          item
+            Color = xFFCCFFCC
+          end
+          item
+            Color = xFFCCFFFF
+          end
+          item
+            Color = xFF99CCFF
+          end
+          item
+            Color = xFFCC99FF
+          end
+          item
+            Color = claWhite
+          end>
+        Mode = csmExtended
+        OnColorSelected = CouleurComboColorSelected
+      end
+    end
+    object GroupBox1: TGroupBox
+      Align = Top
+      Position.Y = 298.000000000000000000
+      Size.Width = 418.000000000000000000
+      Size.Height = 79.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'M'#233'canique'
+      TabOrder = 4
+      object VitesseCB: TCheckBox
+        Position.X = 16.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 97.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Vitesse'
+        OnChange = VitesseCBChange
+      end
+      object AccelerationCB: TCheckBox
+        Position.X = 112.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Acc'#233'l'#233'ration'
+        OnChange = AccelerationCBChange
+      end
+      object OptionsVitesseBtn: TButton
+        Position.X = 232.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Options'
+        OnClick = OptionsVitesseBtnClick
+      end
+      object LabelVitesse: TLabel
+        Position.X = 16.000000000000000000
+        Position.Y = 48.000000000000000000
+        Size.Width = 185.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Coordonn'#233'es incorrectes'
+      end
+    end
+  end
+end

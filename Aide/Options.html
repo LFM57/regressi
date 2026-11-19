@@ -1,0 +1,115 @@
+﻿<html>
+	
+<head>
+	<title>Options</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Options");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Options</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="General.html">G&eacute;n&eacute;ral</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="General.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Unites.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="EditionCollerdonnees.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<ul style="text-indent: 0px; margin-left: 0px; list-style-position: inside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps7"><a name="OPTIONS"></a>
+<span class="rvts13">Onglet affichage</span></li>
+</ul>
+<p class="rvps5"><span class="rvts13">On choisit le format par défaut des nombres : 1.12E+4 ou 11.2k ainsi que le nombre de chiffres significatifs. Un clic sur la première ligne d'une colonne permet de choisir un format propre à cette colonne.</span></p>
+<p class="rvps5"><span class="rvts13">Choix de la taille de la police écran et des couleurs du mémo expressions.</span></p>
+<ul style="text-indent: 0px; margin-left: 0px; list-style-position: inside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13"> Onglet "Acquisition"</span></li>
+</ul>
+<p class="rvps5"><span class="rvts13">Ajout de programme d'acquisition dans le menu Fichier Nouveau. La case à cocher en bas permet d'autoriser la modification des données et éventuellement de créer une variable expérimentale supplémentaire à entrer au clavier.</span></p>
+<ul style="text-indent: 0px; margin-left: 0px; list-style-position: inside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13"> Onglet "Calcul"</span></li>
+</ul>
+<p class="rvps5"><span class="rvts15">Unités </span><span class="rvts13">: la case "Calcul avec prise en compte des unités" permet de faire les calculs "corrects" même si les grandeurs expérimentales sont données avec une unité avec préfixe, sinon les unités ne sont gérées que pour l'affichage.. Cela reste une option pour plusieurs raisons : option non testée de manière systématique, cela n'est pas forcément une bonne idée, c'en est même sûrement une mauvaise pour les chimistes.</span></p>
+<p class="rvps5"><span class="rvts15">Incertitudes</span><span class="rvts13"> : elles sont définies pour les grandeurs expérimentales et propagées soit de manière "classique" (apparition d'un bouton </span><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem60.gif"><span class="rvts13">) ou de manière statistique par addition des variances (apparition d'un bouton </span><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem59.gif"><span class="rvts13">).</span></p>
+<p class="rvps5"><span class="rvts13">On indique la méthode désirée pour le calcul de la dérivée : on effectue un lissage sur N points (3 à 9) par un polynôme d'ordre p (1 à 3 donc linéaire, parabolique ou cubique), puis on détermine la dérivée par calcul de la valeur de la dérivée du polynôme. Si on prend parabolique sur 3 points, on obtient la méthode utilisée par Regressi DOS : moyenne pondérée de la dérivée à droite et à gauche donc l'équivalent pour des points régulièrement espacées de </span><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem58.gif"><span class="rvts13">.</span></p>
+<p class="rvps5"><span class="rvts13">Remarque : on peut aussi utiliser diff(x,t,ordre,nombre de points) ou la syntaxe v=(x[i+1]-x[i])/(t[i+1]-t[i]).</span></p>
+<p class="rvps5"><span class="rvts13">On indique l'ordre du lissage appliqué aux courbes expérimentales.</span></p>
+<p class="rvps5"><span class="rvts15">Incertitude avec variance</span><span class="rvts13"> : indique si la propagation des incertitudes se fait par la variance (sinon par le calcul d'incertitude classique).</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem57.gif"><span class="rvts13"> permet de définir les valeur et commentaire des constantes disponibles dans l'onglet constantes du panneau à gauche des expressions.</span></p>
+<ul style="text-indent: 0px; margin-left: 0px; list-style-position: inside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13"> Onglet "Imprimante"</span></li>
+</ul>
+<p class="rvps5"><span class="rvts13">Certaines imprimantes peuvent ne pas fonctionner pour des problèmes de taille mémoire, si cette case est cochée, le logiciel essaie d'éviter les problèmes (pas de niveaux de gris, taille des points à 1…).</span></p>
+<p class="rvps5"><span class="rvts13">Choix de la taille de la police imprimante.</span></p>
+<p class="rvps5"><span class="rvts13">Impression des graphes en gras permet d'avoir des graphes plus lisibles éventuellement.</span></p>
+<p class="rvps5"><span class="rvts13">Permutation des colonnes et lignes permet aux tableaux de prendre moins de place. De toute manière, le nombre de lignes d'un tableau à l'impression est limité à 64 (si dépassement on prend une ligne sur N). Cette option est également active pour l'envoi d'un tableau dans le presse-papiers.</span></p>
+<p class="rvps5"><span class="rvts13">Options d'impression des graphes en mode centimétrique.</span></p>
+<ul style="text-indent: 0px; margin-left: 0px; list-style-position: inside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13"> Onglet "Fichiers Répertoire"</span></li>
+</ul>
+<p class="rvps5"><span class="rvts13">On peut indiquer le répertoire des données par défaut, le répertoire des données partagées (utilisé par Fichier/Envoyer et Recevoir). La taille par défaut des images générées dans les fichiers.</span></p>
+<ul style="text-indent: 0px; margin-left: 0px; list-style-position: inside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13"> Onglet "Préférences"</span></li>
+</ul>
+<p class="rvps5"><span class="rvts13">On peut choisir de permettre ou non l'accès à certaines fonctions (par exemple on peut cacher les modélisations prédéfinies en décochant la case correspondante).</span></p>
+<ul style="text-indent: 0px; margin-left: 0px; list-style-position: inside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13"> Onglet "Graphique"</span></li>
+</ul>
+<p class="rvps5"><span class="rvts13">Permet de choisir les options </span><span class="rvts15">par défaut</span><span class="rvts13"> du graphe, c'est-à-dire celles qui seront activées lorsqu'on commencera un nouveau fichier. Si on charge un fichier, les options seront celles de ce fichier.</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem56.gif"><span class="rvts13"> ouvre une </span><a class="rvts16" href="OptionsGraphe.htm">boite de dialogue</a><span class="rvts13"> de personnalisation des couleurs des graphes.</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/outils-creation-aide">Environnement de création d'aide complet</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

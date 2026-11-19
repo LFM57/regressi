@@ -1,0 +1,273 @@
+object NewClavierDlg: TNewClavierDlg
+  Left = 388
+  Top = 110
+  ActiveControl = OKBtn
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Entr'#233'e de donn'#233'es au clavier'
+  ClientHeight = 372
+  ClientWidth = 476
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Left = 388
+  Top = 110
+  DesignerMasterStyle = 0
+  object Label1: TLabel
+    AutoSize = True
+    Position.X = 8.000000000000000000
+    Position.Y = 180.000000000000000000
+    Size.Width = 411.500000000000000000
+    Size.Height = 17.500000000000000000
+    Size.PlatformDefault = False
+    TextSettings.WordWrap = False
+    Text = 
+      'La premi'#232're variable est la variable de tri et par d'#233'faut l'#39'absc' +
+      'isse du graphe'
+  end
+  object Label3: TLabel
+    AutoSize = True
+    Position.X = 8.000000000000000000
+    Position.Y = 225.000000000000000000
+    Size.Width = 307.500000000000000000
+    Size.Height = 17.500000000000000000
+    Size.PlatformDefault = False
+    TextSettings.WordWrap = False
+    Text = 'Essayez de travailler en S.I. sans pr'#233'fixe m k ... (sauf kg !)'
+  end
+  object OKBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 10
+    ModalResult = 1
+    Position.X = 364.000000000000000000
+    Position.Y = 216.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'OK'
+    OnClick = OKBtnClick
+  end
+  object CancelBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 53
+    ModalResult = 2
+    Position.X = 364.000000000000000000
+    Position.Y = 272.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    Text = 'Abandon'
+  end
+  object HelpBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 5
+    ModalResult = 9
+    Position.X = 364.000000000000000000
+    Position.Y = 328.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    Text = 'Aide'
+  end
+  object GroupBox1: TGroupBox
+    Align = Top
+    Size.Width = 476.000000000000000000
+    Size.Height = 153.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Variables exp'#233'rimentales'
+    TabOrder = 5
+    object GridVariab: TTMSFNCGrid
+      Align = Client
+      Size.Width = 476.000000000000000000
+      Size.Height = 153.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 38
+      FixedColumns = 0
+      Options.Editing.CalcFormat = '%g'
+      Options.Grouping.CalcFormat = '%g'
+      Options.Grouping.GroupCountFormat = '(%d)'
+      Options.IO.XMLEncoding = 'ISO-8859-1'
+      Options.Mouse.ClickMargin = 0
+      Options.Mouse.ColumnSizeMargin = 6
+      Options.Mouse.RowSizeMargin = 6
+      Columns = <
+        item
+          BorderWidth = 1
+          FixedFont.Name = 'Segoe UI'
+          FixedFont.StyleExt = {00070000000000000004000000}
+          Font.Name = 'Segoe UI'
+          ID = ''
+          Width = 68.000000000000000000
+        end
+        item
+          BorderWidth = 1
+          FixedFont.Name = 'Segoe UI'
+          FixedFont.StyleExt = {00070000000000000004000000}
+          Font.Name = 'Segoe UI'
+          ID = ''
+          Width = 68.000000000000000000
+        end
+        item
+          BorderWidth = 1
+          FixedFont.Name = 'Segoe UI'
+          FixedFont.StyleExt = {00070000000000000004000000}
+          Font.Name = 'Segoe UI'
+          ID = ''
+          Width = 68.000000000000000000
+        end
+        item
+          BorderWidth = 1
+          FixedFont.Name = 'Segoe UI'
+          FixedFont.StyleExt = {00070000000000000004000000}
+          Font.Name = 'Segoe UI'
+          ID = ''
+          Width = 68.000000000000000000
+        end
+        item
+          BorderWidth = 1
+          FixedFont.Name = 'Segoe UI'
+          FixedFont.StyleExt = {00070000000000000004000000}
+          Font.Name = 'Segoe UI'
+          ID = ''
+          Width = 68.000000000000000000
+        end>
+      DefaultFont.Name = 'Segoe UI'
+      TopRow = 1
+      Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+      Appearance.FixedLayout.Font.Name = 'Segoe UI'
+      Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+      Appearance.NormalLayout.Fill.Color = claNull
+      Appearance.NormalLayout.Font.Name = 'Segoe UI'
+      Appearance.GroupLayout.Fill.Color = xFF6E93C3
+      Appearance.GroupLayout.Font.Color = claWhite
+      Appearance.GroupLayout.Font.Name = 'Segoe UI'
+      Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
+      Appearance.SummaryLayout.Font.Name = 'Segoe UI'
+      Appearance.SelectedLayout.Fill.Color = claLightsteelblue
+      Appearance.SelectedLayout.Font.Color = claWhite
+      Appearance.SelectedLayout.Font.Name = 'Segoe UI'
+      Appearance.FocusedLayout.Fill.Color = claLightsteelblue
+      Appearance.FocusedLayout.Font.Color = claWhite
+      Appearance.FocusedLayout.Font.Name = 'Segoe UI'
+      Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
+      Appearance.FixedSelectedLayout.Font.Name = 'Segoe UI'
+      Appearance.BandLayout.Fill.Color = claLightyellow
+      Appearance.BandLayout.Font.Name = 'Segoe UI'
+      Appearance.ProgressLayout.Format = '%.0f%%'
+      LeftCol = 0
+      ScrollMode = scmItemScrolling
+      GlobalFont.Scale = 1.000000000000000000
+      GlobalFont.Style = []
+      DesignTimeSampleData = True
+    end
+  end
+  object ConstGB: TGroupBox
+    Position.X = 8.000000000000000000
+    Position.Y = 246.000000000000000000
+    Size.Width = 337.000000000000000000
+    Size.Height = 115.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Param'#232'tres exp'#233'rimentaux'
+    TabOrder = 6
+    object GridConst: TTMSFNCGrid
+      Align = Client
+      Size.Width = 337.000000000000000000
+      Size.Height = 115.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 38
+      FixedColumns = 0
+      Options.Editing.CalcFormat = '%g'
+      Options.Grouping.CalcFormat = '%g'
+      Options.Grouping.GroupCountFormat = '(%d)'
+      Options.IO.XMLEncoding = 'ISO-8859-1'
+      Options.Mouse.ClickMargin = 0
+      Options.Mouse.ColumnSizeMargin = 6
+      Options.Mouse.RowSizeMargin = 6
+      Columns = <
+        item
+          BorderWidth = 1
+          FixedFont.Name = 'Segoe UI'
+          FixedFont.StyleExt = {00070000000000000004000000}
+          Font.Name = 'Segoe UI'
+          ID = ''
+          Width = 68.000000000000000000
+        end
+        item
+          BorderWidth = 1
+          FixedFont.Name = 'Segoe UI'
+          FixedFont.StyleExt = {00070000000000000004000000}
+          Font.Name = 'Segoe UI'
+          ID = ''
+          Width = 68.000000000000000000
+        end
+        item
+          BorderWidth = 1
+          FixedFont.Name = 'Segoe UI'
+          FixedFont.StyleExt = {00070000000000000004000000}
+          Font.Name = 'Segoe UI'
+          ID = ''
+          Width = 68.000000000000000000
+        end
+        item
+          BorderWidth = 1
+          FixedFont.Name = 'Segoe UI'
+          FixedFont.StyleExt = {00070000000000000004000000}
+          Font.Name = 'Segoe UI'
+          ID = ''
+          Width = 68.000000000000000000
+        end
+        item
+          BorderWidth = 1
+          FixedFont.Name = 'Segoe UI'
+          FixedFont.StyleExt = {00070000000000000004000000}
+          Font.Name = 'Segoe UI'
+          ID = ''
+          Width = 68.000000000000000000
+        end>
+      DefaultFont.Name = 'Segoe UI'
+      TopRow = 1
+      Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+      Appearance.FixedLayout.Font.Name = 'Segoe UI'
+      Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+      Appearance.NormalLayout.Fill.Color = claNull
+      Appearance.NormalLayout.Font.Name = 'Segoe UI'
+      Appearance.GroupLayout.Fill.Color = xFF6E93C3
+      Appearance.GroupLayout.Font.Color = claWhite
+      Appearance.GroupLayout.Font.Name = 'Segoe UI'
+      Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
+      Appearance.SummaryLayout.Font.Name = 'Segoe UI'
+      Appearance.SelectedLayout.Fill.Color = claLightsteelblue
+      Appearance.SelectedLayout.Font.Color = claWhite
+      Appearance.SelectedLayout.Font.Name = 'Segoe UI'
+      Appearance.FocusedLayout.Fill.Color = claLightsteelblue
+      Appearance.FocusedLayout.Font.Color = claWhite
+      Appearance.FocusedLayout.Font.Name = 'Segoe UI'
+      Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
+      Appearance.FixedSelectedLayout.Font.Name = 'Segoe UI'
+      Appearance.BandLayout.Fill.Color = claLightyellow
+      Appearance.BandLayout.Font.Name = 'Segoe UI'
+      Appearance.ProgressLayout.Format = '%.0f%%'
+      LeftCol = 0
+      ScrollMode = scmItemScrolling
+      GlobalFont.Scale = 1.000000000000000000
+      GlobalFont.Style = []
+      DesignTimeSampleData = True
+    end
+  end
+  object TriCB: TCheckBox
+    IsChecked = True
+    Position.X = 8.000000000000000000
+    Position.Y = 200.000000000000000000
+    Size.Width = 281.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 7
+    Text = 'Tri automatique selon la premi'#232're variable'
+  end
+end

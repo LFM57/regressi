@@ -1,0 +1,19 @@
+object AideForm: TAideForm
+  Left = 0
+  Top = 0
+  ClientHeight = 640
+  ClientWidth = 1024
+  FormFactor.Width = 1920
+  FormFactor.Height = 1022
+  FormFactor.Devices = [Desktop]
+  OnActivate = FormActivate
+  DesignerMasterStyle = 3
+  object WebBrowser1: TWebBrowser
+    Align = Client
+    Size.Width = 1024.000000000000000000
+    Size.Height = 640.000000000000000000
+    Size.PlatformDefault = False
+    WindowsEngine = IEOnly
+    OnDidFailLoadWithError = WebBrowser1DidFailLoadWithError
+  end
+end

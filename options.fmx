@@ -1,0 +1,387 @@
+object OptionsDlg: TOptionsDlg
+  Left = 339
+  Top = 168
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Options'
+  ClientHeight = 334
+  ClientWidth = 455
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Left = 339
+  Top = 168
+  DesignerMasterStyle = 0
+  object PageControl: TTabControl
+    Align = Client
+    FullSize = True
+    Size.Width = 352.000000000000000000
+    Size.Height = 334.000000000000000000
+    Size.PlatformDefault = False
+    TabHeight = 20.000000000000000000
+    TabIndex = 0
+    TabOrder = 2
+    TabPosition = Top
+    Sizes = (
+      352s
+      314s
+      352s
+      314s)
+    object CalculTS: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = True
+      Size.Width = 175.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Calcul'
+      ExplicitSize.cx = 54.000000000000000000
+      ExplicitSize.cy = 20.000000000000000000
+      object LissageLabel: TLabel
+        AutoSize = True
+        Position.X = 12.000000000000000000
+        Position.Y = 140.000000000000000000
+        Size.Width = 145.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Ordre de lissage par d'#233'faut'
+        TabOrder = 0
+      end
+      object Label1: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 194.000000000000000000
+        Size.Width = 230.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Nombre de points de calcul pour la d'#233'riv'#233'e'
+        TabOrder = 1
+      end
+      object OrdreFiltrageSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 2
+        Cursor = crIBeam
+        Min = 1.000000000000000000
+        Max = 9.000000000000000000
+        Value = 3.000000000000000000
+        KeyboardType = Default
+        Position.X = 194.000000000000000000
+        Position.Y = 136.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 54.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object UseChi2CB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 54.000000000000000000
+        Size.Width = 265.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Text = 'Trac'#233' des ellipses et utilisation du '#967#178
+      end
+      object ExtrapoleDerCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 221.000000000000000000
+        Size.Width = 273.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        Text = 'Calcul de la d'#233'riv'#233'e aux points extr'#234'mes'
+      end
+      object NbrePointsDerSB: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 5
+        Cursor = crIBeam
+        Min = 1.000000000000000000
+        Max = 9.000000000000000000
+        Value = 1.000000000000000000
+        Increment = 2.000000000000000000
+        KeyboardType = Default
+        Position.X = 270.000000000000000000
+        Position.Y = 190.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 54.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object ChiffresSignifSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 6
+        Cursor = crIBeam
+        Min = 1.000000000000000000
+        Max = 9.000000000000000000
+        Value = 3.000000000000000000
+        KeyboardType = Default
+        Position.X = 270.000000000000000000
+        Position.Y = 166.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 54.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyledSettings = [Style, FontColor]
+      end
+      object Label3: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 170.000000000000000000
+        Size.Width = 223.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Nombre de chiffres significatifs par d'#233'faut'
+        TabOrder = 7
+      end
+    end
+    object TabSheet4: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 175.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Graphique'
+      ExplicitSize.cx = 80.000000000000000000
+      ExplicitSize.cy = 20.000000000000000000
+      object Label11: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 58.000000000000000000
+        Size.Width = 154.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Ordre du lissage des courbes'
+        TabOrder = 0
+      end
+      object Label17: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 83.000000000000000000
+        Size.Width = 142.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Taille des points par d'#233'faut'
+        TabOrder = 1
+      end
+      object OptionsBtn: TButton
+        Images = ImagesData.ImagesList
+        ImageIndex = 20
+        Position.X = 208.000000000000000000
+        Position.Y = 166.000000000000000000
+        Size.Width = 90.000000000000000000
+        Size.Height = 26.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Couleurs'
+        OnClick = OptionsBtnClick
+      end
+      object LabelWidth: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 108.000000000000000000
+        Size.Width = 101.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Epaisseur des traits'
+        TabOrder = 3
+      end
+      object GrilleCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 32.000000000000000000
+        Size.Width = 185.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        Text = 'Trac'#233' de grille par d'#233'faut'
+        OnClick = ModifGrapheClick
+      end
+      object IncertitudeCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 10.000000000000000000
+        Size.Width = 257.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        Text = 'Trac'#233' des ellipses et utilisation du '#967#178
+        OnClick = ModifGrapheClick
+      end
+      object OrdreSplineSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 6
+        Cursor = crIBeam
+        Max = 10.000000000000000000
+        Value = 3.000000000000000000
+        KeyboardType = Default
+        Position.X = 190.000000000000000000
+        Position.Y = 55.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 54.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        OnClick = ModifGrapheClick
+      end
+      object DimPointSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 7
+        Cursor = crIBeam
+        Max = 10.000000000000000000
+        Value = 3.000000000000000000
+        KeyboardType = Default
+        Position.X = 190.000000000000000000
+        Position.Y = 80.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 54.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        OnClick = ModifGrapheClick
+      end
+      object GraduationZeroCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 166.000000000000000000
+        Size.Width = 160.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 8
+        Text = 'Axes passant par z'#233'ro'
+        OnClick = ModifGrapheClick
+      end
+      object GraduationPiCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 140.000000000000000000
+        Size.Width = 150.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 9
+        Text = 'Radian traduit en '#960'/n'
+        OnClick = ModifGrapheClick
+      end
+      object Memo1: TMemo
+        Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+        DataDetectorTypes = []
+        Lines.Strings = (
+          'L'#39'utilisation des ellipses supposent que les incertitudes '
+          'soient donn'#233'es sous forme d'#39#233'cart-type')
+        Align = Bottom
+        Position.Y = 212.000000000000000000
+        Size.Width = 352.000000000000000000
+        Size.Height = 55.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 10
+        Viewport.Width = 352.000000000000000000
+        Viewport.Height = 55.000000000000000000
+      end
+      object WidthEcranSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 11
+        Cursor = crIBeam
+        Max = 10.000000000000000000
+        Value = 3.000000000000000000
+        KeyboardType = Default
+        Position.X = 190.000000000000000000
+        Position.Y = 105.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 54.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        OnClick = ModifGrapheClick
+      end
+      object UniteParCB: TCheckBox
+        Position.X = 160.000000000000000000
+        Position.Y = 140.000000000000000000
+        Size.Width = 160.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 12
+        Text = 'Unit'#233' avec parenth'#232'ses'
+      end
+      object CoeffEllipseRG: TGroupBox
+        Align = Bottom
+        Position.Y = 267.000000000000000000
+        Size.Width = 352.000000000000000000
+        Size.Height = 47.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Taille des ellipses'
+        TabOrder = 13
+        object sigmaRB: TRadioButton
+          Position.X = 20.000000000000000000
+          Position.Y = 20.000000000000000000
+          Size.Width = 41.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = #963
+          OnChange = sigmaRBChange
+        end
+        object e95RB: TRadioButton
+          Position.X = 100.000000000000000000
+          Position.Y = 20.000000000000000000
+          Size.Width = 69.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = '95%'
+          OnChange = e95RBChange
+        end
+        object e99RB: TRadioButton
+          Position.X = 200.000000000000000000
+          Position.Y = 20.000000000000000000
+          Size.Width = 81.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = '99%'
+          OnChange = e99RBChange
+        end
+      end
+    end
+  end
+  object Panel1: TPanel
+    Align = Right
+    Position.X = 352.000000000000000000
+    Size.Width = 103.000000000000000000
+    Size.Height = 334.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object OKBtn: TButton
+      Images = ImagesData.ImagesList
+      ImageIndex = 10
+      ModalResult = 1
+      Position.X = 6.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 90.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'OK'
+      OnClick = OKBtnClick
+    end
+    object CancelBtn: TButton
+      Images = ImagesData.ImagesList
+      ImageIndex = 53
+      ModalResult = 2
+      Position.X = 6.000000000000000000
+      Position.Y = 48.000000000000000000
+      Size.Width = 90.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Abandon'
+    end
+  end
+end

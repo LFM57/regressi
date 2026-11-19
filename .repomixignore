@@ -1,0 +1,35 @@
+# 1. Generated HTML Help documentation (HelpNDoc output, JS libraries, search index, HTML)
+Aide/
+
+# 2. Image module (almost certainly huge hex-encoded bitmaps) & macOS-specific form
+Images.dfm
+graphfft.Macintosh.fmx
+
+# 3. Text-based assets & localization dictionaries
+*.svg
+*.lng
+
+# 4. Delphi IDE metadata, caches, and noisy build/deployment XML
+*.identcache
+*.dsk
+*.local
+*.vlb
+*.deployproj
+*.dproj
+
+# 5. Binary assets (Repomix skips most binaries automatically, but explicit is clean)
+*.png
+*.jpg
+*.gif
+*.ico
+*.pdf
+*.res
+
+# 6. OPTIONAL: Uncomment the line below if the token count is still too high
+# (*.fmx files often contain massive hex-encoded icons/styles)
+# *.fmx
+#
+
+about.fmx
+BitmapU.fmx
+ChronoBitmap.fmx

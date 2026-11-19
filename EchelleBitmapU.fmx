@@ -1,0 +1,223 @@
+object EchelleBitmapDlg: TEchelleBitmapDlg
+  Left = 388
+  Top = 110
+  ActiveControl = OKBtn
+  BorderIcons = [biSystemMenu]
+  BorderStyle = Single
+  Caption = 'Options des axes de l'#39'image'
+  ClientHeight = 205
+  ClientWidth = 680
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Left = 388
+  Top = 110
+  DesignerMasterStyle = 0
+  object OKBtn: TButton
+    StyledSettings = [FontColor]
+    Images = ImagesData.ImagesList
+    ImageIndex = 10
+    ModalResult = 1
+    Position.X = 20.000000000000000000
+    Position.Y = 152.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'OK'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnClick = OKBtnClick
+  end
+  object CancelBtn: TButton
+    StyledSettings = [FontColor]
+    Images = ImagesData.ImagesList
+    ImageIndex = 53
+    ModalResult = 2
+    Position.X = 228.000000000000000000
+    Position.Y = 152.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    Text = 'Abandon'
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+  object HelpBtn: TButton
+    StyledSettings = [FontColor]
+    Images = ImagesData.ImagesList
+    ImageIndex = 5
+    ModalResult = 9
+    Position.X = 404.000000000000000000
+    Position.Y = 152.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    Text = 'Aide'
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+  object OrthonormeCB: TCheckBox
+    StyledSettings = [FontColor]
+    IsChecked = True
+    Position.X = 8.000000000000000000
+    Position.Y = 112.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 7
+    Text = 'Orthonorm'#233
+    TextSettings.Font.Size = 13.000000000000000000
+  end
+  object PolaireCB: TCheckBox
+    StyledSettings = [FontColor]
+    IsChecked = True
+    Position.X = 144.000000000000000000
+    Position.Y = 112.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 6
+    Text = 'Polaire'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnChange = PolaireCBChange
+  end
+  object GridVariab: TTMSFNCGrid
+    Touch.InteractiveGestures = [Pan]
+    Align = Top
+    DisableFocusEffect = False
+    TabOrder = 0
+    Size.Width = 680.000000000000000000
+    Size.Height = 105.000000000000000000
+    Size.PlatformDefault = False
+    DefaultColumnWidth = 80.000000000000000000
+    ColumnCount = 7
+    RowCount = 4
+    Options.Editing.AutoCompleteCaseSensitive = False
+    Options.Editing.CalcFormat = '%g'
+    Options.Grouping.CalcFormat = '%g'
+    Options.Grouping.GroupCountFormat = '(%d)'
+    Options.IO.XMLEncoding = 'ISO-8859-1'
+    Options.Keyboard.TabKeyDirectEdit = True
+    Options.Keyboard.ArrowKeyDirectEdit = True
+    Options.Keyboard.InsertKeyHandling = ikhNone
+    Options.Keyboard.DeleteKeyHandling = dkhNone
+    Options.Keyboard.EnterKeyHandling = ekhNextColumnInRow
+    Options.Keyboard.EnterKeyDirectEdit = True
+    Options.Keyboard.TabKeyHandling = tkhNextCell
+    Options.Mouse.TouchScrollingSensitivity = 0.100000001490116100
+    Options.Printing.PageNumberFormat = '%g'
+    OnSelectCell = GridVariabSelectCell
+    Version = '2.3.2.7'
+    Fill.Kind = Solid
+    Stroke.Kind = Solid
+    TopRow = 1
+    LeftCol = 1
+    OnGetCellClass = GridVariabGetCellClass
+    OnGetCellData = GridVariabGetCellData
+    OnGetCellEditorType = GridVariabGetCellEditorType
+    OnGetCellEditorProperties = GridVariabGetCellEditorProperties
+    Columns = <
+      item
+        Color = claNull
+        Editor = etEdit
+        Fixed = False
+        FixedFont.StyleExt = {00070000000000000004000000}
+        FixedFontColor = claBlack
+        FontColor = claNull
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        Color = claNull
+        Editor = etEdit
+        Fixed = False
+        FixedFont.StyleExt = {00070000000000000004000000}
+        FixedFontColor = claBlack
+        FontColor = claNull
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        Color = claNull
+        Editor = etEdit
+        Fixed = False
+        FixedFont.StyleExt = {00070000000000000004000000}
+        FixedFontColor = claBlack
+        FontColor = claNull
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        Color = claNull
+        Editor = etEdit
+        Fixed = False
+        FixedFont.StyleExt = {00070000000000000004000000}
+        FixedFontColor = claBlack
+        FontColor = claNull
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        Color = claNull
+        Editor = etEdit
+        Fixed = False
+        FixedFont.StyleExt = {00070000000000000004000000}
+        FixedFontColor = claBlack
+        FontColor = claNull
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        Color = claNull
+        Editor = etEdit
+        Fixed = False
+        FixedFont.StyleExt = {00070000000000000004000000}
+        FixedFontColor = claBlack
+        FontColor = claBlack
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        Color = claNull
+        Editor = etEdit
+        Fixed = False
+        FixedFont.StyleExt = {00070000000000000004000000}
+        FixedFontColor = claBlack
+        FontColor = claBlack
+        ID = ''
+        Width = 80.000000000000000000
+      end>
+  end
+  object avecTCB: TCheckBox
+    StyledSettings = [FontColor]
+    IsChecked = True
+    Position.X = 256.000000000000000000
+    Position.Y = 112.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+    Text = 'avec index'
+    TextSettings.Font.Size = 13.000000000000000000
+    OnChange = avecTCBChange
+  end
+  object IncrementLabel: TLabel
+    Position.X = 360.000000000000000000
+    Position.Y = 112.000000000000000000
+    Size.Width = 80.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Incr'#233'ment'
+    TabOrder = 8
+  end
+  object deltatEdit: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 9
+    Position.X = 440.000000000000000000
+    Position.Y = 112.000000000000000000
+  end
+end

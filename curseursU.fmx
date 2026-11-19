@@ -1,0 +1,21 @@
+object CurseursForm: TCurseursForm
+  Left = 0
+  Top = 0
+  Caption = 'Curseurs'
+  ClientHeight = 208
+  ClientWidth = 177
+  Position = poMainFormCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [dkDesktop]
+  OnCreate = FormCreate
+  object Grid: TStringGrid
+    Touch.InteractiveGestures = [igPan]
+    Align = alClient
+    Height = 208.000000000000000000
+    StyleLookup = 'gridstyle'
+    Width = 177.000000000000000000
+    RowCount = 8
+    RowHeight = 21.000000000000000000
+  end
+end

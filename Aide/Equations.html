@@ -1,0 +1,87 @@
+﻿<html>
+	
+<head>
+	<title>Equations</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Equations");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Equations</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Calculs.html">Calculs</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Calculs.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Fonctions.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Trigonometrie.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="C.QFW0"></a>
+<span class="rvts15">x=solve(f(x),x1,x2)</span><span class="rvts13"> définit x et résout l'équation f(x)=0. La recherche peut d'une part ne pas aboutir et d'autre part trouver une racine qui n'est pas celle recherchée. Dans ces deux cas il faut initialiser la recherche en tapant dans le tableau du dossier Valeurs une valeur approchée. x1 et x2 sont deux paramètres facultatifs qui permettent d'une part de limiter les valeurs possibles des résultats à x1<x<x2 et d'autre part initialisent la recherche à (x1+x2)/2. Exemple, y étant déjà définie, pour résoudre 2x2+xy+1=0, il faut entrer x=solve(2*x*x+x*y+1).</span></p>
+<p class="rvps5"><span class="rvts15">y´=f(x,y)</span><span class="rvts13"> résout l'équation différentielle y´=dy/dx=f(x,y) avec y(initial)=y0. Dans le cas d'une simulation le paramètre y0 est créé automatiquement (il faut donner sa valeur dans le feuillet paramètres), sinon y0 est la valeur initiale expérimentale. Exemple l'équation de charge d'un condensateur s'écrit Uc´=(E-Uc)/RC.</span></p>
+<p class="rvps5"><span class="rvts15">y´´=f(x,y,y´)</span><span class="rvts13"> résout l'équation différentielle y´´=d2y/dx2=f(x,y,y´) avec y(initial)=y0 et y´(initial)=y´0. Dans le cas d'une simulation y´0 et y0 sont des paramètres expérimentaux à définir dans le feuillet paramètres. Dans le cas d'une modélisation y0 est la valeur initiale expérimentale et y´0 un paramètre de modélisation. Exemple pour résoudre l'équation de Van der Pol, il faut entrer quelque chose du type y´´=-y-2*y´*if(abs(y)<S,-0.15,0.52). Voir fichier d'exemple vdp.rw3. x est obligatoirement la première variable. Dans les options de modélisation, on peut imposer aussi la recherche de y0 (case à cocher valeur initiale). </span></p>
+<p class="rvps5"><span class="rvts13">Ces deux fonctions ne sont disponibles que pour la modélisation ou en mode simulation.</span></p>
+<p class="rvps5"><span class="rvts13">Pour créer un système d'équations différentielles en mode simulation, il faut prédéfinir les variables par une fonction "vide" y´= ou y´´=. Par exemple pour résoudre le système x´=-kx-kk.y y´=-ky-kk.x avec x(0)=0 et y(0)=1, il faut taper :</span></p>
+<p class="rvps5"><span class="rvts13">y´=</span></p>
+<p class="rvps5"><span class="rvts13">x´=-k*x-kk*y</span></p>
+<p class="rvps5"><span class="rvts13">y´=-k*y-kk*x</span></p>
+<p class="rvps5"><span class="rvts13">et entrer les valeurs 0 et 1 pour x0 et y0 dans le feuillet paramètres.</span></p>
+<p class="rvps5"><span class="rvts13">Voir le fichier d'exemple </span><a class="rvts16" href="osccoupl.rw3">oscillateurs couplés </a><span class="rvts13">.</span></p>
+<p class="rvps5"><span class="rvts13">Dans le cas d'une modélisation, la présence de plusieurs équations différentielles est interprétée comme un système. Il y a incompatibilité entre les trois types de modélisation : fonction, équations différentielles d'ordre 1 et d'ordre. Si vous avez un système d'équations avec une d'ordre 1 et l'autre d'ordre 2, il faut transformer celui-ci de manière à avoir trois équations d'ordre 1.</span></p>
+<p class="rvps5"><span class="rvts13">La technique est la même pour créer un système à résoudre par la méthode d´Euler : voir chuteEuler.rw3 et </span><a class="rvts16" href="OscillEuler.rw3">oscillateur</a></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/creer-des-livres-numeriques-epub">Éditeur complet de livres électroniques ePub</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

@@ -1,0 +1,87 @@
+﻿<html>
+	
+<head>
+	<title>Outils graphiques</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Outilsgraphiques");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Outils graphiques</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Graphique.html">Graphique</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Graphique.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Optionsgraphe.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Optionstexte.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="OUTILSGRAPHE"></a>
+<span class="rvts13">La boite liste déroulante en haut à gauche du graphe dans la barre de boutons permet de choisir un “ outil ” entre :</span></p>
+<p class="rvps5"><span class="rvts15">Réticule données</span><span class="rvts13"> : trace un ou deux curseurs déplaçables par glisser déplacer et indique selon la configuration donnée par les cases à cocher la valeur de l'abscisse, de l'ordonnée, l'écart entre les deux curseurs ainsi que la pente de la droite joignant les deux curseurs. Pour avoir l'écart et la pente, il est nécessaire d'avoir deux curseurs et il faut donc sélectionner dans les deux boites listes la même variable. On peut récupérer la position du curseur dans un paramètre à l'aide de la touche F10.</span></p>
+<p class="rvps5"><span class="rvts15">Curseur tangente</span><span class="rvts13"> : indique la tangente courante. Si on sélectionne l'option méthode des tangentes, cliquer sur un point avant une équivalence trace la tangente courante, recherche la tangente parallèle et détermine le point d'équivalence. On peut visualiser le tableau des points d'équivalence par clic droit et sélection de "Tableau des tangentes". On peut faire une remise à zéro par clic droit et sélection de "RàZ tangentes". La stœchiométrie des réactions est supposée par défaut être 1-1 (cas des dosages acide base), la droite d'équivalence est tracée à mi-chemin des tangentes. Un clic sur une tangente déjà existante l'efface (existante voulant dire à 1% près de la valeur courante). On indique les valeurs de la pente (et des volume et pH en cas de méthode des tangentes) sur le graphe si la position est suffisamment différente d'une tangente déjà marquée (différente voulant dire d'au moins 10 % par rapport à l'échelle). L'option tangente déplaçable signifie que vous pouvez déplacer séparément le point de contact des tangentes supérieures et inférieures : les tangentes sont dans ce cas créées lors de la sélection du curseur tangente. On peut récupérer la position du curseur dans un paramètre à l'aide de la touche F1.</span></p>
+<p class="rvps5"><span class="rvts15">Réticule libre</span><span class="rvts13"> : indique les coordonnées du pointeur. Un double clic ou la frappe de la barre d'espace trace des lignes de rappel et remplit un tableau avec les valeurs de l'abscisse et l'ordonnée. Un clic garde une trace du pointeur courant et permet d'indiquer les écarts et pentes entre cette trace et le pointeur (un autre clic fait disparaître cette trace). L'ordonnée "active" est celle qui correspond à l'axe à gauche. Ce tableau est visualisable par le menu local (clic droit) "Tableau des points". On peut faire une remise à zéro par le menu local "RàZ tableau". Ces traces fonctionnent en bascule, i.e. que si vous refaites la même opération au même endroit (à 8 pixels près), cela efface la trace. On peut récupérer la position du réticule dans un paramètre à l'aide de la touche F10.</span></p>
+<p class="rvps5"><span class="rvts15">Ligne</span><span class="rvts13"> : tracé de lignes définies par les extrémités (glisser déplacer). Par la suite, si on sélectionne les extrémités, on déplace celles-ci sinon on translate le segment. Un double clic sur le segment permet le choix de la couleur, du type de tracé et d'indiquer une légende (équation, pente…). L'appui de la touche majuscule pendant le tracé permet d'obliger la ligne à être horizontale ou verticale.</span></p>
+<p class="rvps5"><span class="rvts15">Texte</span><span class="rvts13"> : écriture de texte. Un texte est défini par deux points : le premier (appui sur le bouton) où sera positionné le point de référence et le deuxième (relâche du bouton) où sera placé le texte (centré). Dans le texte lui-même %X (resp. Y) indique d'écrire la valeur de l'abscisse (resp. ordonnée) du point de référence. Le point de référence peut être relié au texte par une ligne de rappel. Le point de référence peut être marqué par différents motifs : flèche (sur la ligne de rappel), croix, ligne horizontale (repérage d'un maxi, d'une bande passante à - 3dB) ou verticale (repérage d'une équivalence, d'un instant particulier). On peut enfin choisir la page concernée par les “ commande ” %S (signification de la page), %Ci (valeur du ième paramètre expérimental), %Pi (valeur du ième paramètre de modélisation). Si vous voulez donc écrire un titre fonction de la page courante, le plus simple est de mettre celui-ci en commentaire de page : éditeur sur la ligne en dessous des menus et donner comme texte %S.</span></p>
+<p class="rvps5"><span class="rvts13">Une fois qu'un élément (ligne ou texte) est défini, le curseur </span><span class="rvts15">standard</span><span class="rvts13"> permet de déplacer par glissement ou de modifier les paramètres par double clic. Lorsqu'on sélectionne une ligne par ses extrémités, on déplace cette extrémité, sinon on translate le segment. Pour le texte, on sélectionne le texte en cliquant dans le texte et dans ce cas on déplace le texte, sinon on déplace le point de référence. Un clic permet de se positionner sur le point expérimental le plus proche avec mise à jour du dossier « variables » de la fenêtre grandeurs. Le point sélectionné peut être supprimé en appuyant sur la touche Suppr. Lors d'une modélisation, le point sélectionné peut être activé/désactivé en frappant la barre d'espace (permet de tester les points d'influence).</span></p>
+<p class="rvps5"><span class="rvts13">Attention : les éléments de type texte, ligne … sont fugitifs : ils servent à préparer une impression ou une copie vers le presse-papiers, en particulier ils sont effacés lors d'un changement de coordonnées.</span></p>
+<p class="rvps5"><span class="rvts15">Gomme</span><span class="rvts13"> : cliquer sur l'élément à effacer. Si on dessine un rectangle par glisser-déplacer, cela supprime les points correspondants du graphe. La gomme est automatiquement désactivée après une utilisation pour éviter des effacements intempestifs. Pour faire des effacements successifs, appuyez sur la touche Ctrl pendant la manipulation.</span></p>
+<p class="rvps5"><span class="rvts15">Origine abscisse</span><span class="rvts13"> : permet de redéfinir l'origine des abscisses (par ex dans le cas d'une synchronisation avec préacquisition) en cliquant sur la nouvelle origine.</span></p>
+<p class="rvps5"><span class="rvts15">Calcul sur modèle</span><span class="rvts13"> : si une modélisation a été effectuée, par ex. y(x), ouvre une boite de dialogue avec un tableau de valeurs x y. Si l'on remplit la cellule x (resp. y) et que l´on valide, la valeur de y (resp. x) est calculée et reportée sur le graphe. On note la présence de deux boutons "RàZ" (remise à zéro) et "Imprime" (imprime le graphe et le tableau).</span></p>
+<p class="rvps5"><span class="rvts13">En mode simulation, vous pouvez modifier à la souris, par cliquer glisser une graduation, l'échelle de l'abscisse. Si l'axe des X est la variable de contrôle, cela mettra à jour le maximum de celle-ci.</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/creer-des-livres-numeriques-epub">Écrire des livres électroniques ePub pour l'iPad</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

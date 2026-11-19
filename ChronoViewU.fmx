@@ -1,0 +1,21 @@
+object ChronoForm: TChronoForm
+  Left = 0
+  Top = 0
+  BorderStyle = Single
+  Caption = 'ChronoPhotographie'
+  ClientHeight = 480
+  ClientWidth = 640
+  Position = OwnerFormCenter
+  FormStyle = Popup
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 1
+  object Image: TImageControl
+    Align = Client
+    Size.Width = 640.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+  end
+end

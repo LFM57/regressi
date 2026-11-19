@@ -1,0 +1,578 @@
+object OptionsVitesseDlg: TOptionsVitesseDlg
+  Left = 527
+  Top = 266
+  BorderIcons = []
+  BorderStyle = Single
+  Caption = 'Options des vecteurs'
+  ClientHeight = 435
+  ClientWidth = 348
+  Position = MainFormCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  Left = 527
+  Top = 266
+  DesignerMasterStyle = 0
+  object OKBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 10
+    ModalResult = 1
+    Position.X = 248.000000000000000000
+    Position.Y = 68.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Text = 'OK'
+    OnClick = OKBtnClick
+  end
+  object CancelBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 53
+    ModalResult = 2
+    Position.X = 248.000000000000000000
+    Position.Y = 156.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Text = 'Abandon'
+  end
+  object HelpBtn: TButton
+    HelpContext = 802
+    Images = ImagesData.ImagesList
+    ImageIndex = 5
+    ModalResult = 9
+    Position.X = 248.000000000000000000
+    Position.Y = 244.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'Aide'
+  end
+  object Panel1: TPanel
+    Align = Left
+    Size.Width = 241.000000000000000000
+    Size.Height = 435.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object GroupBox3: TGroupBox
+      Align = Client
+      Size.Width = 241.000000000000000000
+      Size.Height = 171.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object LabelX: TLabel
+        StyledSettings = [Style, FontColor]
+        Position.X = 8.000000000000000000
+        Position.Y = 16.000000000000000000
+        Size.Width = 140.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'LabelXStyle1'
+        TextSettings.WordWrap = False
+      end
+      object LabelY: TLabel
+        StyledSettings = [Style, FontColor]
+        Position.X = 8.000000000000000000
+        Position.Y = 34.000000000000000000
+        Size.Width = 140.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'LabelYStyle1'
+        TextSettings.WordWrap = False
+      end
+      object Label4: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 63.000000000000000000
+        Size.Width = 116.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Taille des vecteurs (%)'
+      end
+      object NbreLabel: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 90.000000000000000000
+        Size.Width = 136.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Nombre maxi de vecteurs'
+      end
+      object EchelleVecteurSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 4
+        Cursor = crIBeam
+        Min = 1.000000000000000000
+        Max = 9.000000000000000000
+        Value = 3.000000000000000000
+        KeyboardType = Default
+        Position.X = 170.000000000000000000
+        Position.Y = 60.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 60.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyledSettings = [Style, FontColor]
+      end
+      object NbreSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 5
+        Cursor = crIBeam
+        Min = 1.000000000000000000
+        Max = 32.000000000000000000
+        Value = 8.000000000000000000
+        KeyboardType = Default
+        Position.X = 170.000000000000000000
+        Position.Y = 90.000000000000000000
+        TextSettings.Font.Size = 15.000000000000000000
+        Size.Width = 60.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        StyledSettings = [Style, FontColor]
+      end
+      object UseSelectCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 120.000000000000000000
+        Size.Width = 201.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 6
+        Text = 'S'#233'lection des points de trac'#233
+      end
+      object CouleurPointCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 142.000000000000000000
+        Size.Width = 201.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 7
+        Text = 'M'#234'me couleur que les points'
+      end
+    end
+    object GroupBox2: TGroupBox
+      Align = Bottom
+      Position.Y = 303.000000000000000000
+      Size.Width = 241.000000000000000000
+      Size.Height = 132.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Vecteur "acc'#233'l'#233'ration"'
+      TabOrder = 1
+      object Label3: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 20.000000000000000000
+        Size.Width = 95.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Coordonn'#233'e sur x'
+      end
+      object Label5: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 46.000000000000000000
+        Size.Width = 95.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Coordonn'#233'e sur y'
+      end
+      object AccelerationX: TComboBox
+        Tag = 1
+        DropDownCount = 10
+        ItemHeight = 15.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 120.000000000000000000
+        Position.Y = 20.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+      end
+      object AccelerationY: TComboBox
+        Tag = 1
+        DropDownCount = 10
+        ItemHeight = 15.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 120.000000000000000000
+        Position.Y = 50.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+      end
+      object ProlongeCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 106.000000000000000000
+        Size.Width = 217.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        Text = 'Prolonge le vecteur acc'#233'l'#233'ration'
+      end
+      object CouleurAcceleration: TTMSFNCColorPicker
+        DisableFocusEffect = False
+        Position.X = 120.000000000000000000
+        Position.Y = 80.000000000000000000
+        Size.Width = 81.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        DropDownWidth = 200.000000000000000000
+        Appearance.Stroke.Color = claDarkgray
+        Appearance.Fill.Color = xFFE9E9E9
+        Appearance.StrokeHover.Color = claLightslategray
+        Appearance.FillHover.Color = xFFBBC4CC
+        Appearance.StrokeDown.Color = claSlategray
+        Appearance.FillDown.Color = xFFB8C0C8
+        Appearance.StrokeSelected.Color = claDarkslategray
+        Appearance.FillSelected.Color = xFFB8C0C8
+        Appearance.StrokeDisabled.Color = claDarkgray
+        Appearance.FillDisabled.Color = claSilver
+        Appearance.SeparatorStroke.Color = claDarkgray
+        Appearance.Font.Name = 'Segoe UI'
+        Rows = 5
+        Columns = 8
+        Items = <
+          item
+            Color = claBlack
+          end
+          item
+            Color = xFF003399
+          end
+          item
+            Color = xFF003333
+          end
+          item
+            Color = xFF003300
+          end
+          item
+            Color = xFF663300
+          end
+          item
+            Color = claNavy
+          end
+          item
+            Color = xFF353333
+          end
+          item
+            Color = xFF333333
+          end
+          item
+            Color = claMaroon
+          end
+          item
+            Color = xFFFF6600
+          end
+          item
+            Color = claOlive
+          end
+          item
+            Color = claGreen
+          end
+          item
+            Color = claTeal
+          end
+          item
+            Color = claBlue
+          end
+          item
+            Color = xFF666699
+          end
+          item
+            Color = claGray
+          end
+          item
+            Color = claRed
+          end
+          item
+            Color = xFFFF9900
+          end
+          item
+            Color = xFF99CC00
+          end
+          item
+            Color = xFF339966
+          end
+          item
+            Color = xFF33CCCC
+          end
+          item
+            Color = xFF3366FF
+          end
+          item
+            Color = claPurple
+          end
+          item
+            Color = xFF999999
+          end
+          item
+            Color = claFuchsia
+          end
+          item
+            Color = xFFFFCC00
+          end
+          item
+            Color = claYellow
+          end
+          item
+            Color = claLime
+          end
+          item
+            Color = claAqua
+          end
+          item
+            Color = xFF00CCFF
+          end
+          item
+            Color = xFF993366
+          end
+          item
+            Color = claSilver
+          end
+          item
+            Color = xFFFF99CC
+          end
+          item
+            Color = xFFFFCC99
+          end
+          item
+            Color = xFFFFFF99
+          end
+          item
+            Color = xFFCCFFCC
+          end
+          item
+            Color = xFFCCFFFF
+          end
+          item
+            Color = xFF99CCFF
+          end
+          item
+            Color = xFFCC99FF
+          end
+          item
+            Color = claWhite
+          end>
+        Mode = csmExtended
+      end
+    end
+    object GroupBox1: TGroupBox
+      Align = Bottom
+      StyledSettings = [Style, FontColor, Other]
+      Position.Y = 171.000000000000000000
+      Size.Width = 241.000000000000000000
+      Size.Height = 132.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Vecteur "vitesse"'
+      TabOrder = 2
+      object Label1: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 20.000000000000000000
+        Size.Width = 95.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Coordonn'#233'e sur x'
+      end
+      object Label2: TLabel
+        AutoSize = True
+        Position.X = 8.000000000000000000
+        Position.Y = 46.000000000000000000
+        Size.Width = 95.000000000000000000
+        Size.Height = 16.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.WordWrap = False
+        Text = 'Coordonn'#233'e sur y'
+      end
+      object VitesseX: TComboBox
+        Tag = 1
+        DropDownCount = 10
+        ItemHeight = 15.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 120.000000000000000000
+        Position.Y = 20.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+      end
+      object VitesseY: TComboBox
+        Tag = 1
+        DropDownCount = 10
+        ItemHeight = 15.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 120.000000000000000000
+        Position.Y = 50.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+      end
+      object ProjeteCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 106.000000000000000000
+        Size.Width = 195.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        Text = 'Projette le vecteur vitesse'
+      end
+      object CouleurVitesse: TTMSFNCColorPicker
+        DisableFocusEffect = False
+        Position.X = 120.000000000000000000
+        Position.Y = 80.000000000000000000
+        Size.Width = 81.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        DropDownWidth = 200.000000000000000000
+        Appearance.Stroke.Color = claDarkgray
+        Appearance.Fill.Color = xFFE9E9E9
+        Appearance.StrokeHover.Color = claLightslategray
+        Appearance.FillHover.Color = xFFBBC4CC
+        Appearance.StrokeDown.Color = claSlategray
+        Appearance.FillDown.Color = xFFB8C0C8
+        Appearance.StrokeSelected.Color = claDarkslategray
+        Appearance.FillSelected.Color = xFFB8C0C8
+        Appearance.StrokeDisabled.Color = claDarkgray
+        Appearance.FillDisabled.Color = claSilver
+        Appearance.SeparatorStroke.Color = claDarkgray
+        Appearance.Font.Name = 'Segoe UI'
+        Rows = 5
+        Columns = 8
+        Items = <
+          item
+            Color = claBlack
+          end
+          item
+            Color = xFF003399
+          end
+          item
+            Color = xFF003333
+          end
+          item
+            Color = xFF003300
+          end
+          item
+            Color = xFF663300
+          end
+          item
+            Color = claNavy
+          end
+          item
+            Color = xFF353333
+          end
+          item
+            Color = xFF333333
+          end
+          item
+            Color = claMaroon
+          end
+          item
+            Color = xFFFF6600
+          end
+          item
+            Color = claOlive
+          end
+          item
+            Color = claGreen
+          end
+          item
+            Color = claTeal
+          end
+          item
+            Color = claBlue
+          end
+          item
+            Color = xFF666699
+          end
+          item
+            Color = claGray
+          end
+          item
+            Color = claRed
+          end
+          item
+            Color = xFFFF9900
+          end
+          item
+            Color = xFF99CC00
+          end
+          item
+            Color = xFF339966
+          end
+          item
+            Color = xFF33CCCC
+          end
+          item
+            Color = xFF3366FF
+          end
+          item
+            Color = claPurple
+          end
+          item
+            Color = xFF999999
+          end
+          item
+            Color = claFuchsia
+          end
+          item
+            Color = xFFFFCC00
+          end
+          item
+            Color = claYellow
+          end
+          item
+            Color = claLime
+          end
+          item
+            Color = claAqua
+          end
+          item
+            Color = xFF00CCFF
+          end
+          item
+            Color = xFF993366
+          end
+          item
+            Color = claSilver
+          end
+          item
+            Color = xFFFF99CC
+          end
+          item
+            Color = xFFFFCC99
+          end
+          item
+            Color = xFFFFFF99
+          end
+          item
+            Color = xFFCCFFCC
+          end
+          item
+            Color = xFFCCFFFF
+          end
+          item
+            Color = xFF99CCFF
+          end
+          item
+            Color = xFFCC99FF
+          end
+          item
+            Color = claWhite
+          end>
+        Mode = csmExtended
+      end
+    end
+  end
+end

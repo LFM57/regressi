@@ -1,0 +1,79 @@
+﻿<html>
+	
+<head>
+	<title>Principe</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Principe");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Principe</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Modelisation1.html">Mod&eacute;lisation</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Modelisation1.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Parametrevolatil.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Statistiques.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps2"><span class="rvts23">De manière usuelle, un ajustement de courbe (fit), appelé modélisation dans Regressi car, pour moi, un ajustement de courbe n'a de sens que si l'expression est issue d'une modélisation physique, consiste à minimiser un critère. Le critère le plus classique est le moindre carré, si yexp[i] est la mesure pour x[i] et f la fonction d’ajustement, la grandeur à minimiser est C = Somme sur i de ((yexp[i]-f([x[i]))^2). </span></p>
+<p class="rvps2"><span class="rvts23">Dans le cas linéaire (y=a*x+b), on est capable de calculer la dérivée de C par rapport aux paramètres a et b  et de résoudre, dC/da=0 et dC/db=0. C'est ce que font les calculatrices.</span></p>
+<p class="rvps2"><span class="rvts23">Dans les cas plus compliqués, c'est une technique par approximations successives : on linéarise la dérivée, on résout et on boucle jusqu'à ce que C ne varie plus.</span></p>
+<p class="rvps2"><span class="rvts23"><br/></span></p>
+<p class="rvps2"><span class="rvts24"><br/></span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/creer-des-livres-numeriques-epub">Générer des livres électroniques EPub facilement</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

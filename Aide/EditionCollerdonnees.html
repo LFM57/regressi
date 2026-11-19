@@ -1,0 +1,119 @@
+﻿<html>
+	
+<head>
+	<title>Edition|Coller donn&eacute;es</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("EditionCollerdonnees");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Edition|Coller donn&eacute;es</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="General.html">G&eacute;n&eacute;ral</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="General.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Options.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Editeur.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="COLLERDATA"></a>
+<span class="rvts15">Menu : Edition Coller données</span></p>
+<p class="rvps5"><span class="rvts13">Récupère dans le presse-papiers les données s´y trouvant sous forme tableur ASCII :</span></p>
+<p class="rvps5"><span class="rvts13">TAB (#9) séparateur dans une ligne et CR (#13) entre les lignes</span></p>
+<p class="rvps5"><span class="rvts15">Première ligne</span><span class="rvts13"> : nom de l'exécutable avec chemin (facultative, utilisée par les programmes d'acquisition pour se faire rappeler) sans tabulation</span></p>
+<p class="rvps5"><span class="rvts15">Deuxième ligne</span><span class="rvts13"> : commentaire général sans tabulation</span></p>
+<p class="rvps5"><span class="rvts15">Troisième ligne</span><span class="rvts13"> : commentaire de page sans tabulation</span></p>
+<p class="rvps5"><span class="rvts13">Sans tabulation signifie que vous ne pouvez le faire à partir d'un tableur qui les ajoute automatiquement, mais uniquement à partir d'un programme générant le format tel qu'indiqué. Le format à partir d'un tableur commence donc ici.</span></p>
+<p class="rvps5"><span class="rvts15">Quatrième ligne</span><span class="rvts13"> : Noms des variables séparés par des tabulations. Si le nom d'une variable est sigma_nom elle est interprétée comme l'incertitude de la variable nom.</span></p>
+<p class="rvps5"><span class="rvts15">Cinquième ligne</span><span class="rvts13"> : Unités des variables séparées par des tabulations</span></p>
+<p class="rvps5"><span class="rvts15">Sixième ligne</span><span class="rvts13"> : Significations des variables séparées par des tabulations</span></p>
+<p class="rvps5"><span class="rvts15">Lignes suivantes</span><span class="rvts13"> : Valeurs séparées par des tabulations</span></p>
+<p class="rvps5"><span class="rvts13">On peut éventuellement envoyer aussi des constantes :</span></p>
+<p class="rvps5"><span class="rvts13">Une ligne vide de séparation puis même format que les variables</span></p>
+<p class="rvps5"><span class="rvts15">(n+1)ième ligne</span><span class="rvts13"> : noms des constantes séparés par des tabulations</span></p>
+<p class="rvps5"><span class="rvts15">(n+2)ième ligne</span><span class="rvts13"> : unités des constantes séparées par des tabulations</span></p>
+<p class="rvps5"><span class="rvts15">(n+3)ième ligne</span><span class="rvts13"> : significations des constantes séparées par des tabulations</span></p>
+<p class="rvps5"><span class="rvts15">(n+4)ième ligne</span><span class="rvts13"> : valeurs des constantes séparées par des tabulations</span></p>
+<p class="rvps5"><span class="rvts13">Exemple (en bleu les lignes facultatives) :</span></p>
+<p class="rvps5"><span class="rvts13">c:\essai\bidule.exe</span></p>
+<p class="rvps5"><span class="rvts13">ligne de commentaire général</span></p>
+<p class="rvps5"><span class="rvts13">ligne de commentaire de page</span></p>
+<p class="rvps5"><span class="rvts15">tyz</span></p>
+<p class="rvps5"><span class="rvts15">smm</span></p>
+<p class="rvps5"><span class="rvts13">temps altitude distance</span></p>
+<p class="rvps5"><span class="rvts15">0 0 1</span></p>
+<p class="rvps5"><span class="rvts15">0.1 0.1 2</span></p>
+<p class="rvps5"><span class="rvts15">0.2 0.3 5</span></p>
+<p class="rvps5"><span class="rvts15">0.3 0.4 6</span></p>
+<p class="rvps5"><span class="rvts13">g</span></p>
+<p class="rvps5"><span class="rvts13">m/s2</span></p>
+<p class="rvps5"><span class="rvts13">accélération</span></p>
+<p class="rvps5"><span class="rvts13">9.81</span></p>
+<p class="rvps5"><span class="rvts15">A.Synchronie</span></p>
+<p class="rvps5"><span class="rvts13">Sous Synchronie, enregistrer les acquisitions dans le "Presse-papiers" en réalisant les opérations suivantes :</span></p>
+<ul style="text-indent: 0px; margin-left: 0px; list-style-position: inside; list-style-type: disc;">
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13">passer en mode 'Tableur' choisir 'Arrondi' : [1E-8]</span></li>
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13">'Ajouter' les variables manquantes. Remarque: auparavant, avec Synchronie 2000, pour obtenir les variables dans l'ordre désiré, on pourra sélectionner l'option 'Choix utilisateur' ou 'Tout enlever' dans le menu 'Variables'. Dans le menu 'Edition' , réaliser successivement:</span></li>
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13">'Tout sélectionner'</span></li>
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13">'Copier' (et pas clic droit copier: marche pas sous Win98)</span></li>
+<li style="margin-left: 0px" class="rvps7"><span class="rvts13">Dans REGRESSI : Fichier/Nouveau/"presse papiers". Et les données sont importées.</span></li>
+</ul>
+<p class="rvps5"><span class="rvts15">B.Crocodile clip</span></p>
+<p class="rvps5"><span class="rvts13">Si vous faites une simulation en plaçant des sondes dans le montage, il faut d'abord faire un enregistrement du graphique sous Crocodile (Cliquer sur "+..." puis choisir "Pause automatique si le graphique est plein"). Faire un enregistrement, puis Edition/"Copier données sonde". Dans REGRESSI : Fichier/Nouveau/"presse papier". Vous avez les données de la simulation et le graphique. Et vous pouvez l'exporter vers OOw.</span></p>
+<p class="rvps5"><span class="rvts13">D'après Yann LE DIAGON Lycée Lamartine, Paris</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/tour-des-fonctionnalites">Créer des livres électroniques EPub facilement</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+

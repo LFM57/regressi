@@ -1,0 +1,87 @@
+﻿<html>
+	
+<head>
+	<title>Options graphe</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.6.0.558">
+	<meta name="keywords" content="">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/hnd.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if (top.frames.length == 0)
+			{
+				var sTopicUrl = top.location.href.substring(top.location.href.lastIndexOf("/") + 1, top.location.href.length);
+				top.location.href = "Regressi.html?" + sTopicUrl;
+			}
+			else if (top && top.FrameTOC && top.FrameTOC.SelectTocItem)
+			{
+				top.FrameTOC.SelectTocItem("Optionsgraphe");
+			}
+		});
+	</script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1 id="topic_header_text">Options graphe</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="Graphique.html">Graphique</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="Graphique.html"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Graphique.html"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Outilsgraphiques.html"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<p class="rvps5"><a name="OPTIONSGRAPHE"></a>
+<span class="rvts13">Remarque : le mode de tracé ci-dessous est le mode par défaut, vous pouvez définir un autre mode pour une courbe particulière dans la boite de dialogue </span><a class="rvts16" href="Coordonnees.htm">coordonnées</a><span class="rvts13">.</span></p>
+<p class="rvps5"><span class="rvts15">Tracé (par défaut) : points </span><span class="rvts13">(trace uniquement les points) ou </span><span class="rvts15">segment </span><span class="rvts13">(relie les points par des segments de droite).</span></p>
+<p class="rvps5"><span class="rvts15">Ordre de lissage</span><span class="rvts13"> (de la B-spline) : plus l'ordre est grand plus la courbe est proche des points. Remarque : le tracé se fait selon une B-spline de 128 points : à utiliser pour avoir une courbe lisse avec un faible nombre de points. Pour lisser les défauts d'une courbe avec un grand nombre de points calculer plutôt une nouvelle grandeur avec la fonction lisse(y,n), ou une sauvegarde de modélisation. Le lissage par une B-spline est un polynôme d'approximation de Bernstein. </span></p>
+<p class="rvps5"><span class="rvts13">La représentation de type Shannon est une application du théorème de Shannon : on reconstruit une fonction en interpolant avec des fonctions sinus cardinal.</span></p>
+<p class="rvps5"><span class="rvts15">Taille des points</span><span class="rvts13"> : 1 représente 1 pixel quelque soit le périphérique. Au-delà, n représente n pixels pour un écran VGA et la sortie sur imprimante se fera de manière proportionnelle. On peut rendre visibles ou non les points en cas de tracé différent de “ points ”. Lorsque les incertitudes sont utilisées, elles sont prioritaires sur les motifs de points.</span></p>
+<p class="rvps5"><span class="rvts15">Tracé de grille </span><span class="rvts13">: active ou non.</span></p>
+<p class="rvps5"><span class="rvts15">Gras</span><span class="rvts13"> : si la case est cochée, le texte est en gras et les lignes sont épaissies, utile pour visualisation par une classe et pour impression dans le cas où vous trouver le tracé trop fin.</span></p>
+<p class="rvps5"><span class="rvts15">Tracé des ellipses d'incertitude</span><span class="rvts13"> : actif uniquement si les incertitudes des grandeurs expérimentales ont été définies.</span></p>
+<p class="rvps5"><img alt="" style="vertical-align: text-bottom;" src="lib/NewItem54.gif"><span class="rvts13"> ouvre une boite de dialogue de personnalisation des couleurs. Ceci concerne les options générales correspondant à des préférences et donc à faire une fois pour toutes. Les options liées plus intimement aux courbes sont à choisir dans la boite de dialogue coordonnée.</span></p>
+<p class="rvps5"><span class="rvts15">L'onglet page</span><span class="rvts13"> permet de sélectionner la couleur, le motif et le type de lignes des différentes pages lorsque celles-ci sont superposées. On sélectionne la page à paramétrer dans la liste du haut puis on choisit une couleur, un motif de points et un type de ligne.</span></p>
+<p class="rvps5"><span class="rvts15">L'onglet courbe</span><span class="rvts13"> permet de sélectionner la couleur, le motif et le type de lignes des différentes courbes. On sélectionne le numéro de courbe à paramétrer à l'aide du “ compteur ” du haut puis on choisit une couleur, un motif de points et un type de ligne. Remarque : lorsque les incertitudes sont utilisées, elles sont prioritaires sur les motifs de points.</span></p>
+<p class="rvps5"><span class="rvts15">L'onglet modèle</span><span class="rvts13"> permet de sélectionner la couleur de tracé des modélisations. On sélectionne le numéro de courbe à paramétrer à l'aide du “ compteur ” du haut puis on choisit une couleur, un motif de points et un type de ligne. Il y a une exception : s'il y a un seul modèle qui concerne toutes les données, la courbe modélisée est tracée de la même couleur que les points de données.</span></p>
+<p></p>
+<p class="rvps4"><span class="rvts11">Créé avec HelpNDoc Personal Edition: </span><a class="rvts12" href="http://www.helpndoc.com/fr/creer-des-livres-numeriques-epub">Produire des livres électroniques facilement</a></p>
+</div>
+	
+	<div id="topic_footer">
+
+			<div id="topic_footer_content">
+				Copyright &copy; 2015, Evariste</div>
+		</div>
+	</body>
+	
+</html>
+
