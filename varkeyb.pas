@@ -79,7 +79,8 @@ procedure TNewClavierDlg.FormCreate(Sender: TObject);
 procedure InitGrid(agrid : TTMSFNCGrid);
 var Acol,Arow : integer;
 begin with AGrid do begin
-         columnWidths[0] := 60;
+         ColumnCount := 3;
+         columnWidths[0] := 80;
          columnWidths[1] := 60;
          columnWidths[2] := 170;
          cells[0,0] := stSymbole;
@@ -157,9 +158,9 @@ begin
      modalResult := mrNone;
      GridVariab.StopEdit;
      GridConst.StopEdit;
-     for i := 1 to 3 do
+     for i := 1 to pred(GridVariab.RowCount) do
          if not Ajoute(i,gridVariab,variable) then exit;
-     for i := 1 to 2 do
+     for i := 1 to pred(GridConst.RowCount) do
          if not Ajoute(i,gridConst,constante) then exit;
      modalResult := mrOK;
      FichierTrie := DataTrieGlb;

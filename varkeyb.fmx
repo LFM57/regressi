@@ -77,15 +77,19 @@ object NewClavierDlg: TNewClavierDlg
   end
   object GroupBox1: TGroupBox
     Align = Top
+    Padding.Left = 4.000000000000000000
+    Padding.Top = 18.000000000000000000
+    Padding.Right = 4.000000000000000000
+    Padding.Bottom = 4.000000000000000000
     Size.Width = 476.000000000000000000
-    Size.Height = 153.000000000000000000
+    Size.Height = 165.000000000000000000
     Size.PlatformDefault = False
     Text = 'Variables exp'#233'rimentales'
     TabOrder = 5
     object GridVariab: TTMSFNCGrid
       Align = Client
-      Size.Width = 476.000000000000000000
-      Size.Height = 153.000000000000000000
+      Size.Width = 468.000000000000000000
+      Size.Height = 143.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 38
       FixedColumns = 0
@@ -103,7 +107,7 @@ object NewClavierDlg: TNewClavierDlg
           FixedFont.StyleExt = {00070000000000000004000000}
           Font.Name = 'Segoe UI'
           ID = ''
-          Width = 68.000000000000000000
+          Width = 80.000000000000000000
         end
         item
           BorderWidth = 1
@@ -111,7 +115,7 @@ object NewClavierDlg: TNewClavierDlg
           FixedFont.StyleExt = {00070000000000000004000000}
           Font.Name = 'Segoe UI'
           ID = ''
-          Width = 68.000000000000000000
+          Width = 80.000000000000000000
         end
         item
           BorderWidth = 1
@@ -119,23 +123,7 @@ object NewClavierDlg: TNewClavierDlg
           FixedFont.StyleExt = {00070000000000000004000000}
           Font.Name = 'Segoe UI'
           ID = ''
-          Width = 68.000000000000000000
-        end
-        item
-          BorderWidth = 1
-          FixedFont.Name = 'Segoe UI'
-          FixedFont.StyleExt = {00070000000000000004000000}
-          Font.Name = 'Segoe UI'
-          ID = ''
-          Width = 68.000000000000000000
-        end
-        item
-          BorderWidth = 1
-          FixedFont.Name = 'Segoe UI'
-          FixedFont.StyleExt = {00070000000000000004000000}
-          Font.Name = 'Segoe UI'
-          ID = ''
-          Width = 68.000000000000000000
+          Width = 220.000000000000000000
         end>
       DefaultFont.Name = 'Segoe UI'
       TopRow = 1
@@ -168,6 +156,10 @@ object NewClavierDlg: TNewClavierDlg
     end
   end
   object ConstGB: TGroupBox
+    Padding.Left = 4.000000000000000000
+    Padding.Top = 18.000000000000000000
+    Padding.Right = 4.000000000000000000
+    Padding.Bottom = 4.000000000000000000
     Position.X = 8.000000000000000000
     Position.Y = 246.000000000000000000
     Size.Width = 337.000000000000000000
@@ -177,8 +169,8 @@ object NewClavierDlg: TNewClavierDlg
     TabOrder = 6
     object GridConst: TTMSFNCGrid
       Align = Client
-      Size.Width = 337.000000000000000000
-      Size.Height = 115.000000000000000000
+      Size.Width = 329.000000000000000000
+      Size.Height = 93.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 38
       FixedColumns = 0
@@ -196,7 +188,7 @@ object NewClavierDlg: TNewClavierDlg
           FixedFont.StyleExt = {00070000000000000004000000}
           Font.Name = 'Segoe UI'
           ID = ''
-          Width = 68.000000000000000000
+          Width = 80.000000000000000000
         end
         item
           BorderWidth = 1
@@ -204,7 +196,7 @@ object NewClavierDlg: TNewClavierDlg
           FixedFont.StyleExt = {00070000000000000004000000}
           Font.Name = 'Segoe UI'
           ID = ''
-          Width = 68.000000000000000000
+          Width = 80.000000000000000000
         end
         item
           BorderWidth = 1
@@ -212,23 +204,7 @@ object NewClavierDlg: TNewClavierDlg
           FixedFont.StyleExt = {00070000000000000004000000}
           Font.Name = 'Segoe UI'
           ID = ''
-          Width = 68.000000000000000000
-        end
-        item
-          BorderWidth = 1
-          FixedFont.Name = 'Segoe UI'
-          FixedFont.StyleExt = {00070000000000000004000000}
-          Font.Name = 'Segoe UI'
-          ID = ''
-          Width = 68.000000000000000000
-        end
-        item
-          BorderWidth = 1
-          FixedFont.Name = 'Segoe UI'
-          FixedFont.StyleExt = {00070000000000000004000000}
-          Font.Name = 'Segoe UI'
-          ID = ''
-          Width = 68.000000000000000000
+          Width = 160.000000000000000000
         end>
       DefaultFont.Name = 'Segoe UI'
       TopRow = 1
