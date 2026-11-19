@@ -161,6 +161,8 @@ type
     GridVariab: TTMSFNCGrid;
     GridParam: TTMSFNCGrid;
     GrecGrid: TTMSFNCGrid;
+    SplitterExp1: TSplitter;
+    SplitterExp2: TSplitter;
     procedure DeleteBtnClick(Sender: TObject);
     procedure CompileItemClick(Sender: TObject);
     procedure FeuilletsClick(Sender: TObject);
@@ -277,6 +279,16 @@ const
      TabParam = 0;
      TabVariab = 1;
      TabExpressions = 2;
+     LettresGrecquesMin : array[0..23] of char = (
+       alphaMin, betaMin, gammaMin, deltaMin, epsilonMin, zetaMin,
+       etaMin, thetaMin, iotaMin, kappaMin, lambdaMin, muMin,
+       nuMin, xiMin, omicronMin, piMin, rhoMin, sigmaMin,
+       tauMin, upsilonMin, phiMin, chiMin, psiMin, omegaMin);
+     LettresGrecquesMaj : array[0..23] of char = (
+       alphaMaj, betaMaj, gammaMaj, deltaMaj, epsilonMaj, zetaMaj,
+       etaMaj, thetaMaj, iotaMaj, kappaMaj, lambdaMaj, muMaj,
+       nuMaj, xiMaj, omicronMaj, piMaj, rhoMaj, sigmaMaj,
+       tauMaj, upsilonMaj, phiMaj, chiMaj, psiMaj, omegaMaj);
 
 Function TFValeurs.FormatGridVariab(Acol,Arow : Integer) : string;
 var isPrec : boolean;
@@ -1034,8 +1046,7 @@ begin
 end;
 
 procedure TFValeurs.FormCreate(Sender: TObject);
-var col,row : integer;
-    carac : char;
+var col,row,idx : integer;
 begin
    GlobalDisableFocusEffect := True;
    compilationEnCours := false;
@@ -1044,13 +1055,18 @@ begin
    GridVariab.columnWidths[0] := 45;
    GridParam.columnWidths[0] := 45;
    prevenirPi := true;
-   carac := alphaMin;
+   GrecGrid.ColumnCount := 5;
+   GrecGrid.RowCount := 5;
+   for col := 0 to GrecGrid.columnCount-1 do
+       GrecGrid.ColumnWidths[col] := 26;
    for row := 0 to GrecGrid.rowCount-1 do
        for col := 0 to GrecGrid.columnCount-1 do begin
-           GrecGrid.AddButton(col,row,carac);
-           inc(carac);
-           GrecGrid.FontStyles[Col,Row] := [TFontStyle.fsBold];
-           GrecGrid.FontSizes[Col,Row]:= 17;
+           idx := col + row * GrecGrid.columnCount;
+           if idx <= High(LettresGrecquesMin) then begin
+              GrecGrid.AddButton(col,row,LettresGrecquesMin[idx]);
+              GrecGrid.FontStyles[Col,Row] := [TFontStyle.fsBold];
+              GrecGrid.FontSizes[Col,Row]:= 14;
+           end;
        end;
    AideFonction := TDictionary<String,String>.create;
    AideFonction.Add('Sin','sinus');
@@ -1578,18 +1594,14 @@ end;
 
 procedure TFValeurs.GrecGridCellButtonClick(Sender: TObject; ACol,
   ARow: Integer; ACell: TTMSFNCGridCell);
-  var carac : char;
-    majuscule : boolean;
-    code : integer;
+var idx : integer;
+    carac : char;
 begin
-     carac := alphaMin;
-     inc(carac,acol+arow*GrecGrid.columnCount);
-     majuscule := isShift;
-     if majuscule then begin
-        code := ord(carac);
-        dec(code,32);
-        carac := char(code);
-     end;
+     idx := acol + arow * GrecGrid.columnCount;
+     if (idx < 0) or (idx > High(LettresGrecquesMin)) then exit;
+     if isShift
+        then carac := LettresGrecquesMaj[idx]
+        else carac := LettresGrecquesMin[idx];
      ajouteStrMemo(carac,1);
 end;
 

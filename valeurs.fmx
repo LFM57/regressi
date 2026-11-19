@@ -460,19 +460,19 @@ object FValeurs: TFValeurs
           Align = Top
           ShowCheck = False
           Size.Width = 150.000000000000000000
-          Size.Height = 224.000000000000000000
+          Size.Height = 160.000000000000000000
           Size.PlatformDefault = False
           Text = 'Fonctions'
           TabOrder = 1
-          ContentSize = '199'
+          ContentSize = '135'
           object TreeView1: TTreeView
             Align = Client
             Size.Width = 150.000000000000000000
-            Size.Height = 199.000000000000000000
+            Size.Height = 135.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
             Viewport.Width = 138.000000000000000000
-            Viewport.Height = 195.000000000000000000
+            Viewport.Height = 131.000000000000000000
             object TreeViewItem1: TTreeViewItem
               IsChecked = False
               IsExpanded = False
@@ -843,9 +843,17 @@ object FValeurs: TFValeurs
             end
           end
         end
+        object SplitterExp1: TSplitter
+          Align = Top
+          Position.Y = 160.000000000000000000
+          Size.Width = 150.000000000000000000
+          Size.Height = 5.000000000000000000
+          Size.PlatformDefault = False
+        end
         object GrecExpander: TExpander
           Align = Top
-          Position.Y = 224.000000000000000000
+          IsExpanded = False
+          Position.Y = 165.000000000000000000
           ShowCheck = False
           Size.Width = 150.000000000000000000
           Size.Height = 154.000000000000000000
@@ -873,7 +881,7 @@ object FValeurs: TFValeurs
                 FixedFont.StyleExt = {00070000000000000004000000}
                 Font.Name = 'Segoe UI'
                 ID = ''
-                Width = 68.000000000000000000
+                Width = 26.000000000000000000
               end
               item
                 BorderWidth = 1
@@ -881,7 +889,7 @@ object FValeurs: TFValeurs
                 FixedFont.StyleExt = {00070000000000000004000000}
                 Font.Name = 'Segoe UI'
                 ID = ''
-                Width = 68.000000000000000000
+                Width = 26.000000000000000000
               end
               item
                 BorderWidth = 1
@@ -889,7 +897,7 @@ object FValeurs: TFValeurs
                 FixedFont.StyleExt = {00070000000000000004000000}
                 Font.Name = 'Segoe UI'
                 ID = ''
-                Width = 68.000000000000000000
+                Width = 26.000000000000000000
               end
               item
                 BorderWidth = 1
@@ -897,7 +905,7 @@ object FValeurs: TFValeurs
                 FixedFont.StyleExt = {00070000000000000004000000}
                 Font.Name = 'Segoe UI'
                 ID = ''
-                Width = 68.000000000000000000
+                Width = 26.000000000000000000
               end
               item
                 BorderWidth = 1
@@ -905,10 +913,10 @@ object FValeurs: TFValeurs
                 FixedFont.StyleExt = {00070000000000000004000000}
                 Font.Name = 'Segoe UI'
                 ID = ''
-                Width = 68.000000000000000000
+                Width = 26.000000000000000000
               end>
             DefaultFont.Name = 'Segoe UI'
-            TopRow = 1
+            TopRow = 0
             Appearance.FixedLayout.Fill.Color = xFFE6E6E6
             Appearance.FixedLayout.Font.Name = 'Segoe UI'
             Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
@@ -930,7 +938,7 @@ object FValeurs: TFValeurs
             Appearance.BandLayout.Fill.Color = claLightyellow
             Appearance.BandLayout.Font.Name = 'Segoe UI'
             Appearance.ProgressLayout.Format = '%.0f%%'
-            LeftCol = 1
+            LeftCol = 0
             ScrollMode = scmItemScrolling
             GlobalFont.Scale = 1.000000000000000000
             GlobalFont.Style = []
@@ -938,6 +946,13 @@ object FValeurs: TFValeurs
             OnGetCellClass = TMSFNCGrid3GetCellClass
             OnCellButtonClick = GrecGridCellButtonClick
           end
+        end
+        object SplitterExp2: TSplitter
+          Align = Top
+          Position.Y = 319.000000000000000000
+          Size.Width = 150.000000000000000000
+          Size.Height = 5.000000000000000000
+          Size.PlatformDefault = False
         end
       end
       object ExpressionsToolBar: TToolBar
