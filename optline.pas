@@ -48,12 +48,8 @@ type
     OKBtn: TButton;
     CancelBtn: TButton;
     PenBar: TPanel;
-    PenSize: TLabel;
-    PenWidth: TScrollBar;
     LabelTaille: TLabel;
-    SpinEditHauteur: TSpinBox;
     LigneCombo: TComboBox;
-    Label1: TLabel;
     SpinEditWidth: TSpinBox;
     GroupBox3: TGroupBox;
     SansRB: TRadioButton;
