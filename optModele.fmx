@@ -141,17 +141,6 @@ object OptionModeleDlg: TOptionModeleDlg
         Text = 'Inter/Extrapolation des mod'#232'les'
         TextSettings.Font.Size = 13.000000000000000000
       end
-      object IncertitudeCB: TCheckBox
-        StyledSettings = [FontColor]
-        Position.X = 8.000000000000000000
-        Position.Y = 50.000000000000000000
-        Size.Width = 233.000000000000000000
-        Size.Height = 17.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 2
-        Text = 'Trac'#233' des ellipses d'#39'incertitudes'
-        TextSettings.Font.Size = 13.000000000000000000
-      end
     end
     object CouleurTS: TTabItem
       CustomIcon = <

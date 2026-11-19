@@ -47,7 +47,6 @@ type
     AjusteOrigineCB: TCheckBox;
     EchelleModeleCB: TCheckBox;
     ExtrapoleModeleCB: TCheckBox;
-    IncertitudeCB: TCheckBox;
     CouleurTS: TTabItem;
     Label5: TLabel;
     Label12: TLabel;
@@ -89,16 +88,14 @@ begin
   inherited;
      EchelleModeleCB.IsChecked  := OmEchelle in DlgGraphique.optionModele;
      ExtrapoleModeleCB.IsChecked  := OmExtrapole in DlgGraphique.optionModele;
-     IncertitudeCB.IsChecked  := TraceEllipse;
      ajusteOrigineCB.IsChecked  := ajusteOrigine;
 //     chi2CB.Visible := pages[pageCourante].chi2Permis;
-     chi2CB.IsChecked  := traceEllipse and chi2CB.isVisible;
-     with CouleurTS do
-        for i := 0 to pred(childrenCount) do
-           if children[i] is TcolorBox then begin
-              j := TcolorBox(children[i]).tag;
-              TcolorBox(children[i]).color := couleurModele[j];
-           end;
+     chi2CB.IsChecked  := traceEllipse;
+     for i := 0 to pred(ComponentCount) do
+        if Components[i] is TColorComboBox then begin
+           j := TColorComboBox(Components[i]).tag;
+           TColorComboBox(Components[i]).Color := couleurModele[j];
+        end;
 end;
 
 procedure TOptionModeleDlg.OKBtnClick(Sender: TObject);
@@ -109,7 +106,6 @@ begin
     if ExtrapoleModeleCB.isChecked
         then include(DlgGraphique.OptionModele,OmExtrapole)
         else exclude(DlgGraphique.OptionModele,OmExtrapole);
-    TraceEllipse := IncertitudeCB.isChecked;
     traceEllipse := chi2CB.isChecked;
     ajusteOrigine := ajusteOrigineCB.isChecked;
 end;
@@ -125,8 +121,9 @@ end;
 
 procedure TOptionModeleDlg.ColorBox1Change(Sender: TObject);
 begin
-     with sender as TcolorBox do
-        CouleurModele[tag] := color
+     if sender is TColorComboBox then
+        with sender as TColorComboBox do
+           CouleurModele[tag] := Color
 end;
 
 end.
