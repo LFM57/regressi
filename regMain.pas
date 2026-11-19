@@ -374,8 +374,6 @@ type
     procedure TimerDemarrageTimer(Sender: TObject);
     procedure PrintPdfItemClick(Sender: TObject);
     procedure SaveGrapheStatItemClick(Sender: TObject);
-    procedure PanelCentralPaint(Sender: TObject; Canvas: TCanvas;
-      const ARect: TRectF);
     procedure TimerStatTimer(Sender: TObject);
     procedure EnglishActionExecute(Sender: TObject);
     procedure FrenchActionExecute(Sender: TObject);
@@ -424,6 +422,7 @@ type
     procedure MajModeleGr(NumeroGr : integer);
     procedure MajResultat;
     procedure SetPanelModele(NouvelEtat : boolean);
+    procedure UpdateResiduVisibility;
     procedure setMenu;
     procedure BarreEspace;
   public
@@ -2267,18 +2266,15 @@ begin
      end;
 end;
 
-procedure TFRegressiMain.PanelCentralPaint(Sender: TObject; Canvas: TCanvas;
-  const ARect: TRectF);
+procedure TFRegressiMain.UpdateResiduVisibility;
 begin
-  if residusItem.IsChecked and panelModele.visible
-     then begin // pas le même ordre
-       paintBoxResidu.visible := true;
-       splitterResidu.visible := true;
-     end
-     else begin
-       splitterResidu.visible := false;
-       paintBoxResidu.visible := false;
-     end;
+  if ResidusItem.IsChecked and PanelModele.Visible then begin // pas le même ordre
+    PaintBoxResidu.Visible := True;
+    SplitterResidu.Visible := True;
+  end else begin
+    SplitterResidu.Visible := False;
+    PaintBoxResidu.Visible := False;
+  end;
 end;
 
 procedure TFRegressiMain.ParamGridCellButtonClick(Sender: TObject; ACol,
@@ -2424,6 +2420,7 @@ end;
 procedure TFRegressiMain.ResidusItemClick(Sender: TObject);
 begin
      ResidusItem.IsChecked  := not ResidusItem.IsChecked ;
+     UpdateResiduVisibility;
      if ResidusItem.IsChecked  then begin
         WMRegMaj(MajModele);
         paintBoxResidu.height := panelCentral.height/3;
@@ -2514,6 +2511,7 @@ var i : integer;
 begin
    if not graphe.grapheOK then NouvelEtat := false;
    PanelModele.Visible := NouvelEtat;
+   UpdateResiduVisibility;
    FcoordonneesPhys.modeleEnCours := NouvelEtat;
    ModeleItem.IsChecked := NouvelEtat;
    ModeleBtn.IsPressed := NouvelEtat;

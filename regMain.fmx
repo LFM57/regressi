@@ -212,7 +212,6 @@ object FRegressiMain: TFRegressiMain
           Size.PlatformDefault = False
           StyleLookup = 'PanelCentralStyle1'
           TabOrder = 0
-          OnPaint = PanelCentralPaint
           object GrapheToolBar: TToolBar
             Size.Width = 834.000000000000000000
             Size.Height = 30.000000000000000000
