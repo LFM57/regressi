@@ -1,4 +1,4 @@
-unit valeurs;
+ï»¿unit valeurs;
 
 interface
 
@@ -57,7 +57,7 @@ Uses
 
 const
      ReperageConstGlb = '-->';
-     captionAngle : array[boolean] of string = ('Radian','Degré');
+     captionAngle : array[boolean] of string = ('Radian','DegrÃ©');
 
 type
   TFValeurs = class(TForm)
@@ -283,7 +283,7 @@ begin
     result := '';
     if Acol=0 then begin
        if Arow=0 then result := 'Nom'
-       else if Arow=1 then result := 'Unité'
+       else if Arow=1 then result := 'UnitÃ©'
        else result := intToStr(Arow-2);
        exit;
     end;
@@ -339,7 +339,7 @@ begin
                  then result := formatIncert(pages[page].incertConst[indexC],CoeffAff)
                  else result := formatNombre(pages[page].valeurConst[indexC],CoeffAff)
            end
-           else begin // paramètre
+           else begin // paramÃ¨tre
                iParam := indexToParam(indexC);
                with parametres[iParam] do
                if isPrec
@@ -409,7 +409,7 @@ begin
       with GridVariab,pages[PageCourante] do begin
            Colonne := NbreVariab;
            if DeltaItem.isChecked then Colonne := 2*Colonne;
-           colonne := colonne+1;// numéro de ligne
+           colonne := colonne+1;// numÃ©ro de ligne
            ColumnCount := colonne;
            if LigneSup
                then RowCount := Nmes+3
@@ -549,7 +549,7 @@ begin
       enTeteGridParam;
       Ncol := NbreConst + NbreParam;
       if DeltaItem.isChecked then Ncol := 2*Ncol;
-      Ncol := Ncol+1; // Numéro de ligne
+      Ncol := Ncol+1; // NumÃ©ro de ligne
       GridParam.columnCount := Ncol;
 end;// AfficheConstantes
 
@@ -613,7 +613,7 @@ begin
         if NewVarDlg.showModal=mrOK then begin
            if LigneInit<>'' then Memo.Lines.Add(LigneInit);
            if LigneCompile<>'' then Memo.Lines.Add(LigneCompile);
-         // grandeur calculée
+         // grandeur calculÃ©e
            if LigneSignif<>'' then Memo.Lines.Add(LigneSignif);
            FRegressiMain.WMRegMaj(MajGrandeur);
            Recompiler := not ErreurCompile;
@@ -648,7 +648,7 @@ begin
      if SuppressionDlg.showModal=mrOK then begin
         reCompiler := true;
         compileP;
-// en particulier les fonctions pouvant contenir la grandeur supprimée
+// en particulier les fonctions pouvant contenir la grandeur supprimÃ©e
      end;
      suppressionDlg.Free;
 end; // DeleteBtn
@@ -761,7 +761,7 @@ begin
         grandeurImmediate.fonct.expression := ligneCourante;
         if grandeurImmediate.compileG(posErreur,longErreur,0)
            then memo.lines[numLigne] := ligneCourante+reperageConstGlb
-// calcul fait à la fin quand les autres grandeurs sont connues
+// calcul fait Ã  la fin quand les autres grandeurs sont connues
            else memo.lines[numLigne] := ligneCourante+' ?';
         exit;
     end;
@@ -807,7 +807,7 @@ begin
                while indexV<(NbreGrandeurs-1) do begin
                      TransfereVariabE(indexV,indexV+1);
                      inc(indexV);
-// pour que le calcul d'un sytème se fasse dans l'ordre de définition des fonctions
+// pour que le calcul d'un sytÃ¨me se fasse dans l'ordre de dÃ©finition des fonctions
                end;
           end
           else begin
@@ -822,7 +822,7 @@ begin
            posEgal := Pos('=',ligneCourante);
            posErreur := posErreur+posEgal;
            for k := (NbreGrandeurs-1) downto oldNbre do libereGrandeurE(k);
-// grandeur créée plus dérivée ou grandeur init éventuelle créée par équa diff
+// grandeur crÃ©Ã©e plus dÃ©rivÃ©e ou grandeur init Ã©ventuelle crÃ©Ã©e par Ã©qua diff
        end;
      if prevenirFonctionDeParam and
         ((numLigne=(memo.Lines.count-1)) or
@@ -900,7 +900,7 @@ begin // CompileP
               MajValeurConstGlb(i,posDebutLigne);
               posDebutLigne := posDebutLigne+length(memo.lines[i])+1; // +1=LF
           end;
-          if memoActif then begin // curseur en fin de mémo
+          if memoActif then begin // curseur en fin de mÃ©mo
              memo.setFocus;
              Memo.gotoTextEnd;
           end;
@@ -921,7 +921,7 @@ begin // CompileP
              ErreurCompile := true;
         end;
      recompiler := false;
-// car modif du format du texte a remis recompiler à true
+// car modif du format du texte a remis recompiler Ã  true
 end; // CompileP
 
 procedure TFValeurs.MajValeurConstGlb(i,posDebutLigne : integer);
@@ -939,7 +939,7 @@ begin
           indexConst := IndexNom(nomLu);
           if (indexConst<>grandeurInconnue) and
              (grandeurs[indexConst].genreG=ConstanteGlb)
-                  then begin // ajouter résultat si constanteGlb
+                  then begin // ajouter rÃ©sultat si constanteGlb
                      if debutReperage>0 then
                         ligne := copy(ligne,1,debutReperage-1);
                      with grandeurs[indexConst] do
@@ -949,7 +949,7 @@ begin
                   end;
           end;
      if (PosEgal=0) and (debutReperage>0) then begin
-      // valeur immédiate globale 
+      // valeur immÃ©diate globale 
           ligne := copy(ligne,1,debutReperage-1);
           grandeurImmediate.fonct.expression := ligne;
           if grandeurImmediate.compileG(posErreur,longErreur,0) then begin
@@ -1022,7 +1022,7 @@ end;
 procedure TFValeurs.UniteXeditExit(Sender: TObject);
 begin
        grandeurs[0].NomUnite := UniteXEdit.text;
-       if pos('°', grandeurs[0].nomUnite)>0 then changeAngle(true);
+       if pos('Â°', grandeurs[0].nomUnite)>0 then changeAngle(true);
        if pos('rad', grandeurs[0].nomUnite)>0 then changeAngle(false);
        if not grandeurs[0].correct and
           not OKReg(OkUniteInconnue,HELP_Unites) then
@@ -1055,33 +1055,33 @@ begin
    AideFonction.Add('Acos','arccosinus');
    AideFonction.Add('Asin','arcsinus');
    AideFonction.Add('Frac','partie fractionnaire');
-   AideFonction.Add('Log','logarithme décimal');
-   AideFonction.Add('Ln','logarithme népérien');
+   AideFonction.Add('Log','logarithme dÃ©cimal');
+   AideFonction.Add('Ln','logarithme nÃ©pÃ©rien');
    AideFonction.Add('Exp','exponentielle');
-   AideFonction.Add('Noise','noise(x)= valeur aléatoire gaussienne centré d''écart-type x');
-   AideFonction.Add('Atan','arctangente à valeur entre -'+piMin+'/2 et +'+piMin+'/2 (voir Arg pour -'+piMin+' et +'+piMin);
+   AideFonction.Add('Noise','noise(x)= valeur alÃ©atoire gaussienne centrÃ© d''Ã©cart-type x');
+   AideFonction.Add('Atan','arctangente Ã  valeur entre -'+piMin+'/2 et +'+piMin+'/2 (voir Arg pour -'+piMin+' et +'+piMin);
    AideFonction.Add('Arg','arg(x+j*y)=argument de z = x+j*y');
    AideFonction.Add('Phase','phase(x,y)=phase(y)-phase(x)');
-   AideFonction.Add('Filtre','filtre(x,G(f))=x filtré par G(f) : gain complexe');
-   AideFonction.Add('Triangle','triangle(t,f,r)=triangle de fréquence f et de rapport cyclique r (durée pente positive / période)');
-   AideFonction.Add('Creneau','creneau(t,f,r)=créneau de fréquence f et de rapport cyclique r (durée état haut / période)');
-   AideFonction.Add('Lisse','lisse(y,N)=ôte les points "incorrects" puis filtre avec tau=N*Tech');
-   AideFonction.Add('Ech','échelon');
+   AideFonction.Add('Filtre','filtre(x,G(f))=x filtrÃ© par G(f) : gain complexe');
+   AideFonction.Add('Triangle','triangle(t,f,r)=triangle de frÃ©quence f et de rapport cyclique r (durÃ©e pente positive / pÃ©riode)');
+   AideFonction.Add('Creneau','creneau(t,f,r)=crÃ©neau de frÃ©quence f et de rapport cyclique r (durÃ©e Ã©tat haut / pÃ©riode)');
+   AideFonction.Add('Lisse','lisse(y,N)=Ã´te les points "incorrects" puis filtre avec tau=N*Tech');
+   AideFonction.Add('Ech','Ã©chelon');
    AideFonction.Add('CH','cosinus hyperbolique');
    AideFonction.Add('SH','sinus hyperbolique');
-   AideFonction.Add('Re','partie réelle');
+   AideFonction.Add('Re','partie rÃ©elle');
    AideFonction.Add('Im','partie imaginaire');
    AideFonction.Add('Env','enveloppe');
    AideFonction.Add('Sign','signe');
-   AideFonction.Add('Sqrt','racine carrée');
+   AideFonction.Add('Sqrt','racine carrÃ©e');
    AideFonction.Add('Sinc','sinus cardinal');
-   AideFonction.Add('RMS','valeur efficace sur une période');
+   AideFonction.Add('RMS','valeur efficace sur une pÃ©riode');
    AideFonction.Add('Min','minimum');
    AideFonction.Add('Max','maximum');
    AideFonction.Add('Erf','error function');
    AideFonction.Add('Freq','');
    AideFonction.Add('Moy','moyenne');
-   AideFonction.Add('Avg','moyenne sur une période');
+   AideFonction.Add('Avg','moyenne sur une pÃ©riode');
 end;
 
 procedure TFValeurs.CopierItemClick(Sender: TObject);
@@ -1100,7 +1100,7 @@ begin
            else if recompiler then compileP;
         Memo.EndUpdate
     end;
-end; // Mise à jour
+end; // Mise Ã  jour
 
 procedure TFValeurs.Recalculer;
 begin
@@ -1113,7 +1113,7 @@ end;
 procedure TFValeurs.GridVariabFixedCellButtonClick(Sender: TObject; ACol,
   ARow: Integer; Cell: TFmxObject);
 begin
-// modif du nom, de l'unité et du format
+// modif du nom, de l'unitÃ© et du format
         if gridVariab.editing then gridVariab.CancelEdit;
         modifDlg := TmodifDlg.create(self);
         modifDlg.indexV := indexVariable(Acol);
@@ -1349,7 +1349,7 @@ begin with GridParam do begin
               else begin
            if not vide then begin
                pages[page].recalculP;
-             // Reconstruire les unités : exposants ?
+             // Reconstruire les unitÃ©s : exposants ?
                for i := Acol to (columnCount-1) do
                     Cells[i,arow] := FormatGridConst(i,arow);
            end;
@@ -1378,7 +1378,7 @@ end;
 
 procedure TFValeurs.GridParamFixedCellButtonClick(Sender: TObject; ACol,
   ARow: Integer; Cell: TFmxObject);
-begin // modif du nom, de l'unité et du format
+begin // modif du nom, de l'unitÃ© et du format
         if gridParam.editing then gridParam.CancelEdit;
         modifDlg := TmodifDlg.create(self);
         modifDlg.indexV := indexConstante(acol);
