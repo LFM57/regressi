@@ -47,7 +47,7 @@ object OptionsDlg: TOptionsDlg
       object LissageLabel: TLabel
         AutoSize = True
         Position.X = 12.000000000000000000
-        Position.Y = 140.000000000000000000
+        Position.Y = 18.000000000000000000
         Size.Width = 145.000000000000000000
         Size.Height = 16.000000000000000000
         Size.PlatformDefault = False
@@ -57,8 +57,8 @@ object OptionsDlg: TOptionsDlg
       end
       object Label1: TLabel
         AutoSize = True
-        Position.X = 8.000000000000000000
-        Position.Y = 194.000000000000000000
+        Position.X = 12.000000000000000000
+        Position.Y = 82.000000000000000000
         Size.Width = 230.000000000000000000
         Size.Height = 16.000000000000000000
         Size.PlatformDefault = False
@@ -74,25 +74,16 @@ object OptionsDlg: TOptionsDlg
         Max = 9.000000000000000000
         Value = 3.000000000000000000
         KeyboardType = Default
-        Position.X = 194.000000000000000000
-        Position.Y = 136.000000000000000000
+        Position.X = 270.000000000000000000
+        Position.Y = 14.000000000000000000
         TextSettings.Font.Size = 15.000000000000000000
         Size.Width = 54.000000000000000000
         Size.Height = 20.000000000000000000
         Size.PlatformDefault = False
       end
-      object UseChi2CB: TCheckBox
-        Position.X = 8.000000000000000000
-        Position.Y = 54.000000000000000000
-        Size.Width = 265.000000000000000000
-        Size.Height = 17.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 3
-        Text = 'Trac'#233' des ellipses et utilisation du '#967#178
-      end
       object ExtrapoleDerCB: TCheckBox
-        Position.X = 8.000000000000000000
-        Position.Y = 221.000000000000000000
+        Position.X = 12.000000000000000000
+        Position.Y = 114.000000000000000000
         Size.Width = 273.000000000000000000
         Size.Height = 17.000000000000000000
         Size.PlatformDefault = False
@@ -103,13 +94,13 @@ object OptionsDlg: TOptionsDlg
         Touch.InteractiveGestures = [LongTap, DoubleTap]
         TabOrder = 5
         Cursor = crIBeam
-        Min = 1.000000000000000000
-        Max = 9.000000000000000000
-        Value = 1.000000000000000000
+        Min = 3.000000000000000000
+        Max = 15.000000000000000000
+        Value = 3.000000000000000000
         Increment = 2.000000000000000000
         KeyboardType = Default
         Position.X = 270.000000000000000000
-        Position.Y = 190.000000000000000000
+        Position.Y = 78.000000000000000000
         TextSettings.Font.Size = 15.000000000000000000
         Size.Width = 54.000000000000000000
         Size.Height = 20.000000000000000000
@@ -124,7 +115,7 @@ object OptionsDlg: TOptionsDlg
         Value = 3.000000000000000000
         KeyboardType = Default
         Position.X = 270.000000000000000000
-        Position.Y = 166.000000000000000000
+        Position.Y = 46.000000000000000000
         TextSettings.Font.Size = 15.000000000000000000
         Size.Width = 54.000000000000000000
         Size.Height = 20.000000000000000000
@@ -133,8 +124,8 @@ object OptionsDlg: TOptionsDlg
       end
       object Label3: TLabel
         AutoSize = True
-        Position.X = 8.000000000000000000
-        Position.Y = 170.000000000000000000
+        Position.X = 12.000000000000000000
+        Position.Y = 50.000000000000000000
         Size.Width = 223.000000000000000000
         Size.Height = 16.000000000000000000
         Size.PlatformDefault = False

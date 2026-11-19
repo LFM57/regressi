@@ -51,7 +51,6 @@ type
     LissageLabel: TLabel;
     OrdreFiltrageSE: TSpinBox;
     Label1: TLabel;
-    UseChi2CB: TCheckBox;
     TabSheet4: TTabItem;
     GrilleCB: TCheckBox;
     IncertitudeCB: TCheckBox;
@@ -131,11 +130,9 @@ begin
        OrdreFiltrageSE.Value := OrdreFiltrage;
        DimPointSE.Value := DimPointVGA;
        IncertitudeCB.IsChecked  := TraceEllipse;
+       NbrePointsDerSB.Value := NbrePointDerivee;
        ModifDerivee := false;
        ModifGraphe := false;
-       OrdreSplineSE.Value := OrdreLissage;
-       OrdreFiltrageSE.Value := OrdreFiltrage;
-       UseChi2CB.IsChecked  := traceEllipse;
        ChiffresSignifSE.value := precision;
        if coeffEllipse<1.1
           then sigmaRB.isChecked := true
@@ -194,14 +191,15 @@ begin // OKBtnClick
      penWidthEcran := widthEcranSE.value;
      TraceEllipse := IncertitudeCB.ischecked;
      DimPointVGA := round(DimPointSE.value);
-     ModifDerivee := ModifDerivee or (ExtrapoleDerivee<>ExtrapoleDerCB.IsChecked);
+     ModifDerivee := ModifDerivee or (ExtrapoleDerivee<>ExtrapoleDerCB.IsChecked) or
+                     (NbrePointDerivee<>round(NbrePointsDerSB.Value));
+     NbrePointDerivee := round(NbrePointsDerSB.Value);
      ExtrapoleDerivee := ExtrapoleDerCB.ischecked;
      if GrilleCB.ischecked
          then include(OptionGrapheDefault,OgQuadrillage)
          else exclude(OptionGrapheDefault,OgQuadrillage);
      GraduationPi := GraduationPiCB.ischecked;
      precision := round(chiffresSignifSE.value);
-     traceEllipse := UseChi2CB.ischecked or incertitudeCB.isChecked;
      OrdreLissage := round(OrdreSplineSE.Value);
      OrdreFiltrage := round(OrdreFiltrageSE.Value);
      if sigmaRB.isChecked then coeffEllipse := 1; // 68 %
