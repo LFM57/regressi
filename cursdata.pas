@@ -59,6 +59,7 @@ type
     procedure OKBtnClick(Sender: TObject);
     procedure DeuxCurseursCBClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
   public
      Agraphe : TgrapheReg;
@@ -68,6 +69,8 @@ var
   ReticuleDataDlg: TReticuleDataDlg;
 
 implementation
+
+uses AideU;
 
 {$R *.FMX}
 
@@ -134,6 +137,12 @@ begin
       deltaXCB.Visible := DeuxCurseursCB.isChecked;
       deltaYCB.Visible := DeuxCurseursCB.isChecked;
       penteCB.Visible := DeuxCurseursCB.isChecked;
+end;
+
+
+procedure TReticuleDataDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

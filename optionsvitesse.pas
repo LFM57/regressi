@@ -83,6 +83,7 @@ type
     procedure CouleurVitesseClick(Sender: TObject);
     procedure CouleurAccelerationClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
     ListeVar : TstrListe;
   public
@@ -93,6 +94,8 @@ var
   OptionsVitesseDlg: TOptionsVitesseDlg;
 
 implementation
+
+uses AideU;
 
 {$R *.FMX}
 
@@ -189,6 +192,12 @@ end;
 procedure TOptionsVitesseDlg.CouleurAccelerationClick(Sender: TObject);
 begin
      couleurMecanique[mondeAcc] := CouleurAcceleration.selectedColor
+end;
+
+
+procedure TOptionsVitesseDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

@@ -719,5 +719,6 @@ object ChoixModeleDlg: TChoixModeleDlg
     Size.PlatformDefault = False
     TabOrder = 4
     Text = 'Aide'
+    OnClick = HelpBtnClick
   end
 end

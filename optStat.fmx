@@ -81,7 +81,6 @@ object StatOptDlg: TStatOptDlg
     HelpContext = 803
     Images = ImagesData.ImagesList
     ImageIndex = 5
-    ModalResult = 9
     Position.X = 354.000000000000000000
     Position.Y = 119.000000000000000000
     Size.Width = 90.000000000000000000
@@ -90,6 +89,7 @@ object StatOptDlg: TStatOptDlg
     TabOrder = 5
     Text = 'Aide'
     TextSettings.Font.Size = 13.000000000000000000
+    OnClick = HelpBtnClick
   end
   object NombreSpin: TSpinBox
     Touch.InteractiveGestures = [LongTap, DoubleTap]

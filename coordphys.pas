@@ -178,6 +178,7 @@ TFcoordonneesPhys = class(TForm)
     procedure FormShow(Sender: TObject);
     procedure CouleurComboColorSelected(Sender: TObject; AColor: TAlphaColor);
     procedure LigneRGChange(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
     ListeVar : TstrListe;
     CourbeCourante : indiceOrdonnee;
@@ -198,7 +199,7 @@ var
 
 implementation
 
-uses Valeurs, optionsVitesse, options;
+uses Valeurs, optionsVitesse, options, AideU;
 
 {$R *.FMX}
 
@@ -959,6 +960,12 @@ begin
     if traitRB.ischecked then LigneCombo.itemIndex := ord(PstylePages[PageActive]);
     if motifRB.ischecked then PointCombo.itemIndex := ord(motifPages[PageActive]);
     if couleurRB.ischecked then CouleurCombo.selectedColor := couleurPages[PageActive];
+end;
+
+
+procedure TFcoordonneesPhys.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

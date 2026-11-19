@@ -50,7 +50,6 @@ object ReticuleDataDlg: TReticuleDataDlg
     StyledSettings = [FontColor]
     Images = ImagesData.ImagesList
     ImageIndex = 5
-    ModalResult = 9
     Position.X = 140.000000000000000000
     Position.Y = 88.000000000000000000
     Size.Width = 100.000000000000000000
@@ -59,6 +58,7 @@ object ReticuleDataDlg: TReticuleDataDlg
     TabOrder = 4
     Text = 'Aide'
     TextSettings.Font.Size = 13.000000000000000000
+    OnClick = HelpBtnClick
   end
   object GroupBox1: TGroupBox
     Align = Bottom

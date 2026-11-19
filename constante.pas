@@ -44,6 +44,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure SaveBtnClick(Sender: TObject);
     procedure DefautBtnClick(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
   public
     titreConstante,exprConstante,hintConstante : TstringList;
@@ -53,6 +54,8 @@ var
   ConstanteUnivDlg: TConstanteUnivDlg;
 
 implementation
+
+uses AideU;
 
 {$R *.FMX}
 
@@ -190,6 +193,12 @@ begin
       tableau.Cells[1,i] := '';
       tableau.Cells[2,i] := '';
   end;
+end;
+
+
+procedure TConstanteUnivDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

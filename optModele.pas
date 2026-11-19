@@ -68,6 +68,7 @@ type
     procedure OptionsBtnClick(Sender: TObject);
     procedure ColorBox1Change(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
   public
     DlgGraphique : TgrapheReg;
@@ -78,7 +79,7 @@ var
 
 implementation
 
-uses optcolordlg;
+uses optcolordlg, AideU;
 
 {$R *.FMX}
 
@@ -124,6 +125,12 @@ begin
      if sender is TColorComboBox then
         with sender as TColorComboBox do
            CouleurModele[tag] := Color
+end;
+
+
+procedure TOptionModeleDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

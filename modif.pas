@@ -62,6 +62,7 @@ type
     procedure PrecisionCBChange(Sender: TObject);
     procedure RazIncertitudeBtnClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
   public
       grandeurModif : Tgrandeur;
@@ -74,7 +75,7 @@ var
 
 implementation
 
-uses Valeurs, options, regmain;
+uses Valeurs, options, regmain, AideU;
 
 {$R *.FMX}
 
@@ -241,6 +242,12 @@ begin
               constante : incertConst[indexV] := Nan;
               constanteGlb : grandeurModif.incertCourante := Nan;
          end;
+end;
+
+
+procedure TModifDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

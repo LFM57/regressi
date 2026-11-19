@@ -54,7 +54,6 @@ object FcoordonneesPhys: TFcoordonneesPhys
       HelpContext = 804
       Images = ImagesData.ImagesList
       ImageIndex = 5
-      ModalResult = 9
       Position.X = 4.000000000000000000
       Position.Y = 124.000000000000000000
       Size.Width = 140.000000000000000000
@@ -62,6 +61,7 @@ object FcoordonneesPhys: TFcoordonneesPhys
       Size.PlatformDefault = False
       TabOrder = 2
       Text = 'Aide'
+      OnClick = HelpBtnClick
     end
     object FinModeleBtn: TButton
       HelpContext = 804

@@ -13,13 +13,13 @@ object ConstanteUnivDlg: TConstanteUnivDlg
   Top = 163
   DesignerMasterStyle = 0
   object HelpBtn: TButton
-    ModalResult = 9
     Position.X = 353.000000000000000000
     Position.Y = 164.000000000000000000
     Size.Width = 110.000000000000000000
     Size.Height = 27.000000000000000000
     Size.PlatformDefault = False
     Visible = False
+    OnClick = HelpBtnClick
   end
   object Tableau: TStringGrid
     CanFocus = True

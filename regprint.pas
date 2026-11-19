@@ -58,6 +58,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure PrintCBChange(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
   public
   end;
@@ -67,7 +68,7 @@ var
 
 implementation
 
-uses Options, graphFft, optStat, regmain;
+uses Options, graphFft, optStat, regmain, AideU;
 
 {$R *.FMX}
 
@@ -144,6 +145,12 @@ begin
     grapheStatCB.Visible := statOptDlg<>nil;
     ModeleVariabCB.Visible := FRegressiMain.panelModele.visible or
             (ModeleDefini in etatModele);
+end;
+
+
+procedure TPrintDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

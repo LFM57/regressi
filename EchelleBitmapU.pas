@@ -63,6 +63,7 @@ type
     procedure GridVariabGetCellData(Sender: TObject; ACol, ARow: Integer;
       var CellString: string);
     procedure PolaireCBChange(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
   public
   end;
@@ -71,6 +72,8 @@ var
   EchelleBitmapDlg: TEchelleBitmapDlg;
 
 implementation
+
+uses AideU;
 
 {$R *.FMX}
 
@@ -266,6 +269,12 @@ begin
          gridVariab.cells[0,3] := stAxeY;
     end;
 
+end;
+
+
+procedure TEchelleBitmapDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

@@ -74,6 +74,7 @@ type
     procedure dBCheckBoxClick(Sender: TObject);
     procedure PagesBtnClick(Sender: TObject);
     procedure SuperPagesCBClick(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
   public
     MiniDecibel : double;
@@ -85,7 +86,7 @@ var
 
 implementation
 
-uses Graphfft;
+uses Graphfft, AideU;
 
 {$R *.FMX}
 
@@ -151,6 +152,12 @@ end;
 procedure TOptionsFFTDlg.SuperPagesCBClick(Sender: TObject);
 begin
    PagesBtn.Visible := SuperPagesCB.isChecked
+end;
+
+
+procedure TOptionsFFTDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

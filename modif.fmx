@@ -114,7 +114,6 @@ object ModifDlg: TModifDlg
     HelpContext = 814
     Images = ImagesData.ImagesList
     ImageIndex = 5
-    ModalResult = 9
     Position.X = 280.000000000000000000
     Position.Y = 72.000000000000000000
     Size.Width = 90.000000000000000000
@@ -123,6 +122,7 @@ object ModifDlg: TModifDlg
     TabOrder = 8
     Text = 'Aide'
     TextSettings.Font.Size = 13.000000000000000000
+    OnClick = HelpBtnClick
   end
   object EditNom: TEdit
     Touch.InteractiveGestures = [LongTap, DoubleTap]

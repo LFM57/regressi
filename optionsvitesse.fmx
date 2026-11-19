@@ -45,7 +45,6 @@ object OptionsVitesseDlg: TOptionsVitesseDlg
     HelpContext = 802
     Images = ImagesData.ImagesList
     ImageIndex = 5
-    ModalResult = 9
     Position.X = 248.000000000000000000
     Position.Y = 244.000000000000000000
     Size.Width = 90.000000000000000000
@@ -53,6 +52,7 @@ object OptionsVitesseDlg: TOptionsVitesseDlg
     Size.PlatformDefault = False
     TabOrder = 2
     Text = 'Aide'
+    OnClick = HelpBtnClick
   end
   object Panel1: TPanel
     Align = Left

@@ -101,6 +101,7 @@ type
     procedure EulerCBClick(Sender: TObject);
     procedure ParametreDeriveeClick(Sender: TObject);
     procedure GenreGrandeurRGClick(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
   public
     LigneInit,LigneCompile,LigneSignif : string;
@@ -123,7 +124,7 @@ const
 
 implementation
 
-uses RegMain;
+uses RegMain, AideU;
 
 {$R *.FMX}
 
@@ -368,6 +369,12 @@ begin
   inherited;
   OptionsDeriveeGB.visible := ParametreDerivee.ischecked;
   LissageRG.visible := ParametreDerivee.IsChecked   
+end;
+
+
+procedure TNewVarDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

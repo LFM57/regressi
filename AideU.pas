@@ -27,9 +27,23 @@ type
 var
   AideForm: TAideForm;
 
+procedure ShowAide(AContext: Integer = 0; AModal: Boolean = False);
+
 implementation
 
 {$R *.fmx}
+
+procedure ShowAide(AContext: Integer = 0; AModal: Boolean = False);
+begin
+  if AideForm = nil then
+    Application.CreateForm(TAideForm, AideForm);
+  AideForm.HelpContext := AContext;
+  CentreForm(AideForm);
+  if AModal then
+    AideForm.ShowModal
+  else
+    AideForm.Show;
+end;
 
 procedure TAideForm.FormActivate(Sender: TObject);
 begin

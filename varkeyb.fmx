@@ -66,7 +66,6 @@ object NewClavierDlg: TNewClavierDlg
   object HelpBtn: TButton
     Images = ImagesData.ImagesList
     ImageIndex = 5
-    ModalResult = 9
     Position.X = 364.000000000000000000
     Position.Y = 328.000000000000000000
     Size.Width = 100.000000000000000000
@@ -74,6 +73,7 @@ object NewClavierDlg: TNewClavierDlg
     Size.PlatformDefault = False
     TabOrder = 4
     Text = 'Aide'
+    OnClick = HelpBtnClick
   end
   object GroupBox1: TGroupBox
     Align = Top

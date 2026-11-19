@@ -53,7 +53,6 @@ object PrintDlg: TPrintDlg
       HelpContext = 807
       Images = ImagesData.ImagesList
       ImageIndex = 5
-      ModalResult = 9
       Position.X = 14.000000000000000000
       Position.Y = 91.000000000000000000
       Size.Width = 108.000000000000000000
@@ -62,6 +61,7 @@ object PrintDlg: TPrintDlg
       TabOrder = 2
       Text = 'Aide'
       TextSettings.Font.Size = 13.000000000000000000
+      OnClick = HelpBtnClick
     end
   end
   object Panel1: TPanel

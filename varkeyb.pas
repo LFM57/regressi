@@ -63,6 +63,7 @@ type
     procedure OKBtnClick(Sender: TObject);
     procedure GridConstExit(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
   public
   end;
@@ -71,6 +72,8 @@ var
   NewClavierDlg: TNewClavierDlg;
 
 implementation
+
+uses AideU;
 
 {$R *.FMX}
 
@@ -167,6 +170,12 @@ begin
      AjoutePage;
      pages[pageCourante].AffecteVariableP(false);
      ModifFichier := true;
+end;
+
+
+procedure TNewClavierDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

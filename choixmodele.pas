@@ -106,6 +106,7 @@ type
       const ARect: TRectF);
     procedure ModMagnumPaint(Sender: TObject; Canvas: TCanvas;
       const ARect: TRectF);
+    procedure HelpBtnClick(Sender: TObject);
   private
     Procedure MajTexte;
   public
@@ -124,6 +125,8 @@ const
     iEquaDiff2 = 2;
 
 implementation
+
+uses AideU;
 
 {$R *.FMX}
 
@@ -401,6 +404,12 @@ begin
                 if Abutton.Controls[i] is TImage then
 
         end;
+end;
+
+
+procedure TChoixModeleDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

@@ -505,5 +505,6 @@ object LectureTexteDlg: TLectureTexteDlg
     TabOrder = 3
     Text = 'Aide'
     TextSettings.Font.Family = 'Gill Sans MT'
+    OnClick = HelpBtnClick
   end
 end

@@ -44,7 +44,6 @@ object OptionModeleDlg: TOptionModeleDlg
     HelpContext = 802
     Images = ImagesData.ImagesList
     ImageIndex = 5
-    ModalResult = 9
     Position.X = 271.000000000000000000
     Position.Y = 153.000000000000000000
     Size.Width = 90.000000000000000000
@@ -52,6 +51,7 @@ object OptionModeleDlg: TOptionModeleDlg
     Size.PlatformDefault = False
     TabOrder = 2
     Text = 'Aide'
+    OnClick = HelpBtnClick
   end
   object PageControl1: TTabControl
     Align = Left

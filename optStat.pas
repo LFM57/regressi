@@ -79,6 +79,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CibleCBClick(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
      PoissonPermis : boolean;
      FrequenceGr : Tgrandeur;
@@ -100,7 +101,7 @@ implementation
 
 {$R *.FMX}
 
-uses regMain, modif;
+uses regMain, modif, AideU;
 
 const
       largeurNombreEntier = 50;
@@ -864,5 +865,11 @@ with FRegressiMain.grapheStat do begin
      FRegressiMain.DistGrid.endUpdate;
      FRegressiMain.StatGrid.endUpdate;
 end end; // setCoordonnee
+
+
+procedure TStatOptDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
+end;
 
 end.

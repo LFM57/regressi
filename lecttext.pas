@@ -61,6 +61,7 @@ type
     opaqueColorBox: TTMSFNCColorPicker;
     procedure FormActivate(Sender: TObject);
     procedure OKBtnClick(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
   public
     DessinLoc : TdessinText;
@@ -70,6 +71,8 @@ var
   LectureTexteDlg: TLectureTexteDlg;
 
 implementation
+
+uses AideU;
 
 {$R *.FMX}
 
@@ -93,5 +96,11 @@ begin with dessinLoc do begin
          avecCadre := CadreCB.isChecked;
          font.Size := spinEditHauteur.value;
 end end;
+
+
+procedure TLectureTexteDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
+end;
 
 end.

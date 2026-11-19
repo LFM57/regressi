@@ -147,6 +147,7 @@ type
       AColor: TAlphaColor);
     procedure CouleurComboCourbeColorSelected(Sender: TObject;
       AColor: TAlphaColor);
+    procedure HelpBtnClick(Sender: TObject);
   private
   public
     Graphe : TgrapheReg;
@@ -160,7 +161,7 @@ implementation
 
 {$R *.FMX}
 
-uses regMain;
+uses regMain, AideU;
 
 procedure TOptionCouleurDlg.FormActivate(Sender: TObject);
 
@@ -319,6 +320,12 @@ begin
      CouleurComboPage.selectedColor := couleurPages[index];
      LigneCombo.itemIndex := ord(PstylePages[index]);
      PointCombo.itemIndex := ord(motifPages[index]);
+end;
+
+
+procedure TOptionCouleurDlg.HelpBtnClick(Sender: TObject);
+begin
+  ShowAide((Sender as TControl).HelpContext, True);
 end;
 
 end.

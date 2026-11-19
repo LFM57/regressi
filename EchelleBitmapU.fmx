@@ -50,7 +50,6 @@ object EchelleBitmapDlg: TEchelleBitmapDlg
     StyledSettings = [FontColor]
     Images = ImagesData.ImagesList
     ImageIndex = 5
-    ModalResult = 9
     Position.X = 404.000000000000000000
     Position.Y = 152.000000000000000000
     Size.Width = 100.000000000000000000
@@ -59,6 +58,7 @@ object EchelleBitmapDlg: TEchelleBitmapDlg
     TabOrder = 4
     Text = 'Aide'
     TextSettings.Font.Size = 13.000000000000000000
+    OnClick = HelpBtnClick
   end
   object OrthonormeCB: TCheckBox
     StyledSettings = [FontColor]
