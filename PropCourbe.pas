@@ -56,6 +56,7 @@ type
     SplineGB: TGroupBox;
     Label3: TLabel;
     OrdreSplineSE: TSpinBox;
+    FooterPanel: TPanel;
     BitBtn1: TButton;
     ExtrapoleDerCB: TCheckBox;
     CourbeEdit: TEdit;
@@ -137,6 +138,10 @@ end;
 
 procedure TPropCourbeForm.FormCreate(Sender: TObject);
 begin with Grid do begin
+       ColumnCount := 2;
+       RowCount := 5;
+       ColumnWidths[0] := 140;
+       ColumnWidths[1] := 160;
        cells[0,0] := 'Période';
        cells[0,1] := 'Fréquence';
        cells[0,2] := 'Crête à crête';

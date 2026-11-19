@@ -132,18 +132,30 @@ object PropCourbeForm: TPropCourbeForm
       OnChange = OrdreSplineSEChange
     end
   end
-  object BitBtn1: TButton
-    Images = ImagesData.ImagesList
-    ImageIndex = 24
-    ModalResult = 8
-    Position.X = 80.000000000000000000
-    Position.Y = 339.000000000000000000
-    Size.Width = 100.000000000000000000
-    Size.Height = 25.000000000000000000
+  object FooterPanel: TPanel
+    Align = Bottom
+    Position.Y = 335.000000000000000000
+    Size.Width = 318.000000000000000000
+    Size.Height = 40.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 4
-    Text = 'Fermer'
-    OnClick = BitBtn1Click
+    object BitBtn1: TButton
+      Align = Right
+      Images = ImagesData.ImagesList
+      ImageIndex = 24
+      Margins.Top = 6.000000000000000000
+      Margins.Right = 8.000000000000000000
+      Margins.Bottom = 6.000000000000000000
+      ModalResult = 8
+      Position.X = 210.000000000000000000
+      Position.Y = 6.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 28.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Fermer'
+      OnClick = BitBtn1Click
+    end
   end
   object CourbeEdit: TEdit
     Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -155,10 +167,9 @@ object PropCourbeForm: TPropCourbeForm
     Size.PlatformDefault = False
   end
   object Grid: TTMSFNCGrid
-    Position.X = 176.000000000000000000
-    Position.Y = 240.000000000000000000
-    Size.Width = 370.000000000000000000
-    Size.Height = 270.000000000000000000
+    Align = Client
+    Size.Width = 318.000000000000000000
+    Size.Height = 143.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 6
     Options.Editing.CalcFormat = '%g'
@@ -174,7 +185,7 @@ object PropCourbeForm: TPropCourbeForm
         FixedFont.StyleExt = {00070000000000000004000000}
         Font.Name = 'Segoe UI'
         ID = ''
-        Width = 68.000000000000000000
+        Width = 140.000000000000000000
       end
       item
         BorderWidth = 1
@@ -182,33 +193,9 @@ object PropCourbeForm: TPropCourbeForm
         FixedFont.StyleExt = {00070000000000000004000000}
         Font.Name = 'Segoe UI'
         ID = ''
-        Width = 68.000000000000000000
-      end
-      item
-        BorderWidth = 1
-        FixedFont.Name = 'Segoe UI'
-        FixedFont.StyleExt = {00070000000000000004000000}
-        Font.Name = 'Segoe UI'
-        ID = ''
-        Width = 68.000000000000000000
-      end
-      item
-        BorderWidth = 1
-        FixedFont.Name = 'Segoe UI'
-        FixedFont.StyleExt = {00070000000000000004000000}
-        Font.Name = 'Segoe UI'
-        ID = ''
-        Width = 68.000000000000000000
-      end
-      item
-        BorderWidth = 1
-        FixedFont.Name = 'Segoe UI'
-        FixedFont.StyleExt = {00070000000000000004000000}
-        Font.Name = 'Segoe UI'
-        ID = ''
-        Width = 68.000000000000000000
+        Width = 160.000000000000000000
       end>
-    TopRow = 1
+    TopRow = 0
     Appearance.FixedLayout.Fill.Color = xFFE6E6E6
     Appearance.FixedLayout.Font.Name = 'Segoe UI'
     Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
@@ -230,7 +217,7 @@ object PropCourbeForm: TPropCourbeForm
     Appearance.BandLayout.Fill.Color = claLightyellow
     Appearance.BandLayout.Font.Name = 'Segoe UI'
     Appearance.ProgressLayout.Format = '%.0f%%'
-    LeftCol = 1
+    LeftCol = 0
     ScrollMode = scmItemScrolling
     DesignTimeSampleData = False
   end
