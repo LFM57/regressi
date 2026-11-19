@@ -1035,142 +1035,177 @@ object FRegressiMain: TFRegressiMain
         Size.Height = 451.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
-        object MemoVocabulaire: TMemo
-          Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
-          DataDetectorTypes = []
-          Lines.Strings = (
-            
-              'm : moyenne ; '#181'xx : intervalle de confiance sur la moyenne (ICm)' +
-              ' '#224' xx %'
-            
-              #963' : '#233'cart type ; CV : coefficient de variation  = ecart type / m' +
-              'oyenne')
+        object LayoutVocabulaire: TLayout
           Align = Bottom
           Position.Y = 401.000000000000000000
           Size.Width = 1094.000000000000000000
           Size.Height = 50.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
-          Viewport.Width = 1086.000000000000000000
-          Viewport.Height = 42.000000000000000000
-          object OptionStatBtn: TButton
-            Align = Right
-            Position.X = 1022.000000000000000000
-            Size.Width = 64.000000000000000000
-            Size.Height = 42.000000000000000000
+          object MemoVocabulaire: TMemo
+            Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+            DataDetectorTypes = []
+            Lines.Strings = (
+              
+                'm : moyenne ; '#181'xx : intervalle de confiance sur la moyenne (ICm)' +
+                ' '#224' xx %'
+              
+                #963' : '#233'cart type ; CV : coefficient de variation  = ecart type / m' +
+                'oyenne')
+            Align = Client
+            Size.Width = 1018.000000000000000000
+            Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
+            Viewport.Width = 1010.000000000000000000
+            Viewport.Height = 42.000000000000000000
+          end
+          object OptionStatBtn: TButton
+            Align = Right
+            Margins.Left = 4.000000000000000000
+            Margins.Top = 4.000000000000000000
+            Margins.Right = 4.000000000000000000
+            Margins.Bottom = 4.000000000000000000
+            Position.X = 1022.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 68.000000000000000000
+            Size.Height = 42.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
             Text = 'Options'
             OnClick = OptionsStatItemClick
           end
         end
         object PanelValeursStat: TGroupBox
           Align = Left
+          Padding.Left = 4.000000000000000000
+          Padding.Top = 18.000000000000000000
+          Padding.Right = 4.000000000000000000
+          Padding.Bottom = 4.000000000000000000
           Size.Width = 233.000000000000000000
           Size.Height = 401.000000000000000000
           Size.PlatformDefault = False
           Text = 'Caract'#233'ristiques'
           TabOrder = 1
-          object StatGrid: TTMSFNCGrid
-            Align = Left
-            Size.Width = 370.000000000000000000
-            Size.Height = 320.000000000000000000
+          object ListeNom: TComboBox
+            Align = Top
+            Margins.Bottom = 4.000000000000000000
+            Position.X = 4.000000000000000000
+            Position.Y = 18.000000000000000000
+            Size.Width = 225.000000000000000000
+            Size.Height = 24.000000000000000000
             Size.PlatformDefault = False
-            TabOrder = 42
-            Options.Editing.CalcFormat = '%g'
-            Options.Grouping.CalcFormat = '%g'
-            Options.Grouping.GroupCountFormat = '(%d)'
-            Options.IO.XMLEncoding = 'ISO-8859-1'
-            Options.Mouse.ClickMargin = 0
-            Options.Mouse.ColumnSizeMargin = 6
-            Options.Mouse.RowSizeMargin = 6
-            Columns = <
-              item
-                BorderWidth = 1
-                FixedFont.Name = 'Segoe UI'
-                FixedFont.StyleExt = {00070000000000000004000000}
-                Font.Name = 'Segoe UI'
-                ID = ''
-                Width = 68.000000000000000000
-              end
-              item
-                BorderWidth = 1
-                FixedFont.Name = 'Segoe UI'
-                FixedFont.StyleExt = {00070000000000000004000000}
-                Font.Name = 'Segoe UI'
-                ID = ''
-                Width = 68.000000000000000000
-              end
-              item
-                BorderWidth = 1
-                FixedFont.Name = 'Segoe UI'
-                FixedFont.StyleExt = {00070000000000000004000000}
-                Font.Name = 'Segoe UI'
-                ID = ''
-                Width = 68.000000000000000000
-              end
-              item
-                BorderWidth = 1
-                FixedFont.Name = 'Segoe UI'
-                FixedFont.StyleExt = {00070000000000000004000000}
-                Font.Name = 'Segoe UI'
-                ID = ''
-                Width = 68.000000000000000000
-              end
-              item
-                BorderWidth = 1
-                FixedFont.Name = 'Segoe UI'
-                FixedFont.StyleExt = {00070000000000000004000000}
-                Font.Name = 'Segoe UI'
-                ID = ''
-                Width = 68.000000000000000000
-              end>
-            DefaultFont.Name = 'Segoe UI'
-            TopRow = 1
-            Appearance.FixedLayout.Fill.Color = xFFE6E6E6
-            Appearance.FixedLayout.Font.Name = 'Segoe UI'
-            Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
-            Appearance.NormalLayout.Fill.Color = claNull
-            Appearance.NormalLayout.Font.Name = 'Segoe UI'
-            Appearance.GroupLayout.Fill.Color = xFF6E93C3
-            Appearance.GroupLayout.Font.Color = claWhite
-            Appearance.GroupLayout.Font.Name = 'Segoe UI'
-            Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
-            Appearance.SummaryLayout.Font.Name = 'Segoe UI'
-            Appearance.SelectedLayout.Fill.Color = claLightsteelblue
-            Appearance.SelectedLayout.Font.Color = claWhite
-            Appearance.SelectedLayout.Font.Name = 'Segoe UI'
-            Appearance.FocusedLayout.Fill.Color = claLightsteelblue
-            Appearance.FocusedLayout.Font.Color = claWhite
-            Appearance.FocusedLayout.Font.Name = 'Segoe UI'
-            Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
-            Appearance.FixedSelectedLayout.Font.Name = 'Segoe UI'
-            Appearance.BandLayout.Fill.Color = claLightyellow
-            Appearance.BandLayout.Font.Name = 'Segoe UI'
-            Appearance.ProgressLayout.Format = '%.0f%%'
-            LeftCol = 1
-            ScrollMode = scmItemScrolling
-            GlobalFont.Scale = 1.000000000000000000
-            GlobalFont.Style = []
-            DesignTimeSampleData = True
-            object PanelStatGrid: TPanel
-              Position.X = 152.000000000000000000
-              Position.Y = 256.000000000000000000
-              TabOrder = 4
+            TabOrder = 0
+            OnChange = ListeNomChange
+          end
+          object PanelStatGrid: TPanel
+            Align = Client
+            Position.X = 4.000000000000000000
+            Position.Y = 46.000000000000000000
+            Size.Width = 225.000000000000000000
+            Size.Height = 226.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            object StatGrid: TTMSFNCGrid
+              Align = Client
+              Size.Width = 225.000000000000000000
+              Size.Height = 226.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+              Options.Editing.CalcFormat = '%g'
+              Options.Grouping.CalcFormat = '%g'
+              Options.Grouping.GroupCountFormat = '(%d)'
+              Options.IO.XMLEncoding = 'ISO-8859-1'
+              Options.Mouse.ClickMargin = 0
+              Options.Mouse.ColumnSizeMargin = 6
+              Options.Mouse.RowSizeMargin = 6
+              Columns = <
+                item
+                  BorderWidth = 1
+                  FixedFont.Name = 'Segoe UI'
+                  FixedFont.StyleExt = {00070000000000000004000000}
+                  Font.Name = 'Segoe UI'
+                  ID = ''
+                  Width = 68.000000000000000000
+                end
+                item
+                  BorderWidth = 1
+                  FixedFont.Name = 'Segoe UI'
+                  FixedFont.StyleExt = {00070000000000000004000000}
+                  Font.Name = 'Segoe UI'
+                  ID = ''
+                  Width = 68.000000000000000000
+                end
+                item
+                  BorderWidth = 1
+                  FixedFont.Name = 'Segoe UI'
+                  FixedFont.StyleExt = {00070000000000000004000000}
+                  Font.Name = 'Segoe UI'
+                  ID = ''
+                  Width = 68.000000000000000000
+                end
+                item
+                  BorderWidth = 1
+                  FixedFont.Name = 'Segoe UI'
+                  FixedFont.StyleExt = {00070000000000000004000000}
+                  Font.Name = 'Segoe UI'
+                  ID = ''
+                  Width = 68.000000000000000000
+                end
+                item
+                  BorderWidth = 1
+                  FixedFont.Name = 'Segoe UI'
+                  FixedFont.StyleExt = {00070000000000000004000000}
+                  Font.Name = 'Segoe UI'
+                  ID = ''
+                  Width = 68.000000000000000000
+                end>
+              DefaultFont.Name = 'Segoe UI'
+              TopRow = 1
+              Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+              Appearance.FixedLayout.Font.Name = 'Segoe UI'
+              Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+              Appearance.NormalLayout.Fill.Color = claNull
+              Appearance.NormalLayout.Font.Name = 'Segoe UI'
+              Appearance.GroupLayout.Fill.Color = xFF6E93C3
+              Appearance.GroupLayout.Font.Color = claWhite
+              Appearance.GroupLayout.Font.Name = 'Segoe UI'
+              Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
+              Appearance.SummaryLayout.Font.Name = 'Segoe UI'
+              Appearance.SelectedLayout.Fill.Color = claLightsteelblue
+              Appearance.SelectedLayout.Font.Color = claWhite
+              Appearance.SelectedLayout.Font.Name = 'Segoe UI'
+              Appearance.FocusedLayout.Fill.Color = claLightsteelblue
+              Appearance.FocusedLayout.Font.Color = claWhite
+              Appearance.FocusedLayout.Font.Name = 'Segoe UI'
+              Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
+              Appearance.FixedSelectedLayout.Font.Name = 'Segoe UI'
+              Appearance.BandLayout.Fill.Color = claLightyellow
+              Appearance.BandLayout.Font.Name = 'Segoe UI'
+              Appearance.ProgressLayout.Format = '%.0f%%'
+              LeftCol = 1
+              ScrollMode = scmItemScrolling
+              GlobalFont.Scale = 1.000000000000000000
+              GlobalFont.Style = []
+              DesignTimeSampleData = True
             end
-            object ListeNom: TComboBox
-              Position.X = 144.000000000000000000
-              Position.Y = 144.000000000000000000
-              TabOrder = 5
-            end
+          end
+          object SplitterStat: TSplitter
+            Align = Bottom
+            Position.X = 4.000000000000000000
+            Position.Y = 272.000000000000000000
+            Size.Width = 225.000000000000000000
+            Size.Height = 5.000000000000000000
+            Size.PlatformDefault = False
           end
           object DistGrid: TTMSFNCGrid
             Align = Bottom
-            Position.Y = 320.000000000000000000
-            Size.Width = 233.000000000000000000
-            Size.Height = 81.000000000000000000
+            Position.X = 4.000000000000000000
+            Position.Y = 277.000000000000000000
+            Size.Width = 225.000000000000000000
+            Size.Height = 120.000000000000000000
             Size.PlatformDefault = False
-            TabOrder = 43
+            TabOrder = 2
             Options.Editing.CalcFormat = '%g'
             Options.Grouping.CalcFormat = '%g'
             Options.Grouping.GroupCountFormat = '(%d)'

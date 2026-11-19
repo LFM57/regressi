@@ -264,6 +264,8 @@ type
     DistGrid: TTMSFNCGrid;
     PanelStatGrid: TPanel;
     ListeNom: TComboBox;
+    SplitterStat: TSplitter;
+    LayoutVocabulaire: TLayout;
     ParamGrid: TTMSFNCGrid;
     procedure FormCreate(Sender: TObject);
     procedure UpdateMenuItems(Sender: TObject);
@@ -715,6 +717,7 @@ procedure TFRegressiMain.ListeNomChange(Sender: TObject);
 begin
    if statOptDlg=nil then exit;
    if listeNom.enabled and
+      (listeNom.itemIndex>=0) and
       (listeNom.items.count>listeNom.itemIndex) and
       (statOptDlg.NomStat<>listeNom.items[listeNom.itemIndex]) then begin
         statOptDlg.NomStat := listeNom.items[listeNom.itemIndex];
