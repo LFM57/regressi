@@ -21,7 +21,9 @@ type
     procedure WebBrowser1DidFailLoadWithError(ASender: TObject);
     procedure FormActivate(Sender: TObject);
   private
+    FHelpContext: Integer;
   public
+    property HelpContext: Integer read FHelpContext write FHelpContext;
   end;
 
 var
