@@ -1,57 +1,61 @@
 # Regressi
 
-**A community-maintained FireMonkey (`FMX` + `TMS FNC`) continuation of [Jean-Michel Millet](https://www.jeanmillet.org/)'s scientific data analysis and curve-fitting software.**
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS-lightgrey.svg)](#building-from-source)
 
-> **Credits & Attribution**
-> Regressi was originally created and developed for decades by **Jean-Michel Millet** ([jeanmillet.org](https://www.jeanmillet.org/)) and the **EVARISTE** association. It continues to help thousands of French students, teachers, and professionals around the world every day. All credit for the original software, mathematical engine, and design belongs to **Jean-Michel Millet**, and the GNU GPL v3 license is held in his name.
+**Regressi** is a scientific data processing, graphing, and curve-fitting desktop application widely used in physics, chemistry, engineering, and laboratory education.
 
----
-
-## Overview
-
-Regressi is a desktop application for experimental physics, chemistry, and engineering data analysis, designed for classroom labs and scientific measurements.
-
-### Core Capabilities
-- **Data & Expressions (`valeurs`)**: Multi-page experimental tables, uncertainty propagation ($\pm \Delta x$), unit checking and automatic SI prefix scaling, derived variables, numerical derivatives, integrals, smoothing, and simulation expressions.
-- **Graphing (`graphker`, `axes`)**: Multi-curve and multi-page plotting, dual/multiple Y-axes, log/polar/split plots, velocity/acceleration vectors, tangent/reticle/equivalence tools, error ellipses, and image/PDF export.
-- **Curve Fitting & Modeling (`modele`, `modelegr`, `systdiff`)**: Linear and nonlinear regression (Levenberg–Marquardt), predefined physics/electronics/filter/oscillation models, custom expressions, 1st- and 2nd-order ODE solvers, residual plots, and reduced $\chi^2$ evaluation.
-- **Fourier Analysis (`graphfft`, `fft`)**: FFT amplitude/phase spectra, windowing functions (Rectangular, Hamming, Blackman, Flat-top), dB scaling, and sonogram visualization.
-- **Statistics (`optStat`, `statCalc`)**: Descriptive statistics (mean, median, 95% confidence interval, standard deviation, CV), histograms, Gaussian curve overlay, Poisson and binomial distributions.
+This repository is a maintained, modern FireMonkey (`FMX` + `TMS FNC`) continuation of **Jean-Michel Millet**'s work, originally created with the **EVARISTE** association and used by thousands of students, teachers, and professionals around the world.
 
 ---
 
-## Current Status (`v1.8.0-beta`)
+## Features
 
-This maintained fork focuses on stabilizing and modernizing the FireMonkey / TMS FNC port (`FMX` + `TTMSFNCGrid` / `TTMSFNCColorPicker`).
+- **Data Tables & Expressions**
+  - Multi-page experimental data tables with measurement uncertainties ($\pm \Delta x$)
+  - Automatic unit parsing, dimensional consistency checking, and SI prefix scaling
+  - Formula editor for derived variables, numerical derivatives, integrals, smoothing, and simulations
+- **Scientific Graphing**
+  - Multi-curve and multi-page plotting with independent or shared axes
+  - Linear, logarithmic, polar, and split-view plots
+  - Velocity and acceleration vector overlays, tangent lines, measurement reticles, error ellipses, and image/PDF export
+- **Curve Fitting & Differential Equations**
+  - Linear and nonlinear regression (Levenberg–Marquardt) with uncertainty estimation and reduced $\chi^2$
+  - Built-in physics, electronics, filter, and oscillation models alongside custom user expressions
+  - First- and second-order ordinary differential equation (ODE) solvers and residual plots
+- **Fourier Analysis**
+  - Fast Fourier Transform (FFT) amplitude and phase spectra
+  - Windowing functions (Rectangular, Hamming, Blackman, Flat-top), decibel scaling, and sonogram views
+- **Statistics**
+  - Descriptive statistics (mean, median, 95% confidence interval, standard deviation, coefficient of variation)
+  - Histograms with Gaussian, Poisson, and binomial distribution overlays
 
-**Highlights in `v1.8.0-beta`:**
-- Fixed `StatTab` layout overlaps (unnested `ListeNom`, `StatGrid`, `OptionStatBtn`, added `SplitterStat`).
-- Moved the `Radian`/`Degré` angle toggle (`TrigoBtn`) into the status bar so it stays visible on single-page files.
-- Fixed `ModeleToolBar` button clipping and `ParamGrid` column count, editing events, and off-by-one indexing bugs.
-- Re-wired broken `TTMSFNCGrid` events in the **Grandeurs** tables (`GridVariab`, `GridParam`), fixed `valeurs.pas` UTF-8 encoding, repaired the 24-letter Greek palette (`GrecGrid`), and added splitters to the Expressions toolbox.
-- Fixed crashes, overlapping controls, wrong default buttons, missing preview curves, and non-working `Help` buttons across 15 configuration dialogs (`PropCourbe`, `optModele`, `optline`, `coordphys`, `choixmodele`, `optcolordlg`, `ChoixParamAnim`, `selpage`, `graphfft`, `optfft`, `newvar`, `options`, `varkeyb`, etc.).
-- Disabled `DesignTimeSampleData` on all `TTMSFNCGrid` instances and cleaned up English/French UI localization entries.
+---
+
+## Download
+
+Pre-built binaries are published on the [Releases](../../releases) page.
 
 ---
 
 ## Building from Source
 
 ### Prerequisites
-- **Embarcadero RAD Studio / Delphi** (FireMonkey `FMX`, tested with RAD Studio 13 / `37.0` on Windows 64-bit)
-- **TMS FNC Core** and **TMS FNC UI Pack** (for `TTMSFNCGrid`, `TTMSFNCColorPicker`, etc.)
+- **Embarcadero RAD Studio / Delphi** (FireMonkey `FMX`, tested with RAD Studio 13 on Windows 64-bit)
+- **TMS FNC Core** and **TMS FNC UI Pack**
 
-### Build Steps (Windows)
-1. Install **TMS FNC Core** and **TMS FNC UI Pack** in RAD Studio.
-   - Make sure your Delphi **Library Path** (*Tools → Options → Language → Delphi → Library*, `Win64`) includes the `TMSFNCUIPack` and `TMSFNCUIPack\Win64` folders (avoid mixing separate `TMSFNCCore` DCUs ahead of `TMSFNCUIPack` if `TMSFNCUIPack` already bundles Core DCUs).
+### Windows (RAD Studio)
+1. Install **TMS FNC Core** and **TMS FNC UI Pack** in RAD Studio and ensure the `TMSFNCUIPack` library paths are configured for your target platform (`Win64` / `Win32`).
 2. Open `regressiM.dproj` in RAD Studio.
-3. Select **Release** / **Windows 64-bit** and run **Project → Build regressiM** (or use `msbuild regressiM.dproj /t:Build /p:Config=Release;Platform=Win64` on commercial Delphi editions).
-4. The compiled binary is output to `Win64\Release\regressiM.exe`.
-
-> **Note on Community Edition**: RAD Studio Community Edition disables `dcc64.exe` command-line builds (`This version of the product does not support command line compiling`), so compile from inside the RAD Studio IDE.
+3. Select the **Release** configuration and **Windows 64-bit** platform, then run **Project → Build regressiM** (or build via `msbuild` on commercial editions).
+4. The compiled executable is generated in `Win64\Release\`.
 
 ---
 
+## Credits
+
+Regressi was created and developed by **Jean-Michel Millet** and the **EVARISTE** association. All credit for the original software, mathematical algorithms, and decades of dedication to science education goes to **Jean-Michel Millet**.
+
 ## License
 
-This project is licensed under the **GNU General Public License v3.0 (GNU GPL v3)** — in the name of **Jean-Michel Millet** ([jeanmillet.org](https://www.jeanmillet.org/)).
-The `LICENSE` file will be added to this repository shortly.
+This project is licensed under the **GNU General Public License v3.0** — see the [LICENSE](LICENSE) file for details.
