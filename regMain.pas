@@ -2948,7 +2948,7 @@ begin
      HelpItem.Text := 'Help';
      TOCItem.Text := 'Help';
 
-     EditionItem.Text := 'Edition';
+     EditionItem.Text := 'Edit';
      copyItem.Text := 'Copy';
      cutItem.Text := 'Cut';
      deleteItem.Text := 'Delete';
@@ -2962,12 +2962,12 @@ begin
      pageNewClipItem.Text := 'Clipboard';
      pageNewItem.Text := 'New';
      pagePrecItem.Text := 'Previous';
-     pageSuivItem.Text := '';
+     pageSuivItem.Text := 'Next';
      pageSelectItem.Text := 'Select';
      pageTrierItem.Text := 'Sort';
      pagesItem.Text := 'Sheets';
 
-     valeursTab.Text := 'Qunatities';
+     valeursTab.Text := 'Quantities';
      grapheTab.Text := 'Graph';
      FFTTab.Text := 'Fourier';
      StatTab.Text := 'Statistics';
@@ -3008,7 +3008,7 @@ begin
      pageNewItem.Text := 'Nouvelle';
      pagePrecItem.Text := 'Précédente';
      pageSuivItem.Text := 'Suivante';
-     pageSelectItem.Text := 'Selectionner';
+     pageSelectItem.Text := 'Sélectionner';
      pageTrierItem.Text := 'Trier';
      pagesItem.Text := 'Pages';
 
