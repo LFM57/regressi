@@ -157,7 +157,10 @@ end;
 
 procedure TOptionsFFTDlg.HelpBtnClick(Sender: TObject);
 begin
-  ShowAide((Sender as TControl).HelpContext, True);
+  if Sender is TButton then
+    ShowAide(TButton(Sender).HelpContext, True)
+  else
+    ShowAide(0, True);
 end;
 
 end.
