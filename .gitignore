@@ -1,3 +1,35 @@
 repomix-output.xml
 VISUAL_IMPROVEMENTS.md
 
+# Delphi / RAD Studio build outputs
+Win32/
+Win64/
+OSX64/
+OSXARM64/
+Android/
+Android64/
+iOSDevice64/
+__history/
+__recovery/
+*.dcu
+*.exe
+*.dll
+*.bpl
+*.dcp
+*.vrc
+*.map
+*.tds
+*.drc
+*.o
+*.a
+*.so
+*.dylib
+
+# Delphi IDE local/user state
+*.local
+*.dsk
+*.identcache
+*.stat
+*.tvsconfig
+*.deployproj.local
+*.~*
