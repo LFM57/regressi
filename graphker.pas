@@ -1637,9 +1637,12 @@ var
                 segmentXY(P.x- dimPoint,P.y - dimPoint,P.x+dimPoint,P.y+dimPoint);
                 segmentXY(P.x+dimPoint,P.y - dimPoint,P.x- dimPoint,P.y+ dimPoint);
               end;
-              mCercle, mCerclePlein:
+              mCercle:
                 MyDrawEllipse(P.x- dimPoint,P.y - dimPoint,P.x+dimPoint + 1,P.Y+dimPoint + 1);
-              mCarre, mCarrePlein: MyDrawRectXY(P.x- dimPoint,P.Y-dimPoint,P.x+dimPoint,P.Y+dimPoint);
+              mCerclePlein:
+                MyFillEllipse(P.x- dimPoint,P.y - dimPoint,P.x+dimPoint + 1,P.Y+dimPoint + 1);
+              mCarre: MyDrawRectXY(P.x- dimPoint,P.Y-dimPoint,P.x+dimPoint,P.Y+dimPoint);
+              mCarrePlein: MyFillRectXY(P.x- dimPoint,P.Y-dimPoint,P.x+dimPoint,P.Y+dimPoint);
               mLosange,mLosangePlein: begin
                 FPath := TPathData.Create;
                 P1 := P;
@@ -1667,7 +1670,10 @@ var
               mBarreG: SegmentXY(P.x + 2, P0.y,P.x+2,P.y);
               mHisto: if largeurHisto = 0
                  then segment(TpointF.create(P.x, P0.y), P) // sinon windows ne trace rien !
-                 else MyDrawRectXY(P.x - largeurHisto, P0.y, P.x + largeurHisto, P.y);
+                 else begin
+                   MyFillRectXY(P.x - largeurHisto, P0.y, P.x + largeurHisto, P.y);
+                   MyDrawRectXY(P.x - largeurHisto, P0.y, P.x + largeurHisto, P.y);
+                 end;
               mReticule: begin
                 WindowRT(monde[mondeX].mini,monde[iMondeC].mini, iMondeC, P0);
                 WindowRT(monde[mondeX].maxi,monde[iMondeC].maxi, iMondeC, P1);
@@ -1723,8 +1729,12 @@ var
         (motif in [mSpectre, mHisto, mBarreD, mBarreG]) then
         motif := mIncert;
       CreatePen(TStrokeDash.Solid, penWidth, couleurLoc);// par défaut
-      case Motif of
-        mCerclePlein, mCarrePlein:
+      if superposePage and (motif <= mCarrePlein) and
+         (page <> 0) and (SPmotif=reperePage)
+            then motifLoc := motifPages[page mod MaxPages]
+            else motifLoc := motif;
+      case motifLoc of
+        mCerclePlein, mCarrePlein, mLosangePlein:
           CreateSolidBrush(couleurLoc);
         mHisto: if largeurHisto < 11 then begin
             CreateSolidBrush(couleurLoc);
@@ -1746,6 +1756,7 @@ var
             else begin // modélisation
                largeur := 1;
                couleurLoc := couleurModele[indexModele];
+               canvas.stroke.Color := couleurLoc;
             end;
             createSolidBrush(couleurLoc);
             canvas.stroke.Thickness := largeur;
@@ -1755,10 +1766,6 @@ var
         mSpectre: initSpectre;
         mIncert: ;
       end;
-      if superposePage and (motif <= mCarrePlein) and
-         (page <> 0) and (SPmotif=reperePage)
-            then motifLoc := motifPages[page mod MaxPages]
-            else motifLoc := motif;
       for i := DebutC to FinC do
           if ((i mod pasPoint) = 0) then
              traceUnPoint;
@@ -1830,9 +1837,8 @@ var
             Int := 255 - round(255 * IntReal);
             CouleurT := MakeColor(Int, Int, Int);
           end;
-          canvas.stroke.Color := couleurT;
-          canvas.fill.Color := couleurT;
-          MyDrawRectXY(P1.x, P1.y, P2.x+1, P2.y+1); // Trace de x1 à x2 et de y2 à y1
+          CreateSolidBrush(couleurT);
+          MyFillRectXY(P1.x, P1.y, P2.x+1, P2.y+1); // Trace de x1 à x2 et de y2 à y1
           // +1 à cause de ps_null
           P1.y := P2.y;
         end; // j
@@ -2163,6 +2169,7 @@ end end; // restaureSplineSinc
       Points[1] := TPointF.create(P2.x - Pdelta.y, P2.y + Pdelta.x);
       Points[2] := TPointF.create(P2.x + Pdelta.y, P2.y - Pdelta.x);
       Points[3] := P1;
+      canvas.FillPolygon(Points,1);
       canvas.DrawPolygon(Points,1); // triangle 3 points
       Finalize(Points);
     end;
@@ -2327,8 +2334,10 @@ end end; // restaureSplineSinc
       repeat
         WindowRT(valX[i], valY[i], iMondeC, P);
         if P.X>=0 then begin
-           if (valY[i] > 0) then
+           if (valY[i] > 0) then begin
+              MyFillRectXY(xpred, P.y, P.x - largeur, y0);
               MyDrawRectXY(xpred, P.y, P.x - largeur, y0);
+           end;
            xpred := P.x + largeur;
            inc(i);
         end;
@@ -4039,17 +4048,31 @@ begin
       segmentXY(P.x - dimPoint, P.y - dimPoint, P.x + dimPoint, P.y + dimPoint);
       segmentXY(P.x + dimPoint, P.y - dimPoint, P.x - dimPoint, P.y + dimPoint);
     end;
-    mCercle, mCerclePlein: MyDrawEllipse(P.x - dimPoint, P.y - dimPoint,
+    mCercle: MyDrawEllipse(P.x - dimPoint, P.y - dimPoint,
         P.x + dimPoint + 1, P.y + dimPoint + 1);
-    mCarre, mCarrePlein: MyDrawRectXY(P.x - dimPoint, P.y - dimPoint,
+    mCerclePlein: begin
+      CreateSolidBrush(canvas.Stroke.Color);
+      MyFillEllipse(P.x - dimPoint, P.y - dimPoint,
+        P.x + dimPoint + 1, P.y + dimPoint + 1);
+    end;
+    mCarre: MyDrawRectXY(P.x - dimPoint, P.y - dimPoint,
         P.x + dimPoint, P.y + dimPoint);
-    mLosange: begin
+    mCarrePlein: begin
+      CreateSolidBrush(canvas.Stroke.Color);
+      MyFillRectXY(P.x - dimPoint, P.y - dimPoint,
+        P.x + dimPoint, P.y + dimPoint);
+    end;
+    mLosange, mLosangePlein: begin
       FPath := TPathData.Create;
       FPath.moveTo(TpointF.Create(P.x - dimPoint, P.y));
       FPath.lineTo(TpointF.Create(P.x, P.y - dimPoint));
       FPath.lineTo(TpointF.Create(P.x + dimPoint, P.y));
       FPath.lineTo(TpointF.Create(P.x,P.y + dimPoint));
       Fpath.closePath;
+      if Motif = mLosangePlein then begin
+        CreateSolidBrush(canvas.Stroke.Color);
+        canvas.FillPath(Fpath, 1);
+      end;
       canvas.drawPath(Fpath,1);
 //      FPath.free;
     end;
@@ -4422,8 +4445,8 @@ end;
 
 procedure TgrapheReg.CreateSolidBrush(couleur : TAlphaColor);
 begin
-     canvas.stroke.kind := TBrushKind.Solid;
-     canvas.stroke.Color := couleur;
+     canvas.Fill.kind := TBrushKind.Solid;
+     canvas.Fill.Color := couleur;
 end;
 
 procedure TgrapheReg.SetTextAlign(alH,alV : TTextAlign);
@@ -4781,7 +4804,10 @@ begin
 end;
 
 procedure TGrapheReg.MyDrawRectXY(x1,y1,x2,y2 : single);
+var t : single;
 begin
+     if x1 > x2 then begin t := x1; x1 := x2; x2 := t; end;
+     if y1 > y2 then begin t := y1; y1 := y2; y2 := t; end;
      canvas.DrawRect(TrectF.Create(x1,y1,x2,y2),0,0,AllCorners,1)
 end;
 
@@ -4796,7 +4822,10 @@ begin
 end;
 
 procedure TGrapheReg.MyFillRectXY(x1,y1,x2,y2 : single);
+var t : single;
 begin
+     if x1 > x2 then begin t := x1; x1 := x2; x2 := t; end;
+     if y1 > y2 then begin t := y1; y1 := y2; y2 := t; end;
      canvas.FillRect(TrectF.Create(x1,y1,x2,y2),0,0,AllCorners,1)
 end;
 
