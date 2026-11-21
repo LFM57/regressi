@@ -4119,17 +4119,20 @@ begin
     end;
     mLosange, mLosangePlein: begin
       FPath := TPathData.Create;
-      FPath.moveTo(TpointF.Create(P.x - dimPoint, P.y));
-      FPath.lineTo(TpointF.Create(P.x, P.y - dimPoint));
-      FPath.lineTo(TpointF.Create(P.x + dimPoint, P.y));
-      FPath.lineTo(TpointF.Create(P.x,P.y + dimPoint));
-      Fpath.closePath;
-      if Motif = mLosangePlein then begin
-        CreateSolidBrush(canvas.Stroke.Color);
-        canvas.FillPath(Fpath, 1);
+      try
+        FPath.moveTo(TpointF.Create(P.x - dimPoint, P.y));
+        FPath.lineTo(TpointF.Create(P.x, P.y - dimPoint));
+        FPath.lineTo(TpointF.Create(P.x + dimPoint, P.y));
+        FPath.lineTo(TpointF.Create(P.x,P.y + dimPoint));
+        Fpath.closePath;
+        if Motif = mLosangePlein then begin
+          CreateSolidBrush(canvas.Stroke.Color);
+          canvas.FillPath(Fpath, 1);
+        end;
+        canvas.drawPath(Fpath,1);
+      finally
+        FPath.Free;
       end;
-      canvas.drawPath(Fpath,1);
-//      FPath.free;
     end;
   end;
 end;

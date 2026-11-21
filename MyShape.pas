@@ -82,6 +82,7 @@ type
    property texteX : string read FTexteX write FTexteX;
    property texteY : string read FTexteY write FTexteY;
    constructor Create(AOwner: TComponent); override;
+   destructor Destroy; override;
    procedure SetMoveDown(move : TMouseMoveEvent; down,up : TMouseEvent);
  end;
 
@@ -207,6 +208,12 @@ begin
   Flayout.verticalAlign := TTextAlign.Leading;  // Center Leading Trailing
   Flayout.horizontalAlign := TTextAlign.Leading;
   Flayout.Color := claBlack;
+end;
+
+destructor TReticuleShape.Destroy;
+begin
+  Flayout.Free;
+  inherited;
 end;
 
 procedure TReticuleShape.Paint;
