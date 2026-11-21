@@ -2,33 +2,89 @@
 
 procedure TGrapheReg.TraceTitreAxeY(g : tgrandeur;m : indiceMonde;
       indexCourbe : integer);
-var S : string;
-    aTitre : TText;
+var
+  item : TTitreAxeY;
 begin
      if g=nil then exit;
      if g.fonct.genreC=g_Texte then exit;
      if Monde[m].TitreAxe.IndexOf(g.nom)>=0 then exit;
-     canvas.stroke.kind := TBrushKind.None;
-     couleurTexte := courbes[indexCourbe].couleur;
-     S := g.axe((m=mondeY) and
+     item.Couleur := courbes[indexCourbe].couleur;
+     item.Texte := g.axe((m=mondeY) and
                 (courbes[0].trace=[trResidus]),
                  monde[m].graduation=gdB,monde[m].exposant);
+     item.Monde := m;
+     item.Largeur := canvas.textWidth(item.Texte)+marge;
+     item.Hauteur := canvas.textHeight(item.Texte)+marge;
      monde[m].TitreAxe.Add(g.nom);
-     aTitre := TText.Create(nil);
-   //  aTitre.font.family := FonteRegressi;
-     aTitre.rotationAngle := -90;
-     aTitre.rotationCenter.point := TpointF.create(0,0);
-     aTitre.text := S;
-     aTitre.position.point := monde[m].Ptitre;
-     aTitre.font.size := canvas.font.size;
-     aTitre.color := couleurTexte;
-     aTitre.width := canvas.textWidth(S)+marge;
-     aTitre.height := canvas.textHeight(S)+marge;
-     aTitre.tag := indexCourbe;
-     TitreY.add(aTitre);
-     monde[m].PTitre.offset(0,-aTitre.Width-canvas.textWidth('  '));
-     canvas.stroke.kind := TBrushKind.Solid;
+     TitresY.Add(item);
 end; // traceTitreAxeY
+
+procedure TGrapheReg.DrawTitresAxeY;
+var
+  m : indiceMonde;
+  i, n : integer;
+  gap, totalLen, px, py, bandCenter, bandBottom : single;
+  saveMat, rotMat : TMatrix;
+  saveAlignH, saveAlignV : TTextAlign;
+  item : TTitreAxeY;
+begin
+  if TitresY.Count = 0 then exit;
+  gap := canvas.TextWidth('  ');
+  saveMat := canvas.Matrix;
+  saveAlignH := layout.HorizontalAlign;
+  saveAlignV := layout.VerticalAlign;
+  try
+    layout.HorizontalAlign := TTextAlign.Leading;
+    layout.VerticalAlign := TTextAlign.Leading;
+    for m := mondeY to high(indiceMonde) do begin
+      n := 0;
+      totalLen := 0;
+      for i := 0 to TitresY.Count - 1 do
+        if TitresY[i].Monde = m then begin
+          totalLen := totalLen + TitresY[i].Largeur;
+          inc(n);
+        end;
+      if n = 0 then continue;
+      totalLen := totalLen + (n - 1) * gap;
+      px := monde[m].PTitre.x;
+      if OgPolaire in OptionGraphe then begin
+        py := monde[m].PTitre.y + totalLen / 2;
+        if py > limiteFenetre.Bottom then py := limiteFenetre.Bottom;
+      end
+      else if (OgAnalyseurLogique in OptionGraphe) and not superposePage then begin
+        bandCenter := (monde[m].CourbeTop + monde[m].CourbeBottom) / 2;
+        bandBottom := monde[m].CourbeBottom;
+        py := bandCenter + totalLen / 2;
+        if py > bandBottom then py := bandBottom;
+      end
+      else begin
+        bandCenter := (limiteFenetre.Top + limiteFenetre.Bottom) / 2;
+        py := bandCenter + totalLen / 2;
+        if py > limiteFenetre.Bottom then py := limiteFenetre.Bottom;
+      end;
+      for i := 0 to TitresY.Count - 1 do
+        if TitresY[i].Monde = m then begin
+          item := TitresY[i];
+          rotMat := TMatrix.CreateRotation(-Pi / 2) *
+                    TMatrix.CreateTranslation(px, py) *
+                    saveMat;
+          canvas.SetMatrix(rotMat);
+          layout.BeginUpdate;
+          layout.TopLeft := TPointF.Create(0, 0);
+          layout.MaxSize := TPointF.Create(item.Largeur + 6, item.Hauteur + 4);
+          layout.Color := item.Couleur;
+          layout.Text := item.Texte;
+          layout.EndUpdate;
+          layout.RenderLayout(canvas);
+          py := py - item.Largeur - gap;
+        end;
+    end;
+  finally
+    canvas.SetMatrix(saveMat);
+    layout.HorizontalAlign := saveAlignH;
+    layout.VerticalAlign := saveAlignV;
+  end;
+end; // DrawTitresAxeY
 
 procedure TGrapheReg.TraceTitreAxeX(g : tgrandeur;indexCourbe : integer);
 var S : string;
@@ -496,15 +552,14 @@ begin // DrawAxis
      yAxeX := P0.y;
      if not GraduationZeroX then xAxeY := limiteCourbe.left;
      if not GraduationZeroY then yAxeX := limiteCourbe.bottom;
-     for m := low(indiceMonde) to high(indiceMonde) do
-         monde[m].TitreAxe.clear;
      monde[mondeX].Ptitre.x := (limiteFenetre.right+limiteFenetre.left)/2;
      monde[mondeX].Ptitre.y := yAxeX+hautCarac+marge;
      for m := mondeY to high(indiceMonde) do begin
          monde[m].PTitre.x := limiteFenetre.left;
          monde[m].Ptitre.y := (limiteFenetre.Top+limiteFenetre.bottom)/2;
      end;
-     monde[mondeDroit].Ptitre.x := limiteFenetre.right-hautCarac-marge;
+     if not (OgAnalyseurLogique in OptionGraphe) then
+         monde[mondeDroit].Ptitre.x := limiteFenetre.right-hautCarac-marge;
      if (OgAnalyseurLogique in OptionGraphe) and
         not superposePage then
         for m := mondeY to high(indiceMonde) do

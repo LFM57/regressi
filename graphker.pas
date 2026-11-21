@@ -421,6 +421,14 @@ type
     destructor Destroy; override;
   end;
 
+  TTitreAxeY = record
+    Texte: string;
+    Couleur: TAlphaColor;
+    Monde: indiceMonde;
+    Largeur: single;
+    Hauteur: single;
+  end;
+
   TgrapheReg = class
     canvas:        Tcanvas;
     zoneClipBoard: Trectangle;
@@ -463,7 +471,7 @@ type
     DessinLineCourant : TdessinLine;
     indexPointCourant : integer;
 
-    TitreY: TList<Ttext>;
+    TitresY: TList<TTitreAxeY>;
     ReticuleOrigine : TreticuleShape;
     Selection : TRectSelect;
     layout: TTextLayout;
@@ -489,6 +497,7 @@ type
     procedure AjoutePoint(m: indiceMonde; XX, YY: double);
     procedure DrawAxis(initialisation: boolean);
     procedure TraceTitreAxeY(g: Tgrandeur; m: indiceMonde;indexCourbe: integer);
+    procedure DrawTitresAxeY;
     procedure TraceTitreAxeX(g: Tgrandeur;indexCourbe: integer);
     procedure VersImprimante(var Bas: single);
     procedure VersPressePapier;
@@ -536,7 +545,6 @@ type
     procedure ResetEquivalence;
     Procedure AjouteEquivalence(i : integer;effaceDouble : boolean);
     procedure traceUneCourbe(xvecteur,yvecteur : vecteur;N,Neq : integer;aColor : TAlphaColor);
-    procedure NotifyTitreY(sender:TObject;const item : TText;action : TCollectionNotification);
     procedure NotifyText(sender:TObject;const item : TDessinText;action : TCollectionNotification);
     procedure NotifyLine(sender:TObject;const item : TDessinLine;action : TCollectionNotification);
   end;
@@ -2577,7 +2585,6 @@ procedure TGrapheReg.Draw;
 var
   c, i: integer;
   nX: string;
-  largeurTitre : single;
   m : indiceMonde;
   k : indexCurseur;
 begin // graphe.draw
@@ -2646,7 +2653,9 @@ begin // graphe.draw
         if (varX <> nil) and (varX.nom <> nX) then
           unAxeX := False;
   end;
-  TitreY.clear;
+  TitresY.Clear;
+  for m := low(indiceMonde) to high(indiceMonde) do
+      monde[m].TitreAxe.Clear;
   drawAxis(graduationZeroX or graduationZeroY);
   indexHisto := 0;
   for c := 0 to pred(Courbes.Count) do
@@ -2654,16 +2663,7 @@ begin // graphe.draw
   for c := 0 to pred(DessinTexts.Count) do
       DessinTexts[c].maj;
   if graduationZeroX or graduationZeroY then drawAxis(False);
-  largeurTitre := titreY.Count*canvas.TextWidth('  ');
-  for i := 0 to TitreY.Count-1 do
-      largeurTitre := largeurTitre+TitreY[i].Width;
-  largeurTitre := (limiteFenetre.Height-largeurTitre)/2;
-  if largeurTitre<0 then largeurTitre := 0;
-  TitreY[0].Position.y := limiteFenetre.Bottom-largeurTitre;
-  for i := 1 to TitreY.Count-1 do
-         TitreY[i].Position.y := TitreY[i-1].position.y
-               - TitreY[i-1].width
-               - canvas.TextWidth('  ');
+  DrawTitresAxeY;
   for k := 1 to maxCurseur do begin
       curseurOsc[k].positionX := Xauto;
       curseurOsc[k].positionY := Yauto;
@@ -2683,7 +2683,7 @@ begin
          else dessinTexts.Delete(c);
   end;
   dessinLines.Clear;
-  TitreY.Clear;
+  TitresY.Clear;
   monde[mondeX].defini := False;
   GrapheOK  := False;
   AutoTick  := True;
@@ -2705,7 +2705,7 @@ begin
   dessinLines.Free;
   for p := 1 to MaxPages do
     equivalences[p].Free;
-  TitreY.Free;
+  TitresY.Free;
   for m := low(indiceMonde) to high(IndiceMonde) do
       monde[m].Free;
   for m := 1 to 2 do
@@ -2764,8 +2764,7 @@ begin
   dessinLines.OnNotify := notifyLine;
   for k := 1 to MaxPages do
       equivalences[k] := TlisteEquivalence.Create;
-  TitreY := Tlist<TText>.Create;
-  TitreY.OnNotify := notifyTitreY;
+  TitresY := TList<TTitreAxeY>.Create;
   PasPoint := 1;
   UnAxeX := True;
   reset;
@@ -4841,20 +4840,6 @@ begin
      if asize>20 then asize := 20;
      canvas.font.size := asize;
      layout.font.Size := asize;
-end;
-
-Procedure TGrapheReg.NotifyTitreY(sender:TObject;const item :Ttext;action : TCollectionNotification);
-begin
-   if action=cnRemoved then begin
-      paintBox.RemoveObject(item);
-   end;
-   if action=cnAdded then begin
-      paintBox.AddObject(item);
-      item.bringToFront;
-   end;
-   if action=cnExtracted then begin
-      paintBox.RemoveObject(item);
-   end;
 end;
 
 Procedure TGrapheReg.NotifyText(sender:TObject;const item :TDessinText;action : TCollectionNotification);
