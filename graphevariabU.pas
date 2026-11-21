@@ -2588,7 +2588,7 @@ begin with pages[pageCourante] do begin
         Acourbe := Tcourbe.create(valeurX,valeurY,0,pred(j),
                   grandeurs[iX],grandeurs[iY]);
         Acourbe.page := pageCourante;
-        Acourbe.setStyle(claRed,TStrokeDash.Solid,mCroix);
+        Acourbe.setStyle($FFD62728,TStrokeDash.Solid,mCroix);
         Acourbe.trace := [trResidus];
         monde[mondeX].mini := miniX;
         monde[mondeX].maxi := maxiX;

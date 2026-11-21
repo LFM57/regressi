@@ -53,7 +53,7 @@ const
   MondeAcc      = 2;
   NbreHarmoniqueAffMax = 32;
   maxCurseur = 2;
-  couleurCurseurs: array[1..maxCurseur] of tAlphaColor = (claRed,claCrimson);
+  couleurCurseurs: array[1..maxCurseur] of tAlphaColor = ($FFD62728,$FFE11D48);
   LongueurTangente = 25;
   LargeurReticule = 3;
 
@@ -86,18 +86,19 @@ const
   NbreGradMax      = 2 * NbreGradMin;
   NbreGradMaxMan   = 2 * NbreGradMax;
   coCadre          = 8;
-  BrushCouleurSelect = claRed;
-  CouleurAxeX        = claBlack;
+  BrushCouleurSelect = TAlphaColor($FFD62728);
+  CouleurAxeX        = TAlphaColor($FF374151);
+  CouleurCadre       = TAlphaColor($FFD1D5DB);
   styleTangente      = TStrokeDash.Solid;
   NbreLigneDessin = 14;
 
 var
-  CouleurGrille:      TAlphaColor = claSilver;
-  CouleurTexte:       TAlphaColor = claBlue;
-  CouleurLigne:       TAlphaColor = claBlue;
-  CouleurReticule:    TAlphaColor = claBlack;
-  CouleurTangente:    TAlphaColor = claRed;
-  FondReticule:       TAlphaColor = claBeige;
+  CouleurGrille:      TAlphaColor = $FFE5E7EB;
+  CouleurTexte:       TAlphaColor = $FF1F77B4;
+  CouleurLigne:       TAlphaColor = $FF1F77B4;
+  CouleurReticule:    TAlphaColor = $FF334155;
+  CouleurTangente:    TAlphaColor = $FFD62728;
+  FondReticule:       TAlphaColor = $FFFEF3C7;
 
   OrdreLissage:       integer = 3;
   reperePage:         TReperePage = Spcouleur;
@@ -107,15 +108,15 @@ var
   CouleurVitesseImposee: boolean = True;
 
   CouleurPages:     array[0..MaxPages] of  TAlphaColor =
-   (claGray, claBlue, claRed, claOlive, claNavy, claPurple, claTeal, claGray,
-    claBlack, claGreen, claBlue, claFuchsia, claAqua, claSilver, claBlue,
-    claRed, claGray, claDarkCyan, claRed, claMagenta, claBlueViolet, claPurple,
-    claTeal, claGray, claDimGray, claChartreuse, claBlue, claFuchsia, claAqua,
-    claSilver, claSteelBlue, claChocolate, claRed);
+   ($FF64748B, $FF1F77B4, $FFD62728, $FF2CA02C, $FFFF7F0E, $FF9467BD, $FF17BECF, $FF8C564B,
+    $FFE377C2, $FFBCBD22, $FF374151, $FF1F77B4, $FFD62728, $FF2CA02C, $FFFF7F0E,
+    $FF9467BD, $FF17BECF, $FF8C564B, $FFE377C2, $FFBCBD22, $FF374151, $FF1F77B4,
+    $FFD62728, $FF2CA02C, $FFFF7F0E, $FF9467BD, $FF17BECF, $FF8C564B, $FFE377C2,
+    $FFBCBD22, $FF374151, $FF1F77B4, $FFD62728);
   CouleurModele:    array[-MaxIntervalles..MaxIntervalles] of
-  TAlphaColor = (claTeal, claMaroon, claNavy, claGray, claMagenta, claBlack,
-                 claBlue, claRed, claGreen);
-  CouleurMecanique: array[1..2] of TAlphaColor = (claBlue, claRed);
+  TAlphaColor = ($FF17BECF, $FF8C564B, $FF1F77B4, $FF64748B, $FF9467BD, $FF374151,
+                 $FF1F77B4, $FFD62728, $FF2CA02C);
+  CouleurMecanique: array[1..2] of TAlphaColor = ($FF1F77B4, $FFD62728);
   PStylePages:      array[0..MaxPages] of
   TStrokeDash = (TStrokeDash.Solid, TStrokeDash.Dash, TStrokeDash.Dot,
     TStrokeDash.DashDot, TStrokeDash.DashDotDot, TStrokeDash.Solid,
@@ -135,7 +136,7 @@ var
     mCroix, mCroixDiag);
 
   CouleurInit: array[indiceOrdonnee] of TAlphaColor =
-     (claBlue, claRed, claGreen, claNavy, claPurple, claTeal);
+     ($FF1F77B4, $FFD62728, $FF2CA02C, $FFFF7F0E, $FF9467BD, $FF17BECF);
   PStyleInit:  array[indiceOrdonnee] of
   TStrokeDash = (TStrokeDash.Solid, TStrokeDash.Solid, TStrokeDash.Solid,
      TStrokeDash.Solid,TStrokeDash.Solid,TStrokeDash.Solid);
@@ -2288,8 +2289,8 @@ end end; // restaureSplineSinc
        if (m=1) and ((valYder=nil) or (valXder=nil)) then exit;
        if (m=2) and ((valYder=nil) or (valXder=nil)) then exit;
     end;
-    if (couleurMecanique[1]=claWhite) then couleurMecanique[1] := claBlue;
-    if (couleurMecanique[2]=claWhite) then couleurMecanique[2] := claRed;
+    if (couleurMecanique[1]=claWhite) then couleurMecanique[1] := $FF1F77B4;
+    if (couleurMecanique[2]=claWhite) then couleurMecanique[2] := $FFD62728;
       try
         if CouleurVitesseImposee
            then couleurV := CouleurMecanique[m]
@@ -4859,30 +4860,56 @@ end;
 
 procedure TGrapheReg.MyFillText(P : tpointF;S : string;couleurFond : TAlphaColor);
 const
-   PadW = 6;
-   PadH = 4;
-var L,H : single;
+   PadX = 6;
+   PadY = 2;
+var
+   L, H : single;
+   R : TRectF;
+   bgColor, borderColor : TAlphaColor;
+   saveStrokeColor : TAlphaColor;
+   saveStrokeDash : TStrokeDash;
+   saveStrokeThickness : single;
+   saveStrokeKind : TBrushKind;
 begin
    if S = '' then Exit;
    layout.BeginUpdate;
    layout.WordWrap := False;
    layout.MaxSize := TPointF.Create(10000, 10000);
-   layout.Color := couleurTexte;
+   layout.Color := BrushCouleurBadgeText;
    layout.Text := S;
    layout.EndUpdate;
    L := layout.TextWidth;
    H := layout.TextHeight;
    if L < Canvas.TextWidth(S) then L := Canvas.TextWidth(S);
    if H < Canvas.TextHeight(S) then H := Canvas.TextHeight(S);
-   L := L + PadW;
-   H := H + PadH;
+   R := TRectF.Create(P.X, P.Y, P.X + L + 2 * PadX, P.Y + H + 2 * PadY);
+   if couleurFond = BrushCouleurZoom then begin
+      bgColor := BrushCouleurBadgeBg;
+      borderColor := BrushCouleurBadgeBorder;
+   end else begin
+      bgColor := TAlphaColor((couleurFond and $00FFFFFF) or $EB000000);
+      borderColor := CouleurCadre;
+   end;
+   saveStrokeColor := canvas.Stroke.Color;
+   saveStrokeDash := canvas.Stroke.Dash;
+   saveStrokeThickness := canvas.Stroke.Thickness;
+   saveStrokeKind := canvas.Stroke.Kind;
    canvas.Fill.kind := TBrushKind.Solid;
-   canvas.Fill.Color := couleurFond;
-   MyFillRectXY(P.X,P.Y,P.X+L,P.Y+H);
+   canvas.Fill.Color := bgColor;
+   canvas.FillRect(R, 4, 4, AllCorners, 1);
+   canvas.Stroke.Kind := TBrushKind.Solid;
+   canvas.Stroke.Dash := TStrokeDash.Solid;
+   canvas.Stroke.Thickness := 1;
+   canvas.Stroke.Color := borderColor;
+   canvas.DrawRect(R, 4, 4, AllCorners, 1);
    canvas.Fill.kind := TBrushKind.None;
+   canvas.Stroke.Color := saveStrokeColor;
+   canvas.Stroke.Dash := saveStrokeDash;
+   canvas.Stroke.Thickness := saveStrokeThickness;
+   canvas.Stroke.Kind := saveStrokeKind;
    layout.BeginUpdate;
-   layout.TopLeft := P;
-   layout.MaxSize := TPointF.Create(L, H);
+   layout.TopLeft := TPointF.Create(P.X + PadX, P.Y + PadY);
+   layout.MaxSize := TPointF.Create(L + 4, H + 2);
    layout.EndUpdate;
    layout.RenderLayout(Canvas);
 end;

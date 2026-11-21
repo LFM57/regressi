@@ -90,8 +90,11 @@ const
     dimBorne = 8;
     dimVert = 3;
     rayon = dimBorne;
-    BrushCouleurSelect = claRed;
-    BrushCouleurZoom = claYellow;
+    BrushCouleurSelect = TAlphaColor($FFD62728);
+    BrushCouleurZoom = TAlphaColor($FFFEF3C7);
+    BrushCouleurBadgeBg = TAlphaColor($EEFEF3C7);
+    BrushCouleurBadgeBorder = TAlphaColor($FFD97706);
+    BrushCouleurBadgeText = TAlphaColor($FF1E293B);
 
 implementation
 
@@ -196,7 +199,7 @@ begin
   stroke.Dash := TStrokeDash.DashDot;
   Stroke.Thickness := 1;
   Cursor := crHandPoint;
-  Stroke.color := claBlack;
+  Stroke.color := TAlphaColor($FF475569);
   FisVert := true;
   FisHoriz := true;
   Fcomplet := true;
@@ -207,7 +210,7 @@ begin
   Flayout.font.Size := 14;
   Flayout.verticalAlign := TTextAlign.Leading;  // Center Leading Trailing
   Flayout.horizontalAlign := TTextAlign.Leading;
-  Flayout.Color := claBlack;
+  Flayout.Color := BrushCouleurBadgeText;
 end;
 
 destructor TReticuleShape.Destroy;
@@ -219,11 +222,31 @@ end;
 procedure TReticuleShape.Paint;
 
 procedure traceFond(P : TpointF;L,H : single);
+var
+   R : TRectF;
+   saveStrokeColor : TAlphaColor;
+   saveStrokeDash : TStrokeDash;
+   saveStrokeThickness : single;
+   saveStrokeKind : TBrushKind;
 begin
-   canvas.Fill.kind := TBrushKind.Solid;
-   canvas.Fill.Color := BrushCouleurZoom;
-   canvas.FillRect(TrectF.Create(P.x,P.y,P.X+L,P.Y+H),0,0,AllCorners,1);
-   canvas.Fill.kind := TBrushKind.None;
+   R := TRectF.Create(P.X, P.Y, P.X + L, P.Y + H);
+   saveStrokeColor := canvas.Stroke.Color;
+   saveStrokeDash := canvas.Stroke.Dash;
+   saveStrokeThickness := canvas.Stroke.Thickness;
+   saveStrokeKind := canvas.Stroke.Kind;
+   canvas.Fill.Kind := TBrushKind.Solid;
+   canvas.Fill.Color := BrushCouleurBadgeBg;
+   canvas.FillRect(R, 4, 4, AllCorners, 1);
+   canvas.Stroke.Kind := TBrushKind.Solid;
+   canvas.Stroke.Dash := TStrokeDash.Solid;
+   canvas.Stroke.Thickness := 1;
+   canvas.Stroke.Color := BrushCouleurBadgeBorder;
+   canvas.DrawRect(R, 4, 4, AllCorners, 1);
+   canvas.Fill.Kind := TBrushKind.None;
+   canvas.Stroke.Color := saveStrokeColor;
+   canvas.Stroke.Dash := saveStrokeDash;
+   canvas.Stroke.Thickness := saveStrokeThickness;
+   canvas.Stroke.Kind := saveStrokeKind;
 end;
 
 procedure traceTexte(P : TpointF;S : string);
@@ -233,18 +256,17 @@ begin
    Flayout.BeginUpdate;
    Flayout.WordWrap := False;
    Flayout.MaxSize := TPointF.Create(10000, 10000);
+   Flayout.Color := BrushCouleurBadgeText;
    Flayout.Text := S;
    Flayout.EndUpdate;
    L := Flayout.TextWidth;
    H := Flayout.TextHeight;
    if L < Canvas.TextWidth(S) then L := Canvas.TextWidth(S);
    if H < Canvas.TextHeight(S) then H := Canvas.TextHeight(S);
-   L := L + 6;
-   H := H + 4;
-   traceFond(P,L,H);
+   traceFond(P, L + 12, H + 4);
    Flayout.BeginUpdate;
-   Flayout.TopLeft := P;
-   Flayout.MaxSize := TPointF.Create(L, H);
+   Flayout.TopLeft := TPointF.Create(P.X + 6, P.Y + 2);
+   Flayout.MaxSize := TPointF.Create(L + 4, H + 2);
    Flayout.EndUpdate;
    Flayout.RenderLayout(Canvas);
 end;

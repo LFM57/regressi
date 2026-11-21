@@ -531,7 +531,9 @@ var i : integer;
 begin // DrawAxis
      penWidthAxe := 1.5;
      penWidthGrad := 1;
-     couleurGrillePale := getCouleurPale(couleurGrille);
+     if couleurGrille = TAlphaColor($FFE5E7EB)
+        then couleurGrillePale := TAlphaColor($FFF3F4F6)
+        else couleurGrillePale := getCouleurPale(couleurGrille);
      if courbes.count>0 then monde[mondeX].Axe := courbes[0].varX;
      mondeYseul := true;
      for i := 0 to pred(courbes.count) do with courbes[i] do begin
@@ -571,6 +573,15 @@ begin // DrawAxis
         if avecAxeX then tracePolaire else zeroPolaire;
         exit;
      end;
+     CreatePen(TStrokeDash.Solid, 1, CouleurCadre);
+     if OgAnalyseurLogique in OptionGraphe then begin
+        for m := mondeY to high(indiceMonde) do
+           if monde[m].defini then
+              MyDrawRectXY(limiteCourbe.Left, monde[m].CourbeTop,
+                           limiteCourbe.Right, monde[m].CourbeBottom);
+     end
+     else
+        MyDrawRect(limiteCourbe);
      initAxeX;
      if avecAxeX then begin
         if monde[mondeX].Graduation=gLog
