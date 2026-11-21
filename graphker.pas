@@ -473,6 +473,12 @@ type
     indexPointCourant : integer;
 
     TitresY: TList<TTitreAxeY>;
+    FSonagrammeBitmap: TBitmap;
+    FSonaNbreX, FSonaNbreY: integer;
+    FSonaDecadeDB: integer;
+    FSonaFaussesCouleurs: boolean;
+    FSonaPage: integer;
+    FSonaChecksum: double;
     ReticuleOrigine : TreticuleShape;
     Selection : TRectSelect;
     layout: TTextLayout;
@@ -1807,55 +1813,100 @@ var
 
   procedure TraceSonagramme;
   var
-    i, j, Int, NbreY: integer;
-    P1,P2: TpointF;
-    xCourant,xSuivant : single;
-    IntReal, deltay: double;
+    i, j, Int, NbreY, W, H, idxPrev, idxEnd: integer;
+    xCourant, xSuivant, xStart, xEnd, yTop, yBottom, tmp: single;
+    IntReal, deltay, checksum: double;
     couleurT: TAlphaColor;
+    needRebuild: boolean;
+    MapData: TBitmapData;
+    SrcRect, DstRect: TRectF;
+    SaveState: TCanvasSaveState;
   begin with courbes[index], pages[pageCourante] do begin
-      canvas.Stroke.Dash := TStrokeDash.Solid;
-      canvas.stroke.kind := TBrushKind.Solid;
       deltay := valY[1] / 2;
       NbreY  := 0;
       repeat
         Inc(NbreY)
       until (valY[NbreY] = 0) or (NbreY = NbreFFT div 2);
 // valY = valeur de fréquence
+      W := pred(NbreSonagramme);
+      H := pred(NbreY);
+      if (W <= 0) or (H <= 0) then exit;
+      checksum := son[1, 1] + son[W, H] + son[(W + 1) div 2, (H + 1) div 2];
+      needRebuild := (FSonagrammeBitmap = nil) or
+                     (FSonagrammeBitmap.Width <> W) or
+                     (FSonagrammeBitmap.Height <> H) or
+                     (FSonaNbreX <> W) or
+                     (FSonaNbreY <> H) or
+                     (FSonaDecadeDB <> DecadeDB) or
+                     (FSonaFaussesCouleurs <> useFaussesCouleurs) or
+                     (FSonaPage <> pageCourante) or
+                     (FSonaChecksum <> checksum);
+      if needRebuild then begin
+        if FSonagrammeBitmap = nil then
+          FSonagrammeBitmap := TBitmap.Create(W, H)
+        else
+          FSonagrammeBitmap.SetSize(W, H);
+        if FSonagrammeBitmap.Map(TMapAccess.Write, MapData) then
+        try
+          for i := 1 to W do
+            for j := 1 to H do begin
+              IntReal := son[i, j]; // entre 0 et 1
+              if DecadeDB > 0 then begin // logarithmique sur x décades
+                if IntReal > 0 then begin
+                  IntReal := 1 + log10(IntReal) / DecadeDB;
+                  if IntReal < 0 then
+                    IntReal := 0;
+                end
+                else
+                  IntReal := 0;
+              end;
+              if useFaussesCouleurs then
+                couleurT := GetFausseCouleur(IntReal)
+              else begin
+                Int := 255 - round(255 * IntReal);
+                if Int < 0 then Int := 0
+                else if Int > 255 then Int := 255;
+                couleurT := MakeColor(Int, Int, Int);
+              end;
+              MapData.SetPixel(i - 1, H - j, couleurT);
+            end; // j
+        finally
+          FSonagrammeBitmap.Unmap(MapData);
+        end;
+        FSonaNbreX := W;
+        FSonaNbreY := H;
+        FSonaDecadeDB := DecadeDB;
+        FSonaFaussesCouleurs := useFaussesCouleurs;
+        FSonaPage := pageCourante;
+        FSonaChecksum := checksum;
+      end;
       xCourant := monde[mondeX].affecte(valX[0]);
       xSuivant := monde[mondeX].affecte(valX[1]);
-      P1.x := (xCourant+xSuivant)/2;
-// départ de 1 pour axe Y visible
-      for i := 1 to pred(NbreSonagramme) do begin
-        xSuivant := monde[mondeX].affecte(valX[(i + 1) * nbreSonagrammeAff]);
-        P2.x := (xCourant+xSuivant)/2; // à cheval
-        P1.y := monde[mondeY].affecte(deltay);
-        for j := 1 to pred(NbreY) do begin
-// départ de 1 pour axe X visible
-          P2.y := monde[mondeY].affecte(valY[j] + Deltay);
-          IntReal := son[i, j]; // entre 0 et 1
-          if DecadeDB > 0 then begin // logarithmique sur x décades
-            try
-              IntReal := 1 + log10(IntReal) / DecadeDB;
-              if IntReal < 0 then
-                intReal := 0;
-            except
-              IntReal := 0;
-            end;
-          end;
-          if useFaussesCouleurs then
-            couleurT := GetFausseCouleur(IntReal)
-          else begin
-            Int := 255 - round(255 * IntReal);
-            CouleurT := MakeColor(Int, Int, Int);
-          end;
-          CreateSolidBrush(couleurT);
-          MyFillRectXY(P1.x, P1.y, P2.x+1, P2.y+1); // Trace de x1 à x2 et de y2 à y1
-          // +1 à cause de ps_null
-          P1.y := P2.y;
-        end; // j
-        P1.x := P2.x;
-        xCourant := xSuivant;
-      end; // i
+      xStart := (xCourant + xSuivant) / 2;
+      if NbreSonagramme = 2 then
+        xCourant := xSuivant
+      else begin
+        idxPrev := (NbreSonagramme - 1) * nbreSonagrammeAff;
+        if idxPrev > finC then idxPrev := finC;
+        xCourant := monde[mondeX].affecte(valX[idxPrev]);
+      end;
+      idxEnd := NbreSonagramme * nbreSonagrammeAff;
+      if idxEnd > finC then idxEnd := finC;
+      xSuivant := monde[mondeX].affecte(valX[idxEnd]);
+      xEnd := (xCourant + xSuivant) / 2;
+      yBottom := monde[mondeY].affecte(deltay);
+      yTop := monde[mondeY].affecte(valY[H] + deltay);
+      if xStart > xEnd then begin tmp := xStart; xStart := xEnd; xEnd := tmp; end;
+      if yTop > yBottom then begin tmp := yTop; yTop := yBottom; yBottom := tmp; end;
+      SrcRect := TRectF.Create(0, 0, W, H);
+      DstRect := TRectF.Create(xStart, yTop, xEnd, yBottom);
+      SaveState := Canvas.SaveState;
+      try
+        Canvas.IntersectClipRect(LimiteCourbe);
+        Canvas.DrawBitmap(FSonagrammeBitmap, SrcRect, DstRect, 1, True);
+      finally
+        Canvas.RestoreState(SaveState);
+      end;
   end end; // traceSonagramme
 
 procedure AffecteSplineSinc;
@@ -2686,6 +2737,8 @@ begin
   end;
   dessinLines.Clear;
   TitresY.Clear;
+  FSonaNbreX := 0;
+  FSonaNbreY := 0;
   monde[mondeX].defini := False;
   GrapheOK  := False;
   AutoTick  := True;
@@ -2708,6 +2761,7 @@ begin
   for p := 1 to MaxPages do
     equivalences[p].Free;
   TitresY.Free;
+  FSonagrammeBitmap.Free;
   for m := low(indiceMonde) to high(IndiceMonde) do
       monde[m].Free;
   for m := 1 to 2 do
