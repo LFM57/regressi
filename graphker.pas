@@ -63,6 +63,7 @@ type
   Tmotif          = (mCroix, mCroixDiag, mCercle, mCarre, mLosange,
     mCerclePlein, mCarrePlein, mLosangePlein, mIncert, mHisto,
     mSpectre, mReticule, mBarreD, mBarreG, mLigneH);
+  TStyleIncertitude = (siBarres, siEllipse, siBarresEtEllipse);
 
 // etoile, triangle, pentagone, asterisque, pentagonePlein, trianglePlein
   TetatModele     = (ModeleConstruit, ModeleLineaire, ModeleDefini,
@@ -106,6 +107,7 @@ var
   DimPointVGA:        integer = 4; // dimension du point en pixel VGA
   PStyleReticule:     TStrokeDash = TStrokeDash.Solid;
   CouleurVitesseImposee: boolean = True;
+  StyleIncertitude:   TStyleIncertitude = siBarresEtEllipse;
 
   CouleurPages:     array[0..MaxPages] of  TAlphaColor =
    ($FF64748B, $FF1F77B4, $FFD62728, $FF2CA02C, $FFFF7F0E, $FF9467BD, $FF17BECF, $FF8C564B,
@@ -1642,6 +1644,10 @@ var
 
     procedure TraceUnPoint;
     var Fpath : TPathData;
+        dxErr, dyErr : double;
+        hasErrX, hasErrY : boolean;
+        capSize, dotR, ex1, ey1, ex2, ey2 : single;
+        errRect : TRectF;
     begin with courbes[index] do begin
         WindowRT(valX[i], valY[i], iMondeC, P);
         if (P.x > 0) and (P.y >= miniY) and (P.y <= maxiY) then
@@ -1700,32 +1706,64 @@ var
                 MyDrawEllipse(P.x- dimPoint,P.y - dimPoint,P.x+dimPoint + 1,P.y+dimPoint + 1);
               end;
               mLigneH: Segment(TpointF.create(P.x - dimPoint, P.y), TpointF.create(P.x + dimPoint, P.y));
-              mIncert: if (varX = nil) or
-                          (IncertX = nil) or
-                          (varY = nil) or
-                          (IncertY = nil)
+              mIncert: if ((varX = nil) or (IncertX = nil)) and
+                          ((varY = nil) or (IncertY = nil))
                 then MyDrawRectXY(P.x- dimPoint,P.Y- dimPoint,P.x+dimPoint,P.Y+ dimPoint)
                 else begin
-                  WindowRT(valX[i] + CoeffEllipse * IncertX[i],
-                    valY[i] - CoeffEllipse * IncertY[i], iMondeC, P2);
-                  WindowRT(valX[i] - CoeffEllipse * IncertX[i],
-                    valY[i] + CoeffEllipse * IncertY[i], iMondeC, P1);
-                  if ((P1.x = P2.x) and (P2.y = P1.y)) or
-                    (P1.x<0) or
-                    (P2.x<0) or
-                    (P1.y<0) or
-                    (P2.y<0)
-                  then MyDrawRectXY(P.x - dimPoint, P.y - dimPoint, P.x + dimPoint, P.y + dimPoint)
-                  else if (P1.x = P2.x) or (P1.y = P2.y)
-                    then begin
-                         SegmentXY(P1.x, P.y,P2.x, P.y);
-                         SegmentXY(P.x, P1.y,P.x, P2.y);
-                    end
-                    else begin
-                    SegmentXY(P.x,P.y- 1, p.x,p.Y+1);
-                    SegmentXY(P.x- 1,P.y, P.x+1,P.y);
-                    MyDrawEllipse(P1.x,P1.Y,P2.x+1,P2.Y+1);
-                    // +1 nécessaire pour centrer mais pourquoi ??
+                  if (varX <> nil) and (IncertX <> nil)
+                     then dxErr := Abs(CoeffEllipse * IncertX[i])
+                     else dxErr := 0;
+                  if (varY <> nil) and (IncertY <> nil)
+                     then dyErr := Abs(CoeffEllipse * IncertY[i])
+                     else dyErr := 0;
+                  WindowRT(valX[i] + dxErr, valY[i] - dyErr, iMondeC, P2);
+                  WindowRT(valX[i] - dxErr, valY[i] + dyErr, iMondeC, P1);
+                  hasErrX := (dxErr > 0) and (Abs(P2.X - P1.X) >= 1.5);
+                  hasErrY := (dyErr > 0) and (Abs(P2.Y - P1.Y) >= 1.5);
+                  if (not hasErrX) and (not hasErrY) then begin
+                    dotR := dimPoint * 0.6;
+                    if dotR < 2 then dotR := 2;
+                    CreateSolidBrush(couleurLoc);
+                    MyFillEllipse(P.x - dotR, P.y - dotR, P.x + dotR, P.y + dotR);
+                    Canvas.Fill.Kind := TBrushKind.None;
+                  end else begin
+                    if hasErrX and hasErrY and (StyleIncertitude in [siEllipse, siBarresEtEllipse]) then begin
+                      ex1 := P1.X; ex2 := P2.X;
+                      if ex1 > ex2 then begin dotR := ex1; ex1 := ex2; ex2 := dotR; end;
+                      ey1 := P1.Y; ey2 := P2.Y;
+                      if ey1 > ey2 then begin dotR := ey1; ey1 := ey2; ey2 := dotR; end;
+                      errRect := TRectF.Create(ex1, ey1, ex2, ey2);
+                      CreateSolidBrush(TAlphaColor((couleurLoc and $00FFFFFF) or $28000000));
+                      Canvas.FillEllipse(errRect, 1);
+                      Canvas.Fill.Kind := TBrushKind.None;
+                      CreatePen(TStrokeDash.Solid, 1, TAlphaColor((couleurLoc and $00FFFFFF) or $99000000));
+                      Canvas.DrawEllipse(errRect, 1);
+                    end;
+                    if (StyleIncertitude in [siBarres, siBarresEtEllipse]) or
+                       (hasErrX xor hasErrY) then begin
+                      capSize := dimPoint;
+                      if capSize < 3 then capSize := 3;
+                      if capSize > 6 then capSize := 6;
+                      dotR := penWidth * 0.75;
+                      if dotR < 1 then dotR := 1;
+                      CreatePen(TStrokeDash.Solid, dotR, couleurLoc);
+                      if hasErrX then begin
+                        SegmentXY(P1.X, P.Y, P2.X, P.Y);
+                        SegmentXY(P1.X, P.Y - capSize, P1.X, P.Y + capSize);
+                        SegmentXY(P2.X, P.Y - capSize, P2.X, P.Y + capSize);
+                      end;
+                      if hasErrY then begin
+                        SegmentXY(P.X, P1.Y, P.X, P2.Y);
+                        SegmentXY(P.X - capSize, P1.Y, P.X + capSize, P1.Y);
+                        SegmentXY(P.X - capSize, P2.Y, P.X + capSize, P2.Y);
+                      end;
+                    end;
+                    dotR := dimPoint * 0.55;
+                    if dotR < 2 then dotR := 2;
+                    CreateSolidBrush(couleurLoc);
+                    MyFillEllipse(P.x - dotR, P.y - dotR, P.x + dotR, P.y + dotR);
+                    Canvas.Fill.Kind := TBrushKind.None;
+                    CreatePen(TStrokeDash.Solid, penWidth, couleurLoc);
                   end;
                 end // Incertitude
             end // case motif
