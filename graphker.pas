@@ -242,6 +242,7 @@ type
     procedure Paint; override;
     constructor CreateLine(gr : TgrapheReg);
     function LitOption : boolean;
+    procedure Maj;
     procedure MouseDown(Button: TMouseButton;
              Shift: TShiftState; X,Y: single);override;
     procedure MouseUp(Button: TMouseButton;
@@ -523,6 +524,7 @@ type
       Nbre: integer; grandeurX, grandeurY: Tgrandeur;
       Apage: integer): Tcourbe;
     procedure LineGr(Arect: TrectF);
+    procedure MajDessins;
     procedure MajNomGr;
     function AjusteMonde: boolean;
     procedure SetUnitePente(iMonde: indiceMonde);
@@ -1543,6 +1545,7 @@ begin // setMonde
       CourbeBottom := LimiteCourbe.bottom;
     end;
   chercheProjection;
+  MajDessins;
 end; // SetMonde
 
 procedure TGrapheReg.AjoutePoint(m: indiceMonde; XX, YY: double);
@@ -2660,8 +2663,7 @@ begin // graphe.draw
   indexHisto := 0;
   for c := 0 to pred(Courbes.Count) do
       traceCourbe(c);
-  for c := 0 to pred(DessinTexts.Count) do
-      DessinTexts[c].maj;
+  MajDessins;
   if graduationZeroX or graduationZeroY then drawAxis(False);
   DrawTitresAxeY;
   for k := 1 to maxCurseur do begin
@@ -4082,7 +4084,28 @@ procedure TdessinText.Maj;
 var P : TpointF;
 begin
    agraphe.WindowRT(xReal, yReal, iMonde, p);
-   position.point := p;
+   if (Abs(position.X - p.X) > 0.5) or (Abs(position.Y - p.Y) > 0.5) then
+      position.point := p;
+end;
+
+procedure TdessinLine.Maj;
+var P : TpointF;
+begin
+   agraphe.WindowRT(xReal, yReal, iMonde, P);
+   if (Abs(position.X - P.X) > 0.5) or (Abs(position.Y - P.Y) > 0.5) then
+      position.point := P;
+end;
+
+procedure TGrapheReg.MajDessins;
+var c : integer;
+begin
+   if not grapheOK then exit;
+   for c := 0 to pred(DessinTexts.Count) do
+       if DessinTexts[c] <> DessinTextCourant then
+          DessinTexts[c].Maj;
+   for c := 0 to pred(DessinLines.Count) do
+       if DessinLines[c] <> DessinLineCourant then
+          DessinLines[c].Maj;
 end;
 
 procedure TgrapheReg.majNomGr;
@@ -4899,6 +4922,7 @@ end;
 procedure TDessinText.MouseUp(Button: TMouseButton;
   Shift: TShiftState; X, Y: Single);
 begin
+    aGraphe.mondeRT(position.point, iMonde, xReal, yReal);
     inherited;
 end;
 
@@ -5039,11 +5063,7 @@ end;
 
 procedure TDessinText.Paint;
 var R : TrectF;
-    pos : TPointF;
 begin
-   Agraphe.windowRT(xReal,yReal, iMonde, pos);
-   position.X := pos.X;
-   position.Y := pos.Y;
    R := TrectF.create(0,0,width,height);
    if avecCadre then begin
       canvas.Stroke.Color := color;
@@ -5098,8 +5118,6 @@ var dX,dY,a,b : double;
 begin
     inherited;
     Agraphe.windowRT(xReal,yReal, iMonde, pfin);
-    position.X := pfin.X;
-    position.X := pfin.X;
     x1 := xReal;
     y1 := yReal;
     pfin.Offset(width,height);
