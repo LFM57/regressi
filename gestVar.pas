@@ -1,4 +1,4 @@
-// gestVar.pas : fichier inclus de compile.pas
+Ôªø// gestVar.pas : fichier inclus de compile.pas
 
 procedure videParam;
 var i : codeParam;
@@ -17,6 +17,13 @@ begin
        nomInit := f.nom+'0';
        result := indexNom(nomInit);
     end;
+end;
+
+Function Tgrandeur.TitreAff : string;
+begin
+     if AffSignif and (fonct.expression<>'')
+        then result := fonct.expression
+        else result := nom;
 end;
 
 Function GrandeurToIndex(Avariable : tgrandeur) : codeGrandeur;
@@ -316,7 +323,7 @@ end; // calculEuler
 
 Procedure CalculDiff12;
 // calcul par Runge-Kunta d'ordre 4 de z(t) solution de
-//   z''=f(t,z,z') systËme Èquivalent : z'=x  z''=x'=f(t,z,x)
+//   z''=f(t,z,z') syst√®me √©quivalent : z'=x  z''=x'=f(t,z,x)
 //   ou de z'=f(t,z)
 var i : integer;
     index : codeGrandeur;
@@ -484,7 +491,7 @@ begin // ChercheSystDiff
                         then begin
                            equation := calcul.OperandGlb;
                            i0 := getIndexInit(grandeurs[i]);
-                           if isNan(valeurConst[i0]) then exit; // valeur initiale non dÈfinie
+                           if isNan(valeurConst[i0]) then exit; // valeur initiale non d√©finie
                         end
                         else equation := calcul;
                      diffDepend := diffDepend + depend;
@@ -496,7 +503,7 @@ begin // ChercheSystDiff
        if DiffTrouve
           then begin
                repeat
-           { vÈrifier fonction incluse dans le systËme diff }
+           { v√©rifier fonction incluse dans le syst√®me diff }
                modif := false;
                for i := 0 to pred(NbreGrandeurs) do
                    if not grandeurs[i].fonct.isSysteme and
@@ -514,7 +521,7 @@ begin // ChercheSystDiff
                            AjouteFonct(i);
                        end;
                until not modif;
-//   modif x0 (varX) oblige ‡ recalculer x' ; x'0 (varY) pour x'' 
+//   modif x0 (varX) oblige √† recalculer x' ; x'0 (varY) pour x'' 
           end
           else exit;
        for i := 0 to pred(NbreGrandeurs) do
@@ -593,7 +600,7 @@ begin // ChercheEuler
                         then begin
                            typeE := tEuler;
                            i0 := getIndexInit(grandeurs[i]);
-                           if isNan(valeurConst[i0]) then exit; // valeur initiale non dÈfinie
+                           if isNan(valeurConst[i0]) then exit; // valeur initiale non d√©finie
                         end
                         else typeE := tFonction;
                      equation := calcul;
@@ -606,7 +613,7 @@ begin // ChercheEuler
        if DiffTrouve
           then begin
                repeat
-// vÈrifier fonction incluse dans le systËme
+// v√©rifier fonction incluse dans le syst√®me
                modif := false;
                for i := 0 to pred(NbreGrandeurs) do
                    if not grandeurs[i].fonct.isSysteme and
@@ -624,7 +631,7 @@ begin // ChercheEuler
                            AjouteFonct(i);
                        end;
                until not modif;
-// modif x0 (varX) oblige ‡ recalculer x' ;  x'0 (varY) pour x'' 
+// modif x0 (varX) oblige √† recalculer x' ;  x'0 (varY) pour x'' 
           end
           else exit;
        for i := 1 to NbreDiff do with DataDiff[i] do begin
@@ -651,14 +658,16 @@ begin
     for i := 0 to pred(NbreGrandeurs) do with grandeurs[i] do
         case genreG of
            variable : case fonct.genreC of
-              g_experimentale : if IncertCalc.expression<>''
-                  then for j := 0 to pred(nmes) do begin
+              g_experimentale : if IncertCalc.expression<>'' then begin
+                  if IncertCalc.calcul=nil then compileIncertitude;
+                  for j := 0 to pred(nmes) do begin
                      valCourante := valeurVar[i,j]; // SI ?
                      try
                      IncertVar[i,j] := calcule(IncertCalc.calcul)
                      except
                          IncertVar[i,j] := Nan;
                      end;
+                  end;
               end;
               g_fonction,g_derivee,g_deriveeSeconde : ; // fait dans calcColonne
               else for j := 0 to pred(nmes) do
@@ -738,14 +747,7 @@ Procedure IncertDerivee;
 var NbrePointDer : integer;
     indexX,indexY : codeGrandeur;
 begin with grandeurs[index].fonct.calcul^ do begin
-   if operandDebut<>nil
-      then begin
-         NbrePointDer := round(calcule(operandDebut));
-         if not odd(NbrePointDer) then inc(NbrePointDer);
-         if (NbrePointDer>11) or (NbrePointDer<3)
-             then NbrePointDer := NbrePointDerivee;
-      end
-      else NbrePointDer := NbrePointDerivee;
+   getParamDerivee(operandDebut,NbrePointDer);
    indexX := grandeurToIndex(varX);
    indexY := grandeurToIndex(varY);
    try
@@ -762,15 +764,17 @@ begin
     affecteVariableP(false);
     with grandeurs[index] do case genreG of
         variable : case fonct.genreC of
-            g_experimentale : if IncertCalc.expression<>''
-              then for j := 0 to pred(nmes) do begin
+            g_experimentale : if IncertCalc.expression<>'' then begin
+                if IncertCalc.calcul=nil then compileIncertitude;
+                for j := 0 to pred(nmes) do begin
                    valCourante := valeurVar[index,j]; // SI ?
                    try
                    IncertVar[index,j] := calcule(IncertCalc.calcul)
                    except
                        IncertVar[index,j] := Nan
                    end;
-              end;
+                end;
+            end;
             g_fonction : for j := 0 to pred(nmes) do begin
                affecteVariableE(j);
                CalculIncertFonction(index,j);
@@ -799,9 +803,11 @@ Procedure Tpage.CalculIncertConst(i : codeGrandeur);
 begin with grandeurs[i] do begin
          try
          case fonct.genreC of
-              g_experimentale : if IncertCalc.expression<>''
-                  then incertConst[i] := calcule(IncertCalc.calcul);
-                   { else entrÈe dans le tableau }
+              g_experimentale : if IncertCalc.expression<>'' then begin
+                  if IncertCalc.calcul=nil then compileIncertitude;
+                  incertConst[i] := calcule(IncertCalc.calcul);
+                   // else entr√©e dans le tableau
+              end;
               g_fonction : if IncertCalc.calcul<>nil
                  then incertConst[i] := calcule(IncertCalc.calcul)
                  else incertConst[i] := Nan;
@@ -817,7 +823,7 @@ procedure Tpage.CalcColonneP(index : codeGrandeur;lisse : boolean);
 var indexX : integer;
 
 Procedure calculFiltrage;
-// filtrage : grandeur*operandGlb dans l'espace des frÈquences
+// filtrage : grandeur*operandGlb dans l'espace des fr√©quences
 var  i,j : integer;
      z : complexe;
      x,y : double;
@@ -836,7 +842,7 @@ begin
     NfiltreCalc := -1;
     for j := 0 to pred(NbreFiltre) do
         if indexFiltre[j]<index then NfiltreCalc := j;
-// f=0 ‡ part pour Èviter erreur /0 lors de passe-bande
+// f=0 √† part pour √©viter erreur /0 lors de passe-bande
     grandeurs[cFrequence].valCourante := grandeurs[cFrequence].valeur[0];
     for j := 0 to NfiltreCalc do with grandeurs[indexFiltre[j]] do begin
           valCourante := valeurR[0];
@@ -872,7 +878,7 @@ begin
         fftImag[index,i] := z.reel*y+z.imag*x;
     end;{for i}
     for i := succ(NbreFFT div 2) to pred(NbreFFT) do begin
-    // f<0 donc complexe conjuguÈ pour signal rÈel
+    // f<0 donc complexe conjugu√© pour signal r√©el
         fftReel[index,i] := fftReel[index,NbreFFT-i];
         fftImag[index,i] := -fftImag[index,NbreFFT-i];
     end;{for i}
@@ -884,8 +890,8 @@ begin
 end; // calculFiltrage
 
 Procedure calculDefinitionFiltre;
-// dÈfinition d'un filtre dans l'espace des frÈquences
-// et rÈponse impulsionnelle dans l'espace temporel
+// d√©finition d'un filtre dans l'espace des fr√©quences
+// et r√©ponse impulsionnelle dans l'espace temporel
 var  i,j : integer;
      z : complexe;
      sauveFenetre : Tfenetre;
@@ -915,7 +921,7 @@ begin
           fftImag[index,i] := z.imag;
           except
              if i=0
-// f=0 ‡ part pour Èviter erreur /0 lors de passe-bande ou passe-haut 
+// f=0 √† part pour √©viter erreur /0 lors de passe-bande ou passe-haut 
                 then begin
                      fftReel[index,0] := 0;
                      fftImag[index,0] := 0;
@@ -930,7 +936,7 @@ begin
     end;
     FourierInverse(Nmes,NbreFFT,0,PeriodeFFT,grandeurs[indexTri].valeur,
        grandeurs[index].valeur,fftReel[index],fftImag[index],c_spectre);
- // rÈponse impulsionnelle
+ // r√©ponse impulsionnelle
     fenetre := sauveFenetre;
     debutFFT := sauveDebut;
     finFFT := sauveFin;
@@ -1006,10 +1012,10 @@ begin
         valeurVar[index,i] := Maxi*i*coeff
     except
     end;
-end; // calculRetard (pour corrÈlation)
+end; // calculRetard (pour corr√©lation)
 
 Procedure calculHarmonique;
-// harmonique debut ‡ fin de grandeur
+// harmonique debut √† fin de grandeur
 var  i,idebut,ifin : integer;
      sauveFenetre : Tfenetre;
      largeurRaie : integer;
@@ -1097,10 +1103,10 @@ begin with grandeurs[index].fonct.calcul^ do begin
        else begin
            coeffX := 0;coeffY := 0;
            for i := 0 to pred(Nmes) do begin
-               coeffY := coeffX+sqr(grandeurs[indexX].valeur[i]);
-               coeffX := coeffY+sqr(grandeurs[indexY].valeur[i]);
+               coeffX := coeffX+sqr(grandeurs[indexX].valeur[i]);
+               coeffY := coeffY+sqr(grandeurs[indexY].valeur[i]);
            end;
-           coeff := Nmes/sqrt(coeffX*coeffY);
+           coeff := Nmes/sqrt(coeffX*coeffY)/2;
        end;
     for i := 0 to pred(Nmes) do
         grandeurs[index].valeur[i] := coeff*grandeurs[index].valeur[i];
@@ -1150,14 +1156,7 @@ var vi : vecteurInt;
     i,j : integer;
     NbrePointDer : integer;
 begin with grandeurs[index].fonct.calcul^ do begin
-   if operandDebut<>nil
-      then begin
-         NbrePointDer := round(calcule(operandDebut));
-         if not odd(NbrePointder) then inc(NbrePointDer);
-         if (NbrePointDer>MaxPointsDerivee) or (NbrepointDer<MinPointsDerivee) then
-             NbrePointDer := NbrePointDerivee;
-      end
-      else NbrePointDer := NbrePointDerivee;
+   getParamDerivee(operandDebut,NbrePointDer);
    setLength(vi,NmesMax+2);
    setLength(valeurDer,NmesMax+2);
    CopyVecteur(valeurX,varX.valeur);
@@ -1187,15 +1186,7 @@ var vi : vecteurInt;
     i,j : integer;
     NbrePointsDer : integer;
 begin with grandeurs[index].fonct.calcul^ do begin
-   if operandDebut<>nil
-      then begin
-         NbrePointsDer := round(calcule(operandDebut));
-         if not odd(NbrePointsDer) then inc(NbrePointsDer);
-         if (NbrePointsDer>MaxPointsDerivee) or
-            (NbrepointsDer<MinPointsDerivee) then
-             NbrePointsDer := NbrePointDerivee;
-      end
-      else NbrePointsDer := NbrePointDerivee;
+   getParamDerivee(operandDebut,NbrePointsDer);
    setLength(vi,NmesMax+2);
    setLength(valeurDer,NmesMax+2);
    CopyVecteur(valeurX,varX.valeur);
@@ -1232,12 +1223,13 @@ end end;// calculLissage
 Procedure calculFreqInst;
 var i,j,iDebut : integer;
     freq : double;
-    Di,Diprec,periode : double;
+    Di,Diprec : double;
     voieF : Tgrandeur;
     seuil,ymax,ymin,valeurC : double;
-    premier : boolean;
     seuilTrouve : boolean;
+    tStart,tCourant : double;
 begin with grandeurs[index] do begin
+     if nmes<2 then exit;
      voieF := fonct.calcul^.varx;
      if (fonct.calcul.operandFin<>nil)
         then seuil := calcule(fonct.calcul.OperandFin)
@@ -1251,53 +1243,57 @@ begin with grandeurs[index] do begin
                    else if valeurC<ymin then ymin := valeurC;
             end;
             seuil := (ymax+ymin)/2;
+            if ymin*ymax<0 then begin
+               valeurC := (ymax-ymin)/32;
+               if abs(seuil)<valeurC then seuil := 0;
+            end;
         end;
-     i := 1;
+     i := 0;
      Di := voieF.valeur[0];
+     freq := 0;
      repeat
         inc(i);
         DiPrec := Di;
         Di := voieF.valeur[i];
-        seuilTrouve := (Di>seuil) and (DiPrec<seuil);
+        seuilTrouve := (Di>=seuil) and (DiPrec<seuil);
      until seuilTrouve or (i>=(Nmes-1));
-     // traversÈe du seuil ‡ i
-     freq := 0;
-     premier := true;
-     while i<(Nmes-1) do begin
-         iDebut := i; // derniËre traversÈe du seuil
-         inc(i,4); // "hystÈrÈsis" temporel
-         seuilTrouve := false;
-         while  (i<=(Nmes-1)) and (voieF.valeur[i]>seuil) do begin
-            inc(i)
+     if not seuilTrouve then begin
+        for j := 0 to pred(nmes) do valeur[j] := 0;
+        exit;
+     end;
+     // travers√©e du seuil vers le haut √† i
+     iDebut := 0; // d√©but du remplissage
+     if voieF.valeur[i]<>voieF.valeur[i-1]
+        then tStart := grandeurs[0].valeur[i]-
+           (grandeurs[0].valeur[i]-grandeurs[0].valeur[i-1])*
+           (voieF.valeur[i]-seuil)/(voieF.valeur[i]-voieF.valeur[i-1])
+        else tStart := grandeurs[0].valeur[i];
+     while i<(Nmes-8) do begin
+         inc(i,3); // "hyst√©r√©sis" temporel
+         while (i<=(Nmes-6)) and (voieF.valeur[i]>=seuil) do inc(i);
+         // on est repass√© en dessous valeur[i]<seuil
+         inc(i,3);
+         while (i<(Nmes-2)) and (voieF.valeur[i]<seuil) do inc(i);
+         // on est repass√© au dessus valeur[i]>=seuil
+         if (voieF.valeur[i]>=seuil) then begin
+            if voieF.valeur[i]<>voieF.valeur[i-1]
+               then tCourant := grandeurs[0].valeur[i]-
+                  (grandeurs[0].valeur[i]-grandeurs[0].valeur[i-1])*
+                  (voieF.valeur[i]-seuil)/(voieF.valeur[i]-voieF.valeur[i-1])
+               else tCourant := grandeurs[0].valeur[i];
+            if tCourant<>tStart then begin
+               freq := 1/(tCourant-tStart);
+               for j := iDebut to pred(i) do valeur[j] := freq;
+               iDebut := i;
+               tStart := tCourant;
+            end;
          end;
-// on est repassÈ en dessous
-         inc(i,4);
-         while (i<(Nmes-2)) and not seuilTrouve do begin
-            inc(i);
-            DiPrec := Di;
-            Di := voieF.valeur[i];
-            seuilTrouve := (Di>seuil) and (DiPrec<seuil);
-         end;
-         if seuilTrouve then begin
-             periode := grandeurs[0].valeur[i]-grandeurs[0].valeur[idebut];
-             try
-             freq := 1/periode;
-             for j := iDebut to pred(i) do
-                valeur[j] := freq;
-             if premier then begin
-                for j := 0 to pred(iDebut) do valeur[j] := freq;
-                premier := false;
-             end;
-             except
-             end;
-          end
-          else for j := iDebut to pred(i) do
-               valeur[j] := freq;
-    end; // while i
-end end;// calculFreqInst 
+     end; // while i
+     for j := iDebut to pred(nmes) do valeur[j] := freq; // on prend la derni√®re valeur
+end end;// calculFreqInst
 
 Procedure CalculIntegrale;
-// intÈgrale operandGlb / varx
+// int√©grale operandGlb / varx
 var  i : integer;
      yprec,y,xprec,x : double;
      vecteurX : vecteur;
@@ -1402,14 +1398,14 @@ begin with grandeurs[index] do begin
              g_harmonique : calculHarmonique;
              g_enveloppe : calculEnveloppe;
              g_retardCorr : calculRetard;
-             g_diff1,g_diff2,g_euler : ; // fait au niveau global : systËme diffÈrentiel
+             g_diff1,g_diff2,g_euler : ; // fait au niveau global : syst√®me diff√©rentiel
              g_integrale : calculIntegrale;
              g_derivee : if not Fonct.isSysteme then calculDerivee;
              g_deriveeSeconde : if not Fonct.isSysteme then calculDeriveeSeconde;
              g_lissage : calculLissage;
              g_FreqInst : calculFreqInst;
              g_phaseContinue : calculPhaseContinue;
-             g_forward : ; // calculÈ ailleurs systËme diff
+             g_forward : ; // calcul√© ailleurs syst√®me diff
              g_experimentale,g_texte : ;
              else if not Fonct.isSysteme then
                   calculFonction // g_fonction,g_equation 
@@ -1421,7 +1417,7 @@ begin with grandeurs[index] do begin
 end end; // calcColonneP
 
 Procedure Tpage.RemplitVarLisse;
-// Avec rÈsultat de la modÈlisation 
+// Avec r√©sultat de la mod√©lisation 
 
 Procedure completer(i : codeIntervalle);
 var j,jdebut : integer;
@@ -1483,7 +1479,7 @@ begin // RemplitVarLisse
 end; // RemplitVarLisse 
 
 Procedure Tpage.CalculGlb;
-// Fonction "globales" : dÈrivÈe maxi ...
+// Fonction "globales" : d√©riv√©e maxi ...
 var v : integer;
     dependGlb : TsetGrandeur;
 begin
@@ -1521,7 +1517,7 @@ begin
     result := indexNomVariab(nomDerivee);
     if result=GrandeurInconnue
        then if Acreer
-         then begin // CrÈation de y'
+         then begin // Cr√©ation de y'
            UU := tgrandeur.Create;
            UU.init(nomDerivee,'','',variable);
            UU.fonct.genreC := g_derivee;
@@ -1597,13 +1593,13 @@ begin
     if result=GrandeurInconnue
        then begin
           if ParamModele
-             then begin // CrÈation de y0 comme paramËtre de modÈlisation
+             then begin // Cr√©ation de y0 comme param√®tre de mod√©lisation
                 inc(NbreParam);
                 result := ParamToIndex(NbreParam);
                 grandeurs[result].nom := nomInitiale;
              end
              else result := AjouteExperimentale(nomInitiale,constante);
-             // CrÈation de y0 comme parametre experimental
+             // Cr√©ation de y0 comme parametre experimental
           grandeurs[result].recopieUnite(f);
           grandeurs[result].uniteDonnee := false;
       end;

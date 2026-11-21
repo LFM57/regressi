@@ -1,4 +1,4 @@
-unit compile;
+ï»¿unit compile;
 
 interface
 
@@ -32,7 +32,7 @@ Uses
   statcalc,
   uniteKer;
 
-// S'inspire fortement de la bibliothèque MODULOG produite par l'ALE Sup :
+// S'inspire fortement de la bibliothÃ¨que MODULOG produite par l'ALE Sup :
 // V. Chauve, P. Cousot, H. Lehning, D. Monasse, C. Potier, R. Rolland, R. Smadja
 
 const
@@ -53,7 +53,8 @@ const
       ['+', '-', '*', '/', '^', '(', ')', '.', ',', '>', '<', '=', '[', ']'];
    GrandeurInconnue = MaxMaxGrandeurs + 1;
    CaracUnite: TsysCharSet =
-      ['a'..'z', 'A'..'Z', '-','.','/','1'..'3','°','%'];
+      ['a'..'z', 'A'..'Z', '-','.','/','1'..'3','Â°','%'];
+   PrecisionMaxParam = 1e-7;
 
 type
    TsetGrandeur    = set of byte;
@@ -82,7 +83,7 @@ type
    CodeElement = (Operateur, Fonction, Nombre, Grandeur,
       IfThenElse, PieceWise, RacineMoinsUn, FonctionGlb, GrandeurIndicee, grandeurEuler,
       Incert, IncertIndicee, Texte);
-// deriveeParametre=dérivée première ou seconde de J/param
+// deriveeParametre=dÃ©rivÃ©e premiÃ¨re ou seconde de J/param
    CodeGrandeur     = 0..GrandeurInconnue;
    CodeParam        = 1..MaxParametres;
    CodePage         = 0..MaxPages;
@@ -106,10 +107,10 @@ type
 
    Tfonction = class
       addrY, addrYp, addrYp2: Tgrandeur;
-      { Yp pour équa diff (1 et 2) Yp2 pour equa diff 2 }
+      { Yp pour Ã©qua diff (1 et 2) Yp2 pour equa diff 2 }
       expression: string; { expression permettant de la calculer }
       signif: string;
-      calcul:     Pelement; { résultat de la compilation de expression }
+      calcul:     Pelement; { rÃ©sultat de la compilation de expression }
       depend:     TsetGrandeur;
       genreC:     TgenreCalcul;
       isSysteme, ContientCalculGlb: boolean;
@@ -159,7 +160,10 @@ type
          ordreEqua: integer): boolean;
       function CompileIncert(code: codeGrandeur;
          var posErreur, LongErreur: integer): boolean;
+      function CompileIncertitude: boolean;
       function axe(avecResidu,endB : boolean;exposant : double) : string;
+      Function TitreAff : string;
+      Function ValeurNum(isLatex : boolean) : String;
       destructor Destroy; override;
    end;
 
@@ -181,7 +185,7 @@ type
       IsCosinus: boolean;
       VariableEgalAbscisse: boolean;
       Amplitude, Phase, PeriodeOuFrequence: codeGrandeur; // codeParam
-      ResiduStat:   TcalculStatistique;
+      ResiduStat:   TcalculStatistiqueResidu;
       Residu:       vecteur;
       SommeCarreY,sigmaY,chi2Relatif : double;
       NbreParamModele : integer;
@@ -189,6 +193,7 @@ type
       fchi2 : Pelement;
       ErreurModele : boolean;
       PosErreurModele : integer;
+      property couleurM: TAlphaColor read couleur write couleur;
       constructor Create;
       function compileM(const LigneCourante: String;
          var posErreur, LongErreur: integer): boolean;
@@ -198,9 +203,10 @@ type
          var PointFinal: integer);
       procedure GenereEquation(X, Y: vecteur; axeX, axeY: TGrandeur;
          page: codePage; var PointFinal: integer);
-      procedure CalculResidu(mC: integer;Classe : TclasseStat);
+      procedure CalculResidu(mC: integer;Classe : TclasseStat = csSigma);
       procedure Assign(Amodele: Tmodele);
       function chi2Permis : boolean;
+      Function expressionLatex(exposantX : string) : string;
       destructor Destroy; override;
    end;
 
@@ -246,7 +252,7 @@ type
    public
       FTexteVar:   array[codeGrandeur] of TStringList;
       NbrePointsSauves: integer;
-      Fnmes:           longint; // nombre d'éléments de valeurVar
+      Fnmes:           longint; // nombre d'Ã©lÃ©ments de valeurVar
       NmesMax:         longint; // taille des dynamic array
       ParamAjustes, changeAdresse: boolean;
       Active : boolean;
@@ -256,6 +262,7 @@ type
       Stat2: TstatistiqueDeuxVar;
       ValeurParam,valeurParamDiff1,valeurParamDiff2: tableauParam;
       incertParam, EcartTypeParam, StudentParam : tableauParam;
+      CovarianceParam : MatriceParam;
       ValeurVar, ValeurLisse, FenetreFourier, IncertVar:
          array[codeGrandeur] of vecteur;
       TexteConst:      array[codeGrandeur] of string;
@@ -264,10 +271,10 @@ type
       FFTimag, FFTreel, FFTampl: array[codeGrandeur] of vecteur;
       ValeurTheorique: array[codeIntervalle] of vecteur;
       debutFFT, finFFT: integer;
-// bornes des éléments de valeurVar utilisés pour FTT
+// bornes des Ã©lÃ©ments de valeurVar utilisÃ©s pour FTT
       AllDataFFT:      boolean;
       PeriodeFFT:      double;
-      NbreFFT:         integer; // nombre d'éléments de FFT
+      NbreFFT:         integer; // nombre d'Ã©lÃ©ments de FFT
       ModifiedP:       boolean;
       TriAfaire:       boolean;
       CommentaireP:    String;
@@ -276,7 +283,7 @@ type
       PrecisionModele, Chi2: tableauReal;
       Debut, Fin:      tableauBornes;
       chi2Actif : boolean;
-// des intervalles de définition de Ytheorique
+// des intervalles de dÃ©finition de Ytheorique
       TexteResultatModele: TStringList;
       NbrePointsInactifs: integer;
       ValeurCourante:  array[codeGrandeur] of double;
@@ -284,6 +291,7 @@ type
       procedure SetNmes(NewNmes: longint);
       constructor Create;
       procedure Reset;
+      procedure ResetP;
       procedure calcColonneP(index: codeGrandeur; lisse: boolean);
       function TitrePage: string;
       procedure SupprimeLignes(debut, fin: integer);
@@ -311,6 +319,7 @@ type
       function ParamEtPrec(k: codeGrandeur;avecPrecision : boolean): String;
       function ValeurParametre(i: codeGrandeur): double;
       function PrecisionParametre(i: codeGrandeur): double;
+      function isIncertitudeDefinie(i : codeGrandeur) : boolean;
       procedure AffecteNbreFFT;
       destructor Destroy; override;
       property nmes: longint Read Fnmes Write setNmes;
@@ -327,7 +336,7 @@ type
    end;
 
    Tsauvegarde = class
-      Fnbre:          integer; {nombre d'éléments de valeurVar}
+      Fnbre:          integer; {nombre d'Ã©lÃ©ments de valeurVar}
       NbreMax:        integer; { taille des dynamic array}
       ValeurVect, IncertVect: array[codePage] of vecteur;
       ValeurUnique, IncertUnique: array[codePage] of double;
@@ -399,7 +408,7 @@ procedure RecalculFourierE;
 procedure VerifParametres;
 function VerifCreneau(var expression : string) : boolean;
 function AjouteGrandeurE(Avariable: Tgrandeur): integer;
-procedure affecteVariableF(indice: integer); // dans l'espace des fréquences
+procedure affecteVariableF(indice: integer); // dans l'espace des frÃ©quences
 procedure affecteVariableE(indice: integer);
 procedure LibereGrandeurE(index: codeGrandeur);
 procedure SupprimeGrandeurE(index: codeGrandeur);
@@ -450,13 +459,13 @@ procedure DeriveeForm(F: Tfonction; xx: Tgrandeur;
 
 const
    NomGenreGrandeur: array[TgenreGrandeur] of string =
-      ('variable', 'paramètre', 'constante', 'paramètre', '', '','paramètre');
+      ('variable', 'paramÃ¨tre', 'constante', 'paramÃ¨tre', '', '','paramÃ¨tre');
 
    NomGenreCalcul: array[TgenreCalcul] of string =
-      ('expérimentale', 'fonction', 'dérivée', 'dérivée seconde', 'lissage', '',
-      '', 'équation', 'équa. diff 1', 'équa diff. 2', 'filtrage',
+      ('expÃ©rimentale', 'fonction', 'dÃ©rivÃ©e', 'dÃ©rivÃ©e seconde', 'lissage', '',
+      '', 'Ã©quation', 'Ã©qua. diff 1', 'Ã©qua diff. 2', 'filtrage',
       'filtre', '', 'enveloppe', 'harmonique', '',
-      'intégrale', '', 'prédéfinie', 'texte','Euler', 'décalage');
+      'intÃ©grale', '', 'prÃ©dÃ©finie', 'texte','Euler', 'dÃ©calage');
 
    NomFonctionGlb: array[CodeFonctionGlb] of string =
       ('MIN', 'POS', 'MOYP','MOY', 'MOYF', 'SOMME', 'SOMMEF', 'EFF', 'INIT', 'FREQ', 'FREQINST',
@@ -475,6 +484,15 @@ const
       'CH', 'SH', 'TH', 'NOT', 'ATH',
       'RE', 'IM', 'ARG', '',
       'TODATE', 'EXTMOIS', 'EXTJOUR', 'EXTANNEE', 'EXTHEURE', 'DEGDEC', '', '');
+
+   NomFonctionLatex: array[CodeFonction] of string =
+      ('abs', 'sign', '', '', '',
+      'atan', 'int', 'ceil', 'floor', 'frac', 'round',
+      '', 'sqrt', 'exp', 'ln', 'log10',
+      'sin', 'cos', 'tan', '', '', '', '', '', '',
+      'asin', 'acos', '', '', '',
+      'cosh', 'sinh', 'tanh', '', '', '', '',
+      '', '', '', '', '', '', '', '', '');
 
    AliasFonctionGlb: array[CodeFonctionGlb] of string =
       ('MIN', 'POS', 'AVG','MEAN', 'MEANF', 'SUM', 'SUMF', 'RMS', 'INIT', 'FREQ', 'FREQINST',
@@ -602,9 +620,9 @@ function Tfonction.compileF(var posErreur, LongErreur: integer;
    Ajuste: boolean;ordreEqua: integer): boolean;
 
 {Analyse la chaine expression et renvoie le pointeur calcul sur l'arbre
-résultant de la compilation, en cas d'erreur posErreur renvoie la position
-de celle-ci et codeErreur le type. A l'entrée depend contient les variables
-dont peut dépendre la fonction }
+rÃ©sultant de la compilation, en cas d'erreur posErreur renvoie la position
+de celle-ci et codeErreur le type. A l'entrÃ©e depend contient les variables
+dont peut dÃ©pendre la fonction }
 
 const
    MaxPile = 128;
@@ -616,7 +634,7 @@ var
    CaracCourant: char;
    IdentCourant: string;
    complexeAtransformer, complexePermis: boolean;
-   pointeurExp: word; // pointe sur le prochain caractère
+   pointeurExp: word; // pointe sur le prochain caractÃ¨re
    SauveNparam: integer;
    longExp: word;
    DependPermis: TsetGrandeur;
@@ -624,7 +642,7 @@ var
    TextePermis: boolean;
 
    procedure Csuivant;
-// Lit le prochain caractère et l'assigne à caracCourant
+// Lit le prochain caractÃ¨re et l'assigne Ã  caracCourant
 // Le caracCourant est toujours extrait avant appel d'un analyseur
    begin
       if (pointeurExp <= longExp) and (Expression[pointeurExp] <> '_') and
@@ -667,7 +685,7 @@ var
             IdentCourant := IdentCourant + '0'
          else
             lireEntier;
-         if (caracCourant = '.') {C'est un nombre décimal} then begin
+         if (caracCourant = '.') {C'est un nombre dÃ©cimal} then begin
             AjouteCourant;
             LireEntier;
          end;
@@ -678,7 +696,7 @@ var
             lireEntier;
          end
          else if charinset(caracCourant,caracPrefixe) then begin
-            AjouteCourant; {coeff unité}
+            AjouteCourant; {coeff unitÃ©}
             ConvertitPrefixe(IdentCourant);
          end;
       end; // lireNombre
@@ -980,9 +998,9 @@ var
             Inc(NbreParam);
             TransfertEffectue :=
                IdentCourant = parametres[NbreParam].nom;
-            // rien à faire
+            // rien Ã  faire
             if not transfertEffectue then begin
-               // récupération des anciennes valeurs
+               // rÃ©cupÃ©ration des anciennes valeurs
                for i := succ(NbreParam) to maxParametres do
                   if IdentCourant = parametres[i].nom then begin
                      transfereParamE(i, NbreParam);
@@ -992,9 +1010,9 @@ var
             end;
             transfertEffectue := transfertEffectue or
                       (parametres[NbreParam].nom = '');
-            // rien à sauvegarder
+            // rien Ã  sauvegarder
             if not transfertEffectue then begin
-               // sauve ancien paramètre dans un endroit vide
+               // sauve ancien paramÃ¨tre dans un endroit vide
                for i := succ(NbreParam) to maxParametres do
                   if (parametres[ i].nom = '') then begin
                      transfereParamE(NbreParam, i);
@@ -1052,7 +1070,7 @@ var
             else Empile(GenIncert(Tn.Pvar));
    end;
 
-// Les procédures ChercheXXX cherche si IdentCourant est une XXX et empile son code
+// Les procÃ©dures ChercheXXX cherche si IdentCourant est une XXX et empile son code
 
    procedure ChercheFonction(var Trouve: boolean);
 // Fonction=F(.expression.)
@@ -1197,7 +1215,7 @@ var
          if not isParentheseO then
             raise ECompile.Create(erParO);
          AnalyseGrandeur(vx, True);
-         Tr := nil; // seuil auto par défaut
+         Tr := nil; // seuil auto par dÃ©faut
          if (code in [Frequence, frequenceInstantanee]) and isVirgule then begin
             AnalyseExpression; // seuil
             Depile(Tr);
@@ -1271,20 +1289,20 @@ var
       procedure CompileCreneau;
       var
          Tt, Tf, Tr : Pelement;
-// creneau(t,f,r) triangle(t,fréquence,rapport cyclique)
+// creneau(t,f,r) triangle(t,frÃ©quence,rapport cyclique)
 // bessel(n,x) Cnp(n,p) Peigne(t,deltat) bruit(x,ordre)
       begin
          if not isParentheseO then
             raise ECompile.Create(erParO);
          Tt := nil;   
-         AnalyseExpression; // le temps : grandeurs[0] par défaut
+         AnalyseExpression; // le temps : grandeurs[0] par dÃ©faut
          Depile(Tt);
-         Tf := nil; // la fréquence
+         Tf := nil; // la frÃ©quence
          if isVirgule then begin
             AnalyseExpression;
             Depile(Tf);
          end;
-         Tr := nil; // rapport cyclique : 0.5 par défaut   
+         Tr := nil; // rapport cyclique : 0.5 par dÃ©faut   
          if (code in [cCreneau,cTriangle]) and isVirgule then begin
             AnalyseExpression;
             Depile(Tr);
@@ -1328,7 +1346,7 @@ var
 // interdire complexe
          complexeAtransformer := False;
          complexePermis := False;
- // ne pas transformer complexe en réel !
+ // ne pas transformer complexe en rÃ©el !
          dependPermis := sauveDepend;
          if not IsParentheseF then
             raise ECompile.Create(erParF);
@@ -1495,7 +1513,7 @@ var
       end;{CompilePosition}
 
       procedure CompileHarmonique;
-// harm(variable,harm début,harm fin) ; gauss(x,moyenne,sigma)
+// harm(variable,harm dÃ©but,harm fin) ; gauss(x,moyenne,sigma)
 // binom(x,n,p) ; modul(x,debut,fin) ; poisson(x,moyenne)
       var
          vdebut, vfin: Pelement;
@@ -1660,7 +1678,7 @@ var
          Depile(N);
          Empile(GenPW(nil, nil, N)); // else final
          for I := 1 to Ntest do begin
-            Depile(N); // test précédent
+            Depile(N); // test prÃ©cÃ©dent
             Depile(P);
             Depile(T);
             Empile(GenPW(T, P, N));
@@ -1773,7 +1791,7 @@ var
             else Empile(GenOperateur('^', T1, T2));
          C := getOperateur;
          if (T2.TypeElement=nombre) and (T2.valeur=1) and (C='/') then ;
-            // message d'ambigüité pour ^1/2 ?
+            // message d'ambigÃ¼itÃ© pour ^1/2 ?
       end; {while}
    end; // AnalyseFacteur
 
@@ -1929,7 +1947,7 @@ var
                            genNormeCarre(rebp, imbp));
                      end;
 // im(a/b) = (re(b)*im(a)-re(a)*im(b))/abs(b)^2
-//  b réel im(a/b) = im(a)/re(b)
+//  b rÃ©el im(a/b) = im(a)/re(b)
 //  b imag im(a/b) = -re(a)/im(b)
                   end; { '*','/' }
                   '^': if operd.typeElement = nombre then
@@ -2151,14 +2169,14 @@ var
                   absolue: Result := transformeNorme(operand);
                   reelle: Result := transformeReel(operand);
                   imaginaire: Result := transformeImag(operand);
-// on supprime la fonction et on transforme l'opérande }
+// on supprime la fonction et on transforme l'opÃ©rande }
                   else Result := genFonction(codeF, transformeComplexe(operand));
-// on change l'opérande pas la fonction ; calcul en réel ? => test en sortie ?
+// on change l'opÃ©rande pas la fonction ; calcul en rÃ©el ? => test en sortie ?
                end;{ case fonction }
             operateur: Result  := genOperateur(codeOp,
                   transformeComplexe(operg),
                   transformeComplexe(operd));
-// on change les opérandes pas l'opérateur
+// on change les opÃ©randes pas l'opÃ©rateur
             nombre, grandeur: Result := copie(f);
             ifThenElse: Result := copie(f);
             PieceWise: Result := copie(f);
@@ -2182,9 +2200,9 @@ begin // CompileF
       depend := [];
       genreC := g_forward;
       if (ordreEqua = 1) or (ordreEqua = 2) then begin // y''= ou y'=
-         indexP := indexDerivee(addrY, grandeurs[0], ajuste, True); // crée y'
+         indexP := indexDerivee(addrY, grandeurs[0], ajuste, True); // crÃ©e y'
          if (ordreEqua = 2) and (indexP <> grandeurInconnue) then
-            indexDerivee(grandeurs[indexP], grandeurs[0], ajuste, True); // crée y"
+            indexDerivee(grandeurs[indexP], grandeurs[0], ajuste, True); // crÃ©e y"
       end;
       isSysteme := True;
       codeErreurC := '';
@@ -2199,7 +2217,7 @@ begin // CompileF
       if (ordreEqua = 1) or (ordreEqua = 2) then
          if ajuste and not (ajusteOrigine) then
             addrY0 := addrY
-         // modélisation = expérimentale pour la valeur initiale
+         // modÃ©lisation = expÃ©rimentale pour la valeur initiale
          else begin
             index := indexGrandeurInitiale(addrY, addrY0, ajuste, false);
             include(depend, index); { y0 }
@@ -2292,7 +2310,7 @@ var
          grandeurs[indexX].valCourante := t;
          if Xtrie then
             i := round(coeff_t * (t - t0))
-         else begin // Longuet donc à voir
+         else begin // Longuet donc Ã  voir
             exit;
             i := 0;
             mini := 0;
@@ -2384,7 +2402,7 @@ begin
    end;
    i := 0;
    Nbre := NbreMin;
-   repeat // ôte Nan
+   repeat // Ã´te Nan
       if isNan(y[i]) then begin
          Dec(Nbre);
          for j := i to Nbre do begin
@@ -2414,8 +2432,8 @@ begin
          if logX
             then CalculLoc(PointFinal, PointFinal + pred(NbreInter), x[pred(i)] * deltaX)
             else CalculLoc(PointFinal, PointFinal + pred(NbreInter), x[pred(i)] + deltaX);
-// + deltax évite de recalculer les points i-1 i+1,
-// i évité par nombre de points pair dans l'intervalle
+// + deltax Ã©vite de recalculer les points i-1 i+1,
+// i Ã©vitÃ© par nombre de points pair dans l'intervalle
          Inc(PointFinal, NbreInter);
          Inc(i, 2);
       end
@@ -2423,7 +2441,7 @@ begin
    end;
    Dec(PointFinal);
    i := 0;
-   while i<pointFinal do begin // ôte Nan
+   while i<pointFinal do begin // Ã´te Nan
       if isNan(y[i]) then begin
          Dec(PointFinal);
          for j := i to pointFinal do begin
@@ -2433,7 +2451,7 @@ begin
       end
       else Inc(i)
    end;
-   Trier; // classe les points ajoutés
+   Trier; // classe les points ajoutÃ©s
 end; // GenereM
 
 procedure Tmodele.GenereMGlb(X, Y: vecteur; miniX, maxiX: double; logX: boolean;
@@ -2484,11 +2502,11 @@ begin
    indexOrdonnee := grandeurToIndex(axeY);
    grandeurs[cIndice].valCourante := 0;
    PointFinal := 340; { 1 point sur 3 en 1024 }
-// Chercher les grandeurs à calculer pour obtenir l'abscisse et l'ordonnee : indexMax
+// Chercher les grandeurs Ã  calculer pour obtenir l'abscisse et l'ordonnee : indexMax
    if indexAbscisse < indexOrdonnee
       then indexMax := indexOrdonnee
       else indexMax := indexAbscisse;
-// Chercher de quoi dépend le paramètre de l'équation : indexParam
+// Chercher de quoi dÃ©pend le paramÃ¨tre de l'Ã©quation : indexParam
    if grandeurs[indexX].fonct.genreC = g_experimentale then
       indexParam := indexX
    else begin
@@ -2501,9 +2519,9 @@ begin
    grandeurs[indexY].valCourante := Nan;
    for i := 0 to PointFinal do begin
       try
-         { Générer valeur de index1 }
+         { GÃ©nÃ©rer valeur de index1 }
          Grandeurs[indexParam].valCourante := MiniX + i * deltaX;
-         { calculer les grandeurs dépendantes }
+         { calculer les grandeurs dÃ©pendantes }
          for fx := succ(indexParam) to indexX do
             with Grandeurs[fx] do
                if (genreG = variable) and (fonct.genreC in
@@ -2514,9 +2532,9 @@ begin
                      valCourante := Nan;
                   end;
                end;
-         { Calculer la solution de l'équation }
+         { Calculer la solution de l'Ã©quation }
          grandeurs[indexY].valCourante := calcule(calcul);
-         { calculer les grandeurs dépendantes }
+         { calculer les grandeurs dÃ©pendantes }
          for fx := succ(indexY) to indexMax do
             with Grandeurs[fx] do
                if (genreG = variable) and (fonct.genreC in
@@ -2615,7 +2633,7 @@ var
             Phase := IndexToParam(index);
          end;
          if Phase = grandeurInconnue then exit;
-         // période fréquence pulsation >0
+         // pÃ©riode frÃ©quence pulsation >0
          IsSinusoide := True;
          posCourante := pos('*' + grandeurs[0].nom, expressionUC);
          if posCourante > 0 then begin // f*t
@@ -2666,7 +2684,7 @@ var
    end;
 
    procedure SetParamInverse(F: Pelement);
-   // Parametre 1/x à remplacer par iX=1/x
+   // Parametre 1/x Ã  remplacer par iX=1/x
    var
       kD, kG: codeGrandeur;
    begin
@@ -2727,7 +2745,7 @@ var
          include(depend, cDeltat);
       Result := compileF(posErreur, longErreur, ajuste, ordreEqua);
       if not Result then exit;
-      genreFonction(gf); // vérifier gf
+      genreFonction(gf); // vÃ©rifier gf
       if (genreC = g_euler) and (ordreEqua >= 0) then
          raise ECompile.Create(erModeleIncorrect);
       if (genreC in [g_fonction, g_equation]) and (indexX <> grandeurInconnue) then
@@ -2993,6 +3011,38 @@ begin
    end;
 end;
 
+function tgrandeur.CompileIncertitude: boolean;
+var
+   posErreur, LongErreur: integer;
+begin
+   Result := CompileIncert(indexG, posErreur, LongErreur);
+end;
+
+function Tpage.isIncertitudeDefinie(i : codeGrandeur) : boolean;
+var j : integer;
+begin
+   result := false;
+   case grandeurs[i].genreG of
+      variable : begin
+         result := (grandeurs[i].fonct.genreC=g_experimentale) and
+                   (grandeurs[i].incertCalc.expression<>'');
+         if not result then begin
+            result := nmes>0;
+            for j := 0 to pred(nmes) do
+               if isNan(incertVar[i,j]) then begin
+                  result := false;
+                  break;
+               end;
+         end;
+      end;
+      constante : begin
+         result := (grandeurs[i].fonct.genreC=g_experimentale) and
+                   (grandeurs[i].incertCalc.expression<>'');
+         if not result then result := not isNan(incertConst[i]);
+      end;
+   end;
+end;
+
 procedure ResetEnTete;
 var
    i: integer;
@@ -3041,6 +3091,8 @@ begin
    for j := 1 to maxIntervalles do begin
       fonctionTheorique[j]  := Tmodele.Create;
       fonctionSuperposee[j] := Tmodele.Create;
+      fonctionTheoriqueGlb[j]  := Tmodele.Create;
+      fonctionSuperposeeGlb[j] := Tmodele.Create;
    end;
    NbrePages := 0;
    NbreHarmoniqueAff := 0;
@@ -3058,6 +3110,8 @@ begin
    for j := 1 to maxIntervalles do begin
       fonctionTheorique[j].Free;
       fonctionSuperposee[j].Free;
+      fonctionTheoriqueGlb[j].Free;
+      fonctionSuperposeeGlb[j].Free;
    end;
 //   ResetEnTete fait par forme principale 
    Dispose(PointeurJ);
@@ -3137,7 +3191,7 @@ begin
                with pages[p] do
                   if valeurVar[i] <> nil then
                      LibereGrandeurP(i);
-// à la création on ne connait pas le type et donc valeurVar est créée par défaut
+// Ã  la crÃ©ation on ne connait pas le type et donc valeurVar est crÃ©Ã©e par dÃ©faut
          if fonct.genreC = g_equation then begin
             genreG := constanteGlb;
             for j := 0 to pred(NbreConst) do
@@ -3148,9 +3202,12 @@ begin
                   (indexVariab[j] <> i) then
                   genreG := variable;
          end;
-         if fonct.genreC = g_fonction then
-            DeriveeIncert(fonct, incertCalc.calcul);
-         fonct.setDependF;(***)
+         case fonct.genreC of
+            g_fonction : DeriveeIncert(fonct, incertCalc.calcul);
+            g_experimentale : if IncertCalc.expression<>'' then
+               compileIncertitude;
+         end;
+         fonct.setDependF;
       end;
    ConstruireIndex;
    DefinitGrandeurFrequence;
@@ -3287,7 +3344,7 @@ var
          j := GrandeurToIndex(Agrandeur);
          if (j > parametre0) and (j <= (parametre0 + maxParametres)) then begin
             j := IndexToParam(j);
-            include(exclure, j); // paramètre initial
+            include(exclure, j); // paramÃ¨tre initial
          end;
       end;
    end;
@@ -3342,8 +3399,8 @@ begin  // ChercheUniteParametre
    for i := 1 to NbreParam do
       Refaire := Refaire or Parametres[i].Adaptable;
    if refaire then Cherche;
-// Pour résoudre les pb du type L/R avec L et R paramètres,
-// l'unité de R étant déterminée par ailleurs
+// Pour rÃ©soudre les pb du type L/R avec L et R paramÃ¨tres,
+// l'unitÃ© de R Ã©tant dÃ©terminÃ©e par ailleurs
    ULoc.Free;
    for i := 1 to NbreParam do
       with Parametres[ i] do begin
@@ -3412,8 +3469,8 @@ begin  // ChercheUniteParametreGlb
    for i := 1 to NbreParamGlb do
       Refaire := Refaire or ParametresGlb[i].Adaptable;
    if refaire then Cherche;
-// Pour résoudre les pb du type L/R avec L et R paramètres,
-// l'unité de R étant déterminée par ailleurs
+// Pour rÃ©soudre les pb du type L/R avec L et R paramÃ¨tres,
+// l'unitÃ© de R Ã©tant dÃ©terminÃ©e par ailleurs
    ULoc.Free;
    for i := 1 to NbreParamGlb do
       with ParametresGlb[i] do
@@ -3492,7 +3549,7 @@ var
       end;{i}
    end; // CalculLoc
 
-// Calcul de fonction à pas variable pour tracé de modèle
+// Calcul de fonction Ã  pas variable pour tracÃ© de modÃ¨le
 const
    NbreMin = 200;
    NbreInter = 18; // Nombre de points par intervalle
@@ -3532,8 +3589,8 @@ begin
          (abs(x[succ(i)] + x[pred(i)] - 2 * x[i]) > XsecondeMin)) then begin
          CalculLoc(PointFinal, PointFinal + pred(NbreInter),
             T[pred(i)] + deltaT, T[succ(i)] - deltaT);
-// + deltax évite de recalculer les points i-1 i+1,
-// i évité par nombre de points pair dans l'intervalle
+// + deltax Ã©vite de recalculer les points i-1 i+1,
+// i Ã©vitÃ© par nombre de points pair dans l'intervalle
          Inc(PointFinal, NbreInter);
          Inc(i, 2);
       end
@@ -3542,7 +3599,7 @@ begin
    until i >= NbreMin;
    Dec(PointFinal);
    i := 0;
-   repeat // ôte SansSignif
+   repeat // Ã´te SansSignif
       if isNan(y[i]) or isNan(x[i]) then begin
          Dec(PointFinal);
          for j := i to pointFinal do begin
@@ -3554,7 +3611,7 @@ begin
       else
          Inc(i)
    until i = PointFinal;
-   Trier; // classe les points ajoutés
+   Trier; // classe les points ajoutÃ©s
    T := nil;
 end; // GenereModeleParametrique
 
@@ -3563,18 +3620,18 @@ var j, k, nbreR: integer;
 begin with pages[pageCourante] do begin
       residuStat.statOK := False;
       NbreR  := succ(fin[mC] - debut[mC]);
-      if NbreR>maxVecteurDefaut then exit;
+      if (NbreR<=0) or (NbreR>MaxVecteurStat) then exit;
       setLength(residu, NbreR + 1);
+      residuStat.setValeur(NbreR, NbreParamModele);
+      residuStat.avecIncert := isIncertitudeDefinie(indexY);
       for j := debut[mC] to fin[mC] do begin
          k := j - debut[mC];
          residu[k] := valeurVar[indexY, j] - valeurTheorique[mC, j];
+         residuStat.residus[k] := residu[k];
+         if residuStat.avecIncert then
+            residuStat.Incertitudes[k] := incertVar[indexY, j];
       end;
-      residuStat.ClasseStat := classe;
-      residuStat.setValeur(Residu, NbreR, True);
-      // passage de l'écart sur la moyenne à l'écart sur la population
-      residuStat.t99 := residuStat.t99 * sqrt(NbreR);
-      residuStat.t95 := residuStat.t95 * sqrt(NbreR);
-      residuStat.statOK := true;
+      residuStat.calcul;
    end;
 end;
 
@@ -3603,8 +3660,8 @@ begin
 end;
 
 function VerifCreneau(var expression : string) : boolean;
-// modification de syntaxe d'où transformation de l'ancienne en nouvelle
-// creneau avec trois param ; bruit avec un seul paramètre
+// modification de syntaxe d'oÃ¹ transformation de l'ancienne en nouvelle
+// creneau avec trois param ; bruit avec un seul paramÃ¨tre
 var posPar,Virgule,posC,nbre : integer;
     expU : string;
     isNoise : boolean;
@@ -3655,7 +3712,7 @@ begin
        result := true;
        exit;
     end;
-    if posPar>0 then begin // compter le nombre de virgule jusqu'à ")" : f(t,f,rc)
+    if posPar>0 then begin // compter le nombre de virgule jusqu'Ã  ")" : f(t,f,rc)
        Virgule := 0;
        posC := posPar;
        while (posC<length(expression)) and (expression[posC]<>')') do begin

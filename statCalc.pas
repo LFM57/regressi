@@ -1,4 +1,4 @@
-unit statcalc;
+Ôªøunit statcalc;
 
 interface
 
@@ -9,28 +9,15 @@ Uses
   System.Classes,
   System.Math,
 
-  FMX.Types,
-  FMX.Controls,
-  FMX.Forms,
-  FMX.Dialogs,
-  FMX.Objects,
-  FMX.Menus,
-  FMX.ExtCtrls,
-  FMX.ListBox,
-  FMX.Memo,
-  FMX.TabControl,
-  FMX.Layouts,
-  FMX.Edit,
-  FMX.Platform,
-
   constreg,
   maths,
   regutil;
 
 Const
       MaxHisto = 256;
-{ Les bornes vont de 0 ‡ MaxHisto et les classes de 1 ‡ MaxHisto
-  Classe i = entre bornes(pred(i)) et bornes(i) }
+// Les bornes vont de 0 √† MaxHisto et les classes de 1 √† MaxHisto
+// Classe i = entre bornes(pred(i)) et bornes(i)
+      MaxVecteurStat = 2048;
 
 type
   TClasseStat = (csAuto,csNombreImpose,csEcartImpose,csEffectifDonne,csFrequenceDonnee,csSigma);
@@ -41,10 +28,10 @@ type
       FpourCent : boolean;
       procedure setNbre(Anbre : integer);
       public
-      Min,Max,Moyenne,Mediane,Sigma,t95,t99,ecartMoyen : double;
+      Min,Max,Moyenne,Mediane,Sigma,sigmaMoyenne,t95,t99,ecartMoyen : double;
       ClasseStat : TclasseStat;
       Donnees,Effectif : vecteur;
-      Cible,EcartDist,DebutDist,maxDist : double;
+      Cible,ecartTypeCible,Zscore,EcartDist,DebutDist,maxDist : double;
       NbreClasse : integer;
       MoyDist,NbreDist,BornesDist,DistPourCent : vecteur;
       StatOK,avecTri,DataInteger : boolean;
@@ -62,7 +49,7 @@ type
 
   TStatistiqueDeuxVar = class
       Sy,Sy2,Sx,Sx2,Sxx,Syy,sigma : double;
-      covariance,penteY,Y0 : double;
+      U95Pente,U95Y0,covariance95PenteY0 : double;
       SSE,SSR : double;
       xmoyen,ymoyen : double;
       X,Y : vecteur;
@@ -71,10 +58,28 @@ type
       FFisher : double;
       Procedure yConfidence(x,y : double;var maxM,minM,maxI,minI : double);
       public
+      covariance,penteY,Y0 : double;
+      sigmaPente,sigmaY0,covariancePenteY0 : double;
       Property Correlation : double read Fcorrelation;
       Property Fisher : double read FFisher;
       Procedure Init(ax,ay : vecteur;debut,fin : integer);
       Procedure GenereBande(X,Y : TvecteurExtrapole;Nbande : integer);
+  end;
+
+  TcalculStatistiqueResidu = class
+      private
+      FNbre : integer;
+      FNbreParam : integer;
+      public
+      Residus,Incertitudes,ResidusNormalises : Tvecteur;
+      StatOK : boolean;
+      avecIncert : boolean;
+      sigma,t95 : double;
+      property Nbre : integer read Fnbre;
+      constructor Create;
+      destructor Destroy; override;
+      Procedure Calcul;
+      Procedure SetValeur(ANbre,NParam : integer);
   end;
 
 Procedure CalcCornish(X,Y : vecteur;N : integer;var K,V : vecteur;var Nbre : integer);
@@ -84,6 +89,73 @@ var indexStat,indexEffectif : integer;
     statCourante : TcalculStatistique;
 
 implementation
+
+constructor TcalculStatistiqueResidu.Create;
+begin
+   inherited create;
+   setLength(Residus,MaxVecteurStat+1);
+   setLength(ResidusNormalises,MaxVecteurStat+1);
+   setLength(Incertitudes,MaxVecteurStat+1);
+   StatOK := false;
+   avecIncert := false;
+   sigma := 0;
+   t95 := 0;
+end;
+
+destructor TcalculStatistiqueResidu.Destroy;
+begin
+   Finalize(Residus);
+   Finalize(ResidusNormalises);
+   Finalize(Incertitudes);
+   inherited destroy;
+end;
+
+procedure TcalculStatistiqueResidu.SetValeur(ANbre,NParam : integer);
+begin
+   FNbre := ANbre;
+   FNbreParam := NParam;
+   if FNbre>high(Residus) then begin
+      setLength(Residus,FNbre+1);
+      setLength(ResidusNormalises,FNbre+1);
+      setLength(Incertitudes,FNbre+1);
+   end;
+   statOK := FNbre>2;
+end;
+
+procedure TcalculStatistiqueResidu.Calcul;
+
+Procedure CalculStat;
+var i : integer;
+    sR2,sR : double;
+    ddl : integer;
+begin
+   if FNbre<2 then exit;
+   sR2 := 0;
+   sR := 0;
+   for i := 0 to pred(FNbre) do begin
+       sR2 := sR2+sqr(Residus[i]);
+       sR := sR+Residus[i];
+   end;
+   sigma := sqrt(Max(0.0,(sR2-sqr(sR)/FNbre)/pred(FNbre)));
+   if avecIncert then
+       for i := 0 to pred(FNbre) do
+           if not isZero(Incertitudes[i]) and not isNan(Incertitudes[i])
+              then ResidusNormalises[i] := Residus[i]/Incertitudes[i]
+              else ResidusNormalises[i] := Nan;
+   ddl := FNbre-1-FNbreParam;
+   if ddl<1 then ddl := 1;
+   t95 := sigma*student95(ddl);
+   statOK := true;
+end;
+
+begin
+     statOK := FNbre>2;
+     try
+     if StatOK then calculStat;
+     except
+        statOK := false;
+     end;
+end; // TcalculStatistiqueResidu.Calcul
 
 constructor TcalculStatistique.Create;
 begin
@@ -96,6 +168,9 @@ begin
    setLength(effectif,MaxVecteurDefaut+1);
    ClasseStat := csAuto;
    Cible := Nan;
+   ecartTypeCible := 0;
+   Zscore := Nan;
+   sigmaMoyenne := 0;
    StatOK := false;
 end;
 
@@ -103,13 +178,15 @@ procedure TcalculStatistique.Calcul;
 
 Procedure CalculStat;
 var i,imilieu : integer;
-    total : double;
+    total,denomZ : double;
 begin
    min := Donnees[0];
    max := Donnees[pred(Nbre)];
    moyenne := 0;
    mediane := Donnees[0];
    Sigma := 0;
+   sigmaMoyenne := 0;
+   Zscore := Nan;
    if Nbre<2 then exit;
    iMilieu := FNbre div 2;
    if odd(FNbre)
@@ -119,21 +196,32 @@ begin
        moyenne := moyenne+Donnees[i];
        sigma := sigma+sqr(Donnees[i]);
        if Donnees[i]<Min then Min := Donnees[i];
-       if Donnees[i]>Min then Max := Donnees[i];
+       if Donnees[i]>Max then Max := Donnees[i];
    end;
-   sigma := sqrt((sigma-sqr(moyenne)/Nbre)/pred(Nbre));
-   moyenne := moyenne/Nbre;
-   t99 := Sigma*Student99(Nbre-1)/sqrt(Nbre);
-   t95 := Sigma*Student95(Nbre-1)/sqrt(Nbre);
+   sigma := sqrt(Max(0.0,(sigma-sqr(moyenne)/FNbre)/pred(FNbre)));
+   sigmaMoyenne := sigma/sqrt(FNbre);
+   moyenne := moyenne/FNbre;
+   t99 := Sigma*Student99(FNbre-1)/sqrt(FNbre);
+   t95 := Sigma*Student95(FNbre-1)/sqrt(FNbre);
    Fntotal := Fnbre;
    total := 0;
    for i := 0 to pred(FNbre) do
        total := total+abs(Donnees[i]-moyenne);
    ecartMoyen := total/Fnbre;
+   if isNan(cible)
+      then Zscore := Nan
+      else begin
+         if isNan(ecartTypeCible) then ecartTypeCible := 0;
+         denomZ := sqrt(sqr(ecartTypeCible)+sqr(sigmaMoyenne));
+         if denomZ>0
+            then Zscore := abs(Cible-moyenne)/denomZ
+            else Zscore := Nan;
+      end;
 end;
 
 Procedure CalculStatEffectif;
 var i,imilieu,n : integer;
+    denomZ : double;
 begin
    min := Donnees[0];
    max := Donnees[pred(Nbre)];
@@ -141,13 +229,15 @@ begin
    Fntotal := 0;
    mediane := Donnees[0];
    Sigma := 0;
-   if Nbre<2 then exit;
-   for i := 0 to pred(Nbre) do begin
+   sigmaMoyenne := 0;
+   Zscore := Nan;
+   if FNbre<2 then exit;
+   for i := 0 to pred(FNbre) do begin
        Fntotal := Fntotal+round(effectif[i]);
        moyenne := moyenne+Effectif[i]*Donnees[i];
        sigma := sigma+Effectif[i]*sqr(Donnees[i]);
        if Donnees[i]<Min then Min := Donnees[i];
-       if Donnees[i]>Min then Max := Donnees[i];
+       if Donnees[i]>Max then Max := Donnees[i];
    end;
    iMilieu := Fntotal div 2;
    i := 0;
@@ -158,36 +248,51 @@ begin
          then Mediane := Donnees[i]
          else inc(i);
    until n>=iMilieu;
-   sigma := sqrt((sigma-sqr(moyenne)/Fntotal)/pred(Fntotal));
+   sigma := sqrt(Max(0.0,(sigma-sqr(moyenne)/Fntotal)/pred(Fntotal)));
+   sigmaMoyenne := sigma/sqrt(Fntotal);
    moyenne := moyenne/Fntotal;
    t99 := Sigma*Student99(Fntotal-1)/sqrt(Fntotal);
    t95 := Sigma*Student95(Fntotal-1)/sqrt(Fntotal);
+   if not isNan(cible) then begin
+      if isNan(ecartTypeCible) then ecartTypeCible := 0;
+      denomZ := sqrt(sqr(ecartTypeCible)+sqr(sigmaMoyenne));
+      if denomZ>0 then Zscore := abs(Cible-moyenne)/denomZ;
+   end;
 end;
 
 Procedure CalculStatFrequence;
 var i : integer;
+    denomZ : double;
 begin
    min := Donnees[0];
    max := Donnees[pred(Nbre)];
    moyenne := 0;
    Fntotal := 1;
    Sigma := 0;
-   if Nbre<2 then exit;
-   for i := 0 to pred(Nbre) do begin
+   sigmaMoyenne := 0;
+   Zscore := Nan;
+   if FNbre<2 then exit;
+   for i := 0 to pred(FNbre) do begin
        moyenne := moyenne+Effectif[i]*Donnees[i];
        sigma := sigma+Effectif[i]*sqr(Donnees[i]);
        if Donnees[i]<Min then Min := Donnees[i];
-       if Donnees[i]>Min then Max := Donnees[i];
+       if Donnees[i]>Max then Max := Donnees[i];
    end;
    if FpourCent then begin
       moyenne := moyenne/100;
       sigma := sigma/100;
       Fntotal := 100;
    end;
-   sigma := sqrt(sigma-sqr(moyenne));
+   sigma := sqrt(Max(0.0,sigma-sqr(moyenne)));
+   sigmaMoyenne := sigma/sqrt(FNbre);
    t99 := 3*Sigma;
    t95 := 2*Sigma;
    mediane := moyenne;
+   if not isNan(cible) then begin
+      if isNan(ecartTypeCible) then ecartTypeCible := 0;
+      denomZ := sqrt(sqr(ecartTypeCible)+sqr(sigmaMoyenne));
+      if denomZ>0 then Zscore := abs(Cible-moyenne)/denomZ;
+   end;
 end;
 
 Procedure CalculDistFrequence;
@@ -259,7 +364,7 @@ begin
    end;
    i := 0;
    for k:=0 to pred(Nbre) do begin
-// rangement des donnÈes dans les intervalles
+// rangement des donn√©es dans les intervalles
        trouve := Donnees[k]<=BornesDist[i];
        while (i<MaxHisto) and not trouve do begin
            inc(i);
@@ -429,7 +534,7 @@ end;
 
 Procedure TstatistiqueDeuxVar.Init(ax,ay : vecteur;debut,fin : integer);
 var i : integer;
-    xsigma,ysigma : double;
+    xsigma,ysigma,Delta,elarg : double;
 begin
     X := ax;
     Y := ay;
@@ -455,12 +560,35 @@ begin
     Y0 := Ymoyen-PenteY*Xmoyen;
     SSR := sqr(PenteY)*Sxx;
     SSE := Syy-SSR;
-    sigma := sqrt(SSE/(Nbre-2));
-    FFisher := SSR*(Nbre-2)/SSE;
-    // interprÈtable comme r^2*(n-2)/(1-r^2)
+    sigma := sqrt(Max(0.0,SSE/(Nbre-2)));
+    Delta := Nbre*Sx2-sqr(Sx);
+    if Delta>0 then begin
+       sigmaY0 := sigma*sqrt(Sx2/Delta);
+       sigmaPente := sigma*sqrt(Nbre/Delta);
+       covariancePenteY0 := -sqr(sigma)*Sx/Delta;
+       elarg := student95(Nbre-2);
+       U95Y0 := elarg*sigmaY0;
+       U95Pente := elarg*sigmaPente;
+       covariance95PenteY0 := covariancePenteY0*sqr(elarg);
+    end
+    else begin
+       sigmaY0 := Nan;
+       sigmaPente := Nan;
+       covariancePenteY0 := Nan;
+       U95Y0 := Nan;
+       U95Pente := Nan;
+       covariance95PenteY0 := Nan;
+    end;
+    if SSE>0
+       then FFisher := SSR*(Nbre-2)/SSE
+       else FFisher := Nan;
+    // interpr√©table comme r^2*(n-2)/(1-r^2)
     except
       Fcorrelation := Nan;
       FFisher := Nan;
+      sigmaY0 := Nan;
+      sigmaPente := Nan;
+      covariancePenteY0 := Nan;
     end;
 end; // Calcul stat deux variables
 

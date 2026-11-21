@@ -1,4 +1,4 @@
-// Pages.pas : fichier include de compile.pas
+ï»¿// Pages.pas : fichier include de compile.pas
 
 constructor Tpage.Create;
 var i  : codeIntervalle;
@@ -59,7 +59,7 @@ function Tpage.TitrePage : string;
 begin
     if NbrePages=1
        then TitrePage := commentaireP
-       else Result := 'N°'+intToStr(numero)+' '+commentaireP
+       else Result := 'NÂ°'+intToStr(numero)+' '+commentaireP
 end;
 
 procedure Tpage.Reset;
@@ -83,6 +83,11 @@ begin
   end;
   TexteResultatModele.Clear;
 end; // Page.Reset
+
+procedure Tpage.ResetP;
+begin
+  Reset;
+end;
 
 procedure Tpage.GenereLisseP(index : codeGrandeur);
 var tampon : vecteur;
@@ -194,7 +199,7 @@ begin // ParamEtPrec
          if valeurDix>=1000
             then tamponPrec := IntToStr(round(valeurDix))
             else tamponPrec := FloatToStrF(valeurDix,ffFixed,Precision,Decimales);
-         tampon := tampon+' ±'+tamponPrec;
+         tampon := tampon+' Â±'+tamponPrec;
       end
       else tampon := tampon+' ??';
    tampon := '('+tampon+')';
@@ -279,7 +284,7 @@ begin
   iRaie1[index] := 1;
   except
       on EOutOfMemory do begin
-         valeurVar[index] := nil; // à améliorer !
+         valeurVar[index] := nil; // Ã  amÃ©liorer !
          valeurLisse[index] := nil;
          AjouteGrandeurP := false;
       end;
@@ -457,7 +462,7 @@ begin
            Parametres[i].valCourante := valeurParam[i];
            Parametres[i].incertCourante := incertParam[i];
        end;
-// uniquement pour modèle
+// uniquement pour modÃ¨le
    for i := 1 to NbreParam do
        if paramInverse[i] then
           Parametres[i].valCourante := 1/Parametres[i].valCourante;
@@ -516,12 +521,12 @@ begin
          end;
        end;
    CalculGlb;
-// recalcul des fonctions globales : dérivée, maxi ...
+// recalcul des fonctions globales : dÃ©rivÃ©e, maxi ...
    PileSauvegarde.Push(S);
 end;
 
 Function Tpage.ValeurParametre(i : codeGrandeur) : double;
-// Renvoie la valeur du paramètre d'index i
+// Renvoie la valeur du paramÃ¨tre d'index i
 var k : codeGrandeur;
 begin
    if i<NbreGrandeurs
@@ -535,7 +540,7 @@ begin
 end;
 
 Function Tpage.PrecisionParametre(i : codeGrandeur) : double;
-// Renvoie la precision du paramètre d'index i
+// Renvoie la precision du paramÃ¨tre d'index i
 var k : codeGrandeur;
 begin
    if i<NbreGrandeurs

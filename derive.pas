@@ -1,4 +1,4 @@
-{ derive.pas include de compile.pas pour calcul des incertitudes }
+﻿{ derive.pas include de compile.pas pour calcul des incertitudes }
 
 type
   PderiveeIncert = ^TderiveeIncert;
@@ -100,7 +100,8 @@ Function derive(F : Pelement) : TlisteDeriveeIncert;
                               genFonction(sinus,copie(operand)));
               tangente : tampon := genOperateurSimpl('+',
                   pointeurUn,
-                  genFonction(tangente,copie(operand)));
+                  genFonction(carre,
+                     genFonction(tangente,copie(operand))));
             // tan(x)'=1+tan(x)^2
               arcTangente : tampon := genFonction(inverse,
                   genOperateurSimpl('+',

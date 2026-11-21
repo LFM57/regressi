@@ -1,4 +1,4 @@
-{$F+} // pour passage de fonction en paramètres
+ï»¿{$F+} // pour passage de fonction en paramÃ¨tres
 
 Unit maths;
 
@@ -42,6 +42,9 @@ type
      FonctionMath = Function(x : double) : double;
      Vecteur = array of double;
      VecteurInt = array of integer;
+     TVecteur = Vecteur;
+     TVecteurInt = VecteurInt;
+     TVecteurSingle = array of single;
      CodeIntervalle = 1..maxIntervalles;
 
      FonctionMath2 = Function(im,re : double) : double;
@@ -120,9 +123,9 @@ Function ToAnnee(x : double) : double;
 Function ToJour(x : double) : double;
 Function ToHeure(x : double) : double;
 function Puiss2Inf(N : LongInt) : LongInt;
-// Puissance de 2 inférieure ou égale à N
+// Puissance de 2 infÃ©rieure ou Ã©gale Ã  N
 function Puiss2Sup(N : LongInt) : LongInt;
-// Puissance de 2 supérieure ou égale à N
+// Puissance de 2 supÃ©rieure ou Ã©gale Ã  N
 Function PhaseModulo(X,debut,fin : double) : double;
 // renvoie x entre debut et fin
 
@@ -170,6 +173,8 @@ Procedure Swap(var v1,v2 : double); overload;
 Procedure Swap(var v1,v2 : integer); overload;
 
 Function isEntier(x : double;var n : integer) : boolean;
+Function isCorrect(aValue : double) : boolean;
+Function isIncorrect(aValue : double) : boolean;
 
 const
    degreMax = 4;
@@ -252,14 +257,14 @@ begin
 end;
 
 Procedure AngleEnRadian(var alpha : double);
-// donne l'angle en radian correspondant à l'angle exprimé en unité courante
+// donne l'angle en radian correspondant Ã  l'angle exprimÃ© en unitÃ© courante
 begin
     if angleEnDegre then
         alpha := DegToRad(alpha)
 end;
 
 Function AngleUtilisateur(x : double) : double;
-// donne l'angle en uniteCourante correspondant à l'angle exprimé en radian
+// donne l'angle en uniteCourante correspondant Ã  l'angle exprimÃ© en radian
 begin
    if angleEnDegre
       then result := RadToDeg(x)
@@ -356,12 +361,23 @@ begin
     result := Gauss(X,Moyenne,Sigma)*sqr((x-moyenne)/sigma)/sigma
 end;
 
+Function isCorrect(aValue : double) : boolean;
+begin
+    result := not (isNan(aValue) or isInfinite(aValue));
+end;
+
+Function isIncorrect(aValue : double) : boolean;
+begin
+    result := isNan(aValue) or isInfinite(aValue);
+end;
+
 Function sinc(x : double) : double;
 begin
    try
       AngleEnRadian(x);
-      result := 1/x;
-      result := sin(x)*result;
+      if isZero(x,1e-6)
+        then result := 1
+        else result := sin(x)/x;
    except
       result := 1
    end;
@@ -371,8 +387,9 @@ Function derSinc(x : double) : double;
 begin
     try
       AngleEnRadian(X);
-      result := 1/X;
-      result := (X*cos(X)-sin(X))*sqr(result);
+      if isZero(x,1e-6)
+        then result := 0
+        else result := (X*cos(X)-sin(X))/sqr(x);
     except
       result := 0
     end;
@@ -454,7 +471,7 @@ begin
 end;
 
 Function Aleat(x : double) : double;
-// Aléatoire entre 0 et +x
+// AlÃ©atoire entre 0 et +x
 begin
    result := X*Random
 end;
@@ -527,14 +544,29 @@ begin
   result := arcTanh(x)
 end;
 
+const
+  maxStudent = 20;
+  TableStudent95 : array[1..maxStudent] of double =
+    (12.71,4.30,3.182,2.776,2.571,2.447,2.365,2.306,2.262,2.228,
+     2.201,2.179,2.160,2.145,2.131,2.120,2.110,2.101,2.093,2.086);
+  TableStudent99 : array[1..maxStudent] of double =
+    (63.65,9.925,5.841,4.604,4.032,3.707,3.499,3.355,3.250,3.169,
+     3.106,3.055,3.012,2.977,2.947,2.921,2.898,2.878,2.861,2.845);
+
 Function Student95(ddl : integer) : double;
 begin
-    student95 := ((4.5082/ddl+2.3090)/ddl+2.4033)/ddl+1.960
+    if ddl<1
+       then result := 0
+       else if ddl<=maxStudent then result := TableStudent95[ddl]
+       else result := ((4.5082/ddl+2.3090)/ddl+2.4033)/ddl+1.960
 end;
 
 Function Student99(ddl : integer) : double;
 begin
-    student99 := ((29.769/ddl+4.0933)/ddl+5.1992)/ddl+2.576
+    if ddl<1
+       then result := 0
+       else if ddl<=maxStudent then result := TableStudent99[ddl]
+       else result := ((29.769/ddl+4.0933)/ddl+5.1992)/ddl+2.576
 end;
 
 Procedure VerifMinMaxInt(var mini,maxi : integer);
@@ -579,7 +611,7 @@ end;
 
 Procedure CopyVecteur(var destination : vecteur;const source : vecteur);
 begin
-      destination := nil;// libére si existe déjà
+      destination := nil;// libÃ©re si existe dÃ©jÃ 
       destination := copy(source,0,high(source)+1);
 end;
 
@@ -747,8 +779,8 @@ end;
 Function Triangle(t,f,RapportCyclique : double) : double;
 var z1 : double;
 begin
-     z1 := t*f; // temps réduit
-     z1 := z1-floor(z1); // temps réduit modulo une période 
+     z1 := t*f; // temps rÃ©duit
+     z1 := z1-floor(z1); // temps rÃ©duit modulo une pÃ©riode 
      try
      if z1<rapportCyclique
         then triangle := -1+2*z1/rapportCyclique
@@ -889,15 +921,15 @@ begin
      iDebut := 0;
      repeat inc(iDebut)
      until ((Y[iDebut]-Ymoy)*(Y[0]-Ymoy)<0) or (iDebut=Nbre div 2);
-     { Premier passage par "zéro" (vers le bas par ex.) }
+     { Premier passage par "zÃ©ro" (vers le bas par ex.) }
      iFin := iDebut+NbreRef;
      while (iFin<pred(Nbre)) and
            ((Y[iDebut]-Ymoy)*(Y[iFin]-Ymoy)>=0) do inc(iFin);
-     { On repasse au dessus (par ex.) du "zéro" }
+     { On repasse au dessus (par ex.) du "zÃ©ro" }
      iFin := iFin+NbreRef;
      while (iFin<pred(Nbre)) and
            ((Y[iDebut]-Ymoy)*(Y[iFin]-Ymoy)<=0) do inc(iFin);
-     { On repasse par "zéro" dans le même sens }
+     { On repasse par "zÃ©ro" dans le mÃªme sens }
      for i := iFin to pred(Nbre-NbreRef) do
          if abs(Y[i]-Ymoy)<ecartMin then begin
                 ecartQuad := 0;
@@ -909,13 +941,13 @@ begin
                    iFin := i;
                 end;
          end;
-     dec(iFin); // on est au début de la période suivante
+     dec(iFin); // on est au dÃ©but de la pÃ©riode suivante
 end;
 
 Procedure Resolution(A : matrice;ordre : integer;var Result : matriceLigne);
- { Cette procédure résoud un système AX = B }
- { écrit sous la forme AX = A(n+1) }
- { par la méthode d'élimination de Gauss (pivot partiel) }
+ { Cette procÃ©dure rÃ©soud un systÃ¨me AX = B }
+ { Ã©crit sous la forme AX = A(n+1) }
+ { par la mÃ©thode d'Ã©limination de Gauss (pivot partiel) }
 
   Procedure Elimination;
 
@@ -927,7 +959,7 @@ Procedure Resolution(A : matrice;ordre : integer;var Result : matriceLigne);
           if abs(A[n,i]) > abs(A[i,i]) then temp:= n;
       pivot:=temp;
       if abs(A[temp,i]) <= 1e-100 then
-         raise EsystemeLineaireError.Create('Erreur résolution système linéaire')
+         raise EsystemeLineaireError.Create('Erreur rÃ©solution systÃ¨me linÃ©aire')
     END;
 
     PROCEDURE Permute(i,j:integer);
@@ -965,14 +997,14 @@ Procedure Resolution(A : matrice;ordre : integer;var Result : matriceLigne);
              Result[I]:=S/A[I,I];
          end;
          except
-            on EzeroDivide do raise EsystemeLineaireError.Create('Erreur résolution système linéaire')
+            on EzeroDivide do raise EsystemeLineaireError.Create('Erreur rÃ©solution systÃ¨me linÃ©aire')
          end;
     end;
 
 begin {Resolution}
   Elimination;
   Substitution;
-end; {résolution}
+end; {rÃ©solution}
 
 procedure DeriveeLisse(const X,Y : vecteur;
      const NbrePointDeriveeL : integer;
@@ -1075,6 +1107,19 @@ begin // DeriveeLisse
     end;
 end; // DeriveeLisse
 
+function verifDerivee(N : integer;var NbrePointDer : integer) : boolean;
+begin
+    result := false;
+    if N<NbrePointDer then begin
+       repeat
+          dec(NbrePointDer,2)
+       until (N>=NbrePointDer) or (NbrePointDer<=3);
+       if N<NbrePointDer then exit;
+    end;
+    if NbrePointDer<3 then NbrePointDer := 3;
+    result := true;
+end;
+
 procedure DeriveeGauss(const X,Yr : vecteur;N : integer;
    var Yder : vecteur;NbrePointDer : integer);
 var puissX : vectorPuiss;
@@ -1147,14 +1192,7 @@ end;
 var i : integer;
 begin // DeriveeGauss
     for i := 0 to pred(N) do yder[i] := Nan;
-    if N<NbrePointDer then begin
-       repeat
-          dec(NbrePointDer,2)
-       until (N>=NbrePointDer) or (NbrePointDer<=MinPointsDerivee);
-       if N<NbrePointDer then exit;
-    end;
-    if NbrePointDer<MinPointsDerivee
-       then NbrePointDer := MinPointsDerivee;
+    if not verifDerivee(N,NbrePointDer) then exit;
     ordre := degreDerivee+1;
     puissMax := 2*degreDerivee;
     ii := NbrePointDer div 2;
@@ -1238,8 +1276,7 @@ end;
 var i : integer;
 begin // DeriveeSecondeGauss
     for i := 0 to pred(N) do yder[i] := Nan;
-    if N<NbrePointDer then exit;
-    if NbrePointDer<5 then NbrePointDer := 5;
+    if not verifDerivee(N,NbrePointDer) then exit;
     ordre := degreDerivee+1;
     puissMax := 2*degreDerivee;
     ii := NbrePointDer div 2;
@@ -1270,10 +1307,11 @@ begin
     for i := 1 to ordre do A[i,ordre+1] := 0;
     jdebut := index-(NbrePointDerivee div 2);
     if jdebut<0 then jdebut := 0;
-    jfin := jDebut+NbrePointDerivee;
+    jfin := jDebut+NbrePointDerivee-1;
     if jfin>=N then begin
        jfin := pred(N);
-       jdebut := jfin-NbrePointDerivee;
+       jdebut := jfin-NbrePointDerivee+1;
+       if jdebut<0 then jdebut := 0;
     end;
     for j := jdebut to jfin do if
        not isNan(X[j]) and not isNan(Y[j]) then begin
@@ -1333,10 +1371,11 @@ begin
     for i := 1 to ordre do A[i,ordre+1] := 0;
     jdebut := index-(NbrePointDerivee div 2);
     if jdebut<0 then jdebut := 0;
-    jfin := jDebut+NbrePointDerivee;
+    jfin := jDebut+NbrePointDerivee-1;
     if jfin>=N then begin
        jfin := pred(N);
-       jdebut := jfin-NbrePointDerivee;
+       jdebut := jfin-NbrePointDerivee+1;
+       if jdebut<0 then jdebut := 0;
     end;
     for j := jdebut to jfin do if
        not isNan(X[j]) and not isNan(Y[j]) then begin
@@ -1434,11 +1473,11 @@ begin
      i := 1;
      repeat inc(i)
      until (ecart>ecartMax) or (i=pred(N));
-// on est loin du départ
+// on est loin du dÃ©part
      if i=pred(N) then exit;
      repeat inc(i)
      until (ecart<ecartMin) or entre0et1 or (i=pred(N));
-// on est près de la boucle
+// on est prÃ¨s de la boucle
      if i=pred(N) then exit;
      iFin := i;
      repeat
@@ -1449,7 +1488,7 @@ begin
                iFin := i;
          end; { on se rapproche }
      until (ecartLoc>ecartMax) or (i=pred(N));
-// on séloigne
+// on sÃ©loigne
      i := iFin;
      if entre0et1 then dec(i); { plus d'un tour }
      iFin := i;

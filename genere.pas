@@ -1,4 +1,21 @@
-// genere.pas include de compile.pas
+ï»¿// genere.pas include de compile.pas
+
+procedure GetParamDerivee(operandDebut : Pelement;var NbrePointDer : integer);
+begin
+   if operandDebut<>nil
+      then begin
+         NbrePointDer := round(calcule(operandDebut));
+         if not odd(NbrePointDer) then inc(NbrePointDer);
+         if (NbrePointDer>MaxPointsDerivee) then
+             NbrePointDer := NbrePointDerivee;
+      end
+      else NbrePointDer := NbrePointDerivee;
+   case degreDerivee of
+      1 : if NbrePointDer<3 then nbrePointDer := 3;
+      2 : if NbrePointDer<5 then nbrePointDer := 5;
+      3 : if NbrePointDer<7 then nbrePointDer := 7;
+   end;
+end;
 
 Procedure CalculeCpx(F:Pelement;var Z : complexe);
 
@@ -32,7 +49,7 @@ begin with F^ do begin
      end; { case }
 end end; // calculFonctionGlb 
 
-// Evalue la Valeur d'un arbre pointé par F
+// Evalue la Valeur d'un arbre pointÃ© par F
 Var  X,Y : complexe;
      Xi,Yi : integer;
 Begin // Noyau de Function calculeCpx 
@@ -92,7 +109,7 @@ Begin // Noyau de Function calculeCpx
                z.reel := argumentCpx(z);
                z.imag := 0;
             end
-            else begin { calcul en réel }
+            else begin { calcul en rÃ©el }
                 z.reel := AdresseF(z.reel);
                 z.imag := 0;
             end;
@@ -302,7 +319,7 @@ Procedure AffecteUnite(F : Pelement;U : Tunite);
                                        U1.recopieUnite(U);
                                        U1.uniteDonnee := false;
                                        U1.MoinsUnite(U_d);
-     { TODO : prévoir U_d = seconde pour éviter S/s = F et autres}
+     { TODO : prÃ©voir U_d = seconde pour Ã©viter S/s = F et autres}
                                        affecteUnite(OperG,U1);
                                      end
                                      else affecteUnite(OperG,U_g);
@@ -376,7 +393,7 @@ if f=nil then exit;
        fonctionGlb : case f^.CodeFglb of
             EquaDiff1 : affecteUnite(f^.operandGlb,U);
             EquaDiff2 : affecteUnite(f^.operandGlb,U);
-            else // ne peut intervenir dans un modèle
+            else // ne peut intervenir dans un modÃ¨le
        end;
        Nombre : ;
        ifThenElse,PieceWise : aIf(F,U);
@@ -526,6 +543,63 @@ begin
       	if Length(u)>0 then NomUnite := u;
 end;
 
+Function Tgrandeur.ValeurNum(isLatex : boolean) : String;
+var puissValeur : shortInt;
+    CoeffValeur,valeurDix : double;
+    Precision,Decimales : integer;
+    tampon : String;
+    PrecOk : boolean;
+    valeurLoc,precLoc : double;
+begin
+      valeurLoc := valCourante;
+      if isNan(valeurLoc) or isInfinite(valeurLoc) then begin
+         result := '';
+         exit;
+      end;
+      if isZero(valeurLoc, 1e-300) then begin
+         result := '0';
+         exit;
+      end;
+      precLoc := incertCourante;
+      Precision := 0;
+      precOK := not isNan(precLoc) and (precLoc>0) and
+                ( abs(valeurLoc)>precLoc ) and
+                ( abs(valeurLoc)<1e9*precLoc );
+      if precOK then begin
+           try
+           Precision := floor(log10(abs(valeurLoc))-floor(log10(precLoc))); // +1
+           except
+           precOK := false;
+           end;
+      end; // precOK
+      if precOK
+         then begin
+            if Precision<=2
+               then Precision := 3
+               else if Precision>PrecisionMax
+                  then Precision := PrecisionMax;
+         end
+         else Precision := PrecisionMax div 2;
+   PuissValeur := 3*floor(log10(abs(valeurLoc))/3);
+   CoeffValeur := dix(-puissValeur);
+   Decimales := Precision-1;
+   valeurDix := valeurLoc*CoeffValeur;
+   if abs(valeurDix)>=10 then dec(Decimales);
+   if abs(valeurDix)>=100 then dec(Decimales);
+   if Decimales<0 then Decimales := 0;
+   if isLatex then begin
+      tampon := FloatToStrFixedLatex(valeurDix,Precision,Decimales);
+      if puissValeur<>0 then
+         tampon := tampon+'*10^('+intToStr(puissValeur)+')';
+   end
+   else begin
+      tampon := FloatToStrF(valeurDix,ffFixed,Precision,Decimales);
+      if puissValeur<>0 then
+         tampon := tampon+pointMedian+'10'+powerToStr(puissValeur);
+   end;
+   result := tampon;
+end; // ValeurNum
+
 Constructor Tfonction.Create;
 begin
         calcul := nil;
@@ -537,6 +611,71 @@ begin
         isSysteme := false;
         contientCalculGlb := false;
 end;
+
+Function TModele.expressionLatex(exposantX : string) : string;
+
+Function TranslateExp(F : Pelement) : string;
+Var X,Y : string;
+    parX,parY : boolean; // parenthÃ¨se X Y
+    i : codeGrandeur;
+Begin // ExpressionLatex
+  result := '';
+  if F=nil then exit;
+  With F^ do Case TypeElement of
+       Operateur: Begin
+            X := translateExp(OperG);
+            if X='' then exit;
+            parX := (Operg.TypeElement=Operateur) and
+                    charInSet(OperG.CodeOp,['+','-']) and
+                    charInSet(CodeOp,['*','^']);
+            if parX then X := '('+X+')';
+            Y := translateExp(OperD);
+            if Y='' then exit;
+            parY := ((OperD.TypeElement=Operateur) and
+                    charInSet(OperD.CodeOp,['+','-']) and
+                    (CodeOp='*')) or (CodeOp='^') or (Y[1]='-');
+            if parY then Y := '('+Y+')';
+            if charInSet(CodeOp,['+','-','*','/','^'])
+               then result := X+CodeOp+Y;
+            if (CodeOp='*') and
+               (Operd.typeElement=grandeur) and
+               (Operd.pvar.genreG=paramNormal) then begin
+                   i := indexNom(operd.Pvar.nom);
+                   i := indexToParam(i);
+                   if (i>=low(ParamInverse)) and (i<=high(ParamInverse)) and ParamInverse[i]
+                      then result := X+'/'+Y;
+            end;
+       end;// operateur
+       Fonction: Begin
+           X := '('+translateExp(Operand)+')';
+           case codeF of
+                oppose : result := '-'+X;
+                inverse : result := '1/'+X;
+                carre : result := X+'^2';
+                else begin
+                   result := nomFonctionLatex[codeF];
+                   if result<>'' then
+                      if not(AngleEnDegre) and (codeF in [cosinus,sinus,tangente])
+                        then result := result+'(deg'+X+')'
+                        else result := result+X;
+                end;
+           end;
+       End; // Fonction
+       FonctionGlb : ;
+       grandeur : if Pvar.genreG=paramNormal
+           then result := Pvar.valeurNum(true)
+           else if Pvar=grandeurs[indexX]
+              then result := 'x'+exposantX;  // *10^(exposantX)
+       incert : ;
+       Nombre: if F=pointeurPi then result := 'pi' else result := floatToStrLatex(valeur);
+       RacineMoinsUn : result := 'j';
+       else result := '';
+  End;// case typeElement
+end;
+
+begin
+    result := translateExp(calcul) // + /10^(exposantY) fait dans la procedure appelante
+End; // ExpressionLatex
 
 Destructor Tmodele.Destroy;
 begin
@@ -557,7 +696,7 @@ begin
    IsSinusoide := false;
    IsCosinus := false;
    VariableEgalAbscisse := false;
-   residuStat := TcalculStatistique.create;
+   residuStat := TcalculStatistiqueResidu.create;
    fchi2 := nil;
 end;
 
@@ -583,8 +722,8 @@ end;
 
 // Compilation
 
-// Les procédures GenXXX génére un noeud de l'arbre Pelement correspondant
-//  à XXX pour dériveeForm, Fonctor et transformeComplexe
+// Les procÃ©dures GenXXX gÃ©nÃ©re un noeud de l'arbre Pelement correspondant
+//  Ã  XXX pour dÃ©riveeForm, Fonctor et transformeComplexe
 
 Function GenNombre(ValNombre:double): Pelement;
 Var  P : Pelement;
@@ -746,9 +885,9 @@ begin
 end; // GenPW
 
 Function GenOperateurSimpl(C:Char;P1,P2:Pelement):Pelement;
-{Les simplifications sont indispensables pour éviter la prolifération des
-branches, elles ne tiennent pas compte des formes indéterminées (utilisé par
-dérivée et complexe) }
+{Les simplifications sont indispensables pour Ã©viter la prolifÃ©ration des
+branches, elles ne tiennent pas compte des formes indÃ©terminÃ©es (utilisÃ© par
+dÃ©rivÃ©e et complexe) }
 Begin
    case C of
        '+','@': Begin
@@ -897,7 +1036,7 @@ Begin
   Grandeurs[cDeltat].Init(deltaMaj+'t','','',constante);
   GrandeurImmediate := Grandeurs[cImmediate];
   GrandeurImmediate.Init('','','',constanteGlb);
-  Grandeurs[cFrequence].Init('f','Hz','Fréquence',variable);
+  Grandeurs[cFrequence].Init('f','Hz','FrÃ©quence',variable);
   setLength(Grandeurs[cFrequence].Valeur,MaxMaxVecteur);
   Grandeurs[cIndice].Init('i','','Indice de ligne',variable);
   Grandeurs[cMuette].Init('i','','muette',constante);
@@ -930,7 +1069,7 @@ end; // copie
 // Calcul
 
 Function CalculeLoc(F:Pelement) : double;
-// Evalue la Valeur d'un arbre pointé par F
+// Evalue la Valeur d'un arbre pointÃ© par F
 
 Function AngleMod(X : double) : double;
 var periode : double;
@@ -971,15 +1110,15 @@ var
     PrecisionValeur : double;
 Const
     PrecisionRelative = 1e-8;
-    PrecisionAbsolue = 1e-15; // calcul de pH à 10-2 près à pH=13
+    PrecisionAbsolue = 1e-15; // calcul de pH Ã  10-2 prÃ¨s Ã  pH=13
 
-// boucle de recherche par méthode gradient-Newton
+// boucle de recherche par mÃ©thode gradient-Newton
 
 Procedure ResoudEquation;
 var
     J,Jprec,incY : double; { J = F(x)^2 }
     diverge,stable : boolean;
-    valF,valFprime : double; // valeur de la fonction et de sa dérivée
+    valF,valFprime : double; // valeur de la fonction et de sa dÃ©rivÃ©e
 
 procedure CalculF;
 begin
@@ -999,7 +1138,7 @@ end;
 
 const
     Maxi_i1 = 12; // time out
-    Maxi_i2 = 5; // soit µ mini =(1/3)^5=0.4%
+    Maxi_i2 = 5; // soit Âµ mini =(1/3)^5=0.4%
 var
     i1,i2 : integer;
     mu : double;
@@ -1272,7 +1411,7 @@ begin with F^ do begin
            (varX.valeur[fin]-seuil)/(varX.valeur[fin]-varX.valeur[pred(fin)]);
        except
        end;
-   end; // fréquence, phase
+   end; // frÃ©quence, phase
    case codeFglb of
         position : CherchePosVal;
         frequence : if t1>t0
@@ -1464,7 +1603,7 @@ begin with F^ do begin
   end;
 end end; // calculPenteOrigine
 
-Function CalcIntegrale : double; // intégrale operandGlb / varMuette de a à b
+Function CalcIntegrale : double; // intÃ©grale operandGlb / varMuette de a Ã  b
 const jmaxmax = 100;
 var  j,jmax : integer;
      deltax,sigma,deltaSigma,somme : double;
@@ -1515,7 +1654,7 @@ begin
   x := vecteurX[i];
 end;
 
-// intégrale operandGlb / varx  de debut à fin
+// intÃ©grale operandGlb / varx  de debut Ã  fin
 var  i,idebut,ifin : integer;
      a,b,somme,signe : double;
 begin with F^ do begin
@@ -1761,7 +1900,7 @@ begin
      end;
 end;
 
-// dérivée formelle
+// dÃ©rivÃ©e formelle
 
 Procedure deriveeForm(F : Tfonction;xx : tgrandeur;var Fprime : Pelement;
    var dependDer : TsetGrandeur);
@@ -1809,7 +1948,8 @@ Function derive(F : Pelement ) : Pelement;
                               genFonction(sinus,copie(operand)));
               tangente : tampon := genOperateurSimpl('+',
                   pointeurUn,
-                  genFonction(tangente,copie(operand)));
+                  genFonction(carre,
+                     genFonction(tangente,copie(operand))));
                { tan(x)'=1+tan(x)^2 }
                arcTangente : tampon := genFonction(inverse,
                   genOperateurSimpl('+',
@@ -1957,7 +2097,7 @@ Begin // derive
            GrandeurIndicee : if (f^.Pvar=xx) and (f^.indexLigne<>nil)
               then Derive := pointeurUn { cas x[i] - x[i-1] }
               else Derive := pointeurZero;
-                  // cas complexe à voir : z=x[0]+x[3]+x[5]
+                  // cas complexe Ã  voir : z=x[0]+x[3]+x[5]
            else Derive := pointeurZero;
      end;{case}
 end;// derive
@@ -2084,7 +2224,7 @@ if El<>nil then with El^ do begin
                           ((indexLigne.typeElement=operateur) and
                            (indexLigne.CodeOp='+'))
                                then begin
-                                  EulerPermis := false; // t[i+1] des dérivées
+                                  EulerPermis := false; // t[i+1] des dÃ©rivÃ©es
                                   isEuler := false;
                                end;
                        if not isEuler and EulerPermis and
@@ -2210,7 +2350,7 @@ Begin with El^ do
 end;
 
 procedure Tpage.calculLigne(numeroLigne : integer);
-// mise à jour d'une ligne après modif d'une valeur
+// mise Ã  jour d'une ligne aprÃ¨s modif d'une valeur
 var fx : integer;
 begin
    affecteConstParam;
@@ -2245,11 +2385,11 @@ begin
 end;{calcLigne}
 
 Procedure construire2(dfdy,dfdyprime : Pelement;var dfdk : Pelement;k : codeGrandeur);
-{  si y'' = f(x,y,y',k)  z=dy/dk obéit
+{  si y'' = f(x,y,y',k)  z=dy/dk obÃ©it
    d2(z)/dx2=df/dy*z+df/dy'*dz/dx+df/dk (1)
-   la procedure construit l'équation (1) et renvoie dans dfdk
-   valeur initiale nulle sauf pour y0 : 1(traité dans modèle)
-   valeur initiale dérivée nulle sauf pour y'0 : 1(traité dans modèle) }
+   la procedure construit l'Ã©quation (1) et renvoie dans dfdk
+   valeur initiale nulle sauf pour y0 : 1(traitÃ© dans modÃ¨le)
+   valeur initiale dÃ©rivÃ©e nulle sauf pour y'0 : 1(traitÃ© dans modÃ¨le) }
 begin
      dfdk := genFonctionGlb(equaDiff2,genOperateurSimpl('+',
           genOperateurSimpl('+',
@@ -2263,10 +2403,10 @@ begin
 end;
 
 Procedure construire1(dfdy : Pelement;var dfdk : Pelement;k : codeGrandeur);
-{  si y' = f(x,y,k)  a=dy/dk obéit à
+{  si y' = f(x,y,k)  a=dy/dk obÃ©it Ã 
    d(a)/dx=df/dy*a+df/dk (1)
    la procedure construit (1) et renvoie dans dfdk
-   valeur initiale nulle sauf pour y0 : 1 (traité dans modèle) }
+   valeur initiale nulle sauf pour y0 : 1 (traitÃ© dans modÃ¨le) }
 begin
       dfdk := genFonctionGlb(equaDiff1,genOperateurSimpl('+',
              genOperateurSimpl('*',

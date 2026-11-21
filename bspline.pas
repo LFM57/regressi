@@ -1,6 +1,6 @@
-procedure CalculBSpline(const X,Y : vecteur;ordre : integer;
+ï»¿procedure CalculBSpline(const X,Y : vecteur;ordre : integer;
                         var N : integer;var Xspline,Yspline : vecteur);
-Const Nmax = 256; // 1 pixel sur 4 pour écran 1024
+Const Nmax = 256; // 1 pixel sur 4 pour Ã©cran 1024
 var
    xi : vecteur;
    Nij : array[1..ordreMaxSpline] of vecteur;
@@ -86,14 +86,14 @@ end; // CalculBSpline
 
 procedure InterpoleSinc(const X,Y : vecteur;ordre : integer;
                         var N : integer;var Xspline,Yspline : vecteur);
-Const Nmax = 4096; // tous les pixels d'un écran 4096
-      a = 6; // à droite et à gauche soit 13 points
+Const Nmax = 4096; // tous les pixels d'un Ã©cran 4096
+      a = 6; // Ã  droite et Ã  gauche soit 13 points
       NijMax = (ordreMaxSinc+1)*(2*a+1); // 208
 var
    Nij : array[0..NijMax] of double;
    i,j,k,Nsinc : integer;
    imin,imax : integer;
-   yy,deltaX : double;
+   yy,deltaX,w : double;
 begin
     copyVecteur(Xspline,X);
     copyVecteur(Yspline,Y);
@@ -102,21 +102,22 @@ begin
     if ordre<2 then ordre := 2;
     while ((N*ordre)>Nmax) and
           (ordre>2) do dec(ordre);
-    if (N * ordre)>Nmax then exit;
-    setLength(Xspline,Nmax+1);
-    setLength(Yspline,Nmax+1);
+    Nsinc := N*ordre;
+    if Nsinc>Nmax then exit;
+    setLength(Xspline,Nsinc+1);
+    setLength(Yspline,Nsinc+1);
     Nij[0] := 1;
 		for j := 1 to NijMax do begin // calcul du noyau
         yy := pi*j/ordre;
         Nij[j] := sinc(yy)*sinc(yy/a);
     end;
-    Nsinc := N*ordre;
     deltaX := (X[N-1]-X[0])/(N-1)/ordre;
 // calcul de Xspline, Yspline
     for j := 0 to Nsinc-1 do begin
         k := round(j/ordre);
         Xspline[j] := X[0]+j*deltaX;
         yy := 0;
+        w := 0;
         imin := k-a;
         if imin<0 then imin := 0;
         imax := imin+2*a; // 2*a+1 points
@@ -125,9 +126,13 @@ begin
            imin := imax-2*a;
            if imin<0 then imin := 0;
         end;
-        for i := imin to imax do
+        for i := imin to imax do begin
             yy := yy + Y[i]*Nij[abs(i*ordre-j)];
-	   	  Yspline[j] := yy;
+            w := w + Nij[abs(i*ordre-j)];
+        end;
+        if w<>0
+           then Yspline[j] := yy/w
+           else Yspline[j] := yy;
     end;
     N := Nsinc;
 end; // InterpoleSinc
@@ -205,7 +210,7 @@ begin  // MoyGlissante
    Ylisse[0] := Y[0];
    for j := 1 to pred(N) do
        Ylisse[j] := Y[j]*(1-a)+a*Ylisse[j-1];
- // (1-a) de manière à avoir une réponse de 1 à une entrée de 1
+ // (1-a) de maniÃ¨re Ã  avoir une rÃ©ponse de 1 Ã  une entrÃ©e de 1
    yg := nil;
    dy := nil;
 end; // MoyGlissante
@@ -251,7 +256,7 @@ begin
           Ylisse[i] := Nan;
           end
       end; // for i
-// interpolation à gauche
+// interpolation Ã  gauche
       try
       Ylisse[NbreLisse] := Y[fin]+pas*(Y[pred(fin)]-Y[fin])/(X[pred(fin)]-X[fin]);
       except

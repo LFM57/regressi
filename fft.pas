@@ -1,4 +1,4 @@
-Unit fft;
+ÔªøUnit fft;
 
 interface
 
@@ -11,9 +11,6 @@ Uses
 
 // Pour gestion fichiers son
   {$IFDEF MACOS}
-  Posix.Unistd,
-  {$ENDIF}
-  {$IFDEF Android}
   Posix.Unistd,
   {$ENDIF}
   {$IFDEF MSWINDOWS}
@@ -38,15 +35,16 @@ Uses
 
 type Tfenetre = (rectangulaire,Hamming,FlatTop,Blackman,rectangleAjuste);
      TcalculFFT = (c_spectre,c_correlation,c_enveloppe);
+     TordonneeFFT = (oNormal,oReduite,oPuissance);
 
 const
       NbrePointsSonagramme = 1024;
       NbreMaxSonagramme = 256; // MaxMaxVecteur div NbrePointsSonagramme
       PasSonCalcul = 3;
       PasTempsSonagramme = 0.03; // 30 ms
-      MaxVecteurSon = 2646000; // 2,6 Mo ; 1 minute ‡ 44100 Hz
+      MaxVecteurSon = 2646000; // 2,6 Mo ; 1 minute √† 44100 Hz
       nomFenetre : array[Tfenetre] of string =
-        ('Rectangle','Hamming','Toit plat','Blackman','Rect. corrigÈe');
+        ('Rectangle','Hamming','Toit plat','Blackman','Rect. corrig√©e');
       indexFenetre : array[Tfenetre] of integer =
         (64,67,69,66,65);
 
@@ -129,10 +127,10 @@ var j : integer;
     xx : double;
 begin
      for j:=0 to pred(nb) do begin
-         xx := kf[j]*tableau[j]; // fenÍtrage
+         xx := kf[j]*tableau[j]; // fen√™trage
          tableau[j] := xx;
          xr[tbi[j]] := xx;
-// rangement avec permutation des mesures tableau fenÍtrÈes dans xr[]
+// rangement avec permutation des mesures tableau fen√™tr√©es dans xr[]
          xi[j]:=0;
      end;
      try
@@ -226,8 +224,8 @@ begin
          angle := dpsn*i;
          wr[i] := cos(angle);
          wi[i] := sin(angle);
-// ATTENTION : les indices ne sont pas permutÈs
-// la permutation selon tbi[] sera faite dans le fenÍtrage
+// ATTENTION : les indices ne sont pas permut√©s
+// la permutation selon tbi[] sera faite dans le fen√™trage
          case fenetre of
               Hamming  : kf[i] :=0.54-0.46*cos(i*dpsn);
               Blackman : kf[i] :=0.42-0.5*cos(i*dpsn)+0.08*cos(2*i*dpsn);
@@ -298,8 +296,8 @@ end; // inverserIndicesInverse
 Procedure corrigeAmplitude(var freq,ampli,Yr,Yi : vecteur;var periode : double;NbreFFT : integer);
 var i,imax,i0,iRef : integer;
     valeurMax,deltaF,maxA : double;
-// En entrÈe freq et ampl les valeurs issues d'une FFT avec fenÍtre rectangulaire
-// En sortie on a remplacÈ les raies excentrÈes par non synchronisation par la "vraie" raie
+// En entr√©e freq et ampl les valeurs issues d'une FFT avec fen√™tre rectangulaire
+// En sortie on a remplac√© les raies excentr√©es par non synchronisation par la "vraie" raie
 
 function AjusteFrequence(var j1 : integer) : boolean;
 
@@ -336,11 +334,11 @@ begin
     if not result then exit;
     if ampli[j1-1]>ampli[j1+1] then j2 := j1-1 else j2 := j1+1;
     F0 := 1-(ampli[j1]/(ampli[j2]+ampli[j1]));
-// F0>0 est ici l'Ècart / maxi du sinc
+// F0>0 est ici l'√©cart / maxi du sinc
     A0 := ampli[j1]/sinc(pi*F0);
     phase0 := MyArctan2(Yi[j1],Yr[j1]);
-// la non synchronisation crÈe Ègalement un dÈphasage de pi*(f0-f)*T
-// T = 1/deltaf = 1 en numÈro
+// la non synchronisation cr√©e √©galement un d√©phasage de pi*(f0-f)*T
+// T = 1/deltaf = 1 en num√©ro
     if j1>j2
        then begin
           phase0 := phase0+pi*F0;
@@ -349,7 +347,7 @@ begin
           phase0 := phase0-pi*F0;
           F0 := j1+F0;
        end;
- // F0 en numÈro
+ // F0 en num√©ro
     j2 := j1;
     repeat dec(j2)
     until (j2<=2) or (ampli[j2]<ampli[j2-1]);
@@ -382,11 +380,11 @@ end; // AjusteFrequence
 
 begin
      deltaF := freq[1];
-// ne marche pas dans le cas o˘ frÈquence signal de l'ordre du pas
+// ne marche pas dans le cas o√π fr√©quence signal de l'ordre du pas
      imax := (NbreFFT div 2) - 2;
      i0 := 0;
      repeat inc(i0)
-     until (ampli[i0]>ampli[i0-1]) or (i0>=imax); // on Èvite le continu
+     until (ampli[i0]>ampli[i0-1]) or (i0>=imax); // on √©vite le continu
      valeurMax := 0;
      maxA := 0;
      for i:= i0 to imax do
@@ -408,7 +406,7 @@ begin
      NbreF := Puiss2Sup(Nbre);
      if (calculFFT=c_correlation) and
         (2*NbreF<=Maxi) then NbreF := 2*NbreF;
-// Interdit pour spectre car on obtient le spectre du signal discrÈtisÈ 
+// Interdit pour spectre car on obtient le spectre du signal discr√©tis√© 
      Deltat := Periode/Nbre;
      Periode := NbreF*deltat;
      for i := 0 to pred(Nbre) do begin
@@ -438,7 +436,7 @@ begin
      Periode := (T[fin]-T[debut])/pred(Nbre)*Nbre;
      case calculFFT of
           c_spectre : setZero;
-          c_correlation : setZero; // zeroPadding obligatoire pour corrÈlation
+          c_correlation : setZero; // zeroPadding obligatoire pour corr√©lation
           c_enveloppe : setInterp;
      end;
      inverserIndices(NbreF);
@@ -494,11 +492,11 @@ begin
      if not (fenetre in [Rectangulaire,RectangleAjuste]) then
         for i := 0 to pred(NbreF) do
             xxr[i] := xxr[i]/kf[i]/coeffFenetrage;
-     deltat := Periode/NbreF; // NbreF et non Nbre ‡ cause choix de pÈriode et interpolation
+     deltat := Periode/NbreF; // NbreF et non Nbre √† cause choix de p√©riode et interpolation
      for i := 0 to pred(Nbre) do begin
          iAvant := trunc((T[i]-T[debutFFT])/deltat);
          ecart := T[i]-T[debutFFT]-iAvant*deltat;
-         iAvant := iAvant mod NbreF; { pÈriodiser }
+         iAvant := iAvant mod NbreF; { p√©riodiser }
          if iAvant<0 then inc(iAvant,NbreF);
          iApres := succ(iAvant) mod NbreF;
          x[i] := xxr[iAvant]+(xxr[iApres]-xxr[iAvant])*ecart/deltat;{ interpoler }
@@ -567,7 +565,7 @@ begin
          Xlisse[i] := 0;
      for j:=0 to pred(NbrePointsSonagramme) do begin
          xr[tbi[j]] := Xlisse[j];
-// rangement avec permutation des mesures tableau fenÍtrÈes dans xr[]
+// rangement avec permutation des mesures tableau fen√™tr√©es dans xr[]
          xi[j]:=0;
      end;
      tfd(NbrePointsSonagramme,xr,xi,false);
@@ -599,7 +597,7 @@ begin
     fenetrage;
     for i := 0 to pred(NbreSonagramme) do begin
         FourierSonagramme(i*NbreSonagrammeAff,(i+1)*nbreSonagrammeAff-1);
-        son[i,0] := Xa[0]; // continu ‡ part
+        son[i,0] := Xa[0]; // continu √† part
         for j := 1 to pred(NbrePointsSonagramme div 2) do begin
             if Xa[j]>sonMax then sonMax := Xa[j];
             son[i,j] := Xa[j];
@@ -636,26 +634,26 @@ var i,i0,imax,imin : integer;
     maxi,s : double;
 begin
    maxi := 0;
-   imax := Nbre div 4; // i ‡ ne pas dÈpasser
-   imin := Nbre div 64; // i ‡ ne pas dÈpasser
+   imax := Nbre div 4; // i √† ne pas d√©passer
+   imin := Nbre div 64; // i √† ne pas d√©passer
    i0 := 1;
    for i := imin to imax do
        if Xa[i]>maxi then begin
           maxi := Xa[i];
           i0 := i;
        end;
-   if i0>=2 then begin // on a en fait trouvÈ l'harmonique 2 ?
+   if i0>=2 then begin // on a en fait trouv√© l'harmonique 2 ?
        s := Xa[i0 div 2]+Xa[3*i0 div 2]+Xa[5*i0 div 2];
    { en fait i0=harm2 3*i0/2=harm3 ; i0/2 fondamental ; 5*i0/2 harm5
      on ne teste pas 4*i0/2 qui est hamr2 de i0 }
        if s>maxi/2 then i0 := affine(i0 div 2);
    end;
-   if i0>=3 then begin // on a en fait trouvÈ l'harmonique 3 ?
+   if i0>=3 then begin // on a en fait trouv√© l'harmonique 3 ?
        s := Xa[i0 div 3]+Xa[2*i0 div 3]+Xa[4*i0 div 3];
    { en fait i0=harm3 2*i0/3=harm2 ; i0/3 fondamental ; 4*i0/3 harm4 }
        if s>maxi/2 then i0 := affine(i0 div 3);
    end;
-   if i0>=4 then begin // on a en fait trouvÈ l'harmonique 4 ?
+   if i0>=4 then begin // on a en fait trouv√© l'harmonique 4 ?
        s := Xa[i0 div 4]+Xa[2*i0 div 4]+Xa[3*i0 div 4];
    { en fait i0=harm4 i0/4=harm1 ; 2*i0/4 harm2 ; 3*i0/4 harm3 }
        if s>maxi/2 then i0 := affine(i0 div 4);
@@ -672,15 +670,15 @@ var i,idebut,imax : integer;
 begin
    maxi := 0;
    idebut := 0;
-   repeat inc(idebut) until (idebut>(nbre)) or (Xa[idebut]>Xa[idebut-1]);
+   imax := Nbre div 3;
+   repeat inc(idebut) until (idebut>=imax) or (Xa[idebut]>Xa[idebut-1]);
    for i := idebut to pred(Nbre) do
        if Xa[i]>maxi then maxi := Xa[i];
    maxi := maxi/2;
    i := idebut;
-   imax := Nbre div 3;
    repeat inc(i)
-   until (i=imax) or (Xa[i]>maxi);
-// dÈbut du premier pic
+   until (i>=imax) or (Xa[i]>maxi);
+// d√©but du premier pic
    i0 := i;
    maxi := Xa[i];
    secondEssai := true;
@@ -737,11 +735,11 @@ begin
         end;
      end;
      deltat := Periode/NbreF;
-// NbreF et non Nbre ‡ cause choix de pÈriode et interpolation
+// NbreF et non Nbre √† cause choix de p√©riode et interpolation
      for i := 0 to pred(Nbre) do begin
          iAvant := trunc((T[i]-T[0])/deltat);
          ecart := T[i]-T[0]-iAvant*deltat;
-         iAvant := iAvant mod NbreF; { pÈriodiser }
+         iAvant := iAvant mod NbreF; { p√©riodiser }
          if iAvant<0 then inc(iAvant,NbreF);
          iApres := succ(iAvant) mod NbreF;
          xre := xxr[iAvant]+(xxr[iApres]-xxr[iAvant])*ecart/deltat;{ interpoler }
@@ -788,7 +786,7 @@ begin
         raise EWavError.create('Le fichier '+nomFichier+' n''existe pas');
      Hfichier := System.SysUtils.FileOpen(NomFichier,fmOpenRead);
      if HFichier<0 then
-        raise EWavError.create('ProblËme d''ouverture du fichier .wav');
+        raise EWavError.create('Probl√®me d''ouverture du fichier .wav');
      son8 := nil;
      son16 := nil;
      son32 := nil;
@@ -801,10 +799,10 @@ begin
      end;
      System.SysUtils.FileSeek(Hfichier,20,0);
      System.SysUtils.FileRead(Hfichier,testPCM,1);
-     // 1 : linÈaire ; 3 : linÈaire flottant ?
+     // 1 : lin√©aire ; 3 : lin√©aire flottant ?
      if not (testPCM in [1,3]) then begin
          FileClose(Hfichier);
-         raise EWavError.create('Format de fichier attendu : PCM linÈaire');
+         raise EWavError.create('Format de fichier attendu : PCM lin√©aire');
      end;
      System.SysUtils.FileSeek(Hfichier,4,0);
      System.SysUtils.FileRead(Hfichier,taille,4);
@@ -843,7 +841,7 @@ begin
      if i>=taille then begin
          FileClose(Hfichier);
          FNbrePoints := 0;
-         raise EWavError.create('ProblËme de lecture du fichier .wav');
+         raise EWavError.create('Probl√®me de lecture du fichier .wav');
      end;
      System.SysUtils.FileRead(Hfichier,FNbrePoints,4); // Nombre de points en octets
      case formatWave of
@@ -923,11 +921,11 @@ begin
      son16 := nil;
      son32 := nil;
      if (freqAudio>50000)
-         then NbreMaxPermis := 8*MaxMaxVecteur   // 96k et 88200 ; passage ‡ 12k
+         then NbreMaxPermis := 8*MaxMaxVecteur   // 96k et 88200 ; passage √† 12k
          else if (freqAudio>35000)
-              then NbreMaxPermis := 4*MaxMaxVecteur // 48k et 44100 ; passage ‡ 12k
+              then NbreMaxPermis := 4*MaxMaxVecteur // 48k et 44100 ; passage √† 12k
               else if (freqAudio>20000)
-                   then NbreMaxPermis := 2*MaxMaxVecteur // 32k 24k 22050 ; passage ‡ 12k
+                   then NbreMaxPermis := 2*MaxMaxVecteur // 32k 24k 22050 ; passage √† 12k
                    else NbreMaxPermis := MaxMaxVecteur;// 16k 12k 11025
      if (FNbrePoints>NbreMaxPermis) then FNbrePoints := NbreMaxPermis;
      FNbrePoints := FNbrePoints-1;

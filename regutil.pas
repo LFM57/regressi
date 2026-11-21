@@ -1,4 +1,4 @@
-unit regutil;
+ï»¿unit regutil;
 
 interface
 
@@ -17,6 +17,7 @@ uses
   System.IniFiles,
 
   FMX.Types,
+  FMX.Utils,
   FMX.Controls,
   FMX.Forms,
   FMX.Dialogs,
@@ -64,6 +65,8 @@ uses
 {$ENDIF POSIX}
 
 {$IFDEF MSWINDOWS}
+   Winapi.ShellApi,
+   Winapi.ShlObj,
    Winapi.Windows,
 {$ENDIF}
 
@@ -75,8 +78,8 @@ uses
 var
   finFichierWin : boolean;
   ligneWin : string;
-  DocumentsPath,homePath,supportPath,cachePath,tempPath,exemplesPath : string;
-  HelpFile,HelpHtml : string;
+  DocumentsPath,homePath,supportPath,cachePath,tempPath,exemplesPath,applicationPath : string;
+  HelpFile,HelpHtml,HelpPath : string;
   ModifFichier : boolean;
   ImprimanteDisponible : boolean;
   nbreParamAnimation : integer;
@@ -90,7 +93,7 @@ const
         PrecisionMin = 3;
         PrecisionMax = 15; // Precision double pour FloatToStrF
         PrecisionFichier = 15; // double
-        SymbReg : Char = '£';
+        SymbReg : Char = 'Â£';
         SymbReg2 : Char = '&';
         UnJour = 24*3600;
         UneHeure = 3600;
@@ -105,27 +108,27 @@ const
         {$ELSE}
  //       FonteRegressi = 'Segoe UI';
         {$ENDIF}
-        MajModele = 0; { modification de l'expresssion du modèle }
+        MajModele = 0; { modification de l'expresssion du modÃ¨le }
         MajGrandeur = 1; { modification de l'expression des grandeurs }
-        MajValeur = 2;{ modification des valeurs expérimentales dans tableur }
-        MajFichier = 3; { général après chargement de fichier ... }
+        MajValeur = 2;{ modification des valeurs expÃ©rimentales dans tableur }
+        MajFichier = 3; { gÃ©nÃ©ral aprÃ¨s chargement de fichier ... }
         MajChangePage = 4; { changement de page }
         MajAjoutPage = 5; { ajout de page }
         MajSupprPage = 6; { suppression de page }
         MajVide = 7; { nettoyage }
-        MajFFT = 8; { options Fenêtre et période }
+        MajFFT = 8; { options FenÃªtre et pÃ©riode }
         MajTri = 9; { modif de l'ordre }
         MajIncertitude = 10;
         MajUnites = 11;
-        MajValeurAcq = 12;{ modification des valeurs expérimentales par acquisition }
+        MajValeurAcq = 12;{ modification des valeurs expÃ©rimentales par acquisition }
         MajUnitesParam = 13;
         MajSupprPoints = 14;
         MajNom = 15; { Modif d'un nom }
         MajAjoutValeur = 16; { ajout d'un point en mode clavier }
-        MajSelectPage = 17; { changement de sélection des pages }
-        MajValeurGr = 18;{ modification des valeurs expérimentales dans le graphe }
+        MajSelectPage = 17; { changement de sÃ©lection des pages }
+        MajValeurGr = 18;{ modification des valeurs expÃ©rimentales dans le graphe }
         MajSauvePage = 19; { avant de changer de page }
-        MajValeurConst = 20;{ modification des valeurs des paramètres dans tableur }
+        MajValeurConst = 20;{ modification des valeurs des paramÃ¨tres dans tableur }
 
         alphaR =  AnsiChar(128);
         betaRW3 = AnsiChar(129); betaR = ANSIChar(129);
@@ -185,12 +188,16 @@ const
         omicronMin=Char($03Bf);omicronMaj=Char($039F);
         pourMille=Char(8240);cdot=Char($22C5);
         pointMedian=Char($00B7);puce=Char($2219);
+        SymboleAngstrom=Char($00C5);
 
 
         ChiffreExp : array[0..9] of wideChar =
   (WideChar($2070),WideChar($00B9),WideChar($00B2),WideChar($00B3),
    WideChar($2074),WideChar($2075),WideChar($2076),WideChar($2077),
    WideChar($2078),WideChar($2079));
+        ChiffreExpStr = WideChar($2070)+WideChar($00B9)+WideChar($00B2)+
+               WideChar($00B3)+WideChar($2074)+WideChar($2075)+WideChar($2076)+
+               WideChar($2077)+WideChar($2078)+WideChar($2079);
 
        MoinsExp = Char($207B);
        PlusExp = Char($207A);
@@ -199,7 +206,7 @@ const
 
        RepereConst = 'Cte:';
        SeparateurConst =  '________________';
-       LettreAccent = 'éèêëàâùïüô';
+       LettreAccent = 'Ã©Ã¨ÃªÃ«Ã Ã¢Ã¹Ã¯Ã¼Ã´';
 
 type
     TLanguagePstCirc = (fr,en);
@@ -229,7 +236,8 @@ type
     CoefUnite = (zero,yocto,zepto,atto,femto,pico,nano,micro,milli,
                nulle,kilo,mega,giga,tera,peta,exa,zetta,yotta,infini);
     TmodeAcquisition = (AcqClavier,AcqFichier,AcqClipBoard,AcqBitMap,
-                        AcqSon,AcqSimulation,AcqVideo,AcqArduino);
+                        AcqSon,AcqSimulation,AcqVideo,AcqArduino,
+                        AcqChrono,AcqCourbes,AcqCan);
 
 {$IFDEF MACOS}
   TOpenFileEvent = reference to procedure (const AFileName: string);
@@ -275,10 +283,11 @@ const
         crLF = #10;
         crESC = #27;
         crTab = char(vkTab);
-        ValidCharsGrid = '+-*/Ee0123456789,.mMnpGk°''"';
+        ValidCharsGrid = '+-*/Ee0123456789,.mMnpGkÂ°''"';
         Separateur : tSysCharSet = [' ',crTab,',',';'];
         NomModeAcq : array[TmodeAcquisition] of string =
-            ('CLAVIER','FICHIER','PRESSE-PAPIER','BITMAP','WAV','SIMULATION','VIDEO','ARDUINO');
+            ('CLAVIER','FICHIER','PRESSE-PAPIER','BITMAP','WAV','SIMULATION','VIDEO','ARDUINO',
+             'CHRONOPHOTO','COURBES','EXTERNE');
         Majuscule   : tSysCharSet = ['A'..'Z'];
         Minuscule   : tSysCharSet = ['a'..'z'];
         Grecque = alphaMin+betaMin+gammaMin+gammaMaj+deltaMin+deltaMaj+
@@ -290,17 +299,17 @@ const
         ChiffreEtc : tSysCharSet = ['0'..'9','+','-','e','E','.',','];
         CaracDateTime : tSysCharSet = ['0'..'9','/',':',' '];
         CharGetFloat : tSysCharSet = ['0'..'9','+','-','e','E','.',',','*','/','^',
-            'P','p','I','i',piMin,piMaj,'m','µ','n','f','k','M','G','T',
+            'P','p','I','i',piMin,piMaj,'m','Âµ','n','f','k','M','G','T',
             '(',')',crSupprArr,crTab,crCR];
         ChiffrePuiss = WideChar($2070)+WideChar($00B9)+WideChar($00B2)+
                WideChar($00B3)+WideChar($2074)+WideChar($2075)+WideChar($2076)+
                WideChar($2077)+WideChar($2078)+WideChar($2079)+MoinsExp+PlusExp;
 
         NChiffreSignif = 5;
-        caracPrefixe : tSysCharSet = ['y','z','a','f','p','n','µ','m','k','M','G','T','P','E','Z','Y'];
+        caracPrefixe : tSysCharSet = ['y','z','a','f','p','n','Âµ','m','k','M','G','T','P','E','Z','Y'];
         prefixeUnite : array[coefUnite] of char =
-              ('0','y','z','a','f','p','n','µ','m',
-               ' ','k','M','G','T','P','E','Z','Y','ì');
+              ('0','y','z','a','f','p','n','Âµ','m',
+               ' ','k','M','G','T','P','E','Z','Y','Ã¬');
         valUnite : array[coefUnite] of double =
               (1E-27,1E-24,1E-21,1E-18,1E-15,1E-12,1E-9,1E-6,1E-3,
                1,1E+3,1E+6,1E+9,1E+12,1E+15,1E+18,1E+21,1E+24,1E+27);
@@ -311,10 +320,18 @@ const
               (-27,-24,-21,-18,-15,-12,-9,-6,-3,
                 0,+3,+6,+9,+12,+15,+18,+21,+24,+27);
         NomLigneRappel : array[TligneRappel] of string =
-            ('Valeurs du modèle','Réticules','Delta X','Delta Y','Pente','Equivalence','Tangente');
+            ('Valeurs du modÃ¨le','RÃ©ticules','Delta X','Delta Y','Pente','Equivalence','Tangente');
 
 var
+        NbreMC : integer = 1024;
         CoeffEllipse : double = 1.0;
+        withReticule : boolean = true;
+        traceIntersection : boolean = true;
+        avecChi2 : boolean = false;
+        LevenbergMarquardt : boolean = true;
+        Recuit : boolean = false;
+        withBandeConfiance : boolean = false;
+        withBandePrediction : boolean = false;
         ModeleFacteurQualite : boolean = true; // sinon facteur d'amortissement Q=1/2m
         ModeleDecibel : boolean = false;
         FichierTrie : boolean = false;
@@ -323,6 +340,8 @@ var
         OrdreBruit : integer = 3;
         ajusteOrigine : boolean = false;
         uniteParenthese : boolean = false;
+        oCSV_vrai : boolean = true;
+        oCSV_valeursSeules : boolean = false;
         codeErreurF : string;
 
         indexRW3 : integer;
@@ -355,6 +374,7 @@ function litLigneWinU : string;
 function litLigneWin : string;
 procedure ConvertCell(var text : string);
 procedure CentreForm(aForm : TForm);
+procedure OpenHelp(Aurl : string);
 
 function EnTeteRW3 : boolean;
 procedure ecritLigneRW3(s : String);
@@ -370,9 +390,14 @@ function IntToColor(i : integer) : TAlphaColor;
 procedure litColor(Ini : TiniFile;chaine : string;var defaut : TAlphaColor);
 procedure CouleurClaire(var Color : TAlphaColor);
 procedure CouleurFoncee(var Color : TAlphaColor);
+Function GetCouleurFond(Abitmap : FMX.Graphics.Tbitmap) : TAlphaColor;
+procedure SetPixel(abitmap : FMX.Graphics.tbitmap;i,j : integer;acolor : TAlphaColor);
+function GetPixel(abitmap : FMX.Graphics.tbitmap;i,j : integer) : TAlphaColor;
+Function CouleurComplementaire(couleur : TAlphaColor) : TAlphaColor;
 function litColorRW3 : TAlphaColor;
 function litFloatRW3 : double;
 function litBooleanWin : boolean;
+function litBooleanRW3 : boolean;
 function litIntegerRW3 : integer;
 
 function writeStringXML(ANode : IXMLNOde;Nom,valeur : string) : IXMLNODE;
@@ -393,6 +418,7 @@ Function IsLigneComment(const ligneCourante : String) : boolean;
 Function FloatToStrPoint(const valeur : double) : string;
 Function StrToFloatWin(nombre : String) : double;
 Function StrToFloatSex(degStr,minStr,secStr : string) : double;
+Function StrSexaToDeci(Nombre : String) : double;
 Function CaracToChiffre(carac : char) : integer;
 Function GetFloat(Nombre : String) : double;
 Function GetFloatDate(Nombre : String;Aformat : TnombreFormat) : double;
@@ -404,12 +430,21 @@ Procedure NewLine;
 Procedure PrintLine(const TextStr : String;var debut : single);
 procedure PrintList(const aList: TStrings;const entete : string;var debut : single);
 procedure printGrid(const aGrid : TTMSFNCGrid;var debut : single);
+function CouleurLatex(color: TAlphaColor): string;
+Function FloatToStrLatex(const valeur : double) : string;
+Function FloatToStrFixedLatex(const valeur : double;Precision,Decimales : integer) : string;
+Function PowerToStr(puiss : integer) : string;
+function TranslateNomMath(const anom : string) : string;
+function TranslateNomTexte(const anom : string) : string;
 
 function valeur125(valInt : integer;down : boolean) : integer;
 function getNomCoord(nom : string) : string;
 Function isCaracGrandeur(carac : char) : boolean;
 Function isLettre(carac : char) : boolean;
+function ouvreURL(const myURL : string) : boolean;
+function ShellOpen(const FileName: string) : boolean;
 function isShift: boolean;
+function KeyboardModifiers: TShiftState;
 procedure Convert_RW3_to_Mac(NomRW3,NomMac : string);
 procedure Convert_RMac_to_RW3(NomMac,NomRW3 : string);
 
@@ -440,6 +475,244 @@ var
 {$ENDIF}
 
 implementation
+
+function CouleurLatex(color: TAlphaColor): string;
+begin
+  case color of
+    claBlack: Result := 'black';
+    claMaroon: Result := 'brown';
+    claGreen: Result := 'green';
+    claOlive: Result := 'olive';
+    claNavy: Result := 'blue';
+    claPurple: Result := 'red';
+    claTeal: Result := 'teal';
+    claGray: Result := 'gray';
+    claSilver: Result := 'lightgray';
+    claRed: Result  := 'red';
+    claLime: Result := 'lime';
+    claYellow: Result := 'yellow';
+    claBlue: Result := 'blue';
+    claFuchsia: Result := 'purple';
+    claAqua: Result := 'blue';
+    claWhite: Result := 'white';
+    claSkyBlue: Result := 'blue';
+    else Result := 'black';
+  end;
+end;
+
+Function PowerToStr(puiss : integer) : string;
+var tampon : string;
+    i : integer;
+    numero : integer;
+begin
+  if puiss=0
+     then result := ''
+     else begin
+        tampon := IntToStr(puiss);
+        result := '';
+        for i := 1 to length(tampon) do
+            case tampon[i] of
+               '0'..'9' : begin
+                  numero := strToInt(tampon[i]);
+                  result := result+chiffreExp[numero];
+               end;
+               '+' : result := result+PlusExp;
+               '-' : result := result+MoinsExp;
+            end;
+      end;
+end;
+
+Function FloatToStrLatex(const valeur : double) : string;
+var posSeparator : integer;
+begin
+   if isNan(valeur) or isInfinite(valeur)
+   then result := ''
+   else begin
+      result := FloatToStrF(valeur,ffGeneral,4,2);
+      if FormatSettings.decimalSeparator<>'.' then begin
+         posSeparator := pos(FormatSettings.decimalSeparator,result);
+         if posSeparator>0 then result[posSeparator] := '.';
+      end;
+   end;
+end;
+
+Function FloatToStrFixedLatex(const valeur : double;Precision,Decimales : integer) : string;
+var posSeparator : integer;
+begin
+   if isNan(valeur) or isInfinite(valeur)
+   then result := ''
+   else begin
+      result := FloatToStrF(valeur,ffFixed,precision,decimales);
+      if FormatSettings.decimalSeparator<>'.' then begin
+         posSeparator := pos(FormatSettings.decimalSeparator,result);
+         if posSeparator>0 then result[posSeparator] := '.';
+      end;
+   end;
+end;
+
+var avecExposantLatex : boolean;
+
+Function UnicodeToLatexMath(carac : char) : string;
+var j : integer;
+begin
+     avecExposantLatex := false;
+     case carac of
+                      alphaMin : result := '\alpha ';
+                      betaMin : result := '\beta ';
+                      gammaMin: result := '\gamma ' ;
+                      gammaMaj: result := '\Gamma ';
+                      deltaMin: result := '\delta ';
+                      deltaMaj: result := '\Delta ';
+                      epsilonMin: result := '\epsilon ';
+                      zetaMin: result := '\zeta ';
+                      etaMin: result := '\eta ';
+                      kappaMin: result := '\kappa ';
+                      lambdaMin: result := '\lambda ';
+                      lambdaMaj: result := '\Lambda ';
+                      muMin: result := '\mu ';
+                      nuMin: result := '\nu ';
+                      xiMin: result := '\xi ';
+                      xiMaj: result := '\Xi ';
+                      pimin: result := '\pi ';
+                      piMaj: result := '\Pi ';
+                      rhoMin: result := '\rho ';
+                      sigmaMin: result := '\sigma ';
+                      sigmaMaj: result := '\Sigma ';
+                      tauMin: result := '\tau ';
+                      thetaMin: result := '\theta ';
+                      thetaMaj: result := '\Theta ';
+                      phiMin: result := '\phi ';
+                      phiMaj: result := '\Phi ';
+                      chiMin: result := '\chi ';
+                      psiMin: result := '\psi ';
+                      psiMaj: result := '\Psi ';
+                      omegaMin: result := '\omega ';
+                      omegaMaj: result := '\Omega ';
+                      'Â§' : result := '\S';
+                      '&' : result := '\&';
+                      '#' : result := '\#';
+                      'Â°' : result := 'Â°';
+                      'Â±' : result := '\pm ';
+                      '%' : result := '\%';
+                      pourMille : result := '\textperthousand ';
+                      MoinsExp : result := '-';
+                      PlusExp : result := '+';
+                      InfEgal : result := '\leq ';
+                      SupEgal : result := '\geq ';
+                      pointMedian : result := '\cdot ';
+                      cdot : result := '\cdot ';
+                      else begin
+                         result := carac;
+                         for j := 0 to 9 do
+                            if carac=ChiffreExp[j] then begin
+                               result := intToStr(j);
+                               break;
+                            end;
+                      end;
+     end;
+end;
+
+Function UnicodeToLatexTexte(carac : char) : string;
+var j : integer;
+begin
+     avecExposantLatex := false;
+     case carac of
+                      alphaMin: result := '$\alpha$';
+                      betaMin: result := '$\beta$';
+                      gammaMin: result := '$\gamma$' ;
+                      gammaMaj: result := '$\Gamma$';
+                      deltaMin: result := '$\delta$';
+                      deltaMaj: result := '$\Delta$';
+                      epsilonMin: result := '$\epsilon$';
+                      zetaMin: result := '$\zeta$';
+                      etaMin: result := '$\eta$';
+                      kappaMin: result := '$\kappa$';
+                      lambdaMin: result := '$\lambda$';
+                      lambdaMaj: result := '$\Lambda$';
+                      muMin: result := '$\mu$';
+                      nuMin: result := '$\nu$';
+                      xiMin: result := '$\xi$';
+                      xiMaj: result := '$\Xi$';
+                      pimin: result := '$\pi$';
+                      piMaj: result := '$\Pi$';
+                      rhoMin: result := '$\rho$';
+                      sigmaMin: result := '$\sigma$';
+                      sigmaMaj: result := '$\Sigma$';
+                      tauMin: result := '$\tau$';
+                      thetaMin: result := '$\theta$';
+                      thetaMaj: result := '$\Theta$';
+                      phiMin: result := '$\phi$';
+                      phiMaj: result := '$\Phi$';
+                      chiMin: result := '$\chi$';
+                      psiMin: result := '$\psi$';
+                      psiMaj: result := '$\Psi$';
+                      omegaMin: result := '$\omega$';
+                      omegaMaj: result := '$\Omega$';
+                      '%' : result := '\%';
+                      pourmille : result := '\textperthousand';
+                      'Â§' : result := '\S';
+                      '&' : result := '\&';
+                      '#' : result := '\#';
+                      'Â°' : result := '\degres';
+                      MoinsExp : begin
+                         avecExposantLatex := true;
+                         result := '-';
+                      end;
+                      PlusExp : begin
+                         avecExposantLatex := true;
+                         result := '+';
+                      end;
+                      InfEgal : result := '$\leq$';
+                      SupEgal : result := '$\geq$';
+                      'Â±' : result := '$\pm$';
+                      pointMedian : result := '\cdot ';
+                      cdot : result := '\cdot ';
+                      else begin
+                         result := carac;
+                         for j := 0 to 9 do
+                            if carac=ChiffreExp[j] then begin
+                               avecExposantLatex := true;
+                               result := intToStr(j);
+                               break;
+                            end;
+                      end;
+     end;
+end;
+
+function TranslateNomMath(const anom : string) : string;
+var i : integer;
+begin
+    result := '';
+    for i := 1 to length(anom) do
+        result := result+unicodeToLatexMath(anom[i]);
+end;
+
+function TranslateNomTexte(const anom : string) : string;
+var i : integer;
+    tr : string;
+    exposantEnCours : boolean;
+begin
+    result := '';
+    exposantEnCours := false;
+    for i := 1 to length(anom) do begin
+        tr := unicodeToLatexTexte(anom[i]);
+        if exposantEnCours
+           then if avecExposantLatex
+              then
+              else begin
+                 exposantEnCours := false;
+                 result := result+'}$';
+              end
+           else if avecExposantLatex
+              then begin
+               result := result+'$^{';
+               exposantEnCours := true;
+              end;
+        result := result+tr;
+    end;
+    if exposantEnCours then
+        result := result+'}$';
+end;
 
 constructor TparamAnimation.create;
 begin
@@ -475,13 +748,13 @@ Procedure TparamAnimation.litXML(ANode : IXMLNOde);
 
 procedure litUnElement(ANode : IXMLNOde);
 begin
-     if (ANode.NodeName='Pas') then pasA := GetFloatXML(ANode);
-     if (ANode.NodeName='Nom') then nomA := ANode.nodeValue;
-     if (ANode.NodeName='Debut') then DebutA := GetFloatXML(ANode);
-     if (ANode.NodeName='Fin') then FinA := GetFloatXML(ANode);
-     if (ANode.NodeName='Active') then active := GetBoolXML(ANode);
-     if (ANode.NodeName='Log') then variationLog := GetBoolXML(ANode);
-     if (ANode.NodeName='Valeur') then valeurA := GetFloatXML(ANode);
+     if SameText(ANode.NodeName,'Pas') then pasA := GetFloatXML(ANode);
+     if SameText(ANode.NodeName,'Nom') then nomA := ANode.nodeValue;
+     if SameText(ANode.NodeName,'Debut') then DebutA := GetFloatXML(ANode);
+     if SameText(ANode.NodeName,'Fin') then FinA := GetFloatXML(ANode);
+     if SameText(ANode.NodeName,'Active') then active := GetBoolXML(ANode);
+     if SameText(ANode.NodeName,'Log') then variationLog := GetBoolXML(ANode);
+     if SameText(ANode.NodeName,'Valeur') then valeurA := GetFloatXML(ANode);
 end;
 
 var i : integer;
@@ -492,7 +765,7 @@ begin
 end;
 
 var
-     SuiteCaracGrandeur : TsysCharSet; // carac permis à l'interieur d'un nom de grandeur
+     SuiteCaracGrandeur : TsysCharSet; // carac permis Ã  l'interieur d'un nom de grandeur
 
 procedure Convert_RW3_to_Mac(NomRW3,NomMac : string);
 var fichierRW3,fichierMac : TBufferedFileStream;
@@ -532,7 +805,7 @@ begin
 case pref of
      'p' : textePrefixe := 'E-12';
      'n' : textePrefixe := 'E-9';
-     'µ' : textePrefixe := 'E-6';
+     'Âµ' : textePrefixe := 'E-6';
      'm' : textePrefixe := 'E-3';
      'k' : textePrefixe := 'E+3';
      'M' : textePrefixe := 'E+6';
@@ -555,16 +828,14 @@ begin
 end;
 
 procedure litColor(Ini : TiniFile;chaine : string;var defaut : TAlphaColor);
-var couleur : TAlphaColor;
-    i : integer;
+var i : integer;
 begin
      try
-     i := ini.ReadInteger('Color',chaine,defaut);
-     couleur := IntToColor(i);
+     i := ini.ReadInteger('Color',chaine,0);
+     if i<>0 then defaut := IntToColor(i);
      except
-       couleur := claBlack;
+       defaut := claBlack;
      end;
-     defaut := couleur;
 end;
 
 function litColorRW3 : TAlphaColor;
@@ -606,7 +877,8 @@ var fichierRW3,fichierMac : TBufferedFileStream;
     octet : AnsiChar;
 begin
     fichierMac := TBufferedFileStream.Create(nomMac,fmOpenRead);
-    fichierRW3 := TBufferedFileStream.Create(nomRW3,fmCreate+fmOpenWrite);
+    try
+    fichierRW3 := TBufferedFileStream.Create(nomRW3,fmCreate or fmOpenWrite);
     try
     fichierRW3.position := 0;
     fichierMac.Position := 0;
@@ -623,6 +895,8 @@ begin
     end;
     finally
     fichierRW3.Free;
+    end;
+    finally
     fichierMac.Free;
     end;
 end;
@@ -664,7 +938,7 @@ Var
     PointeurExp : integer;
 
 Procedure suivant;
-// Lit le prochain caractère et l'assigne à caracCourant
+// Lit le prochain caractÃ¨re et l'assigne Ã  caracCourant
 // Le caracCourant est toujours extrait avant appel d'un analyseur
 begin
     inc(pointeurExp);
@@ -680,7 +954,7 @@ Begin
   suivant;
 end;
 
-// Les procédures LireXXX extraient un XXX de la chaine Nombre à partir du pointeur courant
+// Les procÃ©dures LireXXX extraient un XXX de la chaine Nombre Ã  partir du pointeur courant
 
 Function LireNombre : double;
     Var PointeurChiffre : integer;
@@ -696,7 +970,7 @@ Function LireNombre : double;
         PointeurChiffre := PointeurExp; // pointe le premier chiffre du nombre
         If charinset(caracCourant,['-','+']) then suivant; // saute le signe
         lireEntier;
-        If caracCourant='.' // C'est un nombre décimal
+        If caracCourant='.' // C'est un nombre dÃ©cimal
            Then begin
               suivant; // on saute le .
               lireEntier
@@ -707,7 +981,7 @@ Function LireNombre : double;
               if (caracCourant='+') or (caracCourant='-')  then suivant;
               lireEntier
            end
-           else if charinset(caracCourant,caracPrefixe) then suivant; // coeff unité
+           else if charinset(caracCourant,caracPrefixe) then suivant; // coeff unitÃ©
         NombreLoc := copy(nombre,pointeurChiffre,pointeurExp-PointeurChiffre);
         if not ConvertitChaine(nombreLoc,valeur)
            then raise EGetFloatError.Create(erNombre);
@@ -844,6 +1118,47 @@ Begin
   End // while
 End; // AnalyseExpression
 
+procedure VerifExposant;
+var i,j : integer;
+    acarac : char;
+    expInsere : boolean;
+begin
+    i := 1;
+    expInsere := false;
+    while (i<=length(nombre)) do begin
+        acarac := nombre[i];
+        if pos(acarac,chiffrePuiss)>0 then begin
+           for j := 0 to 9 do
+               if acarac=ChiffreExp[j] then begin
+                  if expInsere then begin
+                     nombre[i] := char(ord('0')+j);
+                     inc(i);
+                  end
+                  else begin
+                     insert('^',nombre,i);
+                     expInsere := true;
+                     nombre[i+1] := char(ord('0')+j);
+                     inc(i,2);
+                  end;
+                  break;
+               end;
+           if acarac=moinsExp then begin
+              insert('^',nombre,i);
+              expInsere := true;
+              nombre[i+1] := '-';
+              inc(i,2);
+           end
+           else if acarac=plusExp then begin
+              insert('^',nombre,i);
+              expInsere := true;
+              nombre[i+1] := '+';
+              inc(i,2);
+           end;
+        end
+        else inc(i);
+    end;
+end;
+
 var posVirgule : integer;
 Begin // getFloat
   trimComplet(Nombre);
@@ -851,6 +1166,7 @@ Begin // getFloat
      raise EGetFloatError.Create('chaine vide');
      exit; // ?!
   end;
+  VerifExposant;
   if FormatSettings.decimalSeparator<>'.' then begin
      posVirgule := pos(',',nombre);
      while posVirgule>0 do begin
@@ -864,8 +1180,49 @@ Begin // getFloat
      raise EGetFloatError.Create('Erreur nombre');
      exit; // ?!
   end;
+  if isInfinite(Pile[1]) then
+     raise EGetFloatError.Create('Erreur nombre');
   result := Pile[1];
 end; // getFloat
+
+Function StrSexaToDeci(Nombre : String) : double;
+var posDegre,posSeconde,posMinute,posPoint : integer;
+    degre,minute : integer;
+    seconde : double;
+    negatif : boolean;
+begin
+     nombre := trim(nombre);
+     posDegre := pos('Â°',nombre);
+     if posDegre=0 then posDegre := pos(' ',nombre);
+     posMinute := pos('''',nombre);
+     if (posMinute=0) and (posDegre>0) then posMinute := PosEx(' ',nombre,posDegre+2);
+     posSeconde := pos('"',nombre);
+     if posSeconde=0 then posSeconde := pos('''''',nombre);
+     if posSeconde>0 then delete(nombre,posSeconde,length(nombre)-posSeconde+1);
+     if (posDegre>0) or (posMinute>0) then begin
+             negatif := (length(nombre)>0) and (nombre[1]='-');
+             if posDegre>0
+                then degre := abs(strToInt(trim(copy(nombre,1,posDegre-1))))
+                else degre := 0;
+             if posMinute>0
+                then minute := strToInt(trim(copy(nombre,posDegre+1,posMinute-posDegre-1)))
+                else begin
+                     posMinute := posDegre;
+                     minute := 0;
+                end;
+             if posMinute<length(nombre)
+                then begin
+                   posPoint := pos('.',copy(nombre,posMinute+1,length(nombre)-posMinute));
+                   if posPoint>0
+                      then seconde := StrToFloatWin(trim(copy(nombre,posMinute+1,length(nombre)-posMinute)))
+                      else seconde := strToInt(trim(copy(nombre,posMinute+1,length(nombre)-posMinute)));
+                end
+                else seconde := 0;
+             result := degre+minute/60+seconde/3600;
+             if negatif then result := -result;
+     end
+     else result := getFloat(nombre);
+end; // StrSexaToDeci
 
 Function StrLongueDureeToSecond(zz : string) : double;
 
@@ -901,7 +1258,7 @@ begin
        end
        else day := 0;
     if (day=0) and (pos(':',zz)=0)
-       then result := strToFloat(zz)  { donnée en seconde }
+       then result := strToFloat(zz)  { donnÃ©e en seconde }
        else begin
           sec := 0;
           for min := 1 to length(zz) do
@@ -934,11 +1291,11 @@ begin
      fDegreMinute : begin
         posDegre := pos(':',nombre);
         if posDegre>0 then begin
-           nombre[posDegre] := '°';
+           nombre[posDegre] := 'Â°';
            posDegre := pos(':',nombre);
            if posDegre>0 then nombre[posDegre] := '''';
         end;
-        posDegre := pos('°',nombre);
+        posDegre := pos('Â°',nombre);
         posMinute := pos('''',nombre);
         posSeconde := pos('"',nombre);
         if posSeconde=0 then begin
@@ -959,7 +1316,7 @@ begin
                         try
                         case nombre[i] of
                              '0'..'9' : z := z+nombre[i];
-                             '°' : begin
+                             'Â°' : begin
                                  degre := strToInt(z);
                                  z := '';
                               end;
@@ -1321,6 +1678,7 @@ end;
 procedure ConvertCell(var text : string);
 var ValeurF : double;
 begin
+     if text='' then exit;
      try
      valeurF := GetFloat(Text);
      text := floatToStr(valeurF);
@@ -1425,34 +1783,34 @@ begin
          numero := ord(carac);
          if caracAccent then begin
             case carac of
-                    '©' : ligneWin := ligneWin+'é';
+                    'Â©' : ligneWin := ligneWin+'Ã©';
 
-                    '¨' : ligneWin := ligneWin+'è';
-                    ' ' : ligneWin := ligneWin+'à';
+                    'Â¨' : ligneWin := ligneWin+'Ã¨';
+                    'Â ' : ligneWin := ligneWin+'Ã ';
 
-                    '¢' : ligneWin := ligneWin+'â';
-                    'ª' : ligneWin := ligneWin+'ê';
-                    '®' : ligneWin := ligneWin+'î';
-                  //  '¼' : ligneWin := ligneWin+'ô';
-                    '»' : ligneWin := ligneWin+'û';
+                    'Â¢' : ligneWin := ligneWin+'Ã¢';
+                    'Âª' : ligneWin := ligneWin+'Ãª';
+                    'Â®' : ligneWin := ligneWin+'Ã®';
+                  //  'Â¼' : ligneWin := ligneWin+'Ã´';
+                    'Â»' : ligneWin := ligneWin+'Ã»';
 
-                    '¤' : ligneWin := ligneWin+'ä';
-                    '«' : ligneWin := ligneWin+'ë';
-                    '¯' : ligneWin := ligneWin+'ï';
-                    '¶' : ligneWin := ligneWin+'ö';
-                    '¼' : ligneWin := ligneWin+'ü';
+                    'Â¤' : ligneWin := ligneWin+'Ã¤';
+                    'Â«' : ligneWin := ligneWin+'Ã«';
+                    'Â¯' : ligneWin := ligneWin+'Ã¯';
+                    'Â¶' : ligneWin := ligneWin+'Ã¶';
+                    'Â¼' : ligneWin := ligneWin+'Ã¼';
 
-                    '§' : ligneWin := ligneWin+'ç';
+                    'Â§' : ligneWin := ligneWin+'Ã§';
             end;
             caracAccent := false;
             continue;
          end;
-         caracAccent := carac='Ã';
+         caracAccent := carac='Ãƒ';
          if caracAccent then begin
             continue;
          end;
-// Les caractères au-delà de 7 bits sont différents selon l'encodage...
-// £ encodé en UTF-8 donne (194)(163) ce qui, lu en latin-1, fait Â£.
+// Les caractÃ¨res au-delÃ  de 7 bits sont diffÃ©rents selon l'encodage...
+// Â£ encodÃ© en UTF-8 donne (194)(163) ce qui, lu en latin-1, fait Ã‚Â£.
          if (numero<128) or (numero>188)
             then ligneWin := ligneWin+char(carac)
             else ligneWin := ligneWin+NouveauCode[numero]
@@ -1470,12 +1828,12 @@ begin
          carac := LigneWin[i];
          if caracAccent then begin
             case carac of
-                    '©' : ligneWin[i] := 'é'; // A9 169
+                    'Â©' : ligneWin[i] := 'Ã©'; // A9 169
             end;
             caracAccent := false;
             continue;
          end;
-         caracAccent := carac='Ã';
+         caracAccent := carac='Ãƒ';
          if caracAccent then begin
             ligneWin[i] := ' ';
             continue;
@@ -1514,7 +1872,7 @@ begin
    if (length(ligneWin)>0) and (ligneWin[1]='#')
       then ligneWin[1] := SymbReg;
 {$ENDIF}
-   if pos('Â£',ligneWin)=1 then delete(ligneWin,1,1);
+   if pos('Ã‚Â£',ligneWin)=1 then delete(ligneWin,1,1);
    result := ligneWin;
  //  if (length(ligneWin)>0) and (ligneWin[1]='#')  then ligneWin[1]=SymbReg2;
    except
@@ -1539,6 +1897,11 @@ function litBooleanWin : boolean;
 begin
    litLigneWin;
    result := (length(ligneWin)>0) and (ligneWin[1]<>'0')
+end;
+
+function litBooleanRW3 : boolean;
+begin
+   result := litBooleanWin;
 end;
 
 function litIntegerRW3 : integer;
@@ -1837,17 +2200,17 @@ begin
                       psiMaj: caracR := psiMajR;
                       omegaMin: caracR := omegaR;
                       omegaMaj: caracR := omegaMajR;
-                      'é' : caracR := AnsiChar(233);
-                      'è' : caracR := AnsiChar(232);
-                      'ê' : caracR := AnsiChar(234);
-                      'ë' : caracR := AnsiChar(235);
-                      'ï' : caracR := AnsiChar(239);
-                      'à' : caracR := AnsiChar(224);
-                      'â' : caracR := AnsiChar(226);
-                      'ù' : caracR := AnsiChar(249);
-                      'û' : caracR := AnsiChar(251);
-                      'ü' : caracR := AnsiChar(252);
-                      'ô' : caracR := AnsiChar(252);
+                      'Ã©' : caracR := AnsiChar(233);
+                      'Ã¨' : caracR := AnsiChar(232);
+                      'Ãª' : caracR := AnsiChar(234);
+                      'Ã«' : caracR := AnsiChar(235);
+                      'Ã¯' : caracR := AnsiChar(239);
+                      'Ã ' : caracR := AnsiChar(224);
+                      'Ã¢' : caracR := AnsiChar(226);
+                      'Ã¹' : caracR := AnsiChar(249);
+                      'Ã»' : caracR := AnsiChar(251);
+                      'Ã¼' : caracR := AnsiChar(252);
+                      'Ã´' : caracR := AnsiChar(252);
                       MoinsExp: caracR := moinsExpR;
                       PlusExp: caracR := plusExpR;
                       InfEgal: caracR := infEgalR;
@@ -1894,8 +2257,11 @@ begin
 end;
 
 function ColorToInt(c : TAlphaColor) : integer;
+var couleur : TAlphaColorRec;
 begin
-    result := c-TAlphaColorRec(c).alpha;
+    couleur.color := c;
+    couleur.A := $00;
+    result := integer(couleur);
 end;
 
 procedure ecritColorRW3(c : TAlphaColor);
@@ -1913,21 +2279,137 @@ begin
 end;
 
 function IntToColor(i : integer) : TAlphaColor;
-var red,green,blue : byte;
-    color : TAlphaColor;
+var red,green,blue : integer;
+    couleur : TAlphaColorRec;
 begin
-    color := TAlphaColor(i);
+    couleur.color := TAlphaColor(i);
     try
-    red := TAlphaColorRec(Color).R; // red
-    green := TAlphaColorRec(Color).G; // blue
-    blue := TAlphaColorRec(Color).B; // green
-//    alpha := TAlphaColorRec(Color).A; // alpha
-    if (red+green+blue)>650 then color := claBlack; // trop proche du blanc
-    TAlphaColorRec(Color).A := $FF; // pas de transparence
+    red := Couleur.R;
+    green := Couleur.G;
+    blue := Couleur.B;
+    if (red+green+blue)>650 then couleur.color := claBlack; // trop proche du blanc
+    Couleur.A := $FF; // pas de transparence
+    result := couleur.color;
     except
-       color := claBlack;
+       result := claBlack;
     end;
-    result := color;
+end;
+
+Function GetCouleurFond(Abitmap : FMX.Graphics.Tbitmap) : TAlphaColor;
+var i,j : integer;
+    rouge,vert,bleu : integer;
+    pasY,pasX : integer;
+    vBitMapData : TBitmapData;
+    couleur : TAlphaColorRec;
+begin
+       rouge := 0;
+       vert := 0;
+       bleu := 0;
+       pasY := Abitmap.height div 9;
+       pasX := Abitmap.width div 9;
+       if (pasX>0) and (pasY>0) and ABitmap.Map(TMapAccess.Read, vBitMapData) then begin
+           try
+           for i := 1 to 8 do begin
+              for j := 1 to 8 do begin
+                couleur.color := vBitmapData.GetPixel(j*pasX,i*pasY);
+                rouge := rouge+(couleur.R);
+                vert := vert+(couleur.G);
+                bleu := bleu+(couleur.B);
+              end;
+           end;
+           finally
+           aBitmap.Unmap(vBitMapData);
+           end;
+       end;
+       result := MakeColor(rouge div 64,vert div 64,bleu div 64);
+end;
+
+procedure SetPixel(abitmap : FMX.Graphics.tbitmap;i,j : integer;acolor : TAlphaColor);
+var
+  vBitMapData : TBitmapData;
+begin
+      if aBitmap.Map(TMapAccess.Write, vBitMapData) then begin
+          try
+          vBitmapData.SetPixel(i,j, aColor);
+          finally
+          aBitmap.Unmap(vBitMapData);
+          end;
+      end;
+end;
+
+function GetPixel(abitmap : FMX.Graphics.tbitmap;i,j : integer) : TAlphaColor;
+var
+  vBitMapData : TBitmapData;
+begin
+      if aBitmap.Map(TMapAccess.Read, vBitMapData) then begin
+          try
+          result := vBitmapData.GetPixel(i,j);
+          finally
+          aBitmap.Unmap(vBitMapData);
+          end;
+      end
+      else result := claWhite;
+end;
+
+Function CouleurComplementaire(couleur : TAlphaColor) : TAlphaColor;
+var H,L,S : single;
+    rr,gg,bb : byte;
+    c : TAlphaColorRec;
+begin
+       System.UIConsts.RGBToHSL(couleur,H,S,L); // 0..1 pour H, S, L
+       if H>0.5
+          then H := H-0.5
+          else H := H+0.5;
+       if S<0.5 then begin
+          if L<0.5
+             then L := 1.0
+             else L := 0.0;
+       end;
+       S := 1.0;
+       couleur := System.UIConsts.HSLToRGB(H,S,L);
+       c.Color := couleur;
+       rr := 64*(c.R div 64);
+       gg := 64*(c.G div 64);
+       bb := 64*(c.B div 64);
+       result := makeColor(rr,gg,bb);
+end;
+
+function OuvreURL(const myURL: string) : boolean;
+const SW_SHOWNORMAL = 1;
+begin
+{$IFDEF MSWINDOWS}
+  result := ShellExecute(0, 'OPEN', PChar(myURL), '', '', SW_SHOWNORMAL)>32;
+{$ENDIF}
+{$IFDEF MACOS}
+  result := _system(PAnsiChar('open ' + AnsiString(myURL)))=0;
+{$ENDIF}
+end;
+
+function ShellOpen(const FileName: string) : boolean;
+const SW_SHOWNORMAL = 1;
+begin
+{$IFDEF MSWINDOWS}
+  result := ShellExecute(0, nil, PChar(FileName), nil, nil, SW_SHOWNORMAL)>32;
+{$ENDIF}
+{$IFDEF MACOS}
+  result := _system(PAnsiChar(UTF8String('open "' +
+    ReplaceStr(ReplaceStr(FileName, '\', '\\'), '"', '\"') + '"')))=0;
+{$ENDIF}
+end;
+
+procedure OpenHelp(Aurl : string);
+var Lfile : string;
+begin
+    if (HelpPath<>'') and (HelpPath[length(HelpPath)]='/')
+       then Lfile := HelpPath+Aurl+'.html'
+       else Lfile := HelpPath+'/'+Aurl+'.html';
+{$IFDEF MSWINDOWS}
+    if ShellExecute(0, 'open', PChar(Lfile), nil, nil, SW_SHOWNORMAL) <= 32 then
+       ShowMessage('Site Regressi non trouvÃ©');
+{$ENDIF MSWINDOWS}
+{$IFDEF MACOS}
+    _system(PAnsiChar('open ' + '"' + AnsiString(Lfile) + '"'));
+{$ENDIF MACOS}
 end;
 
 procedure CouleurClaire(var Color : TAlphaColor);
@@ -2189,7 +2671,7 @@ begin
 end;
 {$ENDIF}
 
-// permet de retrouver un repertoire d'après sa valeur CSIDL
+// permet de retrouver un repertoire d'aprÃ¨s sa valeur CSIDL
 {$IFDEF  MSWINDOWS}
 
 Procedure AddBackSlash(var aPath : String);
@@ -2211,15 +2693,17 @@ End;
 {$ENDIF}
 
 Initialization
+     applicationPath := System.IOUtils.TPath.GetDirectoryName(ParamStr(0));
      HomePath := System.IOUtils.TPath.getHomePath;
      DocumentsPath := System.IOUtils.TPath.getDocumentsPath;
      DocumentsPath := System.IOUtils.TPath.combine(DocumentsPath,'Regressi');
-     system.sysUtils.forceDirectories(DocumentsPath); // création si nécessaire
+     system.sysUtils.forceDirectories(DocumentsPath); // crÃ©ation si nÃ©cessaire
      supportPath := System.IOUtils.TPath.GetLibraryPath;
      tempPath := System.IOUtils.TPath.GetTempPath;
      cachePath := System.IOUtils.TPath.GetCachePath;
      supportPath := System.IOUtils.TPath.combine(supportPath,'Regressi');
-     system.sysUtils.forceDirectories(supportPath); // création si nécessaire
+     system.sysUtils.forceDirectories(supportPath); // crÃ©ation si nÃ©cessaire
+     HelpPath := 'https://regressi.fr/Regressihtml';
 {$IFDEF MACOS}
      HelpFile := System.IOUtils.TPath.combine(recupereBundle,'Regressi.Help/Regressi.pdf');
      HelpHtml := System.IOUtils.TPath.combine(recupereBundle,'Aide/Regressi.html');
@@ -2232,10 +2716,10 @@ Initialization
 {$ENDIF}
      RegistreReg := System.IOUtils.TPath.combine(supportPath,'Regressi.ini');
      NomFichierTampon := System.IOUtils.TPath.combine(supportPath,'regWinMac.rw3');  // tampon conversion regressi Mac -> Win
-     NomTamponPdf := System.IOUtils.TPath.combine(supportPath,'regWinMac.bmp');  // tampon image fenêtres vers pdf
+     NomTamponPdf := System.IOUtils.TPath.combine(supportPath,'regWinMac.bmp');  // tampon image fenÃªtres vers pdf
      precision := 4;
      GraduationPi := false;
-     SuiteCaracGrandeur := ['''','%','"','0'..'9']; // '_' utilisé pour unité
+     SuiteCaracGrandeur := ['''','%','"','0'..'9']; // '_' utilisÃ© pour unitÃ©
      avecOptionsXY := true;
      ImprimanteDisponible := true;
 
