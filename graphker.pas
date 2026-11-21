@@ -532,6 +532,7 @@ type
     destructor Destroy; override;
     procedure AffecteZoomAvant(avecY: boolean);
     procedure AffecteZoomGesture(const EventInfo: TGestureEventInfo);
+    procedure AffecteZoomWheel(WheelDelta: integer; const Centre: TPointF);
     procedure AffecteZoomArriere;
     procedure TraceMotif(P:TpointF; motif: Tmotif);
     procedure GetCurseurProche(P:TpointF; force: boolean);
@@ -3287,6 +3288,71 @@ begin
       if monde[m].defini then
          affecteZoomLoc(m);
 end; // zoomGesture
+
+procedure TGrapheReg.AffecteZoomWheel(WheelDelta: integer; const Centre: TPointF);
+var
+  factor, xr, yr, newMin, newMax, minSpan: double;
+  m: indiceMonde;
+  c: TPointF;
+  zoomedY: boolean;
+begin
+  if (not grapheOK) or (WheelDelta = 0) then Exit;
+  if WheelDelta > 0 then
+    factor := 1.0 / 1.15
+  else
+    factor := 1.15;
+  c := Centre;
+  if (c.X < limiteCourbe.Left) or (c.X > limiteCourbe.Right) or
+     (c.Y < limiteCourbe.Top) or (c.Y > limiteCourbe.Bottom) then
+    c := limiteCourbe.CenterPoint;
+  if monde[mondeX].defini and (monde[mondeX].a <> 0) then begin
+    with monde[mondeX] do begin
+      xr := (c.X - b) / a;
+      newMin := xr - (xr - Mini) * factor;
+      newMax := xr + (Maxi - xr) * factor;
+      minSpan := 1e-12 * Max(Double(1.0), Abs(xr));
+      if (newMax > newMin) and ((newMax - newMin) > minSpan) then begin
+        Mini := newMin;
+        Maxi := newMax;
+        defini := True;
+      end;
+    end;
+  end;
+  zoomedY := False;
+  for m := mondeY to high(indiceMonde) do
+    if monde[m].defini and (monde[m].a <> 0) then begin
+      if (OgAnalyseurLogique in OptionGraphe) and
+         ((c.Y < monde[m].CourbeTop) or (c.Y > monde[m].CourbeBottom)) then
+        Continue;
+      with monde[m] do begin
+        yr := (c.Y - b) / a;
+        newMin := yr - (yr - Mini) * factor;
+        newMax := yr + (Maxi - yr) * factor;
+        minSpan := 1e-12 * Max(Double(1.0), Abs(yr));
+        if (newMax > newMin) and ((newMax - newMin) > minSpan) then begin
+          Mini := newMin;
+          Maxi := newMax;
+          zoomedY := True;
+        end;
+      end;
+    end;
+  if (OgAnalyseurLogique in OptionGraphe) and (not zoomedY) then
+    for m := mondeY to high(indiceMonde) do
+      if monde[m].defini and (monde[m].a <> 0) then begin
+        with monde[m] do begin
+          yr := (c.Y - b) / a;
+          newMin := yr - (yr - Mini) * factor;
+          newMax := yr + (Maxi - yr) * factor;
+          minSpan := 1e-12 * Max(Double(1.0), Abs(yr));
+          if (newMax > newMin) and ((newMax - newMin) > minSpan) then begin
+            Mini := newMin;
+            Maxi := newMax;
+          end;
+        end;
+      end;
+  UseDefaut := False;
+  UseDefautX := False;
+end; // AffecteZoomWheel
 
 procedure TGrapheReg.ChercheDroite(x, y, pente: double; m: indiceMonde;
   var P1, P2: TpointF);

@@ -70,6 +70,9 @@ type
       BorneDebut,BorneFin : array[1..MaxIntervalles] of TBorneShape;
       BorneSelect : TBorneShape;
       TailleEq : single;
+      FPanLastPos : TPointF;
+      FPanPrevCurseur : Tcurseur;
+      FPanActive : boolean;
 // Début data Animation
       InitManuelleAfaire : boolean;
       ParamAnimCourant : integer;
@@ -87,6 +90,7 @@ type
       BorneActive : codeIntervalle;
       modeleDependant : boolean;
       CurMovePermis : boolean;
+      SpaceHeld : boolean;
       IsModeleMagnum : boolean;
       verifGraphe : boolean;
       configCharge : boolean;
@@ -118,6 +122,8 @@ type
          Shift: TShiftState; X, Y: single);
       procedure PaintBoxMouseUp(sender : Tobject;Button: TMouseButton;
          Shift: TShiftState; X, Y: single);
+      procedure PaintBoxMouseWheel(Sender: TObject; Shift: TShiftState;
+         WheelDelta: Integer; var Handled: Boolean);
       destructor Destroy; override;
 // Début procedure animation
       Procedure SetAnimation;
@@ -669,6 +675,7 @@ var deplacement : boolean;
     hintLoc : string;
     iProche : integer;
     Pint : TPointF;
+    m : indiceMonde;
 begin // PaintBoxMouseMove
    if not grapheOK then exit;
    if ssRight in Shift then exit; // clic droit
@@ -714,6 +721,8 @@ begin // PaintBoxMouseMove
                         paintBox.cursor := crHandPoint;
                      if LegendHitTest(origin) then
                         paintBox.cursor := crHandPoint;
+                     if SpaceHeld then
+                        paintBox.cursor := crSizeAll;
                end;
            if FCoordonneesPhys.ModeleEnCours and
                (indexCourbeModele>=0) then afficheResidu
@@ -725,32 +734,30 @@ begin // PaintBoxMouseMove
            AffichePosition;
            hintLoc := stBarreReticule;
         end;
-        curMove : if deplacement then begin
-            with monde[mondeX] do begin
-                 deltaM := (x-reticuleOrigine.position.X)/a;
-                 mini := mini+deltaM;
-                 maxi := maxi+deltaM;
-                 defini := true;
-            end;
-            with monde[mondeY] do begin
-                 deltaM := (y-reticuleOrigine.position.y)/a;
-                 mini := mini+deltaM;
-                 maxi := maxi+deltaM;
-                 defini := true;
-            end;
-            with monde[mondeDroit] do begin
-                 deltaM := (y-reticuleOrigine.position.y)/a;
-                 mini := mini+deltaM;
-                 maxi := maxi+deltaM;
-                 defini := true;
-            end;
-            if (abs(x-reticuleOrigine.position.x)+abs(y-reticuleOrigine.position.y)>8) then begin
+        curMove : if FPanActive and ((ssLeft in Shift) or (ssMiddle in Shift)) then begin
+            if (Abs(x - FPanLastPos.X) > 0) or (Abs(y - FPanLastPos.Y) > 0) then begin
+               if monde[mondeX].defini and (monde[mondeX].a <> 0) then begin
+                  deltaM := (x - FPanLastPos.X) / monde[mondeX].a;
+                  monde[mondeX].mini := monde[mondeX].mini - deltaM;
+                  monde[mondeX].maxi := monde[mondeX].maxi - deltaM;
+               end;
+               for m := mondeY to high(indiceMonde) do
+                  if monde[m].defini and (monde[m].a <> 0) then begin
+                     deltaM := (y - FPanLastPos.Y) / monde[m].a;
+                     monde[m].mini := monde[m].mini - deltaM;
+                     monde[m].maxi := monde[m].maxi - deltaM;
+                  end;
+               FPanLastPos := TPointF.Create(x, y);
+               useDefaut := False;
+               useDefautX := False;
+               include(modif, gmEchelle);
                paintBox.repaint;
-               reticuleOrigine.visible := true;
-               reticuleOrigine.bringToFront;
             end;
         end
-        else setPenBrush(curSelect);
+        else begin
+            FPanActive := False;
+            setPenBrush(FPanPrevCurseur);
+        end;
         curOrigine : begin
             hintLoc := hOrigine;
             ReticuleOrigine.centre := origin;
@@ -808,7 +815,7 @@ begin
      end;// case curseur
      if not (curseur in [curZoomAv,curBornes,curEfface]) then selection.visible := false;
      curseurOsc[1].visible := curseur in [curReticule,curReticuleData];
-     ReticuleOrigine.visible := curseur in [curOrigine,curMove];
+     ReticuleOrigine.visible := curseur = curOrigine;
      FregressiMain.cercle.Visible := curseur in [curEquivalence,curReticuleData];
      if curseur=curEquivalence then begin
          tailleEq := 5*dimPoint;
@@ -899,6 +906,14 @@ begin // MouseDown
       BorneSelect := sender as TborneShape;
       BorneSelect.isSelected := true;
    end;
+   if (Button = TMouseButton.mbMiddle) or
+      ((Button = TMouseButton.mbLeft) and SpaceHeld and (curseur = curSelect) and (borneSelect = nil)) then begin
+      FPanActive := True;
+      FPanPrevCurseur := curseur;
+      FPanLastPos := origin;
+      setPenBrush(curMove);
+      exit;
+   end;
    case curseur of
        curZoomAv,curBornes,curEfface : afficheSelection;
        curLigne : if (dessinLineCourant<>nil) then
@@ -923,12 +938,10 @@ begin // MouseDown
               paintBox.Cursor := crSizeAll;
        end
        else if curMovePermis and (borneSelect=nil) then begin
+              FPanActive := True;
+              FPanPrevCurseur := curSelect;
+              FPanLastPos := origin;
               setPenBrush(curMove);
-              reticuleOrigine.Position.x := origin.X;
-              reticuleOrigine.Position.y := origin.Y;
-              reticuleOrigine.width := 0;
-              reticuleOrigine.height := 0;
-              reticuleOrigine.Visible := true;
        end; // curSelect
        curEquivalence : if (lrEquivalence=ligneRappelTangente) then begin
            iproche := PointProche(origin,indexCourbeEquivalence,true,ligneRappelTangente=lrTangente);
@@ -1163,11 +1176,28 @@ begin // MouseUp
        curReticuleData : ;
        curReticule : ;
        curEquivalence : ;
-       curMove : setPenBrush(curSelect);
+       curMove : begin FPanActive := False; setPenBrush(FPanPrevCurseur); end;
        curOrigine : affecteOrigine;
   end;
   paintBox.repaint;
 end; // MouseUp
+
+procedure TgrapheVariab.PaintBoxMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; var Handled: Boolean);
+var
+  P: TPointF;
+begin
+  if not grapheOK then Exit;
+  if Screen <> nil then
+    P := paintBox.ScreenToLocal(Screen.MousePos)
+  else
+    P := origin;
+  AffecteZoomWheel(WheelDelta, P);
+  curMovePermis := True;
+  include(modif, gmEchelle);
+  paintBox.Repaint;
+  Handled := True;
+end;
 
 constructor TgrapheResidu.Create(apaintBox : TPaintBox);
 begin
@@ -1202,6 +1232,9 @@ begin
   end;
   BorneSelect := nil;
   curseur := curSelect;
+  FPanActive := False;
+  FPanPrevCurseur := curSelect;
+  SpaceHeld := False;
   VerifGraphe := true;
   for m := 1 to MaxIntervalles do  begin
       BorneDebut[m].SetMoveDown(PaintBoxMouseMove,PaintBoxMouseDown,PaintBoxMouseUp);

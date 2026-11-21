@@ -327,6 +327,9 @@ type
       Shift: TShiftState; X, Y: Single);
     procedure PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Single);
+    procedure PaintBox1MouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; var Handled: Boolean);
+    procedure PaintBox1DblClick(Sender: TObject);
     procedure RaZModeleClick(Sender: TObject);
     procedure InitEquaDiffBtnClick(Sender: TObject);
     procedure BornesBtnClick(Sender: TObject);
@@ -358,6 +361,8 @@ type
     procedure PaintBox1Gesture(Sender: TObject;
       const EventInfo: TGestureEventInfo; var Handled: Boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure GrecItemClick(Sender: TObject);
     procedure GrecActionExecute(Sender: TObject);
@@ -875,11 +880,27 @@ begin
                 then keyChar := GrecMin[ord(keyChar)-ord('a')];
        GrecActif := false;
     end
-    else if (windowTab.ActiveTab=GrapheTab) and (keyChar=' ') and
+    else if (windowTab.ActiveTab=GrapheTab) and ((key=vkSpace) or (keyChar=' ')) and
             ((activeControl=nil) or (not (activeControl is TEdit) and not (activeControl is TMemo))) then begin
-        BarreEspace;
+        if (graphe<>nil) and (graphe.curseur=curSelect) and (graphe.indexPointCourant<0) then begin
+           graphe.SpaceHeld := True;
+           PaintBox1.Cursor := crSizeAll;
+        end
+        else BarreEspace;
         keyChar := #0;
         key := 0;
+    end;
+end;
+
+procedure TFRegressiMain.FormKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+    if (Key = vkSpace) or (KeyChar = ' ') then begin
+       if graphe <> nil then begin
+          graphe.SpaceHeld := False;
+          if graphe.curseur = curSelect then
+             PaintBox1.Cursor := crDefault;
+       end;
     end;
 end;
 
@@ -2235,6 +2256,19 @@ procedure TFRegressiMain.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Single);
 begin
    Graphe.PaintBoxMouseUp(Sender,Button,Shift,X, Y);
+end;
+
+procedure TFRegressiMain.PaintBox1MouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; var Handled: Boolean);
+begin
+   Graphe.PaintBoxMouseWheel(Sender, Shift, WheelDelta, Handled);
+end;
+
+procedure TFRegressiMain.PaintBox1DblClick(Sender: TObject);
+begin
+   if (graphe <> nil) and graphe.grapheOK and (graphe.curseur = curSelect) and
+      (not graphe.LegendHitTest(graphe.Origin)) then
+      ZoomAutoBtnClick(Sender);
 end;
 
 procedure TFRegressiMain.PaintBox1Paint(Sender: TObject; Canvas: TCanvas);

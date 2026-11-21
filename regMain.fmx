@@ -14,6 +14,7 @@ object FRegressiMain: TFRegressiMain
   OnClose = FormClose
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
+  OnKeyUp = FormKeyUp
   OnResize = FormResize
   Left = 171
   Top = 279
@@ -386,9 +387,11 @@ object FRegressiMain: TFRegressiMain
               Size.Height = 421.000000000000000000
               Size.PlatformDefault = False
               OnClick = PaintBox1Click
+              OnDblClick = PaintBox1DblClick
               OnMouseDown = PaintBox1MouseDown
               OnMouseMove = PaintBox1MouseMove
               OnMouseUp = PaintBox1MouseUp
+              OnMouseWheel = PaintBox1MouseWheel
               OnPaint = PaintBox1Paint
               Left = 1
               Top = 1
