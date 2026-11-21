@@ -190,6 +190,7 @@ type
     CoordonneesItem: TMenuItem;
     ModeleItem: TMenuItem;
     IncertItem: TMenuItem;
+    LegendeItem: TMenuItem;
     ProprieteCourbe: TMenuItem;
     SaveGraphItem: TMenuItem;
     PrintGraphItem: TMenuItem;
@@ -338,6 +339,7 @@ type
     procedure ParamGridCellButtonClick(Sender: TObject; ACol, ARow: Integer;
       ACell: TTMSFNCGridCell);
     procedure IncertItemClick(Sender: TObject);
+    procedure LegendeItemClick(Sender: TObject);
     procedure SelectItemClick(Sender: TObject);
     procedure VitesseItemClick(Sender: TObject);
     procedure OptionsModeleBtn0Click(Sender: TObject);
@@ -1959,6 +1961,12 @@ begin
   paintBox1.repaint;
 end;
 
+procedure TFRegressiMain.LegendeItemClick(Sender: TObject);
+begin
+  graphe.ShowLegend := LegendeItem.IsChecked;
+  paintBox1.repaint;
+end;
+
 procedure TFRegressiMain.InitEquaDiffBtnClick(Sender: TObject);
 const Maxi = 2;
 var pente : double;
@@ -2238,6 +2246,7 @@ begin
      (courbes[0].varX<>nil) and (courbes[0].varY<>nil) and
      (courbes[0].varX<>grandeurs[0]) and (courbes[0].varY<>grandeurs[0]);
   incertItem.isChecked := traceEllipse;
+  LegendeItem.IsChecked := graphe.ShowLegend;
   modeleIncertItem.isChecked := traceEllipse;
   grapheToolBar.enabled := graphe.grapheOK;
 end;

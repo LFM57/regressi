@@ -678,6 +678,17 @@ begin // PaintBoxMouseMove
    deplacement := ssLeft in Shift;
    origin.x := x;
    origin.Y := y;
+   if FLegendDragging then begin
+      if deplacement then begin
+         FLegendCustomPos := True;
+         FLegendPos := TPointF.Create(x - FLegendDragDelta.X, y - FLegendDragDelta.Y);
+         paintBox.Repaint;
+      end else begin
+         FLegendDragging := False;
+         paintBox.Cursor := crDefault;
+      end;
+      exit;
+   end;
    case curseur of
         curZoomAv,curEfface,curBornes : if deplacement then begin
                selection.width := x-selection.Position.x;
@@ -700,6 +711,8 @@ begin // PaintBoxMouseMove
                      if indexPointCourant>=0 then hintLoc := '';
                      if curMovePermis then hintLoc := '';
                      if dessinLineCourant<>nil then
+                        paintBox.cursor := crHandPoint;
+                     if LegendHitTest(origin) then
                         paintBox.cursor := crHandPoint;
                end;
            if FCoordonneesPhys.ModeleEnCours and
@@ -876,6 +889,7 @@ begin // MouseDown
                 FRegressiMain.ProprieteCourbe.Text := stCaracDe+varY.nom+'=f('+varX.nom+')';
          end;
       FRegressiMain.IncertItem.IsChecked  := TraceEllipse;
+      FRegressiMain.LegendeItem.IsChecked := ShowLegend;
       exit; // clic droit donc menu contextuel
    end;
    convertitXY(sender,X,Y);
@@ -903,7 +917,12 @@ begin // MouseDown
                  curseurOsc[2].Visible := false;
                  curseurCourant := 1;
             end;
-       curSelect : if curMovePermis and (borneSelect=nil) then begin
+       curSelect : if (Button = TMouseButton.mbLeft) and (borneSelect=nil) and LegendHitTest(origin) then begin
+              FLegendDragging := True;
+              FLegendDragDelta := TPointF.Create(origin.X - FLegendRect.Left, origin.Y - FLegendRect.Top);
+              paintBox.Cursor := crSizeAll;
+       end
+       else if curMovePermis and (borneSelect=nil) then begin
               setPenBrush(curMove);
               reticuleOrigine.Position.x := origin.X;
               reticuleOrigine.Position.y := origin.Y;
@@ -1121,6 +1140,12 @@ begin // MouseUp
                  P.y+FRegressiMain.panelCentral.position.y);
      exit;
   end; // bouton droit
+  if FLegendDragging then begin
+     FLegendDragging := False;
+     paintBox.Cursor := crDefault;
+     paintBox.Repaint;
+     exit;
+  end;
   if (sender is TBorneShape) then BorneSelect := sender as TborneShape;
   case curseur of
        curZoomAv : affecteZoomAv;

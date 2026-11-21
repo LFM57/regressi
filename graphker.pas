@@ -433,6 +433,15 @@ type
     Hauteur: single;
   end;
 
+  TLegendEntry = record
+    LabelText: string;
+    Couleur: TAlphaColor;
+    StyleT: TStrokeDash;
+    Motif: Tmotif;
+    HasLine: boolean;
+    HasPoint: boolean;
+  end;
+
   TgrapheReg = class
     canvas:        Tcanvas;
     zoneClipBoard: Trectangle;
@@ -480,6 +489,12 @@ type
     FSonaNbreX, FSonaNbreY: integer;
     FSonaDecadeDB: integer;
     FSonaFaussesCouleurs: boolean;
+    ShowLegend:    boolean;
+    FLegendRect:   TRectF;
+    FLegendPos:    TPointF;
+    FLegendCustomPos: boolean;
+    FLegendDragging: boolean;
+    FLegendDragDelta: TPointF;
     FSonaPage: integer;
     FSonaChecksum: double;
     ReticuleOrigine : TreticuleShape;
@@ -506,6 +521,8 @@ type
     procedure SetMonde(m: indiceMonde; minX, minY, maxX, maxY: double);
     procedure AjoutePoint(m: indiceMonde; XX, YY: double);
     procedure DrawAxis(initialisation: boolean);
+    procedure DrawLegend;
+    function LegendHitTest(const P: TPointF): boolean;
     procedure TraceTitreAxeY(g: Tgrandeur; m: indiceMonde;indexCourbe: integer);
     procedure DrawTitresAxeY;
     procedure TraceTitreAxeX(g: Tgrandeur;indexCourbe: integer);
@@ -2758,6 +2775,7 @@ begin // graphe.draw
   MajDessins;
   if graduationZeroX or graduationZeroY then drawAxis(False);
   DrawTitresAxeY;
+  DrawLegend;
   for k := 1 to maxCurseur do begin
       curseurOsc[k].positionX := Xauto;
       curseurOsc[k].positionY := Yauto;
@@ -2766,6 +2784,239 @@ begin // graphe.draw
      curseurOsc[2].visible then AfficheEcart;
   setTextAlign(TTextAlign.leading,TTextAlign.leading);
 end; // graphe.draw
+
+function TGrapheReg.LegendHitTest(const P: TPointF): boolean;
+begin
+  Result := ShowLegend and (not FLegendRect.IsEmpty) and FLegendRect.Contains(P);
+end;
+
+procedure TGrapheReg.DrawLegend;
+const
+  PadX = 10;
+  PadY = 7;
+  SwatchW = 24;
+  Gap = 8;
+  Inset = 10;
+var
+  entries: array of TLegendEntry;
+  count, c, i: integer;
+  firstYName, pageLbl, lbl: string;
+  sameVarY, dup: boolean;
+  entryColor, saveTextColor: TAlphaColor;
+  entryStyle: TStrokeDash;
+  entryMotif: Tmotif;
+  hasLine, hasPoint: boolean;
+  maxTextW, w, rowH, boxW, boxH, posX, posY, rowY, sx1, sx2, scx, lw, r: single;
+  shadowR: TRectF;
+  saveAlignH, saveAlignV: TTextAlign;
+  saveStrokeColor: TAlphaColor;
+  saveStrokeDash: TStrokeDash;
+  saveStrokeThickness: single;
+  saveStrokeKind: TBrushKind;
+  FPath: TPathData;
+begin
+  FLegendRect := TRectF.Empty;
+  if (not ShowLegend) or (courbes.Count < 2) then Exit;
+  sameVarY := True;
+  firstYName := '';
+  for c := 0 to courbes.Count - 1 do
+    with courbes[c] do begin
+      if (varY = nil) or ([trResidus, trSonagramme, trCouleursSpectre] * trace <> []) then Continue;
+      if firstYName = '' then
+        firstYName := varY.nom
+      else if varY.nom <> firstYName then
+        sameVarY := False;
+    end;
+  count := 0;
+  SetLength(entries, courbes.Count);
+  for c := 0 to courbes.Count - 1 do
+    with courbes[c] do begin
+      if (varY = nil) or ([trResidus, trSonagramme, trCouleursSpectre] * trace <> []) then Continue;
+      hasLine := trLigne in trace;
+      hasPoint := trPoint in trace;
+      if (not hasLine) and (not hasPoint) then Continue;
+      if superposePage and (page <> 0) and (reperePage = SPcouleur) then
+        entryColor := GetCouleurPages(page)
+      else if (indexModele <> 0) and (not courbeExp) then
+        entryColor := CouleurModele[indexModele]
+      else
+        entryColor := couleur;
+      if superposePage and (page <> 0) and (reperePage = SPstyle) then
+        entryStyle := PStylePages[page mod MaxPages]
+      else
+        entryStyle := styleT;
+      if superposePage and (motif <= mCarrePlein) and (page <> 0) and (reperePage = SPmotif) then
+        entryMotif := MotifPages[page mod MaxPages]
+      else
+        entryMotif := motif;
+      if TraceEllipse and (not (entryMotif in [mSpectre, mHisto, mBarreD, mBarreG])) then
+        entryMotif := mIncert;
+      if superposePage and (page > 0) and (page <= NbrePages) then begin
+        pageLbl := Trim(pages[page].commentaireP);
+        if Length(pageLbl) > 20 then
+          pageLbl := Copy(pageLbl, 1, 19) + '...';
+        if pageLbl = '' then
+          pageLbl := 'Page ' + IntToStr(page);
+        if sameVarY then
+          lbl := pageLbl
+        else
+          lbl := varY.nom + ' (' + pageLbl + ')';
+        if (indexModele > 0) and (not courbeExp) then
+          lbl := lbl + ' [mod.]';
+      end else begin
+        if (not UnAxeX) and (varX <> nil) then
+          lbl := varY.nom + '(' + varX.nom + ')'
+        else
+          lbl := varY.nom;
+        if (indexModele > 0) and (not courbeExp) then
+          lbl := lbl + ' (mod.)';
+      end;
+      dup := False;
+      for i := 0 to count - 1 do
+        if (entries[i].LabelText = lbl) and
+           (entries[i].Couleur = entryColor) and
+           (entries[i].StyleT = entryStyle) and
+           (entries[i].Motif = entryMotif) and
+           (entries[i].HasLine = hasLine) and
+           (entries[i].HasPoint = hasPoint) then begin
+          dup := True;
+          Break;
+        end;
+      if not dup then begin
+        entries[count].LabelText := lbl;
+        entries[count].Couleur := entryColor;
+        entries[count].StyleT := entryStyle;
+        entries[count].Motif := entryMotif;
+        entries[count].HasLine := hasLine;
+        entries[count].HasPoint := hasPoint;
+        Inc(count);
+      end;
+    end;
+  if count < 2 then Exit;
+  maxTextW := 0;
+  for i := 0 to count - 1 do begin
+    w := Canvas.TextWidth(entries[i].LabelText);
+    if w > maxTextW then maxTextW := w;
+  end;
+  rowH := HautCarac + 4;
+  if rowH < 18 then rowH := 18;
+  boxW := PadX * 2 + SwatchW + Gap + maxTextW + 8;
+  boxH := PadY * 2 + count * rowH;
+  if FLegendCustomPos then begin
+    posX := FLegendPos.X;
+    posY := FLegendPos.Y;
+  end else begin
+    posX := limiteCourbe.Right - boxW - Inset;
+    posY := limiteCourbe.Top + Inset;
+  end;
+  if posX + boxW > limiteCourbe.Right - 4 then posX := limiteCourbe.Right - boxW - 4;
+  if posX < limiteCourbe.Left + 4 then posX := limiteCourbe.Left + 4;
+  if posY + boxH > limiteCourbe.Bottom - 4 then posY := limiteCourbe.Bottom - boxH - 4;
+  if posY < limiteCourbe.Top + 4 then posY := limiteCourbe.Top + 4;
+  FLegendRect := TRectF.Create(posX, posY, posX + boxW, posY + boxH);
+  saveAlignH := layout.HorizontalAlign;
+  saveAlignV := layout.VerticalAlign;
+  saveTextColor := couleurTexte;
+  saveStrokeColor := Canvas.Stroke.Color;
+  saveStrokeDash := Canvas.Stroke.Dash;
+  saveStrokeThickness := Canvas.Stroke.Thickness;
+  saveStrokeKind := Canvas.Stroke.Kind;
+  try
+    shadowR := FLegendRect;
+    shadowR.Offset(1, 2);
+    Canvas.Fill.Kind := TBrushKind.Solid;
+    Canvas.Fill.Color := TAlphaColor($18000000);
+    Canvas.FillRect(shadowR, 6, 6, AllCorners, 1);
+    Canvas.Fill.Color := TAlphaColor($EBFFFFFF);
+    Canvas.FillRect(FLegendRect, 6, 6, AllCorners, 1);
+    Canvas.Fill.Kind := TBrushKind.None;
+    CreatePen(TStrokeDash.Solid, 1, CouleurCadre);
+    Canvas.DrawRect(FLegendRect, 6, 6, AllCorners, 1);
+    SetTextAlign(TTextAlign.Leading, TTextAlign.Center);
+    couleurTexte := BrushCouleurBadgeText;
+    r := 3.5;
+    for i := 0 to count - 1 do begin
+      rowY := posY + PadY + i * rowH + rowH / 2;
+      sx1 := posX + PadX;
+      sx2 := sx1 + SwatchW;
+      scx := (sx1 + sx2) / 2;
+      if entries[i].HasLine then begin
+        lw := penWidth;
+        if lw < 1.5 then lw := 1.5;
+        if lw > 2.5 then lw := 2.5;
+        CreatePen(entries[i].StyleT, lw, entries[i].Couleur);
+        SegmentXY(sx1, rowY, sx2, rowY);
+      end;
+      if entries[i].HasPoint then begin
+        CreatePen(TStrokeDash.Solid, 1.5, entries[i].Couleur);
+        case entries[i].Motif of
+          mCroix: begin
+            SegmentXY(scx - r, rowY, scx + r, rowY);
+            SegmentXY(scx, rowY - r, scx, rowY + r);
+          end;
+          mCroixDiag: begin
+            SegmentXY(scx - r, rowY - r, scx + r, rowY + r);
+            SegmentXY(scx + r, rowY - r, scx - r, rowY + r);
+          end;
+          mCercle:
+            MyDrawEllipse(scx - r, rowY - r, scx + r, rowY + r);
+          mCerclePlein: begin
+            CreateSolidBrush(entries[i].Couleur);
+            MyFillEllipse(scx - r, rowY - r, scx + r, rowY + r);
+            Canvas.Fill.Kind := TBrushKind.None;
+          end;
+          mCarre:
+            MyDrawRectXY(scx - r, rowY - r, scx + r, rowY + r);
+          mCarrePlein: begin
+            CreateSolidBrush(entries[i].Couleur);
+            MyFillRectXY(scx - r, rowY - r, scx + r, rowY + r);
+            Canvas.Fill.Kind := TBrushKind.None;
+          end;
+          mLosange, mLosangePlein: begin
+            FPath := TPathData.Create;
+            try
+              FPath.MoveTo(TPointF.Create(scx - r, rowY));
+              FPath.LineTo(TPointF.Create(scx, rowY - r));
+              FPath.LineTo(TPointF.Create(scx + r, rowY));
+              FPath.LineTo(TPointF.Create(scx, rowY + r));
+              FPath.ClosePath;
+              if entries[i].Motif = mLosangePlein then begin
+                CreateSolidBrush(entries[i].Couleur);
+                Canvas.FillPath(FPath, 1);
+                Canvas.Fill.Kind := TBrushKind.None;
+              end;
+              Canvas.DrawPath(FPath, 1);
+            finally
+              FPath.Free;
+            end;
+          end;
+          mIncert: begin
+            SegmentXY(scx, rowY - r - 1, scx, rowY + r + 1);
+            SegmentXY(scx - 2.5, rowY - r - 1, scx + 2.5, rowY - r - 1);
+            SegmentXY(scx - 2.5, rowY + r + 1, scx + 2.5, rowY + r + 1);
+            CreateSolidBrush(entries[i].Couleur);
+            MyFillEllipse(scx - 2, rowY - 2, scx + 2, rowY + 2);
+            Canvas.Fill.Kind := TBrushKind.None;
+          end;
+          else begin
+            CreateSolidBrush(entries[i].Couleur);
+            MyFillEllipse(scx - 2.5, rowY - 2.5, scx + 2.5, rowY + 2.5);
+            Canvas.Fill.Kind := TBrushKind.None;
+          end;
+        end;
+      end;
+      MyDrawText(TPointF.Create(sx2 + Gap, rowY), entries[i].LabelText);
+    end;
+  finally
+    Canvas.Fill.Kind := TBrushKind.None;
+    Canvas.Stroke.Color := saveStrokeColor;
+    Canvas.Stroke.Dash := saveStrokeDash;
+    Canvas.Stroke.Thickness := saveStrokeThickness;
+    Canvas.Stroke.Kind := saveStrokeKind;
+    couleurTexte := saveTextColor;
+    SetTextAlign(saveAlignH, saveAlignV);
+  end;
+end; // DrawLegend
 
 procedure TGrapheReg.Reset;
 var c : integer;
@@ -2780,6 +3031,9 @@ begin
   TitresY.Clear;
   FSonaNbreX := 0;
   FSonaNbreY := 0;
+  FLegendRect := TRectF.Empty;
+  FLegendCustomPos := False;
+  FLegendDragging := False;
   monde[mondeX].defini := False;
   GrapheOK  := False;
   AutoTick  := True;
@@ -2862,6 +3116,10 @@ begin
   for k := 1 to MaxPages do
       equivalences[k] := TlisteEquivalence.Create;
   TitresY := TList<TTitreAxeY>.Create;
+  ShowLegend := True;
+  FLegendRect := TRectF.Empty;
+  FLegendCustomPos := False;
+  FLegendDragging := False;
   PasPoint := 1;
   UnAxeX := True;
   reset;

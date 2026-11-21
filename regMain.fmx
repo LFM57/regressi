@@ -470,6 +470,12 @@ object FRegressiMain: TFRegressiMain
                   Text = 'Incertitudes'
                   OnClick = IncertItemClick
                 end
+                object LegendeItem: TMenuItem
+                  AutoCheck = True
+                  IsChecked = True
+                  Text = 'L'#233'gende'
+                  OnClick = LegendeItemClick
+                end
                 object ProprieteCourbe: TMenuItem
                   Text = 'Caract'#233'ristiques'
                   OnClick = ProprieteCourbeClick
