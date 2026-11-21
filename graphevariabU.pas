@@ -1644,43 +1644,75 @@ end;
 procedure traceBornes;
 var i : integer;
     P : TPointF;
+    hasVertBounds : boolean;
+    minXLeft, maxXRight, x1, x2 : single;
 begin
+ hasVertBounds := False;
+ minXLeft := limiteCourbe.Right;
+ maxXRight := limiteCourbe.Left;
  for i := 0 to pred(Courbes.Count) do with courbes[i] do begin
  if courbeExp and (page=pageCourante) then begin
       if (indexModele>0) then begin // (debutC > 0)
         borneDebut[indexModele].stroke.color := couleur;
         borneDebut[indexModele].fill.color := couleur;
         borneDebut[indexModele].visible := true;
-        if borneDebut[indexModele]<>borneSelect then begin
-           WindowRT(valX[debutC], valY[debutC], iMondeC, P);
-           borneDebut[indexModele].centre := P;
-        end;
         borneDebut[indexModele].indexCourbe := i;
         borneDebut[indexModele].haut := limiteCourbe.top;
         borneDebut[indexModele].bas := limiteCourbe.bottom;
         borneDebut[indexModele].avecVert :=
               fonctionTheorique[indexModele].variableEgalAbscisse and
              (fonctionTheorique[indexModele].indexX = indexTri);
+        if borneDebut[indexModele]<>borneSelect then begin
+           WindowRT(valX[debutC], valY[debutC], iMondeC, P);
+           borneDebut[indexModele].centre := P;
+        end;
         borneDebut[indexModele].bringToFront;
       end;
       if (indexModele>0) then begin // (finC < pred(pages[page].nmes))
         borneFin[indexModele].stroke.color := couleur;
         borneFin[indexModele].fill.color := couleur;
         borneFin[indexModele].visible := true;
-        if borneFin[indexModele]<>borneSelect then begin
-           WindowRT(valX[finC], valY[finC], iMondeC, P);
-           borneFin[indexModele].centre := P;
-        end;
         borneFin[indexModele].indexCourbe := i;
         borneFin[indexModele].haut := limiteCourbe.top;
         borneFin[indexModele].bas := limiteCourbe.bottom;
         borneFin[indexModele].avecVert :=
               fonctionTheorique[indexModele].variableEgalAbscisse and
              (fonctionTheorique[indexModele].indexX = indexTri);
+        if borneFin[indexModele]<>borneSelect then begin
+           WindowRT(valX[finC], valY[finC], iMondeC, P);
+           borneFin[indexModele].centre := P;
+        end;
         borneFin[indexModele].bringToFront;
+        if borneDebut[indexModele].avecVert and borneFin[indexModele].avecVert then begin
+           x1 := Min(borneDebut[indexModele].centre.X, borneFin[indexModele].centre.X);
+           x2 := Max(borneDebut[indexModele].centre.X, borneFin[indexModele].centre.X);
+           if not hasVertBounds then begin
+              minXLeft := x1;
+              maxXRight := x2;
+              hasVertBounds := True;
+           end else begin
+              if x1 < minXLeft then minXLeft := x1;
+              if x2 > maxXRight then maxXRight := x2;
+           end;
+        end;
       end;
     end; // bornes
     end;// with courbes
+ if hasVertBounds then begin
+    if minXLeft < limiteCourbe.Left then minXLeft := limiteCourbe.Left;
+    if minXLeft > limiteCourbe.Right then minXLeft := limiteCourbe.Right;
+    if maxXRight < limiteCourbe.Left then maxXRight := limiteCourbe.Left;
+    if maxXRight > limiteCourbe.Right then maxXRight := limiteCourbe.Right;
+    canvas.Fill.Kind := TBrushKind.Solid;
+    canvas.Fill.Color := TAlphaColor($141E293B);
+    if minXLeft > limiteCourbe.Left + 1 then
+       canvas.FillRect(TRectF.Create(limiteCourbe.Left, limiteCourbe.Top,
+                                     minXLeft, limiteCourbe.Bottom), 0, 0, [], 1);
+    if maxXRight < limiteCourbe.Right - 1 then
+       canvas.FillRect(TRectF.Create(maxXRight, limiteCourbe.Top,
+                                     limiteCourbe.Right, limiteCourbe.Bottom), 0, 0, [], 1);
+    canvas.Fill.Kind := TBrushKind.None;
+ end;
 end; // traceBornes
 
 
@@ -2954,8 +2986,8 @@ begin
       Y := Y+(sender as TShape).position.y;
    end;
    if sender is TBorneShape then begin
-      X := X+(sender as TBorneShape).centre.x;
-      Y := Y+(sender as TBorneShape).centre.y;
+      X := X+(sender as TBorneShape).Position.x;
+      Y := Y+(sender as TBorneShape).Position.y;
    end;
 end;
 
@@ -2984,12 +3016,17 @@ end; // setBorne
 
 procedure TgrapheVariab.ajusteBorne(P : TpointF);
 var i: integer;
+    oldCentre : TPointF;
 begin
     i := PointProche(P, borneSelect.indexCourbe, False, borneSelect.avecVert);
+    if i < 0 then exit;
     with courbes[BorneSelect.indexCourbe] do
          WindowRT(valX[i], valY[i], iMondeC, P);
+    oldCentre := BorneSelect.Centre;
     BorneSelect.Centre := P;
-end; // setBorne
+    if (Abs(oldCentre.X - P.X) > 0.5) or (Abs(oldCentre.Y - P.Y) > 0.5) then
+       paintBox.Repaint;
+end; // ajusteBorne
 
 end.
 

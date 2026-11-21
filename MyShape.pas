@@ -38,6 +38,7 @@ type
    procedure setGenre(value : TgenreBorne);
    procedure setVert(value : boolean);
    procedure setForme;
+   procedure Paint; override;
  public
    IndexModele, IndexCourbe: integer;
    haut,bas : single;
@@ -88,7 +89,7 @@ type
 
 const
     dimBorne = 8;
-    dimVert = 3;
+    dimVert = 6;
     rayon = dimBorne;
     BrushCouleurSelect = TAlphaColor($FFD62728);
     BrushCouleurZoom = TAlphaColor($FFFEF3C7);
@@ -108,7 +109,7 @@ begin
   Stroke.Kind := TBrushKind.Solid;
   Fill.Kind := TBrushKind.None;
   Fill.Color := BrushCouleurSelect;
-  Stroke.Thickness := 3;
+  Stroke.Thickness := 2;
   Cursor := crHandPoint;
   width := 2*dimBorne;
   height := 2*dimBorne;
@@ -154,7 +155,65 @@ begin
     FisSelected := value;
     if FisSelected
        then Fill.Kind := TBrushKind.Solid
-       else Fill.Kind := TBrushKind.None
+       else Fill.Kind := TBrushKind.None;
+    Repaint;
+end;
+
+procedure TBorneShape.Paint;
+var
+   cx, cy, dir : single;
+   R : TRectF;
+   gripColor : TAlphaColor;
+begin
+   if Fvert then begin
+      cx := Width / 2;
+      cy := Height / 2;
+      Canvas.Stroke.Kind := TBrushKind.Solid;
+      Canvas.Stroke.Dash := TStrokeDash.Solid;
+      Canvas.Stroke.Color := Stroke.Color;
+      if FisSelected then Canvas.Stroke.Thickness := 2.5
+                     else Canvas.Stroke.Thickness := 2;
+      Canvas.DrawLine(TPointF.Create(cx, 0), TPointF.Create(cx, Height), 1);
+      if Fgenre = bsDebut then dir := 5 else dir := -5;
+      Canvas.DrawLine(TPointF.Create(cx, 1), TPointF.Create(cx + dir, 1), 1);
+      Canvas.DrawLine(TPointF.Create(cx, Height - 1), TPointF.Create(cx + dir, Height - 1), 1);
+      R := TRectF.Create(cx - 5, cy - 13, cx + 5, cy + 13);
+      Canvas.Fill.Kind := TBrushKind.Solid;
+      if FisSelected then begin
+         Canvas.Fill.Color := Stroke.Color;
+         gripColor := claWhite;
+      end else begin
+         Canvas.Fill.Color := claWhite;
+         gripColor := Stroke.Color;
+      end;
+      Canvas.FillRect(R, 4, 4, AllCorners, 1);
+      Canvas.Stroke.Thickness := 1.5;
+      Canvas.DrawRect(R, 4, 4, AllCorners, 1);
+      Canvas.Stroke.Color := gripColor;
+      Canvas.Stroke.Thickness := 1.25;
+      Canvas.DrawLine(TPointF.Create(cx - 2.5, cy - 4), TPointF.Create(cx + 2.5, cy - 4), 1);
+      Canvas.DrawLine(TPointF.Create(cx - 2.5, cy),     TPointF.Create(cx + 2.5, cy),     1);
+      Canvas.DrawLine(TPointF.Create(cx - 2.5, cy + 4), TPointF.Create(cx + 2.5, cy + 4), 1);
+      Canvas.Fill.Kind := TBrushKind.None;
+   end else begin
+      R := TRectF.Create(1.5, 1.5, Width - 1.5, Height - 1.5);
+      Canvas.Fill.Kind := TBrushKind.Solid;
+      if FisSelected
+         then Canvas.Fill.Color := Stroke.Color
+         else Canvas.Fill.Color := TAlphaColor((Stroke.Color and $00FFFFFF) or $33000000);
+      Canvas.Stroke.Kind := TBrushKind.Solid;
+      Canvas.Stroke.Dash := TStrokeDash.Solid;
+      Canvas.Stroke.Color := Stroke.Color;
+      Canvas.Stroke.Thickness := 2;
+      if Fgenre = bsFin then begin
+         Canvas.FillEllipse(R, 1);
+         Canvas.DrawEllipse(R, 1);
+      end else begin
+         Canvas.FillRect(R, 3, 3, AllCorners, 1);
+         Canvas.DrawRect(R, 3, 3, AllCorners, 1);
+      end;
+      Canvas.Fill.Kind := TBrushKind.None;
+   end;
 end;
 
 procedure TBorneShape.SetMoveDown(move : TMouseMoveEvent; down,up : TMouseEvent);
@@ -349,9 +408,9 @@ begin
   Parent := TpaintBox(Aowner);
   Stroke.Kind := TBrushKind.Solid;
   Fill.Kind := TBrushKind.Solid;
-  Opacity := 0.3;
-  Fill.Color := brushCouleurZoom;
-  Stroke.Color := claBlack;
+  Opacity := 1;
+  Fill.Color := TAlphaColor($242563EB);
+  Stroke.Color := TAlphaColor($FF2563EB);
   Stroke.Thickness := 1;
   Cursor := crHandPoint;
 end;
