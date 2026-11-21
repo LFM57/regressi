@@ -4739,10 +4739,24 @@ begin
 end;
 
 procedure TGrapheReg.MyDrawText(P : tpointF;S : string);
+const
+   PadW = 6;
+   PadH = 4;
 var L,H,dX,dY : single;
 begin
-   L := Canvas.TextWidth(S);
-   H := Canvas.TextHeight(S);
+   if S = '' then Exit;
+   layout.BeginUpdate;
+   layout.WordWrap := False;
+   layout.MaxSize := TPointF.Create(10000, 10000);
+   layout.Color := couleurTexte;
+   layout.Text := S;
+   layout.EndUpdate;
+   L := layout.TextWidth;
+   H := layout.TextHeight;
+   if L < Canvas.TextWidth(S) then L := Canvas.TextWidth(S);
+   if H < Canvas.TextHeight(S) then H := Canvas.TextHeight(S);
+   L := L + PadW;
+   H := H + PadH;
    if layout.verticalAlign=TTextAlign.Trailing
        then dY := - H
        else if layout.verticalAlign=TTextAlign.Center
@@ -4757,36 +4771,36 @@ begin
    layout.BeginUpdate;
    layout.TopLeft := P;
    layout.MaxSize := TPointF.Create(L, H);
-   layout.Color := couleurTexte;
-   layout.Text := S;
    layout.EndUpdate;
    layout.RenderLayout(Canvas);
 end;
 
 procedure TGrapheReg.MyFillText(P : tpointF;S : string;couleurFond : TAlphaColor);
+const
+   PadW = 6;
+   PadH = 4;
 var L,H : single;
 begin
-   L := Canvas.TextWidth(S);
-   H := Canvas.TextHeight(S);
+   if S = '' then Exit;
+   layout.BeginUpdate;
+   layout.WordWrap := False;
+   layout.MaxSize := TPointF.Create(10000, 10000);
+   layout.Color := couleurTexte;
+   layout.Text := S;
+   layout.EndUpdate;
+   L := layout.TextWidth;
+   H := layout.TextHeight;
+   if L < Canvas.TextWidth(S) then L := Canvas.TextWidth(S);
+   if H < Canvas.TextHeight(S) then H := Canvas.TextHeight(S);
+   L := L + PadW;
+   H := H + PadH;
    canvas.Fill.kind := TBrushKind.Solid;
    canvas.Fill.Color := couleurFond;
-   (*
-   if layout.VerticalAlign=TTextAlign.TaTrailing
-       then P.y := P.y - H
-       else if alignementV=TTextAlign.TACenter
-            then P.y := P.y - H/2;
-   if layout.HorizontalAlign=TTextAlign.TATrailing
-       then P.x := P.x - L
-       else if alignementH=TTextAlign.TACenter
-            then P.x := P.x - L/2;
-            *)
    MyFillRectXY(P.X,P.Y,P.X+L,P.Y+H);
    canvas.Fill.kind := TBrushKind.None;
    layout.BeginUpdate;
    layout.TopLeft := P;
    layout.MaxSize := TPointF.Create(L, H);
-   layout.Color := couleurTexte;
-   layout.Text := S;
    layout.EndUpdate;
    layout.RenderLayout(Canvas);
 end;
@@ -5141,13 +5155,19 @@ begin
           end;
       end; // case TexteLigne
   if str<>'' then begin
-     L := Canvas.TextWidth(Str);
-     H := Canvas.TextHeight(Str);
      agraphe.layout.BeginUpdate;
-     agraphe.layout.TopLeft := TPointF.Create(width/2, Height/2);
-     agraphe.layout.MaxSize := TPointF.Create(L, H);
+     agraphe.layout.WordWrap := False;
+     agraphe.layout.MaxSize := TPointF.Create(10000, 10000);
      agraphe.layout.Color := couleurLigne;
      agraphe.layout.Text := Str;
+     agraphe.layout.EndUpdate;
+     L := agraphe.layout.TextWidth;
+     H := agraphe.layout.TextHeight;
+     if L < Canvas.TextWidth(Str) then L := Canvas.TextWidth(Str);
+     if H < Canvas.TextHeight(Str) then H := Canvas.TextHeight(Str);
+     agraphe.layout.BeginUpdate;
+     agraphe.layout.TopLeft := TPointF.Create(width/2, Height/2);
+     agraphe.layout.MaxSize := TPointF.Create(L + 6, H + 4);
      agraphe.layout.EndUpdate;
      agraphe.layout.RenderLayout(Canvas);
   end;
