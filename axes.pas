@@ -529,9 +529,8 @@ var i : integer;
     decalage : single;
     P0 : TpointF;
 begin // DrawAxis
-     penWidthAxe := limiteFenetre.width/800;
-     penWidthGrad := penWidthAxe/2;
-     if penWidthGrad<1 then penWidthGrad := 1;
+     penWidthAxe := 1.5;
+     penWidthGrad := 1;
      couleurGrillePale := getCouleurPale(couleurGrille);
      if courbes.count>0 then monde[mondeX].Axe := courbes[0].varX;
      mondeYseul := true;

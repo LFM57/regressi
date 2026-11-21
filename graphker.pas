@@ -601,7 +601,7 @@ var
   CoeffDecalage:      single = 1;
   OptionGrapheDefault: TsetOptionGraphe = [];
   verifierLog:        boolean = False;
-  penWidthEcran:      single = 3;
+  penWidthEcran:      single = 2;
   etatModele : setEtatModele;
 
 implementation
@@ -2647,16 +2647,18 @@ begin // graphe.draw
      right := paintBox.width;
      bottom := paintBox.height;
      if (right - left) < 50 then exit;
-     dimPoint := (bottom - top) * dimPointVGA/480;
-     if dimPoint = 0 then dimPoint := 1;
+     dimPoint := dimPointVGA;
+     if dimPoint < 2 then dimPoint := 2;
+     if dimPoint > 12 then dimPoint := 12;
      marge := (bottom-top);
      BorneFenetre.top := top-marge;
      BorneFenetre.bottom := bottom+marge;
      marge := (right-left)/16;
      BorneFenetre.right := right+marge;
      BorneFenetre.left := left-marge;
-     penWidth := width*penWidthEcran/1024;
-     if penWidth<1 then penWidth := 1;
+     penWidth := penWidthEcran;
+     if penWidth < 1 then penWidth := 1;
+     if penWidth > 6 then penWidth := 6;
   end;
   monde[mondeX].minInt := borneFenetre.left;
   monde[mondeX].maxInt := borneFenetre.right;
