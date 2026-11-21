@@ -115,6 +115,7 @@ begin
 end; // traceTitreAxeX
 
 procedure TGrapheReg.DrawAxis(initialisation : boolean);
+const MinTickLabelGap = 8;
 var xNombreMax,xNombreMin,signeMargeX : single;
     PointCourant : double;
     yAxeX,xAxeY : single;
@@ -147,6 +148,14 @@ begin
      XcorrectGrad := (x>=limiteCourbe.left) and
                      (x<limiteCourbe.right) and
                      (x<>xAxeY)
+end;
+
+function TickRectsOverlap(const A, B : TRectF; MinGap : single) : boolean;
+begin
+     Result := (A.Left < B.Right + MinGap) and
+               (A.Right + MinGap > B.Left) and
+               (A.Top < B.Bottom + MinGap) and
+               (A.Bottom + MinGap > B.Top);
 end;
 
 Procedure graduationX(P : TpointF;quadrillage,grande : boolean);
@@ -212,13 +221,16 @@ end;
 
   procedure traceAxeX;
   var Ps : TpointF;
-      NombreAff : string;
+      NombreAff, DrawText : string;
       Ticks : integer;
-      grandeGraduation,Q : boolean;
+      grandeGraduation,Q,hasLast : boolean;
       Xmax : double;
+      lastRect, curRect : TRectF;
+      lblW, lblH, drawX, drawY : single;
   begin with monde[mondeX] do begin
        Q := OgQuadrillage in OptionGraphe;
        Ticks := TickDebut;
+       hasLast := False;
        if orthonorme
           then Xmax := maxiOrtho
           else Xmax := maxi;
@@ -233,15 +245,32 @@ end;
                   if GraduationPiActive
                      then NombreAff := formatRadian(pointCourant)
                      else NombreAff := formatMonde(pointCourant);
-                  if Ps.x<>xAxeY
-                     then MyDrawText(TPointF.create(Ps.x,Ps.y+2*marge),NombreAff)
-                     else if PointCourant=0
-                          then MyDrawText(TPointF.create(Ps.x+marge,Ps.y+2*marge),'0')
+                  if Ps.x<>xAxeY then begin
+                     DrawText := NombreAff;
+                     drawX := Ps.x;
+                  end
+                  else if PointCourant=0 then begin
+                     DrawText := '0';
+                     drawX := Ps.x+marge;
+                  end
+                  else DrawText := '';
+                  if DrawText<>'' then begin
+                     drawY := Ps.y+2*marge;
+                     lblW := Canvas.TextWidth(DrawText)+6;
+                     lblH := Canvas.TextHeight(DrawText)+4;
+                     curRect := TRectF.Create(drawX-lblW/2, drawY, drawX+lblW/2, drawY+lblH);
+                     if (not hasLast) or (not TickRectsOverlap(curRect, lastRect, MinTickLabelGap)) then begin
+                        MyDrawText(TPointF.create(drawX,drawY),DrawText);
+                        lastRect := curRect;
+                        hasLast := True;
+                     end;
+                  end;
                end;
           end;
           PointCourant := PointCourant+deltaAxe;
           inc(Ticks);
       until ( PointCourant>=Xmax );
+      CreatePen(TStrokeDash.Solid,penWidthAxe,CouleurAxeX);
       with limiteFenetre do segmentXY(left,yAxeX,right,yAxeX);
  end end; // traceAxeX
 
@@ -344,10 +373,12 @@ end;
 
  procedure traceAxeY(m : indiceMonde);
  var ticks : Integer;
-     nombreAff : string;
-     grandeGraduation,Q : boolean;
+     nombreAff, DrawText : string;
+     grandeGraduation,Q,hasLast,isRightAxis : boolean;
      Ymax : double;
      Ps : TpointF;
+     lastRect, curRect : TRectF;
+     lblW, lblH, drawX : single;
  begin with monde[m] do begin
       if axe.fonct.genreC=g_Texte then exit;
       Q := (OgQuadrillage in OptionGraphe) and
@@ -355,6 +386,9 @@ end;
             (OgAnalyseurLogique in OptionGraphe));
       GraduationYTrace := true;
       Ticks := TickDebut;
+      hasLast := False;
+      isRightAxis := (m=mondeDroit) and not(OgAnalyseurLogique in OptionGraphe);
+      drawX := xAxeY+2.5*signeMargeX*marge;
       if Orthonorme
          then Ymax := maxiOrtho
          else Ymax := maxi;
@@ -369,20 +403,31 @@ end;
                        then NombreAff := formatRadian(pointCourant)
                        else NombreAff := formatMonde(pointCourant);
                     if Ps.y<>yAxeX
-                       then MyDrawText(TpointF.create(xAxeY+2.5*signeMargeX*marge,
-                                    Ps.y),NombreAff)
+                       then DrawText := NombreAff
                        else if PointCourant=0
-                          then MyDrawText(TPointF.create(xAxeY+2.5*signeMargeX*marge,
-                                    Ps.y),'0');
+                          then DrawText := '0'
+                          else DrawText := '';
+                    if DrawText<>'' then begin
+                       lblW := Canvas.TextWidth(DrawText)+6;
+                       lblH := Canvas.TextHeight(DrawText)+4;
+                       if isRightAxis
+                          then curRect := TRectF.Create(drawX, Ps.y-lblH/2, drawX+lblW, Ps.y+lblH/2)
+                          else curRect := TRectF.Create(drawX-lblW, Ps.y-lblH/2, drawX, Ps.y+lblH/2);
+                       if (not hasLast) or (not TickRectsOverlap(curRect, lastRect, MinTickLabelGap)) then begin
+                          MyDrawText(TpointF.create(drawX,Ps.y),DrawText);
+                          lastRect := curRect;
+                          hasLast := True;
+                       end;
+                    end;
                  end;
                  graduationY(Ps.y,Q,grandeGraduation);
            end;
            pointCourant := pointCourant+deltaAxe;
            inc(Ticks);
       until ( pointCourant>=Ymax );
-      Canvas.stroke.color := CouleurAxeY;
+      CreatePen(TStrokeDash.Solid,penWidthAxe,CouleurAxeY);
       segmentXY(xAxeY,CourbeBottom,xAxeY,CourbeTop);
-      if avecAxeY then begin // fléche Y
+      if avecAxeY then begin // flèche Y
           segmentXY(xAxeY-marge,courbeTop+3*marge,xAxeY,courbeTop);
           segmentXY(xAxeY+marge,courbeTop+3*marge,xAxeY,courbeTop);
       end;
@@ -390,46 +435,68 @@ end end; // traceAxeY
 
 procedure traceAxeLogx;
 var i,j : integer;
-    xpred,xsucc : single;
     Ps : TpointF;
-    intermediaire,intermediaire25 : boolean;
-    ecart : single;
-    Q : boolean;
+    intermediaire,intermediaire25,Q,hasLast,hasNextMajor : boolean;
+    lastRect, curRect, nextMajorRect : TRectF;
+    lblW, lblH, drawY : single;
+    lblText, nextText : string;
 begin with Monde[mondeX] do begin
    try
    Q := OgQuadrillage in OptionGraphe;
    Intermediaire := (Maxi-Mini) <= 4;
    Intermediaire25 := (Maxi-Mini) <= 6;
-   Ecart := largCarac*NbreChiffres;
+   hasLast := False;
+   drawY := yAxeX+2*marge;
    for i := floor(Mini) to ceil(Maxi) do begin
        windowXY(i,monde[mondeY].Mini,mondeY,Ps);
        Ps.y := yAxeX;
        if XcorrectGrad(Ps.x) then begin
            graduationX(Ps,Q,true);
-           if XcorrectNombre(Ps.x) then
-              MyDrawText(TpointF.create(Ps.x,Ps.y+marge),formatMonde(dix(i)));
+           if XcorrectNombre(Ps.x) then begin
+              lblText := formatMonde(dix(i));
+              lblW := Canvas.TextWidth(lblText)+6;
+              lblH := Canvas.TextHeight(lblText)+4;
+              curRect := TRectF.Create(Ps.x-lblW/2, drawY, Ps.x+lblW/2, drawY+lblH);
+              if (not hasLast) or (not TickRectsOverlap(curRect, lastRect, MinTickLabelGap)) then begin
+                 MyDrawText(TpointF.create(Ps.x,drawY),lblText);
+                 lastRect := curRect;
+                 hasLast := True;
+              end;
+           end;
        end;
-       xpred := Ps.x+ecart;
        windowXY(succ(i),monde[mondeY].Mini,mondeY,Ps);
-       xsucc := Ps.x-ecart;
+       hasNextMajor := XcorrectGrad(Ps.x) and XcorrectNombre(Ps.x);
+       if hasNextMajor then begin
+          nextText := formatMonde(dix(succ(i)));
+          lblW := Canvas.TextWidth(nextText)+6;
+          lblH := Canvas.TextHeight(nextText)+4;
+          nextMajorRect := TRectF.Create(Ps.x-lblW/2, drawY, Ps.x+lblW/2, drawY+lblH);
+       end;
        for j := 2 to 9 do begin
            windowXY(i+log10(j),monde[mondeY].Mini,mondeY,Ps);
            Ps.y := yAxeX;
            if XcorrectGrad(Ps.x) then
-              if intermediaire or (intermediaire25 and ((j=2) or (j=4) or(j=8)))
+              if intermediaire or (intermediaire25 and ((j=2) or (j=4) or (j=8)))
                      then begin
                         graduationX(Ps,Q,false);
-                        if XcorrectNombre(Ps.x) and
-                           ( Ps.x>xpred ) and
-                           ( Ps.x<xsucc ) and
-                           ( Ps.x<(xnombreMax-ecart) ) then begin
-                             MyDrawText(TpointF.create(Ps.x,Ps.y+marge),formatMonde(j*dix(i)));
-                             xpred := Ps.x+ecart;
-                             end;  // XcorrectNombre
+                        if XcorrectNombre(Ps.x) then begin
+                           lblText := formatMonde(j*dix(i));
+                           lblW := Canvas.TextWidth(lblText)+6;
+                           lblH := Canvas.TextHeight(lblText)+4;
+                           curRect := TRectF.Create(Ps.x-lblW/2, drawY, Ps.x+lblW/2, drawY+lblH);
+                           if ((not hasLast) or (not TickRectsOverlap(curRect, lastRect, MinTickLabelGap))) and
+                              ((not hasNextMajor) or (not TickRectsOverlap(curRect, nextMajorRect, MinTickLabelGap))) then begin
+                              MyDrawText(TpointF.create(Ps.x,drawY),lblText);
+                              lastRect := curRect;
+                              hasLast := True;
+                           end;
+                        end;
                      end // intermediaire
               else graduationX(Ps,false,false);
        end;{for j}
    end; {for i}
+   CreatePen(TStrokeDash.Solid,penWidthAxe,CouleurAxeX);
+   with limiteFenetre do segmentXY(left,yAxeX,right,yAxeX);
    except
        verifierLog := true;
    end;
@@ -437,42 +504,78 @@ end end;// TraceAxeLogx
 
 procedure traceAxeLogY(m : indiceMonde);
 var i,j : integer;
-    yprec,ysuc,ecart : single;
+    ysuc,drawX,lblW,lblH : single;
     Ps : TpointF;
-    intermediaire,intermediaire25,Q : boolean;
+    intermediaire,intermediaire25,Q,hasLast,hasNextMajor,isRightAxis : boolean;
+    lastRect, curRect, nextMajorRect : TRectF;
+    lblText, nextText : string;
 begin with monde[m] do begin
    try
    Q := (OgQuadrillage in OptionGraphe) and (m=mondeY);
    Intermediaire := (Maxi-Mini) <= 3;
    Intermediaire25 := (Maxi-Mini) <= 5;
-   Ecart := hautCarac*2;
+   hasLast := False;
+   isRightAxis := (m=mondeDroit) and not(OgAnalyseurLogique in OptionGraphe);
+   drawX := xAxeY+2.5*signeMargeX*marge;
    for i := floor(Mini) to ceil(Maxi) do begin
-       windowXY(Mini,i,m,Ps);
+       windowXY(monde[mondeX].Mini,i,m,Ps);
        if YcorrectGrad(Ps.y,m) then begin
-      	    graduationY(Ps.y,Q,true);
-            if YcorrectNombre(Ps.y,m) then
-            	MyDrawText(TpointF.create(xAxeY,Ps.y),formatMonde(dix(i)));
+            graduationY(Ps.y,Q,true);
+            if YcorrectNombre(Ps.y,m) then begin
+               lblText := formatMonde(dix(i));
+               lblW := Canvas.TextWidth(lblText)+6;
+               lblH := Canvas.TextHeight(lblText)+4;
+               if isRightAxis
+                  then curRect := TRectF.Create(drawX, Ps.y-lblH/2, drawX+lblW, Ps.y+lblH/2)
+                  else curRect := TRectF.Create(drawX-lblW, Ps.y-lblH/2, drawX, Ps.y+lblH/2);
+               if (not hasLast) or (not TickRectsOverlap(curRect, lastRect, MinTickLabelGap)) then begin
+                  MyDrawText(TpointF.create(drawX,Ps.y),lblText);
+                  lastRect := curRect;
+                  hasLast := True;
+               end;
+            end;
        end;
-       yprec := Ps.y;
        windowXY(monde[mondeX].Mini,succ(i),m,Ps);
        ysuc := Ps.y;
+       hasNextMajor := YcorrectGrad(ysuc,m) and YcorrectNombre(ysuc,m);
+       if hasNextMajor then begin
+          nextText := formatMonde(dix(succ(i)));
+          lblW := Canvas.TextWidth(nextText)+6;
+          lblH := Canvas.TextHeight(nextText)+4;
+          if isRightAxis
+             then nextMajorRect := TRectF.Create(drawX, ysuc-lblH/2, drawX+lblW, ysuc+lblH/2)
+             else nextMajorRect := TRectF.Create(drawX-lblW, ysuc-lblH/2, drawX, ysuc+lblH/2);
+       end;
        for j := 2 to 9 do begin
-    	    windowXY(monde[mondeX].Mini,i+log10(j),m,Ps);
-	        if YcorrectGrad(Ps.y,m) then
-	          if intermediaire or (intermediaire25 and ((j=2) or (j=4) or(j=8)))
-	            then begin
-          		     	graduationY(Ps.y,Q,false);
-                  	if YcorrectNombre(Ps.y,m) and
-		     	           (Ps.y<(yprec-ecart) ) and
-		     	           (Ps.y>(ysuc+ecart) ) and
-		     	           (Ps.y<(CourbeBottom-ecart) ) then begin
-		     		      MyDrawText(TpointF.create(xAxeY+2.5*signeMargeX*marge,Ps.y),formatMonde(j*dix(i)));
-		     		      yprec := Ps.y;
-		          	  end;
-		          end
-		          else graduationY(Ps.y,false,false);
-	     end;{for j}
+            windowXY(monde[mondeX].Mini,i+log10(j),m,Ps);
+            if YcorrectGrad(Ps.y,m) then
+              if intermediaire or (intermediaire25 and ((j=2) or (j=4) or (j=8)))
+                then begin
+                    graduationY(Ps.y,Q,false);
+                    if YcorrectNombre(Ps.y,m) then begin
+                       lblText := formatMonde(j*dix(i));
+                       lblW := Canvas.TextWidth(lblText)+6;
+                       lblH := Canvas.TextHeight(lblText)+4;
+                       if isRightAxis
+                          then curRect := TRectF.Create(drawX, Ps.y-lblH/2, drawX+lblW, Ps.y+lblH/2)
+                          else curRect := TRectF.Create(drawX-lblW, Ps.y-lblH/2, drawX, Ps.y+lblH/2);
+                       if ((not hasLast) or (not TickRectsOverlap(curRect, lastRect, MinTickLabelGap))) and
+                          ((not hasNextMajor) or (not TickRectsOverlap(curRect, nextMajorRect, MinTickLabelGap))) then begin
+                          MyDrawText(TpointF.create(drawX,Ps.y),lblText);
+                          lastRect := curRect;
+                          hasLast := True;
+                       end;
+                    end;
+                end
+                else graduationY(Ps.y,false,false);
+       end;{for j}
    end; {for i}
+   CreatePen(TStrokeDash.Solid,penWidthAxe,CouleurAxeY);
+   segmentXY(xAxeY,CourbeBottom,xAxeY,CourbeTop);
+   if avecAxeY then begin // flèche Y
+       segmentXY(xAxeY-marge,courbeTop+3*marge,xAxeY,courbeTop);
+       segmentXY(xAxeY+marge,courbeTop+3*marge,xAxeY,courbeTop);
+   end;
    except
    verifierLog := true;
    end;
