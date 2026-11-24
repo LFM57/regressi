@@ -691,7 +691,7 @@ begin with pages[PageCourante] do begin
     derniereColVariab := 0;
     for k := 0 to (NbreVariab-1) do begin
         indexVar := indexVariab[k];
-        colonne := indexVar;
+        colonne := k;
         if DeltaItem.isChecked then colonne := 2*colonne;
         colonne := colonne+1;
         with grandeurs[indexVar] do begin
@@ -971,21 +971,24 @@ var indexVar : integer;
     Acol : integer;
 begin
      MajBtnClick(sender);
-     indexVar := 0;
+     indexVar := grandeurInconnue;
      if feuillets.ActiveTab=paramSheet then begin
          Acol := GridParam.FocusedCell.col-1;
          if DeltaItem.isChecked then Acol := Acol div 2;
-         if Acol<=NbreConst then
+         if (Acol>=0) and (Acol<NbreConst) then
             indexVar := indexConst[Acol];
      end;
      if feuillets.ActiveTab=variabSheet then begin
          Acol := GridVariab.FocusedCell.col-1;
          if DeltaItem.isChecked then Acol := Acol div 2;
-         indexVar := indexVariab[Acol];
+         if (Acol>=0) and (Acol<NbreVariab) then
+            indexVar := indexVariab[Acol];
      end;
      suppressionDlg := TSuppressionDlg.Create(self);
      SuppressionDlg.operation := oSuppression;
-     SuppressionDlg.nomDefaut := grandeurs[indexVar].nom;
+     if (indexVar>=0) and (indexVar<NbreGrandeurs)
+        then SuppressionDlg.nomDefaut := grandeurs[indexVar].nom
+        else SuppressionDlg.nomDefaut := '';
      CentreForm(SuppressionDlg);
      if SuppressionDlg.showModal=mrOK then begin
         reCompiler := true;
@@ -1112,15 +1115,15 @@ begin
     nomLu := copy(ligneCourante,1,posEgal-1); // extrait le nom
     trimComplet(nomLu);
     ordreEqua := 0;
-    if nomLu[length(nomLu)]='''' then begin
+    if (length(nomLu)>0) and (nomLu[length(nomLu)]='''') then begin
        delete(nomLu,length(nomLu),1);
        inc(ordreEqua);
-       if nomLu[length(nomLu)]='''' then begin
+       if (length(nomLu)>0) and (nomLu[length(nomLu)]='''') then begin
            delete(nomLu,length(nomLu),1);
            inc(ordreEqua)
        end;
     end;
-    if nomLu[length(nomLu)]='"' then begin
+    if (length(nomLu)>0) and (nomLu[length(nomLu)]='"') then begin
        delete(nomLu,length(nomLu),1);
        ordreEqua := 2;
     end;
@@ -1339,17 +1342,18 @@ begin
 end;
 
 procedure TFValeurs.TriBtnClick(Sender: TObject);
-var indexV : integer;
+var indexV, colIdx : integer;
 begin
-     suppressionDlg:=TSuppressionDlg.Create(self);
-     SuppressionDlg.operation := oTriVariable;
      indexV := grandeurInconnue;
      if feuillets.activeTab=variabSheet then begin
-        indexV := gridVariab.FocusedCell.col-1;
-        if DeltaItem.isChecked then indexV := indexV div 2;
-        indexV := indexVariab[indexV];
+        colIdx := gridVariab.FocusedCell.col-1;
+        if DeltaItem.isChecked then colIdx := colIdx div 2;
+        if (colIdx>=0) and (colIdx<NbreVariab) then
+           indexV := indexVariab[colIdx];
      end;
-     if indexV=grandeurInconnue then exit;
+     if (indexV=grandeurInconnue) or (indexV<0) or (indexV>=NbreGrandeurs) then exit;
+     suppressionDlg:=TSuppressionDlg.Create(self);
+     SuppressionDlg.operation := oTriVariable;
      SuppressionDlg.nomDefaut := grandeurs[indexV].nom;
      centreForm(suppressionDlg);
      if SuppressionDlg.showModal=mrOK then traceGridVariab;
@@ -1617,6 +1621,23 @@ end;
 procedure TFValeurs.ImprimeBtnClick(Sender: TObject);
 var
   bas : single;
+
+  procedure PrintGrid(AGrid : TTMSFNCGrid);
+  var r, c : integer;
+      ligne : string;
+  begin
+    if AGrid = nil then exit;
+    PrintLine('', bas);
+    for r := 0 to AGrid.RowCount - 1 do begin
+      ligne := '';
+      for c := 0 to AGrid.ColumnCount - 1 do begin
+        if c > 0 then ligne := ligne + '   ';
+        ligne := ligne + AGrid.Cells[c, r];
+      end;
+      PrintLine(ligne, bas);
+    end;
+  end;
+
 begin
     try
     Printer.Orientation := TPrinterOrientation.poPortrait;
@@ -1625,9 +1646,15 @@ begin
     beginPrintTxt(bas);
     PrintList(Memo.Lines,DateToStr(Now)+'  '+NomFichierData,bas);
     if (NbrePages>1) and
-       ((NbreConst+NbreParam)>0) then  ;//GridParam.Print;
+       ((NbreConst+NbreParam)>0) then begin
+         TraceGridParam;
+         PrintGrid(GridParam);
+    end;
     if (pages[pageCourante].nmes<60)
-         then // GridVariab.Print
+         then begin
+            TraceGridVariab;
+            PrintGrid(GridVariab);
+         end
          else afficheErreur(erGrandTableau,0);
     printer.endDoc;
     except
@@ -1678,14 +1705,15 @@ begin with GridParam do begin
      indexV := indexConstante(aCol);
      if indexV=grandeurInconnue  then exit;
      page := arow-1;
-     if (grandeurs[indexV].fonct.genreC=g_experimentale) then begin
+     isPrec := DeltaItem.isChecked and (acol mod 2=0);
+     if (grandeurs[indexV].fonct.genreC=g_experimentale) and
+        (isPrec or not (grandeurs[indexV].formatU in [fLongueDuree,fDateTime,fDate,fTime,fDegreMinute])) then begin
          convertCell(cellString);
          if cellString='' then begin
             cellString := FormatGridConst(acol,arow);// erreur donc ancienne valeur
             exit;
          end;
      end;
-     isPrec := DeltaItem.isChecked and (acol mod 2=0);
      AddPage := (ModeAcquisition=AcqSimulation) and
                 (page=NbrePages+1) and
                 (cellString<>'');
@@ -1794,7 +1822,7 @@ begin with pages[PageCourante],GridVariab do begin
 //        FRegressiMain.WMRegMaj(MajValeur,0);
         exit;
      end
-     else begin
+     else if isPrec or not (grandeurs[indexV].formatU in [fLongueDuree,fDateTime,fDate,fTime,fDegreMinute]) then begin
          convertCell(cellString);
          if cellString='' then begin
             cellString := formatGridVariab(Acol,Arow);// erreur donc ancienne valeur
@@ -1820,7 +1848,7 @@ begin with pages[PageCourante],GridVariab do begin
               end;
               if ligneSuivante then begin
                  ModifFichier := true;
-                 if (arow=rowCount-1) and (nmes<MaxMaxVecteur) then begin
+                 if (ModeAcquisition=AcqClavier) and (arow=rowCount-1) and (nmes<MaxMaxVecteur) then begin
                     nmes := nmes+1;
                     AjoutValeur := true;
                     RowCount := nmes+3;
@@ -1897,9 +1925,10 @@ end;
 procedure TFValeurs.PhaseItemClick(Sender: TObject);
 var indexV : integer;
 begin
+     indexV := indexVariable(GridVariab.focusedCell.col);
+     if (indexV=grandeurInconnue) or (indexV<0) or (indexV>=NbreGrandeurs) then exit;
      suppressionDlg := TSuppressionDlg.Create(self);
      SuppressionDlg.operation := oPhase;
-     indexV := indexVariable(GridVariab.focusedCell.col);
      SuppressionDlg.nomDefaut := grandeurs[indexV].nom;
      centreForm(suppressionDlg);
      if SuppressionDlg.showModal=mrOK then traceGridVariab;
@@ -1983,7 +2012,7 @@ begin
          ligne := memo.lines[i];
          if (length(ligne)>1) and (ligne[1]<>'''') then begin
             posN := pos(anom,ligne);
-            if (posN=1) and (ligne[posN+1]='=') then begin
+            if (posN=1) and (length(ligne)>length(anom)) and (ligne[posN+length(anom)]='=') then begin
                 memo.Lines.delete(i);
                 CompileP;
                 break;
@@ -2048,30 +2077,35 @@ end;
 procedure TFValeurs.RadDegTabBtnClick(Sender: TObject);
 begin
     if OKReg('Passage en '+captionAngle[not AngleEnDegre],0) then begin
-       AngleEnDegre := not AngleEnDegre;
+       ChangeAngle(not AngleEnDegre);
        radDegTabBtn.ImageIndex := indexImageAngle[angleEnDegre];
        RadDegExpBtn.imageIndex := radDegTabBtn.ImageIndex;
-       recalculE;
-       TraceGridVariab;
-       FRegressiMain.WMRegMaj(MajValeur);
+       FRegressiMain.TrigoBtn.Text := captionAngle[angleEnDegre];
+       FRegressiMain.TrigoBtn.hint := hintAngle[angleEnDegre];
     end;
 end;
 
 function TFValeurs.indexConstante(acol : integer) : integer;
 begin
+     result := grandeurInconnue;
+     if acol<1 then exit;
      if DeltaItem.isChecked then acol := (acol+1) div 2;
-     if acol<=NbreConst
+     if (acol>=1) and (acol<=NbreConst)
         then result := indexConst[acol-1]
         else begin
              Acol := Acol-NbreConst;
-             result := ParamToIndex(acol);
+             if (acol>=1) and (acol<=NbreParam) then
+                result := ParamToIndex(acol);
         end;
 end;
 
 function TFValeurs.indexVariable(acol : integer) : integer;
 begin
+    result := grandeurInconnue;
+    if acol<1 then exit;
     if DeltaItem.isChecked then acol := (acol+1) div 2;
-    result := indexVariab[acol-1];
+    if (acol>=1) and (acol<=NbreVariab) then
+       result := indexVariab[acol-1];
 end;
 
 function TFValeurs.VerifMinMax(Sender: TObject) : boolean;
@@ -2160,7 +2194,6 @@ with FcoordonneesPhys do begin
         if FcoordonneesPhys.ShowModal=mrOK then begin
            include(graphe.modif,gmXY);
            graphe.curseur := curSelect;
-           nbreModele := 0;
            graphe.etatModele := [];
            paintBox1.Repaint;
       end;

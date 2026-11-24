@@ -101,13 +101,17 @@ begin
               then AjouteLigne(copy(aligne,2,length(aligne)))
               else begin
                    posEgal := Pos('=',aligne);
-                   nomLu := copy(aligne,1,pred(posEgal)); // extrait le nom
-                   aligne := copy(aligne,succ(posEgal),length(aligne));// pour test forward
-                   trimComplet(nomLu);
-                   if nomLu[length(nomLu)]='''' then delete(nomLu,length(nomLu),1);
-                   if nomLu[length(nomLu)]='''' then delete(nomLu,length(nomLu),1);
-                   indexG := IndexNom(nomLu);
-                   if (indexG<>GrandeurInconnue) and (aligne<>'') then AjouteGrandeur(indexG);
+                   if posEgal>1 then begin
+                      nomLu := copy(aligne,1,pred(posEgal)); // extrait le nom
+                      aligne := copy(aligne,succ(posEgal),length(aligne));// pour test forward
+                      trimComplet(nomLu);
+                      if (length(nomLu)>0) and (nomLu[length(nomLu)]='''') then delete(nomLu,length(nomLu),1);
+                      if (length(nomLu)>0) and (nomLu[length(nomLu)]='''') then delete(nomLu,length(nomLu),1);
+                      if length(nomLu)>0 then begin
+                         indexG := IndexNom(nomLu);
+                         if (indexG<>GrandeurInconnue) and (aligne<>'') then AjouteGrandeur(indexG);
+                      end;
+                   end;
               end; // ligneCalcul
       end; // for i memo
       NbreItem := 0;
