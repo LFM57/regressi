@@ -87,6 +87,7 @@ type
     BorneSelect : TstyleDrag;
     NmesVideo : integer;
     mesureEnCours : boolean;
+    nouveauPoint : boolean;
     largeur, hauteur : integer;  // bitmap
     LargeurAff,HauteurAff : integer; // Affichée
     pasZoom : single; // conversion xy(video) vers xy(écran)
@@ -302,6 +303,7 @@ begin
        setBorne(GetBorne(x,y));
     e_pointRepere[BorneSelect].x := x;
     e_pointRepere[BorneSelect].y := y;
+    nouveauPoint := true;
     ecranVersImage;
 end;
 
@@ -380,9 +382,11 @@ begin
          setBorne(bsNone);
          dessine;
      end;
-     bsMesure : begin
+     bsMesure : if nouveauPoint and (NmesVideo <= MaxVecteurVideo) then begin
          XY[NmesVideo] := pointRepere[bsMesure];
          inc(NmesVideo);
+         nouveauPoint := false;
+         UndoBtn.enabled := nmesVideo > 0;
          RegressiBtn.enabled := nmesVideo>2;
          dessine;
      end;
@@ -421,9 +425,11 @@ begin
          setBorne(bsNone);
          dessine;
      end;
-     bsMesure : begin
+     bsMesure : if nouveauPoint and (NmesVideo <= MaxVecteurVideo) then begin
          XY[NmesVideo] := pointRepere[bsMesure];
          inc(NmesVideo);
+         nouveauPoint := false;
+         UndoBtn.enabled := nmesVideo > 0;
          RegressiBtn.enabled := nmesVideo>2;
          dessine;
      end;
@@ -441,9 +447,11 @@ begin
          setBorne(bsNone);
          dessine;
       end;
-      bsMesure : begin
+      bsMesure : if nouveauPoint and (NmesVideo <= MaxVecteurVideo) then begin
          XY[NmesVideo] := pointRepere[bsMesure];
          inc(NmesVideo);
+         nouveauPoint := false;
+         UndoBtn.enabled := nmesVideo > 0;
          RegressiBtn.enabled := nmesVideo>2;
          dessine;
       end;
@@ -656,31 +664,34 @@ begin
        if echelleY=eLog
             then penteY := log10(MaxiY/MiniY)/PixelY
             else penteY := (MaxiY-MiniY)/PixelY;
-       if orthonorme then penteX := -penteY;
+       if orthonorme then penteX := penteY;
 end;
 
 
 procedure TBitmapForm.getValeur(i : integer;var valx,valy : double);
+var rx, ry : double;
 begin
     if i>=NmesVideo then begin
     valx := 0;
     valy := 0;
     end
     else begin
-    valx := penteX*(xy[i].x-pointRepere[bsOrigine].x);
-    valy := -penteY*(xy[i].y-pointRepere[bsOrigine].y);
+    rx := penteX*(xy[i].x-pointRepere[bsOrigine].x);
+    ry := -penteY*(xy[i].y-pointRepere[bsOrigine].y);
+    valx := rx;
+    valy := ry;
     case echelleX of
-       eLog : valx := MiniX*power(10,valx);
-       eLin : valx := MiniX+valx;
+       eLog : valx := MiniX*power(10,rx);
+       eLin : valx := MiniX+rx;
        ePolaire : begin
-            valx := arcTan2(valy,valx);
+            valx := arcTan2(ry,rx);
             if uniteX='°' then valx := radToDeg(valx);
        end;
     end;
      case echelleY of
-       eLog : valy := MiniY*power(10,valy);
-       eLin : valy := MiniY+valy;
-       ePolaire : valy := sqrt(sqr(valx)+sqr(valy));
+       eLog : valy := MiniY*power(10,ry);
+       eLin : valy := MiniY+ry;
+       ePolaire : valy := sqrt(sqr(rx)+sqr(ry));
     end;
     end;
 end;

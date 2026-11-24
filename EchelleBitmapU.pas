@@ -176,10 +176,11 @@ end;
 
 procedure TEchelleBitmapDlg.OKBtnClick(Sender: TObject);
 
-Procedure Ajoute(i : integer);
+Function Ajoute(i : integer) : boolean;
 var newNom,newUnite,newSignif : string;
     newMini,newmaxi : double;
 begin
+      result := false;
       NewNom := gridVariab.cells[1,i];
       NewUnite := gridVariab.cells[2,i];
       NewSignif := gridVariab.cells[3,i];
@@ -207,20 +208,24 @@ begin
                1: begin
                   bitmapForm.nomT := newNom;
                   bitmapForm.uniteT := newUnite;
+                  bitmapForm.signifT := newSignif;
                end;
                2: begin
                   bitmapForm.nomX := newNom;
                   bitmapForm.uniteX := newUnite;
+                  bitmapForm.signifX := newSignif;
                   bitmapForm.miniX := newMini;
                   bitmapForm.maxiX := newMaxi;
                end;
                3: begin
                   bitmapForm.nomY := newNom;
                   bitmapForm.uniteY := newUnite;
+                  bitmapForm.signifY := newSignif;
                   bitmapForm.miniY := newMini;
                   bitmapForm.maxiY := newMaxi;
                end;
             end;
+            result := true;
          end
          else begin
               afficheErreur(codeErreurC,0);
@@ -234,7 +239,7 @@ begin
      ModeAcquisition := AcqClavier;
      modalResult := mrNone;
      GridVariab.StopEdit;
-     ajoute(1);ajoute(2);ajoute(3);
+     if not ((not avecTCB.IsChecked or ajoute(1)) and ajoute(2) and ajoute(3)) then exit;
      with bitmapForm do begin
         try
         deltat := StrToFloatWin(deltatEdit.text);
