@@ -21,6 +21,7 @@ var
   IncParam : TableauParam;
 
 procedure calculPrecision;
+const MaxReal = 1e36;
 var U,InvDer2j : MatriceParam;
 
 procedure construireU;
