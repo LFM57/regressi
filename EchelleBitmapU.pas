@@ -1,4 +1,4 @@
-unit echelleBitmapU;
+﻿unit echelleBitmapU;
 
 interface
 
@@ -25,6 +25,15 @@ Uses
   FMX.Platform,
   FMX.Controls.Presentation,
 
+
+  FMX.TMSFNCCustomControl,
+  FMX.TMSFNCCustomScrollControl, FMX.TMSFNCGridData,
+  FMX.TMSFNCCustomGrid,
+  FMX.TMSFNCGrid, FMX.TMSFNCGridCell,
+  FMX.TMSFNCTypes, FMX.TMSFNCUtils,
+  FMX.TMSFNCGraphics, FMX.TMSFNCGraphicsTypes,
+  FMX.TMSFNCGridOptions,
+
   aideKey,
   compile,
   constreg,
@@ -32,8 +41,7 @@ Uses
   maths,
   regutil,
   uniteker,
-  images,
-  bitmapU;
+  bitmapU2;
 
 
 type
@@ -51,11 +59,11 @@ type
     procedure OKBtnClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure GridVariabGetCellEditorType(Sender: TObject; ACol, ARow: Integer;
-      var CellEditorType: TTMSFMXGridEditorType);
+      var CellEditorType: TTMSFNCGridEditorType);
     procedure GridVariabGetCellClass(Sender: TObject; ACol, ARow: Integer;
-      var CellClassType: TFmxObjectClass);
+      var CellClassType: TTMSFNCGridCellClass);
     procedure GridVariabGetCellEditorProperties(Sender: TObject; ACol,
-      ARow: Integer; CellEditor: TFmxObject);
+      ARow: Integer; CellEditor: TControl);
     procedure GridVariabSelectCell(Sender: TObject; ACol, ARow: Integer;
       var Allow: Boolean);
     procedure FormActivate(Sender: TObject);
@@ -126,14 +134,14 @@ end end;
 procedure TEchelleBitmapDlg.FormShow(Sender: TObject);
 begin
      inherited;
-     gridVariab.focusedCell := Cell(1,1);
+     gridVariab.focusedCell := makeCell(1,1);
      GridVariab.SetFocus;
 end;
 
 procedure TEchelleBitmapDlg.GridVariabGetCellClass(Sender: TObject; ACol,
-  ARow: Integer; var CellClassType: TFmxObjectClass);
+  ARow: Integer; var CellClassType: TTMSFNCGridCellClass);
 begin
-    if (Acol=6) and (Arow in [2,3]) then CellClassType := TTMSFMXCheckGridCell;
+   if (Acol=6) and (Arow in [2,3]) then CellClassType := TTMSFNCCheckGridCell;
 end;
 
 procedure TEchelleBitmapDlg.GridVariabGetCellData(Sender: TObject; ACol,
@@ -144,13 +152,14 @@ begin
 end;
 
 procedure TEchelleBitmapDlg.GridVariabGetCellEditorProperties(Sender: TObject;
-  ACol, ARow: Integer; CellEditor: TFmxObject);
+  ACol, ARow: Integer; CellEditor: TControl);
 begin
-   if acol in [4,5] then (CellEditor as TTMSFMXEdit).validChars := validCharsGrid; // mini maxi
+   if (acol in [4,5]) and (CellEditor is TTMSFNCGridEdit) then
+     (CellEditor as TTMSFNCGridEdit).validChars := validCharsGrid; // mini maxi
 end;
 
 procedure TEchelleBitmapDlg.GridVariabGetCellEditorType(Sender: TObject; ACol,
-  ARow: Integer; var CellEditorType: TTMSFMXGridEditorType);
+  ARow: Integer; var CellEditorType: TTMSFNCGridEditorType);
 begin
       case Acol of
            1,2,3 : CellEditorType := etEdit; // nom Unite Signif
@@ -192,7 +201,7 @@ begin
       trimComplet(NewNom);
       if NomCorrect(newNom,grandeurInconnue)
          then begin
-            if '�'=newUnite then AngleEnDegre := true;
+            if '°'=newUnite then AngleEnDegre := true;
             if 'rad'=newUnite then AngleEnDegre := false;
             case i of
                1: begin
@@ -215,7 +224,7 @@ begin
          end
          else begin
               afficheErreur(codeErreurC,0);
-              gridVariab.FocusedCell := cell(1,i);
+              gridVariab.FocusedCell := makecell(1,i);
               gridvariab.SetFocus;
          end;
 end;
@@ -270,7 +279,6 @@ begin
     end;
 
 end;
-
 
 procedure TEchelleBitmapDlg.HelpBtnClick(Sender: TObject);
 begin

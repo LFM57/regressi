@@ -10,7 +10,7 @@ object ChronoForm: TChronoForm
   FormFactor.Width = 1920
   FormFactor.Height = 1200
   FormFactor.Devices = [Desktop]
-  DesignerMasterStyle = 1
+  DesignerMasterStyle = 0
   object Image: TImageControl
     Align = Client
     Size.Width = 640.000000000000000000

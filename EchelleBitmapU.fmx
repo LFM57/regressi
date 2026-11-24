@@ -89,10 +89,10 @@ object EchelleBitmapDlg: TEchelleBitmapDlg
     Touch.InteractiveGestures = [Pan]
     Align = Top
     DisableFocusEffect = False
-    TabOrder = 0
     Size.Width = 680.000000000000000000
     Size.Height = 105.000000000000000000
     Size.PlatformDefault = False
+    TabOrder = 0
     DefaultColumnWidth = 80.000000000000000000
     ColumnCount = 7
     RowCount = 4
@@ -103,94 +103,78 @@ object EchelleBitmapDlg: TEchelleBitmapDlg
     Options.IO.XMLEncoding = 'ISO-8859-1'
     Options.Keyboard.TabKeyDirectEdit = True
     Options.Keyboard.ArrowKeyDirectEdit = True
-    Options.Keyboard.InsertKeyHandling = ikhNone
-    Options.Keyboard.DeleteKeyHandling = dkhNone
     Options.Keyboard.EnterKeyHandling = ekhNextColumnInRow
     Options.Keyboard.EnterKeyDirectEdit = True
     Options.Keyboard.TabKeyHandling = tkhNextCell
+    Options.Mouse.ClickMargin = 0
+    Options.Mouse.ColumnSizeMargin = 6
+    Options.Mouse.RowSizeMargin = 6
     Options.Mouse.TouchScrollingSensitivity = 0.100000001490116100
-    Options.Printing.PageNumberFormat = '%g'
     OnSelectCell = GridVariabSelectCell
-    Version = '2.3.2.7'
-    Fill.Kind = Solid
-    Stroke.Kind = Solid
+    Columns = <
+      item
+        BorderWidth = 1
+        FixedFont.StyleExt = {00070000000000000004000000}
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.StyleExt = {00070000000000000004000000}
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.StyleExt = {00070000000000000004000000}
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.StyleExt = {00070000000000000004000000}
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.StyleExt = {00070000000000000004000000}
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.StyleExt = {00070000000000000004000000}
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.StyleExt = {00070000000000000004000000}
+        ID = ''
+        Width = 80.000000000000000000
+      end>
     TopRow = 1
+    Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+    Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+    Appearance.NormalLayout.Fill.Color = claNull
+    Appearance.GroupLayout.Fill.Color = xFF6E93C3
+    Appearance.GroupLayout.Font.Color = claWhite
+    Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
+    Appearance.SelectedLayout.Fill.Color = claLightsteelblue
+    Appearance.SelectedLayout.Font.Color = claWhite
+    Appearance.FocusedLayout.Fill.Color = claLightsteelblue
+    Appearance.FocusedLayout.Font.Color = claWhite
+    Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
+    Appearance.BandLayout.Fill.Color = claLightyellow
+    Appearance.ProgressLayout.Format = '%.0f%%'
     LeftCol = 1
+    ScrollMode = scmItemScrolling
+    DesignTimeSampleData = False
     OnGetCellClass = GridVariabGetCellClass
     OnGetCellData = GridVariabGetCellData
     OnGetCellEditorType = GridVariabGetCellEditorType
     OnGetCellEditorProperties = GridVariabGetCellEditorProperties
-    Columns = <
-      item
-        Color = claNull
-        Editor = etEdit
-        Fixed = False
-        FixedFont.StyleExt = {00070000000000000004000000}
-        FixedFontColor = claBlack
-        FontColor = claNull
-        ID = ''
-        Width = 80.000000000000000000
-      end
-      item
-        Color = claNull
-        Editor = etEdit
-        Fixed = False
-        FixedFont.StyleExt = {00070000000000000004000000}
-        FixedFontColor = claBlack
-        FontColor = claNull
-        ID = ''
-        Width = 80.000000000000000000
-      end
-      item
-        Color = claNull
-        Editor = etEdit
-        Fixed = False
-        FixedFont.StyleExt = {00070000000000000004000000}
-        FixedFontColor = claBlack
-        FontColor = claNull
-        ID = ''
-        Width = 80.000000000000000000
-      end
-      item
-        Color = claNull
-        Editor = etEdit
-        Fixed = False
-        FixedFont.StyleExt = {00070000000000000004000000}
-        FixedFontColor = claBlack
-        FontColor = claNull
-        ID = ''
-        Width = 80.000000000000000000
-      end
-      item
-        Color = claNull
-        Editor = etEdit
-        Fixed = False
-        FixedFont.StyleExt = {00070000000000000004000000}
-        FixedFontColor = claBlack
-        FontColor = claNull
-        ID = ''
-        Width = 80.000000000000000000
-      end
-      item
-        Color = claNull
-        Editor = etEdit
-        Fixed = False
-        FixedFont.StyleExt = {00070000000000000004000000}
-        FixedFontColor = claBlack
-        FontColor = claBlack
-        ID = ''
-        Width = 80.000000000000000000
-      end
-      item
-        Color = claNull
-        Editor = etEdit
-        Fixed = False
-        FixedFont.StyleExt = {00070000000000000004000000}
-        FixedFontColor = claBlack
-        FontColor = claBlack
-        ID = ''
-        Width = 80.000000000000000000
-      end>
   end
   object avecTCB: TCheckBox
     StyledSettings = [FontColor]

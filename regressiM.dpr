@@ -46,7 +46,21 @@ uses
   modeleNum in 'modeleNum.pas',
   aideKey in 'aideKey.pas',
   ChoixParamAnim in 'ChoixParamAnim.pas' {ParamAnimationDlg},
-  AideU in 'AideU.pas' {AideForm};
+  AideU in 'AideU.pas' {AideForm},
+  PrintPdfU in 'PrintPdfU.pas' {PrintPdfForm},
+  ChronoViewU in 'ChronoViewU.pas' {ChronoForm},
+  EchelleBitmapU in 'EchelleBitmapU.pas' {EchelleBitmapDlg},
+  OptiqueBitmap in 'OptiqueBitmap.pas' {OptiqueBitmapForm},
+  grapheOptique in 'grapheOptique.pas',
+  curModeleU in 'curModeleU.pas' {CurseurModeleDlg},
+  BitmapU2 in 'BitmapU2.pas' {BitmapForm},
+  ChronoBitmap2 in 'ChronoBitmap2.pas' {ChronoBitmapForm},
+  Latex in 'Latex.pas',
+  regLatex in 'regLatex.pas' {LatexDlg},
+{$IFDEF HAS_FFMPEG}
+  ffmpegU in 'ffmpegU.pas' {ffmpegForm},
+{$ENDIF}
+  RollingShutterCalc in 'RollingShutterCalc.pas';
 
 {$R *.res}
 
@@ -54,6 +68,9 @@ begin
   Application.Initialize;
   Application.CreateForm(TFRegressiMain, FRegressiMain);
   Application.CreateForm(TImagesData, ImagesData);
+{$IFDEF HAS_FFMPEG}
+  Application.CreateForm(TffmpegForm, ffmpegForm);
+{$ENDIF}
 
   Application.Run;
 end.

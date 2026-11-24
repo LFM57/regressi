@@ -1,0 +1,236 @@
+object CurseurModeleDlg: TCurseurModeleDlg
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 375
+  ClientWidth = 500
+  Position = MainFormCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnActivate = FormActivate
+  DesignerMasterStyle = 0
+  object GroupBox1: TGroupBox
+    Align = Bottom
+    Position.Y = 275.000000000000000000
+    Size.Width = 500.000000000000000000
+    Size.Height = 100.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Commentaire '#224' imprimer'
+    TabOrder = 6
+    object Memo: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      Align = Client
+      Size.Width = 500.000000000000000000
+      Size.Height = 100.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Viewport.Width = 492.000000000000000000
+      Viewport.Height = 92.000000000000000000
+    end
+  end
+  object tableau: TTMSFNCGrid
+    AdaptToStyle = True
+    DisableFocusEffect = False
+    EnableDragHighlight = False
+    Size.Width = 369.000000000000000000
+    Size.Height = 225.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    FixedColumns = 0
+    FixedRows = 2
+    ColumnCount = 3
+    RowCount = 8
+    Options.Bands.Enabled = True
+    Options.Editing.AutoCompleteCaseSensitive = False
+    Options.Editing.CalcFormat = '%g'
+    Options.Grouping.CalcFormat = '%g'
+    Options.Grouping.GroupCountFormat = '(%d)'
+    Options.IO.XMLEncoding = 'ISO-8859-1'
+    Options.Keyboard.TabKeyDirectEdit = True
+    Options.Keyboard.ArrowKeyDirectEdit = True
+    Options.Keyboard.EnterKeyHandling = ekhNextColumn
+    Options.Keyboard.EnterKeyDirectEdit = True
+    Options.Keyboard.TabKeyHandling = tkhNextCell
+    Options.Lookup.Incremental = False
+    Options.Mouse.DirectEdit = True
+    Options.Mouse.ColumnSizing = True
+    Options.Mouse.ClickMargin = 0
+    Options.Mouse.ColumnSizeMargin = 6
+    Options.Mouse.RowSizeMargin = 6
+    Options.Mouse.FixedColumnSizing = True
+    Options.Mouse.FixedCellSelection = [fcsColumn, fcsRowRange]
+    Options.Mouse.RowAutoSizeOnDblClick = False
+    Options.Mouse.AutoDragging = False
+    Options.Mouse.TouchScrollingSensitivity = 0.100000001490116100
+    Options.Styling.AdaptToStyle = True
+    Options.Sorting.MultiColumn = False
+    Columns = <
+      item
+        BorderWidth = 1
+        FixedFont.StyleExt = {00070000000000000004000000}
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.StyleExt = {00070000000000000004000000}
+        ID = ''
+        Width = 80.000000000000000000
+      end
+      item
+        BorderWidth = 1
+        FixedFont.StyleExt = {00070000000000000004000000}
+        ID = ''
+        Width = 185.000000000000000000
+      end>
+    DefaultFont.Color = xFF222222
+    Stroke.Color = xFFEEEEEE
+    TopRow = 2
+    Appearance.FixedLayout.Fill.Kind = gfkGradient
+    Appearance.FixedLayout.Fill.Color = x1A060606
+    Appearance.FixedLayout.Fill.ColorTo = x1A060606
+    Appearance.FixedLayout.Stroke.Color = xFFEEEEEE
+    Appearance.FixedLayout.Font.Color = xFF222222
+    Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+    Appearance.NormalLayout.Fill.Color = claNull
+    Appearance.NormalLayout.Stroke.Color = xFFEEEEEE
+    Appearance.NormalLayout.Font.Color = xFF222222
+    Appearance.GroupLayout.Fill.Kind = gfkGradient
+    Appearance.GroupLayout.Fill.Color = x7F33B5E5
+    Appearance.GroupLayout.Fill.ColorTo = x7F33B5E5
+    Appearance.GroupLayout.Stroke.Color = xFFEEEEEE
+    Appearance.GroupLayout.Font.Color = xFF222222
+    Appearance.SummaryLayout.Fill.Kind = gfkGradient
+    Appearance.SummaryLayout.Fill.Color = x7F33B5E5
+    Appearance.SummaryLayout.Fill.ColorTo = x7F33B5E5
+    Appearance.SummaryLayout.Stroke.Color = xFFEEEEEE
+    Appearance.SummaryLayout.Font.Color = xFF222222
+    Appearance.SelectedLayout.Fill.Kind = gfkGradient
+    Appearance.SelectedLayout.Fill.Color = x7F33B5E5
+    Appearance.SelectedLayout.Fill.ColorTo = x7F33B5E5
+    Appearance.SelectedLayout.Stroke.Color = xFFEEEEEE
+    Appearance.SelectedLayout.Font.Color = xFF222222
+    Appearance.FocusedLayout.Fill.Kind = gfkGradient
+    Appearance.FocusedLayout.Fill.Color = x7F33B5E5
+    Appearance.FocusedLayout.Fill.ColorTo = x7F33B5E5
+    Appearance.FocusedLayout.Stroke.Color = xFFEEEEEE
+    Appearance.FocusedLayout.Font.Color = xFF222222
+    Appearance.FixedSelectedLayout.Fill.Kind = gfkGradient
+    Appearance.FixedSelectedLayout.Fill.Color = x7F33B5E5
+    Appearance.FixedSelectedLayout.Fill.ColorTo = x7F33B5E5
+    Appearance.FixedSelectedLayout.Stroke.Color = xFFEEEEEE
+    Appearance.FixedSelectedLayout.Font.Color = xFF222222
+    Appearance.BandLayout.Fill.Color = claLightyellow
+    Appearance.BandLayout.Stroke.Color = xFFEEEEEE
+    Appearance.ProgressLayout.Color = x7F33B5E5
+    Appearance.ProgressLayout.Format = '%.0f%%'
+    LeftCol = 0
+    ScrollMode = scmItemScrolling
+    DesignTimeSampleData = False
+    OnCellEditSetData = tableauCellEditSetData
+  end
+  object OKBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 24
+    ModalResult = 1
+    Position.X = 384.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Text = 'Fermer'
+    OnClick = OKBtnClick
+  end
+  object HelpBtn: TButton
+    HelpContext = 802
+    Images = ImagesData.ImagesList
+    ImageIndex = 5
+    Position.X = 384.000000000000000000
+    Position.Y = 64.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+    Text = 'Aide'
+    OnClick = HelpBtnClick
+  end
+  object RazBtn: TButton
+    HelpContext = 802
+    Images = ImagesData.ImagesList
+    ImageIndex = 53
+    Position.X = 384.000000000000000000
+    Position.Y = 120.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    Text = 'R'#224'Z'
+    OnClick = RazBtnClick
+  end
+  object CopyBtn: TButton
+    HelpContext = 802
+    Images = ImagesData.ImagesList
+    ImageIndex = 14
+    Position.X = 384.000000000000000000
+    Position.Y = 177.000000000000000000
+    Size.Width = 100.000000000000000000
+    Size.Height = 27.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    Text = 'Copier'
+    OnClick = CopyBtnClick
+  end
+  object ImprimanteGB: TGroupBox
+    Align = Bottom
+    StyledSettings = [FontColor]
+    Position.Y = 225.000000000000000000
+    Size.Width = 500.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Impression'
+    TextSettings.Font.Size = 13.000000000000000000
+    TabOrder = 2
+    object PrinterBtn: TButton
+      Images = ImagesData.ImagesList
+      ImageIndex = 40
+      Position.X = 232.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 25.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      OnClick = PrinterBtnClick
+    end
+    object PrintCB: TComboBox
+      ListBoxResource = 'transparentlistboxstyle'
+      Position.X = 8.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 214.000000000000000000
+      Size.Height = 23.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      OnChange = PrintCBChange
+    end
+    object PrinterSetupDialog: TPrinterSetupDialog
+      Left = 152
+      Top = 128
+    end
+    object PrintBtn: TButton
+      Images = ImagesData.ImagesList
+      ImageIndex = 40
+      ModalResult = 1
+      Position.X = 320.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Imprimer'
+      TextSettings.Font.Size = 13.000000000000000000
+      OnClick = PrintBtnClick
+    end
+  end
+end

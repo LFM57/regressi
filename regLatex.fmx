@@ -1,0 +1,136 @@
+object LatexDlg: TLatexDlg
+  Left = 467
+  Top = 189
+  BorderIcons = [biSystemMenu, biHelp]
+  BorderStyle = Single
+  Caption = 'Export Latex'
+  ClientHeight = 268
+  ClientWidth = 286
+  Position = ScreenCenter
+  FormFactor.Width = 1920
+  FormFactor.Height = 1200
+  FormFactor.Devices = [Desktop]
+  OnActivate = FormActivate
+  Left = 467
+  Top = 189
+  DesignerMasterStyle = 0
+  object PanelOption: TPanel
+    Align = Right
+    Position.X = 154.000000000000000000
+    Size.Width = 132.000000000000000000
+    Size.Height = 268.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object PrintBtn: TButton
+      Images = ImagesData.ImagesList
+      ImageIndex = 40
+      ModalResult = 1
+      Position.X = 14.000000000000000000
+      Position.Y = 3.000000000000000000
+      Size.Width = 108.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Enregistrer'
+      TextSettings.Font.Size = 13.000000000000000000
+      OnClick = PrintBtnClick
+    end
+    object CancelBtn: TButton
+      Images = ImagesData.ImagesList
+      ImageIndex = 53
+      ModalResult = 2
+      Position.X = 14.000000000000000000
+      Position.Y = 47.000000000000000000
+      Size.Width = 108.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Abandon'
+      TextSettings.Font.Size = 13.000000000000000000
+    end
+    object HelpBtn: TButton
+      HelpContext = 807
+      Images = ImagesData.ImagesList
+      ImageIndex = 5
+        Position.X = 14.000000000000000000
+      Position.Y = 91.000000000000000000
+      Size.Width = 108.000000000000000000
+      Size.Height = 27.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Aide'
+      TextSettings.Font.Size = 13.000000000000000000
+      OnClick = HelpBtnClick
+    end
+  end
+  object Panel1: TPanel
+    Align = Client
+    Size.Width = 154.000000000000000000
+    Size.Height = 268.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object GrandeursCB: TCheckBox
+      IsChecked = True
+      Position.X = 8.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 110.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Expressions'
+    end
+    object GrapheFourierCB: TCheckBox
+      Position.X = 8.000000000000000000
+      Position.Y = 31.000000000000000000
+      Size.Width = 110.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Graphe Fourier'
+    end
+    object GrapheVariabCB: TCheckBox
+      IsChecked = True
+      Position.X = 8.000000000000000000
+      Position.Y = 77.000000000000000000
+      Size.Width = 110.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Graphe'
+    end
+    object ModeleVariabCB: TCheckBox
+      IsChecked = True
+      Position.X = 8.000000000000000000
+      Position.Y = 54.000000000000000000
+      Size.Width = 110.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Mod'#233'lisation'
+    end
+    object GrapheStatCB: TCheckBox
+      Position.X = 8.000000000000000000
+      Position.Y = 100.000000000000000000
+      Size.Width = 110.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      Text = 'Statistique'
+    end
+    object GridParamCB: TCheckBox
+      Position.X = 8.000000000000000000
+      Position.Y = 122.000000000000000000
+      Size.Width = 145.000000000000000000
+      Size.Height = 19.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      Text = 'Tableau param'#232'tres'
+    end
+  end
+  object SaveDialog: TSaveDialog
+    DefaultExt = 'tex'
+    Filter = 'Fichiers LaTeX (*.tex)|*.tex'
+    Left = 104
+    Top = 200
+  end
+end

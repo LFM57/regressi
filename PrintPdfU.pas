@@ -1,31 +1,27 @@
-unit PrintPdfU;
+﻿unit PrintPdfU;
 
 interface
 
 uses
   System.SysUtils, System.Types, System.UITypes,
-  System.Classes, System.Variants, System.IniFiles,
+  System.Classes, System.Variants,
+  System.IniFiles,
 
-  FMX.Types, 
-  FMX.Controls, 
-  FMX.Forms,
-  FMX.Graphics,
-  FMX.Dialogs, 
-  FMX.StdCtrls,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics,
+  FMX.Dialogs, FMX.StdCtrls,
   FMX.Controls.Presentation,
-  
-  FMX.TMSFNCTypes, 
-  FMX.TMSFNCUtils, 
-  FMX.TMSFNCGraphics,
-  FMX.TMSFNCGraphicsTypes,
-  FMX.TMSFNCGridCell, 
-  FMX.TMSFNCGridOptions,
-  FMX.TMSFNCCustomControl, 
-  FMX.TMSFNCCustomScrollControl, 
-  FMX.TMSFNCGridData,
-  FMX.TMSFNCCustomGrid, 
-  FMX.TMSFNCGrid;
 
+  FMX.TMSFNCPDFIO,
+  FMX.TMSFNCRichEditorPDFIO, 
+  FMX.TMSFNCRichEditorBase, FMX.TMSFNCRichEditor,
+  FMX.TMSFNCGrid,
+  FMX.TMSFNCRichEditorToolBar,
+  FMX.TMSFNCToolBar, FMX.TMSFNCTypes,
+  FMX.TMSFNCUtils, FMX.TMSFNCGraphics, 
+  FMX.TMSFNCGraphicsTypes,
+  FMX.TMSFNCCustomControl,
+  FMX.TMSFNCCustomComponent,
+  FMX.TMSFNCScrollControl;
 
 type
   TPrintPdfForm = class(TForm)
@@ -37,12 +33,12 @@ type
     ModeleVariabCB: TCheckBox;
     GrapheVariabCB: TCheckBox;
     GrapheFourierCB: TCheckBox;
-    SaveDialog: TSaveDialog;
     TestBtn: TButton;
-    TMSFMXDockPanel1: TTMSFNCDockPanel;
-    TMSFMXRichEditorFormatToolBar1: TTMSFNCRichEditorFormatToolBar;
-    TMSFMXRichEditorEditToolBar1: TTMSFNCRichEditorEditToolBar;
+    DockPanel1: TTMSFNCDockPanel;
+    FormatToolBar1: TTMSFNCRichEditorFormatToolBar;
+    EditToolBar1: TTMSFNCRichEditorEditToolBar;
     GrapheStatCB: TCheckBox;
+    SaveDialog: TSaveDialog;
     procedure PdfBtnClick(Sender: TObject);
     procedure GrandeursCBChange(Sender: TObject);
     procedure TestBtnClick(Sender: TObject);
@@ -58,7 +54,8 @@ var
 
 implementation
 
-uses regmain, valeurs, graphfft, optStat, compile, regutil, graphker, grapheVariabU;
+uses regmain, valeurs, graphfft, optStat, compile, regutil,
+     graphker, grapheVariabU;
 
 {$R *.fmx}
 
@@ -92,7 +89,7 @@ begin
     grapheStatCB.Visible := statOptDlg<>nil;
     grapheFourierCB.Visible := FgrapheFFT<>nil;
     ModeleVariabCB.Visible := FRegressiMain.panelModele.visible or
-                             (ModeleDefini in etatModele);
+                             (ModeleDefini in graphe.etatModele);
     pdfBtn.visible := false;
 end;
 
@@ -103,16 +100,19 @@ end;
 
 procedure TPrintPdfForm.PdfBtnClick(Sender: TObject);
 begin
-   if saveDialog.execute then begin
+   SaveDialog.DefaultExt := 'pdf';
+   SaveDialog.Filter := 'Fichiers PDF (*.pdf)|*.pdf';
+   SaveDialog.Title := 'Sauvegarde au format PDF';
+   if SaveDialog.Execute then begin
           TMSEditortoPDF.options.Footer := '';
           TMSEditortoPDF.options.Header := '';
-          TMSEditortoPDF.Save(changeFileExt(saveDialog.fileName,'.pdf'));
+          TMSEditortoPDF.Save(ChangeFileExt(SaveDialog.FileName,'.pdf'));
    end;
 end;
 
 procedure TPrintPdfForm.TestBtnClick(Sender: TObject);
 
-procedure printGrid(const aGrid : TTMSFMXGrid);
+procedure printGrid(const aGrid : TTMSFNCGrid);
 var col,row,tab,Ntab : integer;
     texte : string;
     largeur : array of integer;
@@ -189,7 +189,7 @@ begin
              printLines(Fvaleurs.Memo.lines);
           end;
           if ModeleVariabCB.isVisible and ModeleVariabCB.IsChecked then begin
-             printTitre('Mod�lisation');
+             printTitre('Modélisation');
              printLines(TexteModele);
              for page := 1 to NbrePages do
                  if pages[page].active then begin

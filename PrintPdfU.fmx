@@ -15,17 +15,13 @@ object PrintPdfForm: TPrintPdfForm
     Touch.InteractiveGestures = [LongTap, DoubleTap]
     Align = Client
     Cursor = crIBeam
-    DisableFocusEffect = False
-    TabOrder = 2
+    Font.Size = 14.000000000000000000
     Size.Width = 791.000000000000000000
     Size.Height = 429.000000000000000000
     Size.PlatformDefault = False
-    Font.Size = 14.000000000000000000
-    Fill.Kind = Solid
-    Stroke.Color = claGray
-    Stroke.Kind = Solid
+    TabOrder = 2
+    Version = '1.8.10.1'
     WantTab = True
-    CanFocus = True
   end
   object Panel1: TPanel
     Align = Left
@@ -122,6 +118,7 @@ object PrintPdfForm: TPrintPdfForm
       TabOrder = 6
       Text = 'PDF'
       TextSettings.Font.Size = 13.000000000000000000
+      TextSettings.Trimming = None
       OnClick = PdfBtnClick
     end
     object TestBtn: TButton
@@ -135,6 +132,7 @@ object PrintPdfForm: TPrintPdfForm
       TabOrder = 5
       Text = 'Test'
       TextSettings.Font.Size = 13.000000000000000000
+      TextSettings.Trimming = None
       OnClick = TestBtnClick
     end
     object GrapheStatCB: TCheckBox
@@ -150,54 +148,36 @@ object PrintPdfForm: TPrintPdfForm
   end
   object SaveDialog: TSaveDialog
     DefaultExt = 'pdf'
+    Filter = 'Fichiers PDF (*.pdf)|*.pdf'
     Left = 296
     Top = 200
   end
-  object TMSFMXDockPanel1: TTMSFNCDockPanel
-    Version = '1.0.1.3'
-    DisableFocusEffect = False
-    TabOrder = 1
+  object DockPanel1: TTMSFNCDockPanel
+    Align = Top
     Size.Width = 916.000000000000000000
     Size.Height = 51.000000000000000000
     Size.PlatformDefault = False
-    object TMSFNCRichEditorFormatToolBar1: TTMSFNCRichEditorFormatToolBar
-      Version = '1.0.0.4'
-      Appearance.Fill.Gradient.Points = <
-        item
-          Color = claWhite
-          Offset = 0.000000000000000000
-        end
-        item
-          Color = xFFE6E6E6
-          Offset = 1.000000000000000000
-        end>
-      DisableFocusEffect = False
+    TabOrder = 1
+    object FormatToolBar1: TTMSFNCRichEditorFormatToolBar
       Position.X = 3.000000000000000000
       Position.Y = 3.000000000000000000
-      TabOrder = 0
-      Size.Width = 652.000000000000000000
+      Size.Width = 692.000000000000000000
       Size.Height = 30.000000000000000000
       Size.PlatformDefault = False
+      TabOrder = 0
+      CompactBitmaps = <>
+      OptionsMenu.ShowButton = False
       RichEditor = Editor
     end
-    object TMSFNCRichEditorEditToolBar1: TTMSFNCRichEditorEditToolBar
-      Version = '1.0.0.4'
-      Appearance.Fill.Gradient.Points = <
-        item
-          Color = claWhite
-          Offset = 0.000000000000000000
-        end
-        item
-          Color = xFFE6E6E6
-          Offset = 1.000000000000000000
-        end>
-      DisableFocusEffect = False
-      Position.X = 658.000000000000000000
+    object EditToolBar1: TTMSFNCRichEditorEditToolBar
+      Position.X = 698.000000000000000000
       Position.Y = 3.000000000000000000
-      TabOrder = 1
-      Size.Width = 230.000000000000000000
+      Size.Width = 210.000000000000000000
       Size.Height = 30.000000000000000000
       Size.PlatformDefault = False
+      TabOrder = 1
+      CompactBitmaps = <>
+      OptionsMenu.ShowButton = False
       RichEditor = Editor
     end
   end
