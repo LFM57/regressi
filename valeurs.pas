@@ -2026,15 +2026,18 @@ var str : string;
     caret : TcaretPosition;
 begin
    caret := Memo.caretPosition;
-   if (caret.Pos=0)
-      then str := Astring
-      else begin
-         str := Memo.Lines[caret.line];
-         str.Insert(caret.Pos,aString);
-      end;
-   if Memo.lines.count=0
-      then Memo.lines.add(str)
-      else Memo.Lines[caret.line] := str;
+   if Memo.lines.count=0 then begin
+      Memo.lines.add(aString);
+      caret.line := 0;
+      caret.pos := 0;
+   end
+   else begin
+      if caret.line >= Memo.lines.count then caret.line := Memo.lines.count - 1;
+      if caret.line < 0 then caret.line := 0;
+      str := Memo.Lines[caret.line];
+      str := str.Insert(caret.Pos,aString);
+      Memo.Lines[caret.line] := str;
+   end;
    if offset>0 then begin
       caret.pos := caret.pos+offset;
       memo.caretPosition := caret;

@@ -1028,16 +1028,21 @@ begin
             LEdit := (sender as TEdit);
             caretEdit := LEdit.caretPosition;
             texte := LEdit.text;
-            texte.insert(caretEdit,keyChar);
+            texte := texte.Insert(caretEdit,keyChar);
             LEdit.text := texte;
             LEdit.caretPosition := caretEdit+1;
           end;
           if (sender is TMemo) then begin
               LMemo := (sender as TMemo);
               CaretMemo := LMemo.CaretPosition;
-              if (CaretMemo.line>=0) and (CaretMemo.line<LMemo.lines.count) then begin
+              if LMemo.lines.count = 0 then begin
+                 LMemo.lines.Add(keyChar);
+                 CaretMemo := TCaretPosition.Create(0, 1);
+                 Lmemo.caretPosition := CaretMemo;
+              end
+              else if (CaretMemo.line>=0) and (CaretMemo.line<LMemo.lines.count) then begin
                  texte := LMemo.lines[CaretMemo.line];
-                 texte.insert(CaretMemo.Pos,keyChar);
+                 texte := texte.Insert(CaretMemo.Pos,keyChar);
                  LMemo.lines[CaretMemo.line] := texte;
                  CaretMemo.Pos := CaretMemo.Pos+1;
                  Lmemo.caretPosition := CaretMemo;
