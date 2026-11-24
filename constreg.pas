@@ -60,8 +60,8 @@ OkAngleRadian ='Angle en radian';
 OkPaysage ='Impression avec orientation paysage';
 okSupprIdentCoord ='Suppression des identifications de courbes';
 okSupprAutresPages ='Suppresssion des points de toutes les pages actives';
-okRazModele ='Remise à 1 des paramètres';
-okRazParam ='Suppression de la modélisation';
+okRazModele ='Suppression de la modélisation';
+okRazParam ='Remise à 1 des paramètres';
 
 
 erNotExists = ' n''existe plus';

@@ -3025,21 +3025,35 @@ end;
 procedure TFRegressiMain.RaZModeleClick(Sender: TObject);
 var p : codePage;
     i : integer;
+    modif : boolean;
 begin
-     if OKreg(okRazParam,0) then
-     for p := 1 to NbrePages do with pages[p] do begin
-         ModeleCalcule := false;
-         ModeleErrone := false;
-         TexteResultatModele.clear;
-         for i := 1 to MaxParametres do
-             ValeurParam[i] := parametres[i].ordreDeGrandeur;
+     modif := false;
+     if OKreg(okRazParam,0) then begin
+        for p := 1 to NbrePages do with pages[p] do begin
+            ModeleCalcule := false;
+            ModeleErrone := false;
+            TexteResultatModele.clear;
+            for i := 1 to MaxParametres do
+                ValeurParam[i] := parametres[i].ordreDeGrandeur;
+        end;
+        modif := true;
      end;
      if OKreg(okRazModele,0) then begin
            MemoModele.lines.clear;
            MemoResultat.lines.clear;
+           NbreModele := 0;
+           NbreFonctionSuper := 0;
+           NbreParam := 0;
            graphe.IsModeleMagnum := false;
            graphe.EtatModele := [PasDeModele];
            exclude(graphe.modif,gmModele);
+           modif := true;
+     end;
+     if modif then begin
+        MajParametres;
+        if not (PasDeModele in graphe.EtatModele) then
+           include(graphe.modif,gmValeurModele);
+        PaintBox1.repaint;
      end;
 end;
 
@@ -3414,7 +3428,8 @@ begin with ModeleGraphique[NbreModele] do begin
      LanceCompileModele;
      include(Graphe.modif,gmModele);
      graphe.setPenBrush(curSelect);
-     pages[pageCourante].resetDebutFin(NbreModele);
+     if pages[pageCourante].fin[NbreModele]<=pages[pageCourante].debut[NbreModele] then
+        pages[pageCourante].resetDebutFin(NbreModele);
      MajModeleGr(NbreModele);
      LanceModele(true);
 end end; // modeleMagnum

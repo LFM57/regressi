@@ -1,4 +1,4 @@
-unit modeleNum;
+ï»¿unit modeleNum;
 
 interface
 
@@ -40,17 +40,17 @@ var diverge,stable : boolean;
     erreurCalcul,erreurParam : boolean;
     sommeCarreY : double;
 
-// boucle de recherche par méthode gradient-Newton
+// boucle de recherche par mÃ©thode gradient-Newton
 var
    J,Jprecedent : double;
 { (FonctionTheorique(x,param)-FonctionExperimentale(x))^2
-  coeffJ pour pondérer de manière égale deux modèles qqsoit les ordres de grandeur }
+  coeffJ pour pondÃ©rer de maniÃ¨re Ã©gale deux modÃ¨les qqsoit les ordres de grandeur }
   derJ  : TableauParam;
-// derj = dérivée de J = (fonctionTheorique-Fexp)*dfonctionTheorique/dParam
+// derj = dÃ©rivÃ©e de J = (fonctionTheorique-Fexp)*dfonctionTheorique/dParam
   der2J : MatriceParam;
-{ der2j = dérivée seconde de J (approximative) =
+{ der2j = dÃ©rivÃ©e seconde de J (approximative) =
   DfonctionTheorique/dparam*DfonctionTheorique/dparam
-  on néglige (fonctionTheorique-Fexp)d2Fth/dparam*dparam }
+  on nÃ©glige (fonctionTheorique-Fexp)d2Fth/dparam*dparam }
   IncParam : TableauParam;
 
 procedure calculPrecision;
@@ -105,7 +105,7 @@ begin
               Y[i] := 0
            end;
         end;
-// passage à invder2J
+// passage Ã  invder2J
      for i := NParam downto 1 do begin
          v := Y[i];
          for k := succ(i) to NParam do
@@ -193,8 +193,8 @@ end;// calculFonction
 procedure calculLoc;
 var k1,k2 : integer;
     i : integer;
-    ValDerf : TableauParam;// valeur de la dérivée première
-    ecart : double; // valeur de l'écart entre la fonction théorique et expérimentale
+    ValDerf : TableauParam;// valeur de la dÃ©rivÃ©e premiÃ¨re
+    ecart : double; // valeur de l'Ã©cart entre la fonction thÃ©orique et expÃ©rimentale
 begin
     try
         for i := debut to fin do begin
@@ -215,7 +215,7 @@ begin
 Const
       PrecisionAbsolueJ = 0.001;
       PrecisionRelativeJ = 0.001;
-      PrecisionZero = 0.0000001; // prise en compte erreur arrondi dans comparaison à zéro
+      PrecisionZero = 0.0000001; // prise en compte erreur arrondi dans comparaison Ã  zÃ©ro
 var k1,k2 : integer;
     DeltaJ : double;
 begin // calculJ
@@ -239,11 +239,11 @@ end; // calculJ
 Function EffectueGaussNewton : boolean;
 const
     Maxi_i1 = 32; // time out
-    Maxi_i2 = 6; // µ mini =(1/2)^7=1%
+    Maxi_i2 = 6; // Âµ mini =(1/2)^7=1%
 var k : integer;
     i1,i2 : integer;
     mu : double;
-// boucle de recherche par méthode gradient-Newton
+// boucle de recherche par mÃ©thode gradient-Newton
 begin
     i1 := 0;
     result := false;
@@ -265,7 +265,7 @@ begin
             CalculJ;
         end; // while diverge
         if diverge and (stable or (i1<=1)) then begin
-           calculJ; // calcul dans l'état initial
+           calculJ; // calcul dans l'Ã©tat initial
            diverge := false;
            stable := true;
         end;
@@ -297,11 +297,11 @@ begin // effectueModele
              end;
              pApres : begin
                 yl[i] := valeurParam[1]+signe*log10(xl[i]-valeurParam[2]);
-                yder[i] := -signe*valeurParam[3]/ln(10)/(valeurParam[2]-xl[i]);
+                yder[i] := -signe/ln(10)/(valeurParam[2]-xl[i]);
              end;
              pEAvant : begin
                 yl[i] := valeurParam[1]-signe*valeurParam[3]*log10(valeurParam[2]-xl[i]);
-                yder[i] := signe/ln(10)/(valeurParam[2]-xl[i]);
+                yder[i] := signe*valeurParam[3]/ln(10)/(valeurParam[2]-xl[i]);
              end;
              pEApres : begin
                 yl[i] := valeurParam[1]+signe*valeurParam[3]*log10(xl[i]-valeurParam[2]);
@@ -354,11 +354,11 @@ end;
 
 function ModeleInflexion(const X,Y : vecteur;const index : integer;
          var Xl,Yl : vecteur;var ve,phe : double;pente : double) : boolean;
-// on modélise y=a+bx+cx^2+dx^3 pour déterminer un point d'inflexion verticale donc avec b=c^2/3d
+// on modÃ©lise y=a+bx+cx^2+dx^3 pour dÃ©terminer un point d'inflexion verticale donc avec b=c^2/3d
 const degreDeriveeL = 3;
       ordre = degreDeriveeL+1;
       puissMax = 2*degreDeriveeL;
-      ecart = 2; // centre (index) et deux points de chaque côté
+      ecart = 2; // centre (index) et deux points de chaque cÃ´tÃ©
 var puissX : vectorPuiss;
     A : matrice;
     Coeff : matriceLigne;
@@ -370,11 +370,11 @@ var
     PrecisionValeur : double;
 Const
     PrecisionRelative = 1e-8;
-    PrecisionAbsolue = 1e-15; // calcul de pH à 10-2 près à pH=13
+    PrecisionAbsolue = 1e-15; // calcul de pH Ã  10-2 prÃ¨s Ã  pH=13
 var
     J,Jprec,incph : double; { J = F(x)^2 }
     diverge,stable : boolean;
-    valF,valFprime : double; // valeur de la fonction et de sa dérivée
+    valF,valFprime : double; // valeur de la fonction et de sa dÃ©rivÃ©e
     pha: double;
 
 procedure CalculF;
@@ -395,7 +395,7 @@ end;
 
 const
     Maxi_i1 = 12; // time out
-    Maxi_i2 = 5; // soit µ mini =(1/3)^5=0.4%
+    Maxi_i2 = 5; // soit Âµ mini =(1/3)^5=0.4%
 var
     i1,i2 : integer;
     mu : double;
@@ -480,7 +480,7 @@ begin
      for i := 1 to pred(NbrePointDeriveeLisse) do begin
          courant := coeff[2]+(2*coeff[3]+3*coeff[4]*xl[i])*xl[i];
          if (courant*ref<0) and (abs(courant)>(abs(ref)/32)) then exit;
-         // la dérivée change de signe ou devient trop grande
+         // la dÃ©rivÃ©e change de signe ou devient trop grande
      end;
      result := true;
 end;

@@ -1,4 +1,4 @@
-unit modeleGr; // Modélisation graphique
+ï»¿unit modeleGr; // ModÃ©lisation graphique
 
 interface
 
@@ -87,7 +87,7 @@ var index : integer;
 begin
     result := NomDefaut;
     index :=  indexNom(NomDefaut);
-// vérifier si une variable de même nom existe
+// vÃ©rifier si une variable de mÃªme nom existe
     if (index<MaxGrandeurs) or
        (indexToParam(index)<>grandeurInconnue)
         then begin
@@ -103,7 +103,7 @@ var exp,debutExp,exp1,exp2,exp3 : string;
 begin
      genre := Agenre;
      numeroModele := numero;
-     if (numeroModele<1) or (numeroModele<MaxIntervalles) then numeroModele := 1;
+     if (numeroModele<1) or (numeroModele>MaxIntervalles) then numeroModele := 1;
      with aGraphe.Coordonnee[1] do begin
           mondeGr := iMondeC;
           nX := nomX;
@@ -141,8 +141,10 @@ begin
      if genre in [mgPasseBas1,mgPasseHaut1]
         then exp1 := 'abs(1+j*'+nX+'/'+NomParam[2]+')';
      if genre=mgAffineDouble then begin
-         NomParam[3] := getNom('a');
-         NomParam[4] := getNom('b');
+         NomParam[3] := getNom('a2');
+         if NomParam[3]=NomParam[1] then NomParam[3] := NomParam[1]+'2';
+         NomParam[4] := getNom('b2');
+         if NomParam[4]=NomParam[2] then NomParam[4] := NomParam[2]+'2';
      end;
      case genre of
           mgLineaire : exp:=debutExp+NomParam[1]+'*'+nX; // a*x
@@ -252,6 +254,7 @@ begin
           mgSinus : ;
           mgAffineDouble : begin
              exp:=debutExp+NomParam[3]+'*'+nX+'+'+NomParam[4];
+             Expression.Add(exp);
             // a'*x+b'
           end;
           mgSigmoide : ;
@@ -350,8 +353,9 @@ var minX,maxX,minY,maxY : double;
 Procedure InitialiseAffineDouble;
 var statLoc : TStatistiqueDeuxVar;
 
-Procedure Resoudre(i1,i2 : integer;var xs1,xs2 : double);
+Procedure Resoudre(i1,i2 : integer;var xs1,xs2 : double; indexP : integer);
 var systeme : matrice;
+    sol : matriceLigne;
     x,y : double;
     i,j : integer;
 begin
@@ -372,8 +376,9 @@ begin
            else if valeurX[i]<minX then minX := valeurX[i];
     end;
     systeme[2,1] := systeme[1,2];
-    Resolution(systeme,2,parametreGr);
-    swap(parametreGr[1],parametreGr[2]);
+    Resolution(systeme,2,sol);
+    parametreGr[indexP] := sol[2];
+    parametreGr[indexP+1] := sol[1];
 // a*x+b au lieu de a+b*x !
     xs1 := minX+(maxX-minX)/10;
     xs2 := maxX-(maxX-minX)/10;
@@ -390,13 +395,13 @@ begin
          inc(fin1,2);
          statLoc.Init(valeurX,valeurY,debut,fin1);
    until (fin1>milieu) or (abs(statLoc.correlation)<0.95);
-   resoudre(debut,fin1,xs1,xs2);
+   resoudre(debut,fin1,xs1,xs2,1);
    debut2 := fin-1;
    repeat
          dec(debut2,2);
          statLoc.Init(valeurX,valeurY,debut2,fin);
    until (debut2<milieu) or (abs(statLoc.correlation)<0.95);
-   resoudre(debut2,fin,xs3,xs4);
+   resoudre(debut2,fin,xs3,xs4,3);
    statLoc.Free;
 end;
 
@@ -442,7 +447,7 @@ Procedure InitialiseHyperbolique;
 var systeme : matrice;
     x,y,a,b : double;
     i,j : integer;
-// y=a*x/(b+x) linéarisé en 1/y = b/a*(1/x)+1/a=a2*x+a1
+// y=a*x/(b+x) linÃ©arisÃ© en 1/y = b/a*(1/x)+1/a=a2*x+a1
 begin
     for i := 1 to 2 do
         for j := 1 to 3 do systeme[i,j] := 0;
@@ -525,7 +530,7 @@ var i,idebut : integer;
     y0,a,periode,phase : double;
 begin
     case genre of
-       mgSinus : y0 := (maxY+minY)/2; // décalage de zéro
+       mgSinus : y0 := (maxY+minY)/2; // dÃ©calage de zÃ©ro
        mgSinusAmorti,mgQualite : begin
           y0 := 0;
           for i := debut to fin do
@@ -538,17 +543,17 @@ begin
     i := debut;
     repeat inc(i)
     until ((valeurY[pred(i)]-y0)*(valeurY[succ(i)]-y0)<=0) or (i>Milieu);
-// Passage par zéro à iDebut
+// Passage par zÃ©ro Ã  iDebut
     modeleOK := i<=Milieu;
     if not modeleOK then exit;
     iDebut := i;
     while (i<fin) and (abs(valeurY[i]-y0)<(a/3)) do inc(i);
-// Hystérésis
+// HystÃ©rÃ©sis
     modeleOK := i<(fin-4);
     if not modeleOK then exit;
     repeat inc(i)
     until ((valeurY[pred(i)]-y0)*(valeurY[succ(i)]-y0)<=0) or (i>=(fin-1));
-// Deuxième passage par zéro
+// DeuxiÃ¨me passage par zÃ©ro
     modeleOK := i<(fin-1);
     if not modeleOK then exit;
     Periode := 2*(valeurX[i]-valeurX[idebut]);
@@ -558,7 +563,7 @@ begin
       zero := (y0-valeurY[pred(i)])*(y0-valeurY[succ(i)]);
       pente := valeurY[succ(i)]-valeurY[pred(i)];
     until ( (zero<0) and (pente>0) ) or (i=(fin-2));
-         // premier passage par zéro montant ou non trouvé
+         // premier passage par zÃ©ro montant ou non trouvÃ©
     modeleOK := i<(fin-2);
     if not modeleOK then exit;
     phase := frac(valeurX[i]/periode); // phase en tour
@@ -566,7 +571,7 @@ begin
     if phase<0.5
        then phase := -2*pi*phase
        else phase := 2*pi*(1-phase); // -pi<phase<+pi
-    if AngleEnDegre then phase := RadToDeg(phase); // degré/radian
+    if AngleEnDegre then phase := RadToDeg(phase); // degrÃ©/radian
     ParametreGr[1] := y0;
     ParametreGr[2] := a;
     ParametreGr[3] := periode;
@@ -588,7 +593,7 @@ begin
     parametreGr[1] := valeurY[debut];
     parametreGr[2] := valeurY[fin];
     parametreGr[3] := valeurX[i];
-// la dérivée en x=x0 vaut -(ymax-ymin)*b/(4*x0)
+// la dÃ©rivÃ©e en x=x0 vaut -(ymax-ymin)*b/(4*x0)
 // soit b=pente*4*x0/(ymin-ymax)
     for i := 1 to 2 do
         for j := 1 to 3 do systeme[i,j] := 0;
@@ -643,8 +648,8 @@ begin
 // periode=3 phase=4 tau=5 donne pulsation=3 lambda=4 phase=5 //
       phase := parametreGr[4];
       parametreGr[3] := 2*pi/parametreGr[3];
-// passage de période à pulsation : omega0=2pi/periode
-      if AngleEnDegre then parametreGr[3] := RadToDeg(parametreGr[3]); // degré/radian
+// passage de pÃ©riode Ã  pulsation : omega0=2pi/periode
+      if AngleEnDegre then parametreGr[3] := RadToDeg(parametreGr[3]); // degrÃ©/radian
       parametreGr[4] := 1/parametreGr[3]/parametreGr[5];
 // passage de constante de temps au facteur d'amortissement 1/tau=lambda*omega0
       parametreGr[5] := phase;
@@ -717,7 +722,7 @@ begin
     modeleOK := i>Milieu;
     if not modeleOK then exit;
     iDebut := i;
-    while (i<Nbre) and (abs(valeurY[i]-y0)<(a/2)) do dec(i);
+    while (i>debut) and (abs(valeurY[i]-y0)<(a/2)) do dec(i);
 //  Passage par maxi
     modeleOK := i>debut+3;
     if not modeleOK then exit;
@@ -733,12 +738,12 @@ begin
       zero := (y0-valeurY[pred(i)])*(y0-valeurY[succ(i)]);
       pente := valeurY[succ(i)]-valeurY[pred(i)];
     until ( (zero<0) and (pente>0) ) or (i=debut+2);
-         // premier passage par zéro montant ou non trouvé 
+         // premier passage par zÃ©ro montant ou non trouvÃ© 
     modeleOK := i>2;
     if not modeleOK then exit;
     phase := frac(valeurX[i]/periode); // phase en tour
     phase := -2*pi*phase;// -2.pi<phase<0
-    if AngleEnDegre then phase := RadToDeg(phase);// degré/radian
+    if AngleEnDegre then phase := RadToDeg(phase);// degrÃ©/radian
     ParametreGr[1] := y0;
     ParametreGr[2] := a;
     ParametreGr[3] := periode;
@@ -758,16 +763,16 @@ begin
          N := Nbre div 6;
          MaxLocal(4*N,5*N,t1,v1);
  // Pas la fin saturation possible
- // On laisse de côté le milieu de 2N à 4N
+ // On laisse de cÃ´tÃ© le milieu de 2N Ã  4N
          MaxLocal(N,2*N,t2,v2);
- // Pas le début bruit
+ // Pas le dÃ©but bruit
       end
       else begin
          N := NbreParPeriode div 2;
          MaxLocal(milieu+N,fin-N,t1,v1);
     // Pas la fin saturation possible
          MaxLocal(debut+N,milieu-N,t2,v2);
-         { Pas le début bruit }
+         { Pas le dÃ©but bruit }
       end;
    parametreGr[5] := (t2-t1)*ln(v2/v1);
    parametreGr[2] := v1*exp(-t1/parametreGr[5]);
@@ -778,7 +783,7 @@ var a : double;
     i : integer;
     ecart : double;
 begin
-     if changeDebutDemande then begin // préacquisition éventuelle
+     if changeDebutDemande then begin // prÃ©acquisition Ã©ventuelle
         ecart := abs(valeurY[fin]-valeurY[debut])/(fin-debut);
         while (debut<fin-2) and (abs(valeurY[debut+1])<ecart) do inc(debut);
      end;
@@ -810,7 +815,7 @@ begin
         then ParametreGr[1] := minY
         else ParametreGr[1] := maxY;
      a := abs(parametreGr[1]/exp(1));
-     if changeDebutDemande then begin // préacquisition éventuelle
+     if changeDebutDemande then begin // prÃ©acquisition Ã©ventuelle
         sauveDebut := debut;
         while (debut<fin) and (abs(valeurY[debut])<a) do inc(debut);
         i := debut;
@@ -893,7 +898,7 @@ begin
           end;
           else i := (debut+fin) div 2;
      end;
-     ParametreGr[2] := valeurX[i]; // fréquence de coupure
+     ParametreGr[2] := valeurX[i]; // frÃ©quence de coupure
 end;
 
 Procedure InitialiseFiltre2;
@@ -908,7 +913,7 @@ begin
      a := a/(n+1);
      ParametreGr[1] := a;
      if maxY>a
-        then i := posMaxY { résonance }
+        then i := posMaxY { rÃ©sonance }
         else begin
              if modeleDecibel
                 then a := a-3
@@ -927,11 +932,14 @@ begin
           else i := (debut+fin) div 2;
             end;
      end;
-     ParametreGr[2] := valeurX[i];// fréquence de coupure
-     ParametreGr[3] := maxY/a; // Q ou QdB approx
-     if modeleDecibel then
-        ParametreGr[3] := power(10,ParametreGr[3]/20);// Q
-     if not ModeleFacteurQualite then ParametreGr[3] := 1/2/ParametreGr[3]; { m }
+     ParametreGr[2] := valeurX[i];// frÃ©quence de coupure
+     if modeleDecibel
+        then ParametreGr[3] := power(10,(maxY-a)/20) // Q
+        else if a<>0
+           then ParametreGr[3] := maxY/a // Q approx
+           else ParametreGr[3] := 1;
+     if (not ModeleFacteurQualite) and (ParametreGr[3]<>0) then
+        ParametreGr[3] := 1/2/ParametreGr[3]; { m }
 end;
 
 Procedure InitialisePasseBande;
@@ -985,11 +993,11 @@ begin // InitialiseParametre
     indexY := indexNom(nY);
     setLength(valeurY,fin+1);
     copyVecteur(valeurY,grandeurs[indexY].valeur);
-    while isNan(valeurY[debut]) or
-          isNan(valeurX[debut])
+    while (debut<fin) and (isNan(valeurY[debut]) or
+          isNan(valeurX[debut]))
             do inc(debut);
-    while isNan(valeurY[fin]) or
-          isNan(valeurX[fin])
+    while (fin>debut) and (isNan(valeurY[fin]) or
+          isNan(valeurX[fin]))
             do dec(fin);
     maxX := valeurX[debut];
     minX := maxX;
@@ -1043,7 +1051,8 @@ var k,index : integer;
 begin
      for k := 1 to NbreParamMagnum[genre] do begin
          index := IndexToParam(indexNom(nomParam[k]));
-         P[index] := parametreGr[k]
+         if (index<>grandeurInconnue) and (index>=1) and (index<=MaxParametres) then
+            P[index] := parametreGr[k];
      end;
 end;
 
@@ -1052,7 +1061,8 @@ var k,index : integer;
 begin
      for k := 1 to NbreParamMagnum[genre] do begin
          index := IndexToParam(indexNom(nomParam[k]));
-         parametreGr[k] := P[index];
+         if (index<>grandeurInconnue) and (index>=1) and (index<=MaxParametres) then
+            parametreGr[k] := P[index];
      end;
 end;
 

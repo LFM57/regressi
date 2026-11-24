@@ -877,15 +877,21 @@ end; // SupprimePage
 Procedure Tpage.ResetDebutFin(i : codeIntervalle);
 begin
        debut[i] := 0;
+       if nmes<=0 then begin
+          fin[i] := 0;
+          exit;
+       end;
        fin[i] := pred(nmes);
        if (i<=NbreModele) and
           (fonctionTheorique[i].indexY<>grandeurInconnue) and
           (fonctionTheorique[i].indexX<>grandeurInconnue) then begin
-       while isNan(valeurVar[fonctionTheorique[i].indexY,debut[i]]) or
-             isNan(valeurVar[fonctionTheorique[i].indexX,debut[i]])
+       while (debut[i]<fin[i]) and
+             (isNan(valeurVar[fonctionTheorique[i].indexY,debut[i]]) or
+              isNan(valeurVar[fonctionTheorique[i].indexX,debut[i]]))
             do inc(debut[i]);
-       while isNan(valeurVar[fonctionTheorique[i].indexY,fin[i]]) or
-             isNan(valeurVar[fonctionTheorique[i].indexX,fin[i]])
+       while (fin[i]>debut[i]) and
+             (isNan(valeurVar[fonctionTheorique[i].indexY,fin[i]]) or
+              isNan(valeurVar[fonctionTheorique[i].indexX,fin[i]]))
             do dec(fin[i]);
        end;
 end;

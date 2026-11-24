@@ -811,6 +811,8 @@ begin
         then begin
              i := 0;
              codeErreurC := '';
+             posErreur := 0;
+             NbreParam := 0;
              NbreModele := 0;
              NbreFonctionSuper := 0;
              modifInverse := false;
