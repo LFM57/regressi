@@ -773,10 +773,14 @@ CloseFile(Datei);
 *)
 
 function valeur24bits(j : longint) : double;
+var val24 : integer;
 begin
-  result := (son8[j]+
-             256*(son8[j+1]+
-                  256*son8[j+2]))/8388608;
+  val24 := son8[j]+
+           256*(son8[j+1]+
+                256*son8[j+2]);
+  if val24 >= 8388608 then
+     val24 := val24 - 16777216;
+  result := val24/8388608;
 end;
 
 var NbreMaxPermis : longInt;
@@ -864,6 +868,7 @@ begin
         f24 : setLength(son8,FNbrePoints);
         f32 : setLength(son32,FNbrePoints div 4); // single 4 octets
      end;
+     if FNbrePoints > 0 then
      case formatWave of
         f8 : begin
            FNbrePoints := FileRead(Hfichier, son8[0], FNbrePoints);
@@ -873,7 +878,7 @@ begin
            FNbrePoints := FNbrePoints div 2;
         end;
         f24 : begin
-           FNbrePoints := FileRead(Hfichier, son8, FNbrePoints);
+           FNbrePoints := FileRead(Hfichier, son8[0], FNbrePoints);
            FNbrePoints := FNbrePoints div 3;
         end;
         f32 : begin

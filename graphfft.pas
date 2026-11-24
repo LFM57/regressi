@@ -596,8 +596,11 @@ begin // AjouteCourbeFreq
      if grandeurs[indexY].fonct.genreC<>g_definitionFiltre then begin
           if NbreHarmoniqueOptimise then begin
                 harmMax := precisionFFT*Aymax;
-                while (Ay[Nbre]<harmMax) do dec(Nbre);
+                if Nbre > High(Ay) then Nbre := High(Ay);
+                while (Nbre > 1) and (Ay[Nbre]<harmMax) do dec(Nbre);
                 Nbre := Puiss2Sup(Nbre);
+                if Nbre > Length(Ax) then Nbre := Length(Ax);
+                if Nbre > Length(Ay) then Nbre := Length(Ay);
           end;
           if freqMax<Ax[pred(Nbre)] then freqMax := Ax[pred(Nbre)];
 // en cas de zoom (avec non puissance de 2)
@@ -791,7 +794,11 @@ begin // SetCoordonneeFFT
               end;
            if not useDefautX then
               for j := 0 to pred(courbes.count) do with courbes[j] do
-                  finC := round(finC*freqMax/valX[finc]);
+                  if (finC >= 0) and (finC <= High(valX)) and (valX[finC] > 0) then begin
+                     finC := round(finC*freqMax/valX[finc]);
+                     if finC > High(valX) then finC := High(valX);
+                     if finC > High(valY) then finC := High(valY);
+                  end;
         end;
         modif := [];
     end; // GrapheFrequence
@@ -918,12 +925,19 @@ begin with GrapheFrequence do begin
      for i := 0 to pred(courbes.count) do
          with courbes.items[i] do begin
            debutC := 1;
-           j := 0;
-           repeat inc(j) until valY[j]=0;
-           finC := j-1;
-           if trace=[trLigne] then
-              // cas de la courbe enveloppe à traiter
-              finC := MaxMaxVecteur div 2;
+           j := High(valY);
+           if High(valX) < j then j := High(valX);
+           if j < 0 then begin
+              finC := 0;
+              continue;
+           end;
+           if trace=[trLigne] then begin
+              while (j > debutC) and (valX[j] = 0) and (valY[j] = 0) do dec(j);
+              finC := j;
+           end else begin
+              while (j > debutC) and (valY[j] = 0) do dec(j);
+              finC := j;
+           end;
      end;
      PaintBoxFrequence.repaint
 end end;
