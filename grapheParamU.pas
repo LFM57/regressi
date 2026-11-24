@@ -111,6 +111,9 @@ type
       destructor Destroy; override;
   end;
 
+var
+  grapheParam : TgrapheParam = nil;
+
 implementation
 
 uses
