@@ -11,6 +11,7 @@ object OptionModeleDlg: TOptionModeleDlg
   FormFactor.Width = 1920
   FormFactor.Height = 1200
   FormFactor.Devices = [Desktop]
+  OnActivate = FormActivate
   OnShow = FormShow
   Left = 452
   Top = 210
@@ -105,6 +106,25 @@ object OptionModeleDlg: TOptionModeleDlg
         Text = 'Valeur initiale ('#233'qua. diff.)'
         TextSettings.Font.Size = 13.000000000000000000
       end
+      object Label1: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 143.000000000000000000
+        Size.Width = 249.000000000000000000
+        Size.Height = 17.500000000000000000
+        Size.PlatformDefault = False
+        Text = 'Nombre d'#39'it'#233'rations Monte-Carlo'
+        TabOrder = 2
+      end
+      object NbreMCSE: TSpinBox
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 3
+        Cursor = crIBeam
+        Min = 1024.000000000000000000
+        Max = 16384.000000000000000000
+        Value = 1024.000000000000000000
+        Position.X = 112.000000000000000000
+        Position.Y = 168.000000000000000000
+      end
     end
     object TabSheet1: TTabItem
       CustomIcon = <
@@ -140,6 +160,15 @@ object OptionModeleDlg: TOptionModeleDlg
         TabOrder = 1
         Text = 'Inter/Extrapolation des mod'#232'les'
         TextSettings.Font.Size = 13.000000000000000000
+      end
+      object IntersectionCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 54.000000000000000000
+        Size.Width = 217.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Trac'#233' des intersections'
       end
     end
     object CouleurTS: TTabItem

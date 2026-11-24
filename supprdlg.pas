@@ -1,4 +1,4 @@
-unit supprdlg;
+ï»¿unit supprdlg;
 
 interface
 
@@ -131,7 +131,7 @@ begin
               for i := succ(index) to pred(NbreGrandeurs) do with grandeurs[i].fonct do
                   if (genreC<>g_experimentale) and
                      (index in depend) then expression := '';
-// désactiver toutes les grandeurs calculées fonction de grandeurs[index]
+// dÃ©sactiver toutes les grandeurs calculÃ©es fonction de grandeurs[index]
              SupprimeGrandeurE(index);
              ModifFichier := true;
              FRegressiMain.WMRegMaj(MajGrandeur);
@@ -168,7 +168,12 @@ begin
                   end
                   else begin
                      NomGrandeurTri := grandeurs[index].nom;
-                  end;
+                     indexTri := index;
+                  end
+               else begin
+                    NomGrandeurTri := grandeurs[0].nom;
+                    indexTri := 0;
+               end;
                for p := 1 to NbrePages do begin
                    pages[p].TriAfaire := true;
                    pages[p].tri;

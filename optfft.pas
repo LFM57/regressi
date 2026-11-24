@@ -1,4 +1,4 @@
-unit optfft;
+﻿unit optfft;
 
 interface
 
@@ -143,7 +143,7 @@ procedure TOptionsFFTDlg.PagesBtnClick(Sender: TObject);
 begin
      selectPageDlg := TselectPageDlg.Create(self);
      SelectPageDlg.appelPrint := false;
-     SelectPageDlg.caption := 'Choix des pages affich�es sur le graphe';
+     SelectPageDlg.caption := 'Choix des pages affichées sur le graphe';
      CentreForm(SelectPageDlg);
      SelectPageDlg.showModal;
      selectPageDlg.Free;

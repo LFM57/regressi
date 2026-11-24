@@ -1,4 +1,4 @@
-unit regPrint;
+﻿unit regPrint;
 
 interface
 
@@ -86,7 +86,7 @@ begin
           PrintLine(enTeteEdit.text,debutImp);
           if GrandeursCB.IsChecked  then
              PrintList(Fvaleurs.Memo.lines,'',debutImp);
-// Mod�lisation
+// Modélisation
           if ModeleVariabCB.isVisible and ModeleVariabCB.IsChecked then begin
              PrintList(TexteModele,stModelisation,debutImp);
              for page := 1 to NbrePages do
@@ -144,7 +144,7 @@ begin
     grapheFourierCB.Visible := FgrapheFFT<>nil;
     grapheStatCB.Visible := statOptDlg<>nil;
     ModeleVariabCB.Visible := FRegressiMain.panelModele.visible or
-            (ModeleDefini in etatModele);
+            (ModeleDefini in graphe.etatModele);
 end;
 
 

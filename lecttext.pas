@@ -93,6 +93,7 @@ begin with dessinLoc do begin
          color := CouleurCombo.selectedColor;
          couleurFond := OpaqueColorBox.selectedColor;
          text := Edit.text;
+         texteBrut := Edit.text;
          avecCadre := CadreCB.isChecked;
          font.Size := spinEditHauteur.value;
 end end;

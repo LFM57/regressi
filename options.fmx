@@ -4,7 +4,7 @@ object OptionsDlg: TOptionsDlg
   BorderIcons = [biSystemMenu]
   BorderStyle = Single
   Caption = 'Options'
-  ClientHeight = 334
+  ClientHeight = 390
   ClientWidth = 455
   Position = ScreenCenter
   FormFactor.Width = 1920
@@ -20,7 +20,7 @@ object OptionsDlg: TOptionsDlg
     Align = Client
     FullSize = True
     Size.Width = 352.000000000000000000
-    Size.Height = 334.000000000000000000
+    Size.Height = 390.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 20.000000000000000000
     TabIndex = 0
@@ -28,15 +28,17 @@ object OptionsDlg: TOptionsDlg
     TabPosition = Top
     Sizes = (
       352s
-      314s
+      370s
       352s
-      314s)
+      370s
+      352s
+      370s)
     object CalculTS: TTabItem
       CustomIcon = <
         item
         end>
       IsSelected = True
-      Size.Width = 175.000000000000000000
+      Size.Width = 117.000000000000000000
       Size.Height = 20.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = ''
@@ -139,7 +141,7 @@ object OptionsDlg: TOptionsDlg
         item
         end>
       IsSelected = False
-      Size.Width = 175.000000000000000000
+      Size.Width = 117.000000000000000000
       Size.Height = 20.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = ''
@@ -269,7 +271,7 @@ object OptionsDlg: TOptionsDlg
           'L'#39'utilisation des ellipses supposent que les incertitudes '
           'soient donn'#233'es sous forme d'#39#233'cart-type')
         Align = Bottom
-        Position.Y = 212.000000000000000000
+        Position.Y = 268.000000000000000000
         Size.Width = 352.000000000000000000
         Size.Height = 55.000000000000000000
         Size.PlatformDefault = False
@@ -303,7 +305,7 @@ object OptionsDlg: TOptionsDlg
       end
       object CoeffEllipseRG: TGroupBox
         Align = Bottom
-        Position.Y = 267.000000000000000000
+        Position.Y = 323.000000000000000000
         Size.Width = 352.000000000000000000
         Size.Height = 47.000000000000000000
         Size.PlatformDefault = False
@@ -322,23 +324,90 @@ object OptionsDlg: TOptionsDlg
         object e95RB: TRadioButton
           Position.X = 100.000000000000000000
           Position.Y = 20.000000000000000000
-          Size.Width = 69.000000000000000000
+          Size.Width = 81.000000000000000000
           Size.Height = 19.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          Text = '95%'
+          Text = '2'#963' 95%'
           OnChange = e95RBChange
         end
         object e99RB: TRadioButton
           Position.X = 200.000000000000000000
           Position.Y = 20.000000000000000000
-          Size.Width = 81.000000000000000000
+          Size.Width = 89.000000000000000000
           Size.Height = 19.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
-          Text = '99%'
+          Text = '3'#963' 99,7%'
           OnChange = e99RBChange
         end
+      end
+      object Label2: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 192.000000000000000000
+        Text = 'R'#233'ticule'
+        TabOrder = 14
+      end
+      object LigneCombo: TComboBox
+        Items.Strings = (
+          'Solid'
+          'Dash'
+          'Dot'
+          'Dash-Dot'
+          'Dash-Dot-Dot')
+        ItemHeight = 16.000000000000000000
+        ListBoxResource = 'transparentlistboxstyle'
+        Position.X = 8.000000000000000000
+        Position.Y = 217.000000000000000000
+        Size.Width = 110.000000000000000000
+        Size.Height = 23.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 15
+        OnChange = ModifGrapheClick
+      end
+      object ReticuleCB: TCheckBox
+        StyledSettings = [FontColor]
+        Position.X = 160.000000000000000000
+        Position.Y = 222.000000000000000000
+        Size.Width = 97.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 16
+        Text = 'Complet'
+        TextSettings.Font.Size = 13.000000000000000000
+        OnClick = ModifGrapheClick
+      end
+    end
+    object CSVTS: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 118.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Fichiers CSV'
+      ExplicitSize.cx = 118.000000000000000000
+      ExplicitSize.cy = 20.000000000000000000
+      object ValeursSeulesCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 64.000000000000000000
+        Size.Width = 233.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Exporter uniquement les valeurs'
+      end
+      object VraiCSVCB: TCheckBox
+        Position.X = 8.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 345.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'S'#233'parateur donn'#233'es=virgule, s'#233'parateur d'#233'cimal=point'
       end
     end
   end
@@ -346,7 +415,7 @@ object OptionsDlg: TOptionsDlg
     Align = Right
     Position.X = 352.000000000000000000
     Size.Width = 103.000000000000000000
-    Size.Height = 334.000000000000000000
+    Size.Height = 390.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 3
     object OKBtn: TButton

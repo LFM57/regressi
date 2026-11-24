@@ -1,4 +1,4 @@
-unit varKeyb;
+﻿unit varKeyb;
 
 interface
 
@@ -102,7 +102,7 @@ end;
 procedure TNewClavierDlg.FormShow(Sender: TObject);
 begin
      inherited;
- //    gridVariab.focusedCell := GridVariab.Cells(0,1);
+     gridVariab.focusedCell := makeCell(0,1);
      TriCB.IsChecked  := not DataTrieGlb;
      GridVariab.SetFocus;
 end;
@@ -131,7 +131,7 @@ if agrid.cells[0,i]<>'' then begin
               UniteOK := U.correct;
               U.free;
               if not UniteOK and not OKReg(OkUniteInconnue,HELP_Unites) then begin
-             //      agrid.FocusedCell := agrid.Cell(1,i);
+                   agrid.FocusedCell := makeCell(1,i);
                    resetEnTete;
                    Agrid.setFocus;
                    exit;
@@ -139,13 +139,13 @@ if agrid.cells[0,i]<>'' then begin
                v := ajouteExperimentale(newNom,genre);
                grandeurs[v].fonct.expression := agrid.cells[2,i];
                grandeurs[v].NomUnite := agrid.cells[1,i];
-               if '�'=Grandeurs[v].nomUnite then AngleEnDegre := true;
+               if '°'=Grandeurs[v].nomUnite then AngleEnDegre := true;
                if 'rad'=Grandeurs[v].nomUnite then AngleEnDegre := false;
          end
          else begin
               resetEnTete;
               afficheErreur(codeErreurC,0);
-         //     agrid.FocusedCell := agrid.cell(0,i);
+              agrid.FocusedCell := makeCell(0,i);
               Agrid.SetFocus;
               exit;
          end;

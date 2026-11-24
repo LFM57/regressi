@@ -125,7 +125,7 @@ object OptionCouleurDlg: TOptionCouleurDlg
         Size.Height = 24.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 3
-        OnClick = LigneComboClick
+        OnChange = LigneComboChange
         object ListBoxItem1: TListBoxItem
           TabOrder = 0
           Text = 'Plein'
@@ -151,7 +151,7 @@ object OptionCouleurDlg: TOptionCouleurDlg
         Size.Height = 24.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 4
-        OnClick = PointComboClick
+        OnChange = PointComboChange
         object ListBoxItem15: TListBoxItem
           TabOrder = 0
           Text = 'Croix'
@@ -590,7 +590,7 @@ object OptionCouleurDlg: TOptionCouleurDlg
         Size.Height = 24.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 4
-        OnClick = LigneComboBisClick
+        OnChange = LigneComboBisChange
         object ListBoxItem5: TListBoxItem
           TabOrder = 0
           Text = 'Plein'
@@ -616,7 +616,7 @@ object OptionCouleurDlg: TOptionCouleurDlg
         Size.Height = 24.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 5
-        OnClick = PointComboBisClick
+        OnChange = PointComboBisChange
         object ListBoxItem9: TListBoxItem
           TabOrder = 0
           Text = 'Croix'

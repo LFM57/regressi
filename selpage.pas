@@ -53,7 +53,7 @@ var
 
 implementation
 
-uses regutil, Regmain;
+uses regutil, grapheVariabU, Regmain;
 
 {$R *.FMX}
 
@@ -91,6 +91,7 @@ begin
          if pages[p].active then inc(N);
      end;
      if N=0 then pages[pageCourante].active := true;
+     graphe.superposePage := N>1;
      if not pages[pageCourante].active then begin
         p := 1;
         while (p<NbrePages) and not pages[p].active do inc(p);
@@ -118,6 +119,7 @@ procedure TSelectPageDlg.AllOKBtnClick(Sender: TObject);
 var p : codePage;
 begin
      for p := 1 to NbrePages do pages[p].active := true;
+     graphe.superposePage := true;
      FRegressiMain.WMRegMaj(MajSelectPage);
 end;
 
@@ -126,6 +128,7 @@ var p : codePage;
 begin
      for p := 1 to NbrePages do pages[p].active := false;
      pages[pageCourante].active := true;
+     graphe.superposePage := false;
      FRegressiMain.WMRegMaj(MajSelectPage);
 end;
 

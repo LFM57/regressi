@@ -1,4 +1,4 @@
-unit coordphys;
+ï»¿unit coordphys;
 
 interface
 
@@ -192,6 +192,7 @@ TFcoordonneesPhys = class(TForm)
      Transfert : TtransfertGraphe;
      modeleEnCours,modelePermis : boolean;
      Agraphe : TgrapheReg;
+     ListeConst : boolean;
   end;
 
 var
@@ -273,7 +274,7 @@ end;
 procedure TFcoordonneesPhys.PagesBtnClick(Sender: TObject);
 begin
      selectPageDlg := TselectPageDlg.Create(self);
-     SelectPageDlg.caption := 'Choix des pages affichées sur le graphe';
+     SelectPageDlg.caption := 'Choix des pages affichÃ©es sur le graphe';
      SelectPageDlg.appelPrint := false;
      CentreForm(SelectPageDlg);
      SelectPageDlg.showModal;
@@ -373,7 +374,7 @@ begin with transfert do begin
       if (trVitesse in trace[c]) or (trAcceleration in trace[c]) then
          if pages[pageCourante].nmes>256
               then include(trace[c],trLigne) // sinon illisible
-              else include(trace[c],trPoint); // points entrés à la main
+              else include(trace[c],trPoint); // points entrÃ©s Ã  la main
 end end; // verifVitesse
 
 var i,mondeLoc : integer;
@@ -429,8 +430,10 @@ var m : indiceMonde;
     code : integer;
     i : integer;
 begin
-     courbeCourante := succ(variableLB.tabIndex);
      if activation then exit;
+     if variableLB.tabIndex >= 0
+        then courbeCourante := succ(variableLB.tabIndex)
+        else courbeCourante := 1;
      MajOptions;
 with transfert do begin
      NonAnalyseur := not(AnalyseurCB.IsChecked);
@@ -458,12 +461,11 @@ with transfert do begin
      mondeCB.itemIndex := m-mondeY;
      minidbEdit.Visible := grad[m]=gdB;
      minidbEdit.value := round(minidb[m]);
-     mondeCB.visible := NonAnalyseur;
      zeroYCB.IsChecked  := zero[m];
      zeroYCB.visible := modifiable and not(PolaireCB.IsChecked) and (grad[m]<>gLog);
      graduationY.itemIndex := ord(grad[m]);
      graduationY.visible := modifiable;
-     mondeCB.visible := modifiable;
+     mondeCB.visible := NonAnalyseur and modifiable;
      if (nomY[courbeCourante]<>'') and (grad[m]<>gLin) then begin
            OrthonormeCB.enabled := false;
            OrthonormeCB.IsChecked  := false;
@@ -537,7 +539,7 @@ begin with transfert do begin
          indexY := 2;
          nomY[CourbeCourante] := getNomCoord(listeVar[indexY]);
       end;
-      OptionsGB.Text  := 'Options de représentation de '+
+      OptionsGB.Text  := 'Options de reprÃ©sentation de '+
          nomY[CourbeCourante]+'('+
          nomX[CourbeCourante]+')';
       LigneRG.itemIndex := ord(transfert.ligne[courbeCourante]);
@@ -561,7 +563,7 @@ begin with transfert do begin
       if trace[CourbeCourante]=[] then begin
          if pages[pageCourante].nmes>256
               then trace[CourbeCourante] := [trLigne] // sinon illisible
-              else trace[CourbeCourante] := [trPoint]; // points entrés à la main
+              else trace[CourbeCourante] := [trPoint]; // points entrÃ©s Ã  la main
          PointCB.IsChecked  := trPoint in trace[CourbeCourante];
          LigneCB.IsChecked  := trLigne in trace[CourbeCourante];
       end;
@@ -620,7 +622,9 @@ begin with transfert do begin
                 else iMonde[courbeCourante] := mondeDroit
            else iMonde[courbeCourante] := mondeY;
      inc(nbreCourbes);
-     Maj;
+     if VariableLB.TabIndex = CourbeCourante - 1
+        then Maj
+        else VariableLB.TabIndex := CourbeCourante - 1;
 end end;
 
 procedure TFcoordonneesPhys.DeleteBtnClick(Sender: TObject);
@@ -632,8 +636,9 @@ begin with transfert do  begin
      iMonde[i] := mondeY;
      trace[i] := [];
      dec(nbreCourbes);
-     VariableLB.tabIndex := 0;
-     Maj;
+     if VariableLB.tabIndex = 0
+        then Maj
+        else VariableLB.tabIndex := 0;
 end end;
 
 Procedure TFcoordonneesPhys.setNom;
@@ -683,6 +688,7 @@ procedure TFcoordonneesPhys.FormCreate(Sender: TObject);
 begin
     ListeVar := TstrListe.create;
     Transfert := TtransfertGraphe.Create;
+    ListeConst := false;
 end;
 
 procedure TFcoordonneesPhys.FormDestroy(Sender: TObject);
@@ -709,13 +715,28 @@ with transfert do begin
     DimPointSE.Value := DimPointVGA;
     PasPointSE.Value := PasPoint;
     ListeVar.Clear;
-    for i := 0 to pred(NbreGrandeurs) do with grandeurs[i] do
+    if listeConst then begin
+      for i := 0 to pred(NbreGrandeurs) do with grandeurs[i] do
+          if genreG=constante then ListeVar.add(nom);
+      for i := 1 to NbreParam do with parametres[i] do
+          ListeVar.add(nom);
+      if NbreConstGlb>0 then begin
+         ListeVar.add(SeparateurConst);
+         for i := 0 to pred(NbreGrandeurs) do with grandeurs[i] do
+             if genreG=constanteGlb then ListeVar.add(RepereConst+nom);
+      end;
+    end
+    else begin
+      for i := 0 to pred(NbreGrandeurs) do with grandeurs[i] do
           if genreG=variable then ListeVar.add(nom);
-    if (NbreConstGlb+NbreConst)>0 then ListeVar.add(SeparateurConst);
-    for i := 0 to pred(NbreGrandeurs) do with grandeurs[i] do
-          if genreG=constante then ListeVar.add(RepereConst+nom);
-    for i := 0 to pred(NbreGrandeurs) do with grandeurs[i] do
-          if genreG=constanteGlb then ListeVar.add(RepereConst+nom);
+      if (NbreConstGlb+NbreConst)>0 then begin
+         ListeVar.add(SeparateurConst);
+         for i := 0 to pred(NbreGrandeurs) do with grandeurs[i] do
+             if genreG=constante then ListeVar.add(RepereConst+nom);
+         for i := 0 to pred(NbreGrandeurs) do with grandeurs[i] do
+             if genreG=constanteGlb then ListeVar.add(RepereConst+nom);
+      end;
+    end;
     ListeX.items := listeVar;
     ListeY.items := listeVar;
     memeX := true;
@@ -760,12 +781,11 @@ with transfert do begin
     SuperPagesCB.visible := (NbrePages>1);
     SuperPagesCB.IsChecked  := (NbrePages>1) and superPage;
     courbeCourante := 1;
-    variableLB.tabIndex := 0;
-    activation := false;
     GraduationZeroCB.IsChecked  := OgZeroGradue in optionGr;
     superPagesCB.visible := (nbrePages>0);
     superPagesCB.IsChecked  :=  superPagesCB.visible and superPage;
     pagesGB.visible := superPagesCB.isChecked;
+    activation := false;
     Maj;
     SetNom;
 end end;
@@ -887,7 +907,6 @@ end;
 procedure TFcoordonneesPhys.ZeroXCBChange(Sender: TObject);
 begin
     Transfert.zero[mondeX] := zeroXCB.isChecked;
-    Maj;
 end;
 
 procedure TFcoordonneesPhys.ZeroYCBChange(Sender: TObject);
@@ -895,7 +914,6 @@ var m : indiceMonde;
 begin
      m := transfert.iMonde[courbeCourante];
      Transfert.zero[m] := zeroYCB.isChecked;
-     Maj;
 end;
 
 procedure TFcoordonneesPhys.LigneRGChange(Sender: TObject);

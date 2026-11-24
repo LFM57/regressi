@@ -133,12 +133,12 @@ type
     procedure FormActivate(Sender: TObject);
     procedure SetModif(Sender: TObject);
     procedure OKBtnClick(Sender: TObject);
-    procedure PointComboClick(Sender: TObject);
-    procedure LigneComboClick(Sender: TObject);
+    procedure PointComboChange(Sender: TObject);
+    procedure LigneComboChange(Sender: TObject);
     procedure CouleurComboClick(Sender: TObject);
     procedure ResetBtnClick(Sender: TObject);
-    procedure PointComboBisClick(Sender: TObject);
-    procedure LigneComboBisClick(Sender: TObject);
+    procedure PointComboBisChange(Sender: TObject);
+    procedure LigneComboBisChange(Sender: TObject);
     procedure CouleurComboBisClick(Sender: TObject);
     procedure CourbeSEClick(Sender: TObject);
     procedure PageSEChange(Sender: TObject);
@@ -231,12 +231,12 @@ begin
     end;
 end;
 
-procedure TOptionCouleurDlg.PointComboClick(Sender: TObject);
+procedure TOptionCouleurDlg.PointComboChange(Sender: TObject);
 begin
      MotifPages[round(PageSE.value)] := Tmotif(PointCombo.itemIndex)
 end;
 
-procedure TOptionCouleurDlg.LigneComboClick(Sender: TObject);
+procedure TOptionCouleurDlg.LigneComboChange(Sender: TObject);
 begin
      PstylePages[round(PageSE.value)] := TStrokeDash(LigneCombo.itemIndex)
 end;
@@ -278,7 +278,7 @@ begin
          CouleurModele[tag] := color
 end;
 
-procedure TOptionCouleurDlg.PointComboBisClick(Sender: TObject);
+procedure TOptionCouleurDlg.PointComboBisChange(Sender: TObject);
 begin
      MotifInit[round(CourbeSE.value)] := Tmotif(PointComboBis.itemIndex);
      if Graphe<>nil then
@@ -286,7 +286,7 @@ begin
      Modification := true;
 end;
 
-procedure TOptionCouleurDlg.LigneComboBisClick(Sender: TObject);
+procedure TOptionCouleurDlg.LigneComboBisChange(Sender: TObject);
 begin
      PstyleInit[round(CourbeSE.value)] := TStrokeDash(LigneComboBis.itemIndex);
      if Graphe<>nil then

@@ -1,4 +1,4 @@
-unit options;
+ï»¿unit options;
 
 interface
 
@@ -73,6 +73,12 @@ type
     e99RB: TRadioButton;
     ChiffresSignifSE: TSpinBox;
     Label3: TLabel;
+    CSVTS: TTabItem;
+    ValeursSeulesCB: TCheckBox;
+    VraiCSVCB: TCheckBox;
+    LigneCombo: TComboBox;
+    ReticuleCB: TCheckBox;
+    Label2: TLabel;
     procedure NbreSpinButtonDownClick(Sender: TObject);
     procedure NbreSpinButtonUpClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
@@ -140,6 +146,11 @@ begin
               then e95RB.ischecked := true
               else e99RB.isChecked := true;
        GraduationZeroCB.IsChecked  := OgZeroGradue in optionGrapheDefault;
+       ReticuleCB.IsChecked := withReticule;
+       if ord(PstyleReticule) < LigneCombo.Items.Count then
+          LigneCombo.itemIndex := ord(PstyleReticule);
+       VraiCSVCB.IsChecked := oCSV_vrai;
+       ValeursSeulesCB.IsChecked := oCSV_valeursSeules;
 end;
 
 procedure TOptionsDlg.OKBtnClick(Sender: TObject);
@@ -153,18 +164,19 @@ begin
     Rini.WriteInteger('PenStyle','Reticule',ord(PstyleReticule));
     Rini.WriteInteger('Color','Reticule',colorToInt(couleurReticule));
     Rini.WriteInteger('Color','FondReticule',colorToInt(FondReticule));
-    Rini.writeInteger('Dérivée','Nombre',NbrePointDerivee);
-    Rini.writeBool('Dérivée','Extrapole',ExtrapoleDerivee);
+    Rini.writeInteger('DÃ©rivÃ©e','Nombre',NbrePointDerivee);
+    Rini.writeBool('DÃ©rivÃ©e','Extrapole',ExtrapoleDerivee);
     Rini.writeInteger('Calcul','OrdreFiltrage',OrdreFiltrage);
     Rini.writeBool('Calcul','Cosinus',ModeleCosinus);
     Rini.writeInteger('Point','Taille',dimPointVGA);
     Rini.writeInteger('Color','Axe',colorToInt(couleurGrille));
-    Rini.writeInteger('Dérivée','Degré',DegreDerivee);
+    Rini.writeInteger('DÃ©rivÃ©e','DegrÃ©',DegreDerivee);
     Rini.writeInteger('Graphe','ReperePage',ord(reperePage));
     Rini.writeInteger('Format','Chiffres',Precision);
     Rini.writeBool('Graphe','ZeroGradue',OgZeroGradue in OptionGrapheDefault);
     Rini.writeBool('FFT','Optimise',NbreHarmoniqueOptimise);
-    Rini.writeBool('Graphe','Ellipse',TraceEllipse);       
+    Rini.writeBool('Graphe','Ellipse',TraceEllipse);
+    Rini.writeBool('Graphe','Intersection',TraceIntersection);
     Rini.WriteBool('Regressi','AjusteAutoLin',true);
     Rini.WriteBool('Regressi','DataTrie',DataTrieGlb);
     Rini.WriteBool('Regressi','UnitePar',UniteParenthese);
@@ -176,6 +188,8 @@ begin
     Rini.writeBool('Calcul','Cosinus',ModeleCosinus);
     Rini.writeInteger('Graphe','WidthEcran',round(penWidthEcran));
     Rini.DeleteKey('Impression','Bold');
+    Rini.WriteBool('CSV','Vrai',oCSV_vrai);
+    Rini.WriteBool('CSV','Valeurs',oCSV_valeursSeules);
     finally
     Rini.free;
     end;
@@ -185,6 +199,8 @@ end;
 begin // OKBtnClick
      UniteParenthese := uniteParCB.ischecked;
      FichierTrie := DataTrieGlb;
+     oCSV_vrai := VraiCSVCB.isChecked;
+     oCSV_valeursSeules := ValeursSeulesCB.isChecked;
      if GraduationZeroCB.ischecked
         then include(optionGrapheDefault,OgZeroGradue)
         else exclude(optionGrapheDefault,OgZeroGradue);
@@ -205,6 +221,9 @@ begin // OKBtnClick
      if sigmaRB.isChecked then coeffEllipse := 1; // 68 %
      if e95RB.IsChecked then coeffEllipse := 1.96; // 95 %
      if e99RB.isChecked then coeffEllipse := 2.58; // 99 %
+     if LigneCombo.itemIndex >= 0 then
+        PstyleReticule := TStrokeDash(LigneCombo.itemIndex);
+     withReticule := ReticuleCB.isChecked;
      {$IFNDEF store}
      SauveOptions;
      {$ENDIF}
@@ -277,18 +296,21 @@ exit;
   AngleEnDegre := Rini.ReadBool('Calcul','Degre',true);
   ModeleDecibel := Rini.ReadBool('Calcul','Decibel',false);
   ModeleFacteurQualite := Rini.ReadBool('Calcul','Qualite',true);
-  ExtrapoleDerivee := Rini.ReadBool('Dérivée','Extrapole',true);
+  ExtrapoleDerivee := Rini.ReadBool('DÃ©rivÃ©e','Extrapole',true);
   NbreHarmoniqueOptimise := Rini.ReadBool('FFT','Optimise',false);
   DimPointVGA := Rini.ReadInteger('Point','Taille',4);
   DataTrieGlb := Rini.ReadBool('Regressi','DataTrie',false);
   UniteParenthese := Rini.ReadBool('Regressi','UnitePar',UniteParenthese);
   penWidthEcran := Rini.readInteger('Graphe','WidthEcran',2);
   Precision := Rini.ReadInteger('Format','Chiffres',4);
-  NbrePointDerivee := Rini.ReadInteger('Dérivée','Nombre',5);
+  NbrePointDerivee := Rini.ReadInteger('DÃ©rivÃ©e','Nombre',5);
   GraduationPi := Rini.ReadBool('Regressi','GraduationPi',true);
   TraceEllipse := Rini.ReadBool('Graphe','Ellipse',false);
-  reperePage := TreperePage(Rini.ReadInteger('graphe','ReperePage',0));
-  for i := 0 to pred(NbreCouleur) do begin
+  TraceIntersection := Rini.ReadBool('Graphe','Intersection',false);
+  oCSV_vrai := Rini.ReadBool('CSV','Vrai',true);
+  oCSV_valeursSeules := Rini.ReadBool('CSV','Valeurs',false);
+  reperePage := TreperePage(Rini.ReadInteger('graphe','ReperePage',ord(reperePage)));
+  for i := 0 to pred(MaxPagesGr) do begin
       litColor(Rini,'C'+IntToStr(i),couleurPages[i]);
       PstylePages[i] := TStrokeDash(Rini.ReadInteger('PenStyle','C'+IntToStr(i),ord(PstylePages[i])));
       MotifPages[i] := Tmotif(Rini.ReadInteger('PointStyle','C'+IntToStr(i),ord(MotifPages[i])));
@@ -351,7 +373,7 @@ begin
     Rini := TIniFile.create(registreReg);
     try
     with RIni do begin
-    for i := 0 to pred(NbreCouleur) do begin
+    for i := 0 to pred(MaxPagesGr) do begin
         WriteInteger('Color','C'+IntToStr(i),ColorToInt(couleurPages[i]));
         WriteInteger('PenStyle','C'+IntToStr(i),ord(PstylePages[i]));
         WriteInteger('PointStyle','C'+IntToStr(i),ord(MotifPages[i]));

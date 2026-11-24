@@ -76,6 +76,8 @@ object ModifDlg: TModifDlg
     Text = 'Nombre de d'#233'cimales'
   end
   object IncertitudeHelpBtn: TButton
+    Images = ImagesData.ImagesList
+    ImageIndex = 1
     Position.X = 363.000000000000000000
     Position.Y = 152.000000000000000000
     Size.Width = 23.000000000000000000

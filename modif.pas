@@ -1,4 +1,4 @@
-unit modif;
+ï»¿unit modif;
 
 interface
 
@@ -140,7 +140,7 @@ begin
        grandeurModif.nom := newNom;
        if indexV<MaxGrandeurs then begin
           FRegressiMain.WMregmaj(MajNom);
-          oldFormatU := grandeurModif.formatU; { mise à jour faite par majNom }
+          oldFormatU := grandeurModif.formatU; { mise Ã  jour faite par majNom }
        end;
 end;
 
@@ -213,7 +213,7 @@ end; // OKBtnClick
 procedure TModifDlg.PrecisionCBChange(Sender: TObject);
 const
      text : array[1..5] of string =
-          ('chiffres','décimales','chiffres',
+          ('chiffres','dÃ©cimales','chiffres',
            'bits','bits');
      Min : array[1..5] of integer = (2,0,2,1,1);
      Max : array[1..5] of integer = (12,12,12,8,8);

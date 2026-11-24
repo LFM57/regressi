@@ -24,6 +24,8 @@ Uses
   FMX.Edit,
   FMX.Platform,
   FMX.Controls.Presentation,
+  FMX.EditBox,
+  FMX.Spinbox,
 
   aidekey,
   compile,
@@ -64,10 +66,14 @@ type
     ColorComboBox6: TColorComboBox;
     ColorComboBox7: TColorComboBox;
     ColorComboBox8: TColorComboBox;
+    IntersectionCB: TCheckBox;
+    Label1: TLabel;
+    NbreMCSE: TSpinBox;
     procedure OKBtnClick(Sender: TObject);
     procedure OptionsBtnClick(Sender: TObject);
     procedure ColorBox1Change(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
   private
   public
@@ -83,6 +89,11 @@ uses optcolordlg, AideU;
 
 {$R *.FMX}
 
+procedure TOptionModeleDlg.FormActivate(Sender: TObject);
+begin
+     NbreMCSE.Value := NbreMC;
+end;
+
 procedure TOptionModeleDlg.FormShow(Sender: TObject);
 var i,j : integer;
 begin
@@ -92,6 +103,8 @@ begin
      ajusteOrigineCB.IsChecked  := ajusteOrigine;
 //     chi2CB.Visible := pages[pageCourante].chi2Permis;
      chi2CB.IsChecked  := traceEllipse;
+     IntersectionCB.IsChecked := traceIntersection;
+     NbreMCSE.Value := NbreMC;
      for i := 0 to pred(ComponentCount) do
         if Components[i] is TColorComboBox then begin
            j := TColorComboBox(Components[i]).tag;
@@ -108,7 +121,9 @@ begin
         then include(DlgGraphique.OptionModele,OmExtrapole)
         else exclude(DlgGraphique.OptionModele,OmExtrapole);
     traceEllipse := chi2CB.isChecked;
+    traceIntersection := IntersectionCB.isChecked;
     ajusteOrigine := ajusteOrigineCB.isChecked;
+    NbreMC := round(NbreMCSE.Value);
 end;
 
 procedure TOptionModeleDlg.OptionsBtnClick(Sender: TObject);
