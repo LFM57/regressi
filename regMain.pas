@@ -1510,7 +1510,7 @@ begin // WMRegMaj
              MajResultat;
              FValeurs.traceGridParam;
           end;
-          MajFichier : if majFichierEnCours then FaireMajFichier else exit;
+          MajFichier : FaireMajFichier;
       end;
       AnimationBtn.Visible := NbreConstExp>0;
       if NbreConstExp=0 then AnimationBtn.isPressed := false;
@@ -1849,12 +1849,14 @@ var i : integer;
 begin
    OpenDialog.Title := 'Fusionner';
    lecturePage := true;
-   if OpenDialog.execute then if OpenDialog.Files.count>1
-        then for i := 0 to OpenDialog.Files.Count - 1 do
-             AddFichier(OpenDialog.Files.Strings[I])
-        else AddFichier(openDialog.FileName);
-    WMRegMaj(MajFichier);
-    modifFichier := true;
+   if OpenDialog.execute then begin
+        if OpenDialog.Files.count>1
+           then for i := 0 to OpenDialog.Files.Count - 1 do
+                AddFichier(OpenDialog.Files.Strings[I])
+           else AddFichier(openDialog.FileName);
+        WMRegMaj(MajFichier);
+        modifFichier := true;
+   end;
 end;
 
 procedure TFRegressiMain.SelectItemClick(Sender: TObject);

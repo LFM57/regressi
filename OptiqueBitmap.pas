@@ -236,8 +236,8 @@ begin // SauveData
        graphe.useDefaut := false;
        NomFichierData := nomFichier;
        ModeAcquisition := AcqBitmap;
-       ModifFichier := true;
        FRegressiMain.WMRegMaj(MajFichier);
+       ModifFichier := true;
        FRegressiMain.windowTab.ActiveTab := FRegressiMain.grapheTab;
   //     FValeurs.feuillets.ActiveTab := Fvaleurs.VariabSheet;
        Close;

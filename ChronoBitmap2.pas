@@ -199,8 +199,8 @@ begin // SauveData
        graphe.useDefaut := false;
        NomFichierData := '';
        ModeAcquisition := AcqCourbes;
-       ModifFichier := true;
        FRegressiMain.WMRegMaj(MajFichier);
+       ModifFichier := true;
        FRegressiMain.windowTab.ActiveTab := FRegressiMain.grapheTab;
 //       FValeurs.feuillets.ActiveTab := Fvaleurs.VariabSheet;
        Close;
