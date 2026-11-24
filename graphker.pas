@@ -2158,14 +2158,14 @@ var
       if motif in [mHisto, mBarreD, mBarreG] then initHisto;
       maxiY := monde[iMondeC].courbeBottom + marge;
       miniY := monde[iMondeC].courbeTop - marge;
-      if TraceEllipse and not
-        (motif in [mSpectre, mHisto, mBarreD, mBarreG]) then
-        motif := mIncert;
       CreatePen(TStrokeDash.Solid, penWidth, couleurLoc);// par défaut
       if superposePage and (motif <= mCarrePlein) and
          (page <> 0) and (SPmotif=reperePage)
             then motifLoc := motifPages[page mod MaxPages]
             else motifLoc := motif;
+      if TraceEllipse and not
+        (motifLoc in [mSpectre, mHisto, mBarreD, mBarreG]) then
+        motifLoc := mIncert;
       case motifLoc of
         mCerclePlein, mCarrePlein, mLosangePlein:
           CreateSolidBrush(couleurLoc);

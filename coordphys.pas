@@ -513,8 +513,14 @@ with transfert do begin
         end;
      LigneCombo.itemIndex := ord(style[courbeCourante]);
      CouleurCombo.selectedColor := Couleur[CourbeCourante];
-     if traceEllipse then motif[courbeCourante] := mIncert;
-     PointCombo.itemIndex := ord(motif[courbeCourante]);
+     PointCombo.OnChange := nil;
+     try
+       if traceEllipse and not (motif[courbeCourante] in [mSpectre, mHisto, mBarreD, mBarreG])
+          then PointCombo.itemIndex := ord(mIncert)
+          else PointCombo.itemIndex := ord(motif[courbeCourante]);
+     finally
+       PointCombo.OnChange := PointComboChange;
+     end;
 end end; // MaJ
 
 procedure TFcoordonneesPhys.FinModeleBtnClick(Sender: TObject);
@@ -892,16 +898,19 @@ end;
 
 procedure TFcoordonneesPhys.PointComboChange(Sender: TObject);
 begin
-if pagesGB.visible and (motifRB.isChecked)
+  if PointCombo.itemIndex < 0 then exit;
+  if pagesGB.visible and (motifRB.isChecked)
      then motifPages[pageActive] := Tmotif(PointCombo.itemIndex)
      else begin
-        motifInit[CourbeCourante] := Tmotif(PointCombo.itemIndex);
-        Transfert.Motif[CourbeCourante] := Tmotif(PointCombo.itemIndex);
+        if Tmotif(PointCombo.itemIndex) = mIncert then
+          traceEllipse := true
+        else begin
+          traceEllipse := false;
+          motifInit[CourbeCourante] := Tmotif(PointCombo.itemIndex);
+          Transfert.Motif[CourbeCourante] := Tmotif(PointCombo.itemIndex);
+        end;
+        DimPointSE.Visible := PointCB.IsChecked and not traceEllipse;
      end;
-     if Transfert.Motif[CourbeCourante]=mIncert then begin
-         traceEllipse := true;
-//         PointCombo.hint := hMotif[true];
-     end;    
 end;
 
 procedure TFcoordonneesPhys.ZeroXCBChange(Sender: TObject);
