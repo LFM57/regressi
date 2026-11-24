@@ -713,13 +713,12 @@ begin
      CopyVecteur(xxr,xr);
      CopyVecteur(xxi,xi);
      continu := xxr[0];
-     for i := 1 to pred(NbreF div 16) do begin
+     for i := 1 to pred(NbreF div 2) do begin
          xxr[i] := 2*xxr[i];
          xxi[i] := 2*xxi[i];
      end;
-     for i := (NbreF div 16) to pred(NbreF) do begin
+     for i := succ(NbreF div 2) to pred(NbreF) do begin
      // signal analytique f>0 ; composantes f<0 nulles
-     // on en profite pour filtrer les HF : 7/8 * Fmax
          xxr[i] := 0;
          xxi[i] := 0;
      end;
@@ -730,7 +729,7 @@ begin
      tfd(NbreF,xxr,xxi,false);
      if zeroPadding then begin
         coeffZeroPadding := Nbre/NbreF;
-        for i := 0 to pred(NbreF div 2) do begin
+        for i := 0 to pred(NbreF) do begin
            xxr[i] := xxr[i]*coeffZeroPadding;
            xxi[i] := xxi[i]*coeffZeroPadding;
         end;

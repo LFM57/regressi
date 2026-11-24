@@ -97,7 +97,9 @@ begin
      HarmMinSE.value := round(PrecisionFFT*100);
      DecalageSE.value := decalageFFT;
      OptimiseNbreHarmCB.IsChecked  := NbreHarmoniqueOptimise;
+     MiniDecibel := FgrapheFFT.grapheFrequence.monde[mondeY].MinidB;
      SpinMindB.value := MiniDecibel;
+     DecadeSE.Value := DecadeDB;
      LabelNomTemps.Text := 'Nom de la grandeur inverse de '+grandeurs[indexTri].nom;
      EditNomFrequence.text := grandeurs[cFrequence].nom;
      LabeldB.visible := DecibelCB.isChecked;
@@ -107,7 +109,6 @@ begin
      ListeVariableBox.repaint;
      FaussesCouleursCB.isChecked := UseFaussesCouleurs;
      superPagesCB.IsChecked  := FgrapheFFT.grapheFrequence.SuperposePage;
-     MiniDecibel := FgrapheFFT.grapheFrequence.monde[mondeY].MinidB;
      height := 175;
      width := 520;
 end;

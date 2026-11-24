@@ -465,8 +465,8 @@ end end; // FrequenceMouseUp
 
 procedure TFGrapheFFT.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-     grapheTemps.free;
-     grapheFrequence.free;
+     FreeAndNil(grapheTemps);
+     FreeAndNil(grapheFrequence);
   // avant destruction des paintBox
 end;
 
@@ -1040,7 +1040,7 @@ end; // MajRaies
 
 var i,indexMax : integer;
 begin // FrequencePaint
-if not PaintBoxFrequence.enabled then exit;
+if (grapheFrequence=nil) or not PaintBoxFrequence.enabled then exit;
 if pageCourante>0 then begin
    SonagrammeBtn.Enabled := pages[pageCourante].nmes >  NbrePointsSonagramme*8;
    if not SonagrammeBtn.Enabled then SonagrammeBtn.isPressed := false;
@@ -1084,7 +1084,6 @@ with grapheFrequence do begin
            else setCurseurF(curseur);
         end;
     FFTToolBar.Enabled := grapheOK;
-    editBidon.SetFocus;
 end end; // FrequencePaint
 
 procedure TFGrapheFFT.TempsPaint(Sender: TObject; Canvas: TCanvas);
@@ -1121,7 +1120,7 @@ begin
 end;
 
 begin
-if (PaintBoxTemps.height<8) then exit;
+if (grapheTemps=nil) or (PaintBoxTemps.height<8) then exit;
 with grapheTemps do begin
     grapheOK := (pageCourante>0) and
          not(lectureFichier) and
@@ -1266,12 +1265,12 @@ end; // TraceMarque
 var existe : boolean;
     i : integer;
 begin
-if (keyChar=' ') and (grapheFRequence.curseur=curReticule) then
+if (keyChar=' ') and (grapheFRequence.curseur=curReticule) then begin
     with grapheFrequence do begin
         xi := curseurOsc[1].Pc.x;
         existe := false;
         for i := pred(grapheFrequence.dessinTexts.count) downto 0 do begin
-            existe := (dessinTexts[i].position.X=Xi);
+            existe := abs(dessinTexts[i].position.X+dessinTexts[i].width/2-Xi)<3;
             if existe then begin
                dessinTexts.Delete(i);
                break;
@@ -1282,6 +1281,7 @@ if (keyChar=' ') and (grapheFRequence.curseur=curReticule) then
     end;
     keyChar := #0;
     key := 0;
+end;
 end;
 
 procedure TFGrapheFFT.Enregistrer1Click(Sender: TObject);
@@ -1636,7 +1636,10 @@ begin
            grapheTemps.selection.width := xfin-x;
         end;
         curFin : grapheTemps.selection.width := (x-xDebut);
-        curDeplace : grapheTemps.selection.position.x := x;
+        curDeplace : begin
+           grapheTemps.selection.position.x := xdebut+(x-Xdeplace);
+           Xdeplace := x;
+        end;
      end;
      if grapheTemps.curseur<>curSelect then ChercheDebutFin;
 end; // TempsMouseMove
@@ -1724,7 +1727,10 @@ end;
 procedure TFGrapheFFT.SonagrammeBtnClick(Sender: TObject);
 begin
      include(grapheFrequence.modif,gmXY);
-     if pageCourante>0 then setCoordonnee
+     if pageCourante>0 then begin
+        setCoordonnee;
+        MajGrapheFFT;
+     end;
 end;
 
 procedure TFGrapheFFT.FrequenceReduiteCBClick(Sender: TObject);
