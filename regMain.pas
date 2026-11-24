@@ -1828,10 +1828,12 @@ begin
        PageDebut := nbrePages;
        if extension = '.RW3'
           then FichierRegressi.AjouteWin(NomFichier)
-          else if extension = '.CSV'
-               then FichierRegressi.LitCSV(NomFichier,false)
-               else if FichierRegressi.AjouteTableur(NomFichier)
-                    and (nbrePages>pageDebut) then WMRegMaj(MajAjoutPage);
+          else if extension = '.RXML'
+               then FichierRegressi.AjouteXML(NomFichier)
+               else if extension = '.CSV'
+                    then FichierRegressi.LitCSV(NomFichier,false)
+                    else if FichierRegressi.AjouteTableur(NomFichier)
+                         and (nbrePages>pageDebut) then WMRegMaj(MajAjoutPage);
        for p := succ(pageDebut) to NbrePages do pages[p].recalculP;
 end;
 

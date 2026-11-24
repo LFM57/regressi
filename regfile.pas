@@ -700,8 +700,8 @@ begin
 end; // verifNoms
 
 procedure litGoodwill;
-var valeurY : array[0..8192] of integer;
-    nbre : integer;
+var valeurY : array of integer;
+    nbre, cap : integer;
     premiereLigne : string;
     posV : integer;
 
@@ -762,9 +762,17 @@ begin
               grandeurs[1].Nom := premiereLigne;
            end;
      end;
+     cap := 8192;
+     SetLength(valeurY, cap);
      while not csvEof do begin
         csvReadln(premiereLigne);
         if premiereLigne<>'' then begin
+           if nbre >= MaxMaxVecteur then break;
+           if nbre >= cap then begin
+              cap := cap * 2;
+              if cap > MaxMaxVecteur then cap := MaxMaxVecteur;
+              SetLength(valeurY, cap);
+           end;
            posV := pos(',',premiereLigne);
            if posV>0 then premiereLigne := copy(premiereLigne, 1, posV-1);
            valeurY[nbre] := strToInt(premiereLigne);
@@ -782,8 +790,8 @@ begin
 end; // litGoodWill
 
 procedure litGoodwillPC;
-var valeurY : array[0..8192] of integer;
-    nbre : integer;
+var valeurY : array of integer;
+    nbre, cap : integer;
     premiereLigne : string;
     posV : integer;
 
@@ -846,9 +854,17 @@ begin
               grandeurs[1].Nom := premiereLigne;
            end;
      end;
+     cap := 8192;
+     SetLength(valeurY, cap);
      while not csvEof do begin
         csvReadln(premiereLigne);
         if premiereLigne<>'' then begin
+           if nbre >= MaxMaxVecteur then break;
+           if nbre >= cap then begin
+              cap := cap * 2;
+              if cap > MaxMaxVecteur then cap := MaxMaxVecteur;
+              SetLength(valeurY, cap);
+           end;
            posV := pos(',',premiereLigne);   // index X
            if posV>0 then premiereLigne := copy(premiereLigne, posV+1, length(premiereLigne)-posV);
            posV := pos(',',premiereLigne); // indexY
@@ -1349,7 +1365,7 @@ end; // litValeursPasco
 var i,j,k,imax : integer;
     existeAilleurs : boolean;
     NomVariab : array[codeGrandeur] of string;
-    NbreDataZero : array[codePage,0..32] of integer;
+    NbreDataZero : array[codePage,codeGrandeur] of integer;
     nbreVar : integer;
 label fin;
 begin
@@ -2807,17 +2823,17 @@ begin // AjouteData
                end;
                if result<>idOK then exit;
                if DataSuppl then begin
-                  for i := 0 to pred(listeNom.count) do
-                      if DecodeVariab[i]=grandeurInconnue then begin
-                         isPrecVariab[i] := pos('sigma_',listeNom[i])=1;
-                         if isPrecVariab[i] then begin
-                            k := indexNom(copy(listeNom[i],7,length(listeNom[i])-6));
-                            isPrecVariab[i] := k<>grandeurInconnue;
-                            DecodeVariab[i] := k;
+                  for j := 0 to pred(listeNom.count) do
+                      if DecodeVariab[j]=grandeurInconnue then begin
+                         isPrecVariab[j] := pos('sigma_',listeNom[j])=1;
+                         if isPrecVariab[j] then begin
+                            k := indexNom(copy(listeNom[j],7,length(listeNom[j])-6));
+                            isPrecVariab[j] := k<>grandeurInconnue;
+                            DecodeVariab[j] := k;
                             inc(NbrePrecVariab);
                          end;
-                         if not isPrecVariab[i]
-                            then DecodeVariab[i] := AjouteExperimentale(listeNom[i],variable);
+                         if not isPrecVariab[j]
+                            then DecodeVariab[j] := AjouteExperimentale(listeNom[j],variable);
                       end;
                   NbreVariabAlire := NbreVariabExp+NbreVariabTexte;
                end;
@@ -2885,7 +2901,13 @@ begin with pages[page] do begin
                     ecritLigneRW3U(texteVar[iVar,j]);
           end;
        end;
-       if (nmes<128) then begin
+       ligneVide := false;
+       for i := 0 to pred(NbreVariabExp) do
+           if isIncertitudeDefinie(indexVariabExp[i]) then begin
+              ligneVide := true;
+              break;
+           end;
+       if ligneVide or (nmes<128) then begin
           ecritSousSection(Nmes,'INCERT VAR');
           for j := 0 to pred(nmes) do begin
               chaine := '';
@@ -3880,22 +3902,27 @@ begin
 end; // litListe
 
 begin
+     Convert_RW3_to_Mac(NomFichier, NomFichierTampon);
      FichierRW3 := TStringList.create;
      valeurs := TStringList.create;
-     valeurs.delimiter := ' ';
-     finFichierWin := false;
-     if enTeteRW3
-          then begin
-              litLigneWin;
-              nomFichierCourt := extractFileName(NomFichier)+' : ';
-              FichierOK := true;
-              while fichierOK and
-                   (ligneWin<>'') and
-                   (ligneWin[1]=symbReg) do litListe;
-          end
-          else AfficheErreur(erFormat,0);
-     FichierRW3.free;
-     valeurs.free;
+     try
+        FichierRW3.LoadFromFile(NomFichierTampon, TEncoding.Ansi);
+        valeurs.delimiter := ' ';
+        finFichierWin := false;
+        if enTeteRW3
+             then begin
+                 litLigneWin;
+                 nomFichierCourt := extractFileName(NomFichier)+' : ';
+                 FichierOK := true;
+                 while fichierOK and
+                      (ligneWin<>'') and
+                      (ligneWin[1]=symbReg) do litListe;
+             end
+             else AfficheErreur(erFormat,0);
+     finally
+        FichierRW3.free;
+        valeurs.free;
+     end;
 end; // AjouteWin
 
 // FileXML.pas : récupération des fichiers xml Regressi
@@ -3921,6 +3948,7 @@ var i : integer;
     Node1, Node2 : IXMLNode;
 begin
      dataCsv := TstringList.create;
+     dataCsv.StrictDelimiter := True;
      XMLDoc := TXMLDocument.Create(nil);
      XMLDoc.active := true;
      XMLDoc.Options := [doNodeAutoIndent];
@@ -3948,14 +3976,22 @@ begin
      dataCsv.Delimiter := crCR;
      WriteStringXML(Document,'Memo',dataCsv.DelimitedText);
      for v := 0 to pred(NbreGrandeurs) do with grandeurs[v] do
-     if fonct.genreC=g_experimentale then begin
+     if fonct.genreC in [g_experimentale, g_texte] then begin
          case genreG of
               variable : Node1 := Document.addChild('VARIABLE');
               constante : Node1 := Document.addChild('CONSTANTE');
+              else continue;
          end;
          Node1.Attributes[stNom] := nom;
          WriteStringXML(Node1,stUniteIni,nomUnite);
          WriteIntegerXML(Node1,'Precision',precisionU);
+         WriteIntegerXML(Node1,'Format',ord(formatU));
+         if affSignif then WriteBoolXML(Node1,'AffSignif',affSignif);
+         if genreMecanique<>gm_position then begin
+            WriteIntegerXML(Node1,'GenreMecanique',ord(genreMecanique));
+            if nomVarPosition<>'' then
+               WriteStringXML(Node1,'NomVarPosition',nomVarPosition);
+         end;
          WriteIntegerXML(Node1,'GenreCalcul',ord(fonct.genreC));
          WriteStringXML(Node1,'Description',fonct.expression);
          if IncertCalc.expression<>'' then
@@ -3988,7 +4024,10 @@ begin
                           writePage(Node2,p);
                        end;
                    end;
-                 constante : begin
+                 constante : if fonct.genreC=g_texte then begin
+                     Node2 := WriteStringXML(Node1,'Texte',TexteConst[v]);
+                     writePage(Node2,p);
+                 end else begin
                      Node2 := WriteFloatXML(Node1,'Valeur',valeurConst[v]);
                      writePage(Node2,p);
                      if isIncertitudeDefinie(v) then begin
@@ -3999,6 +4038,24 @@ begin
              end;  // case
           end;  // for p
      end; // grandeur
+     for p := 1 to NbrePages do with pages[p] do begin
+         Node1 := Document.addChild('PAGE');
+         writePage(Node1,p);
+         if commentaireP<>'' then WriteStringXML(Node1,'Commentaire',commentaireP);
+         WriteBoolXML(Node1,'Active',active);
+         if (debutFFT>0) or (finFFT>0) then begin
+            WriteIntegerXML(Node1,'DebutFFT',debutFFT);
+            WriteIntegerXML(Node1,'FinFFT',finFFT);
+         end;
+         dataCsv.clear;
+         for i := 0 to pred(nmes) do
+             if not PointActif[i] then
+                dataCsv.Add(IntToStr(i));
+         if dataCsv.Count>0 then begin
+            dataCsv.Delimiter := ' ';
+            WriteStringXML(Node1,'PointsInactifs',dataCsv.DelimitedText);
+         end;
+     end;
      for v := 1 to NbreParam do begin
          Node1 := Document.addChild('PARAMETRE');
          writeIndex(Node1,v);
@@ -4025,6 +4082,7 @@ begin
      end;
      if (NbreModele>0) or (TexteModele.count>0) then begin
         Node1 := Document.addChild('MODELE');
+        TexteModele.StrictDelimiter := True;
         TexteModele.Delimiter := crCR;
         WriteStringXML(Node1,'Modelisation',TexteModele.delimitedText);
         for i := 1 to NbreModele do begin
@@ -4059,6 +4117,16 @@ begin
         Node1 := Document.AddChild('GrapheParam');
         grapheParam.ecritConfigXML(Node1);
      end;
+     if statOptDlg<>nil then with statOptDlg do begin
+        Node1 := Document.AddChild('STATISTIQUE');
+        WriteStringXML(Node1,'NomStat',nomStat);
+        WriteStringXML(Node1,'NomEffectif',nomEffectif);
+        WriteBoolXML(Node1,'CourbeGauss',courbeGaussCB.IsChecked);
+        WriteBoolXML(Node1,'Distribution',distributionCB.IsChecked);
+        WriteIntegerXML(Node1,'ClasseGroupe',classeGroupe.itemIndex);
+        WriteBoolXML(Node1,'CourbePoisson',courbePoissonCB.IsChecked);
+        WriteBoolXML(Node1,'CourbeBinome',courbeBinomeCB.IsChecked);
+     end;
      XMLDoc.saveToFile(NomFichier);
      dataCsv.free;
 end; // EcritXML
@@ -4068,6 +4136,7 @@ var
     XmlDoc: TXmlDocument; // Xml document
     indexCourant : integer; // de la grandeur
     modeleCourant : integer;
+    pageBase : integer;
     chaines : TStringList;
 
 procedure LoadXMLInReg(XMLNode: IXMLNode);
@@ -4076,8 +4145,9 @@ Procedure ExtraitValeurs;
 var i : integer;
     strValeur : string;
 begin with pages[pageCourante] do begin
+    chaines.Clear;
     chaines.Delimiter := ' ';
-    chaines.DelimitedText := XMLNode.NodeValue;
+    chaines.DelimitedText := XMLNode.Text;
     nmes := chaines.Count;
     for i := 0 to chaines.Count-1 do begin
         strValeur := chaines[i];
@@ -4092,9 +4162,10 @@ end end; // extraitValeurs
 Procedure ExtraitIncertitudes;
 var i : integer;
 begin with pages[pageCourante] do begin
+    chaines.Clear;
     chaines.Delimiter := ' ';
-    chaines.DelimitedText := XMLNode.NodeValue;
-    nmes := chaines.Count;
+    chaines.DelimitedText := XMLNode.Text;
+    if chaines.Count>nmes then nmes := chaines.Count;
     for i := 0 to chaines.Count-1 do begin
         try
         incertVar[indexCourant,i] := strToFloatWin(chaines[i]);
@@ -4107,8 +4178,17 @@ end end; // extraitIncertitudes
 Procedure ExtraitChaines;
 begin
     chaines.Clear;
+    chaines.Delimiter := crCR;
     chaines.DelimitedText := XMLNode.Text;
 end; // extraitChaines
+
+procedure EnsurePage(pAttr : integer);
+begin
+    if pAttr<=0 then pAttr := 1;
+    pageCourante := pageBase + pAttr;
+    while pageCourante>NbrePages do
+       ajoutePageForce;
+end;
 
 procedure Suite;
 var i: Integer;
@@ -4120,7 +4200,7 @@ end;
 
 var
 I: Integer;
-code : integer;
+code, idxPt : integer;
 nom : string;
 ma : TmodeAcquisition;
 
@@ -4136,55 +4216,165 @@ end;
 
 if (XmlNode.NodeName='Memo') then begin
    extraitChaines;
-   Fvaleurs.Memo.Lines.Assign(chaines);
+   if nouveauFichier then
+      Fvaleurs.Memo.Lines.Assign(chaines)
+   else
+      for i := 0 to chaines.Count-1 do
+         if (chaines[i]<>'') and (Fvaleurs.Memo.Lines.IndexOf(chaines[i])<0) then
+            Fvaleurs.Memo.Lines.Add(chaines[i]);
    exit;
 end;
 
 if (XmlNode.NodeName='Graphe') then begin
-   if Graphe<>nil then Graphe.LitConfigXML(XMLNode);
+   if nouveauFichier and (Graphe<>nil) then Graphe.LitConfigXML(XMLNode);
    exit;
 end;
 
 if (XmlNode.NodeName='GrapheParam') or (XmlNode.NodeName='GrapheP') then begin
-   if GrapheParam<>nil then GrapheParam.LitConfigXML(XMLNode);
+   if nouveauFichier and (GrapheParam<>nil) then GrapheParam.LitConfigXML(XMLNode);
    exit;
 end;
 
 if (XmlNode.NodeName='OPTIONS') then begin
-   suite;
+   if nouveauFichier then suite;
    exit;
 end;
 
 if (XmlNode.NodeName='FOURIER') then begin
-   if FGrapheFFT<>nil then FGrapheFFT.LitConfigXML(XMLNode);
+   if nouveauFichier and (FGrapheFFT<>nil) then FGrapheFFT.LitConfigXML(XMLNode);
+   exit;
+end;
+
+if (XmlNode.NodeName='STATISTIQUE') then begin
+   if nouveauFichier then begin
+      if statOptDlg=nil then
+         application.createForm(TstatOptDlg,statOptDlg);
+      suite;
+   end;
+   exit;
+end;
+
+if (XmlNode.NodeName='NomStat') then begin
+   if statOptDlg<>nil then statOptDlg.nomStat := XMLNode.Text;
+   exit;
+end;
+
+if (XmlNode.NodeName='NomEffectif') then begin
+   if statOptDlg<>nil then statOptDlg.nomEffectif := XMLNode.Text;
+   exit;
+end;
+
+if (XmlNode.NodeName='CourbeGauss') then begin
+   if statOptDlg<>nil then statOptDlg.courbeGaussCB.IsChecked := getBoolXML(XMLNode);
+   exit;
+end;
+
+if (XmlNode.NodeName='Distribution') then begin
+   if statOptDlg<>nil then statOptDlg.distributionCB.IsChecked := getBoolXML(XMLNode);
+   exit;
+end;
+
+if (XmlNode.NodeName='ClasseGroupe') then begin
+   if statOptDlg<>nil then statOptDlg.classeGroupe.itemIndex := getIntegerXML(XMLNode);
+   exit;
+end;
+
+if (XmlNode.NodeName='CourbePoisson') then begin
+   if statOptDlg<>nil then statOptDlg.courbePoissonCB.IsChecked := getBoolXML(XMLNode);
+   exit;
+end;
+
+if (XmlNode.NodeName='CourbeBinome') then begin
+   if statOptDlg<>nil then statOptDlg.courbeBinomeCB.IsChecked := getBoolXML(XMLNode);
+   exit;
+end;
+
+if (XmlNode.NodeName='PAGE') then begin
+   EnsurePage(getIntegerAttribute(XmlNode,stPage));
+   suite;
+   exit;
+end;
+
+if (XmlNode.NodeName='Commentaire') then begin
+   if (pageCourante>0) and (pageCourante<=NbrePages) then
+      pages[pageCourante].commentaireP := XMLNode.Text;
+   exit;
+end;
+
+if (XmlNode.NodeName='Active') then begin
+   if (pageCourante>0) and (pageCourante<=NbrePages) then
+      pages[pageCourante].active := getBoolXML(XMLNode);
+   exit;
+end;
+
+if (XmlNode.NodeName='DebutFFT') then begin
+   if (pageCourante>0) and (pageCourante<=NbrePages) then
+      pages[pageCourante].debutFFT := getIntegerXML(XMLNode);
+   exit;
+end;
+
+if (XmlNode.NodeName='FinFFT') then begin
+   if (pageCourante>0) and (pageCourante<=NbrePages) then
+      pages[pageCourante].finFFT := getIntegerXML(XMLNode);
+   exit;
+end;
+
+if (XmlNode.NodeName='PointsInactifs') then begin
+   if (pageCourante>0) and (pageCourante<=NbrePages) then begin
+      chaines.Clear;
+      chaines.Delimiter := ' ';
+      chaines.DelimitedText := XMLNode.Text;
+      for i := 0 to chaines.Count-1 do
+         if TryStrToInt(chaines[i], idxPt) and (idxPt>=0) and (idxPt<pages[pageCourante].nmes) then
+            pages[pageCourante].PointActif[idxPt] := false;
+   end;
    exit;
 end;
 
 if (XmlNode.NodeName='Modelisation') then begin
-   extraitChaines;
-   TexteModele.Assign(chaines);
+   if nouveauFichier then begin
+      extraitChaines;
+      TexteModele.Assign(chaines);
+   end;
    exit;
 end;
 
 if (XmlNode.NodeName='Acquisition') then begin
-   nom := XMLNode.Text;
-   for ma := low(TmodeAcquisition) to high(TmodeAcquisition) do
-       if nom=NomModeAcq[ma] then begin
-          ModeAcquisition := ma;
-          break;
-       end;
+   if nouveauFichier then begin
+      nom := XMLNode.Text;
+      for ma := low(TmodeAcquisition) to high(TmodeAcquisition) do
+          if nom=NomModeAcq[ma] then begin
+             ModeAcquisition := ma;
+             break;
+          end;
+   end;
+   exit;
+end;
+
+if (XMLNode.NodeName='Texte') then begin
+   EnsurePage(getIntegerAttribute(XmlNode,stPage));
+   case grandeurs[indexCourant].genreG of
+      variable : begin
+         extraitChaines;
+         if chaines.Count>pages[pageCourante].nmes then
+            pages[pageCourante].nmes := chaines.Count;
+         for i := 0 to chaines.Count-1 do
+             pages[pageCourante].TexteVar[indexCourant,i] := chaines[i];
+      end;
+      constante :
+         pages[pageCourante].TexteConst[indexCourant] := XMLNode.Text;
+   end;
    exit;
 end;
 
 if (XMLNode.NodeName='Valeur') then begin
-   pageCourante := getIntegerAttribute(XmlNode,stPage);
-   if pageCourante<=0 then pageCourante := 1;
-   if (pageCourante>NbrePages) then
-        ajoutePage;
+   EnsurePage(getIntegerAttribute(XmlNode,stPage));
    case grandeurs[indexCourant].genreG of
       variable : if grandeurs[indexCourant].fonct.genreC=g_texte
                     then begin
                        extraitChaines;
+                       if chaines.Count>pages[pageCourante].nmes then
+                          pages[pageCourante].nmes := chaines.Count;
                        for i := 0 to chaines.Count-1 do
                            pages[pageCourante].TexteVar[indexCourant,i] := chaines[i];
                        exit;
@@ -4209,10 +4399,7 @@ if (XMLNode.NodeName='Valeur') then begin
 end;
 
 if (XMLNode.NodeName='ValIncert') then begin
-   pageCourante := getIntegerAttribute(XmlNode,stPage);
-   if pageCourante<=0 then pageCourante := 1;
-   if (pageCourante>NbrePages) then
-        ajoutePage;
+   EnsurePage(getIntegerAttribute(XmlNode,stPage));
    case grandeurs[indexCourant].genreG of
       variable : ExtraitIncertitudes;
       constante : begin
@@ -4233,13 +4420,18 @@ end;
 
 if (XmlNode.NodeName='VARIABLE') then begin
     nom := XmlNode.Attributes[stNom];
-    indexCourant := AjouteExperimentale(nom,variable);
+    if not nouveauFichier then
+       indexCourant := indexNom(nom)
+    else
+       indexCourant := grandeurInconnue;
+    if indexCourant=grandeurInconnue then
+       indexCourant := AjouteExperimentale(nom,variable);
     suite;
     exit;
 end;
 
 if (XmlNode.NodeName='MODELE') then begin
-    suite;
+    if nouveauFichier then suite;
     exit;
 end;
 
@@ -4251,13 +4443,15 @@ if (XmlNode.NodeName='COULEURMODELE') then begin
 end;
 
 if (XmlNode.NodeName='ANIMATION') then begin
-    code := getIntegerAttribute(XmlNode,stIndex);
-    paramAnimation[code].litXML(XmlNode);
+    if nouveauFichier then begin
+       code := getIntegerAttribute(XmlNode,stIndex);
+       paramAnimation[code].litXML(XmlNode);
+    end;
     exit;
 end;
 
 if (XmlNode.NodeName='DEBUT') then begin
-    pageCourante := getIntegerAttribute(XmlNode,stPage);
+    EnsurePage(getIntegerAttribute(XmlNode,stPage));
     modeleCourant := getIntegerAttribute(XmlNode,stIndex);
     if (pageCourante>0) and (modeleCourant<>0) then
     pages[pageCourante].debut[modeleCourant] := getIntegerXML(XmlNode);
@@ -4265,7 +4459,7 @@ if (XmlNode.NodeName='DEBUT') then begin
 end;
 
 if (XmlNode.NodeName='FIN') then begin
-    pageCourante := getIntegerAttribute(XmlNode,stPage);
+    EnsurePage(getIntegerAttribute(XmlNode,stPage));
     modeleCourant := getIntegerAttribute(XmlNode,stIndex);
     if (pageCourante>0) and (modeleCourant<>0) then
     pages[pageCourante].fin[modeleCourant] := getIntegerXML(xmlNode);
@@ -4274,12 +4468,18 @@ end;
 
 if (XmlNode.NodeName='CONSTANTE') then begin
     nom := XmlNode.Attributes[stNom];
-    indexCourant := AjouteExperimentale(nom,constante);
+    if not nouveauFichier then
+       indexCourant := indexNom(nom)
+    else
+       indexCourant := grandeurInconnue;
+    if indexCourant=grandeurInconnue then
+       indexCourant := AjouteExperimentale(nom,constante);
     suite;
     exit;
 end;
 
 if (XmlNode.NodeName='PARAMETRE') then begin
+    if not nouveauFichier then exit;
     nom := XmlNode.Attributes[stNom];
     indexCourant := GetIntegerAttribute(XmlNode,stIndex);
     parametres[indexCourant].nom := nom;
@@ -4291,6 +4491,7 @@ if (XmlNode.NodeName='PARAMETRE') then begin
 end;
 
 if (XmlNode.NodeName='PARAMGLB') then begin
+    if not nouveauFichier then exit;
     nom := XmlNode.Attributes[stNom];
     indexCourant := GetIntegerAttribute(XmlNode,stIndex);
     parametresGlb[indexCourant].nom := nom;
@@ -4312,7 +4513,7 @@ if (XmlNode.NodeName='NbreDerivee') then begin
 end;
 
 if (XmlNode.NodeName='SOURCE') then begin
-   suite;
+   if nouveauFichier then suite;
    exit;
 end;
 
@@ -4327,6 +4528,26 @@ if XMLNode.NodeName='GenreCalcul' then begin
 end;
 if XMLNode.NodeName='Precision' then begin
       grandeurs[indexCourant].precisionU := getIntegerXML(XmlNode);
+      exit;
+end;
+if XMLNode.NodeName='Format' then begin
+      code := getIntegerXML(XmlNode);
+      if (code>=ord(low(TnombreFormat))) and (code<=ord(high(TnombreFormat))) then
+         grandeurs[indexCourant].formatU := TnombreFormat(code);
+      exit;
+end;
+if XMLNode.NodeName='AffSignif' then begin
+      grandeurs[indexCourant].affSignif := getBoolXML(XmlNode);
+      exit;
+end;
+if XMLNode.NodeName='GenreMecanique' then begin
+      code := getIntegerXML(XmlNode);
+      if (code>=ord(low(TgenreMecanique))) and (code<=ord(high(TgenreMecanique))) then
+         grandeurs[indexCourant].genreMecanique := TgenreMecanique(code);
+      exit;
+end;
+if XMLNode.NodeName='NomVarPosition' then begin
+      grandeurs[indexCourant].nomVarPosition := XMLNode.Text;
       exit;
 end;
 if XMLNode.NodeName='Description' then begin
@@ -4359,8 +4580,13 @@ end;
 begin // LitXML
 LectureFichier := true;
 codeErreurF := erFileData;
-ModeAcquisition := AcqClavier;
+if nouveauFichier then begin
+   ModeAcquisition := AcqClavier;
+   pageBase := 0;
+end else
+   pageBase := NbrePages;
 chaines := TStringList.create;
+chaines.StrictDelimiter := True;
 chaines.Delimiter := crCR;
 XMLDoc := TXMLDocument.Create(application.MainForm);
 try
@@ -4372,17 +4598,18 @@ if (XMLDoc.DocumentElement.NodeType=ntElement) and
    (XMLDoc.DocumentElement.NodeName='Regressi')
    then begin
       LoadXMLInReg(XMLDoc.DocumentElement);
+      ConstruireIndex;
       result := true;
    end
    else begin
       result := false;
       codeErreurF := erReadFileRXML;
    end;
-if ModeAcquisition=AcqSimulation then MajSimulation;
+if nouveauFichier and (ModeAcquisition=AcqSimulation) then MajSimulation;
 except
     codeErreurF := erReadFile;
     result := false;
-    resetEnTete;
+    if nouveauFichier then resetEnTete;
 end;
 chaines.free;
 LectureFichier := false;
@@ -4458,9 +4685,10 @@ begin
      donnees.lines.clear;
 end; // AjouteTableur
 
-Procedure TFichierRegressi.AjouteXML;
+Procedure TFichierRegressi.AjouteXML(const NomFichier : string);
 begin
-
+     if not LitXML(NomFichier,false) then
+        AfficheErreur(codeErreurF,0);
 end;
 
 Function TFichierRegressi.LitPressePapier : boolean;
