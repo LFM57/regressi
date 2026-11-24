@@ -639,6 +639,7 @@ procedure AffichePosition;
 var icourbe : integer;
 begin
     if not(grapheOK) or (courbes.count=0) then exit;
+    if (curseurCourant < 1) or (curseurCourant > maxCurseur) then curseurCourant := 1;
     iCourbe := courbeProche(origin);
     if iCourbe<0 then iCourbe := 0;
     with courbes[iCourbe] do begin
@@ -2843,14 +2844,19 @@ begin // ChoixCurseurClick
           end;
           curReticuleModele : begin
               curseurVisible := true;
+              curseurCourant := 1;
               with CurseurOsc[1] do begin
+                 isData := false;
                  indexCourbe := indexCourbeLigne;
                  if indexCourbe >= 0 then begin
                     mondeC := courbes[indexCourbe].imondeC;
                     Ic := (courbes[indexCourbe].finC + courbes[indexCourbe].debutC) div 2;
-                    Xr := courbes[indexCourbe].valX[Ic];
-                    Yr := courbes[indexCourbe].valY[Ic];
-                    windowRT(Xr, Yr, MondeC, Pc);
+                    if (Ic >= 0) and (Ic < length(courbes[indexCourbe].valX)) and
+                       (Ic < length(courbes[indexCourbe].valY)) then begin
+                       Xr := courbes[indexCourbe].valX[Ic];
+                       Yr := courbes[indexCourbe].valY[Ic];
+                       windowRT(Xr, Yr, MondeC, Pc);
+                    end;
                  end;
               end;
               paintBox.repaint;

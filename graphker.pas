@@ -1318,8 +1318,13 @@ Function Trouve(aIndexCourbe : integer) : boolean;
 var distanceMin : single;
     i,iMin : integer;
     distance : single;
-begin with courbes[aIndexCourbe] do begin
-    if NbreExtrapole <= 0 then begin
+begin
+    if (aIndexCourbe < 0) or (aIndexCourbe >= courbes.Count) then begin
+       Result := false;
+       exit;
+    end;
+    with courbes[aIndexCourbe] do begin
+    if (NbreExtrapole <= 0) or (length(valExtrapole) < NbreExtrapole) then begin
        Result := false;
        exit;
     end;
@@ -3575,6 +3580,7 @@ begin
      curseurOsc[k].stroke.color := couleurCurseurs[k];
      curseurOsc[k].numero := k;
   end;
+  curseurCourant := 1;
   optionCurseur := [coX, coY, coDeltax, coDeltay, coPente];
   reticuleOrigine := TreticuleShape.Create(paintBox);
   reticuleOrigine.Visible := false;

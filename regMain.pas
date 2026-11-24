@@ -1192,6 +1192,7 @@ begin // BarreEspace
          end;
          PaintBox.repaint;
    end;// curReticuleData
+   curReticuleModele : graphe.BarreEspace;
    curSelect : if (graphe.indexPointCourant>=0) then begin
          Pages[pageCourante].PointActif[graphe.indexPointCourant] :=
               not Pages[pageCourante].PointActif[graphe.indexPointCourant];
