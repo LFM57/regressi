@@ -1,4 +1,4 @@
-unit graphfft;
+ï»¿unit graphfft;
 
 interface
 
@@ -86,6 +86,7 @@ type
     FenetreBtn: TButton;
     MenuItem1: TMenuItem;
     MenuItem4: TMenuItem;
+    HelpBtn: TButton;
     procedure FrequenceMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: single);
     procedure ZoomAvantItemClick(Sender: TObject);
@@ -140,6 +141,7 @@ type
     procedure LigneItemClick(Sender: TObject);
     procedure FenetreBtnClick(Sender: TObject);
     procedure RectangleItemClick(Sender: TObject);
+    procedure HelpBtnClick(Sender: TObject);
   private
       reelClick : boolean;
       listePic : TlistePic;
@@ -156,6 +158,8 @@ type
       indexSonagramme : integer;
       origin : TPointF;
       enveloppeSpectre : boolean;
+      continuInclus : boolean;
+      ordonneeFFTgr : TordonneeFFT;
       Procedure SetCoordonnee;
       procedure SetCurseurF(c : Tcurseur);
       Procedure AffecteDebutFin;
@@ -180,10 +184,9 @@ var FGrapheFFT : TFGrapheFFT;
 
 implementation
 
-uses Regmain, optFFT, Modif, options, optcolordlg;
+uses Regmain, optFFT, Modif, options, optcolordlg, AideU, aidekey;
 
 {$R *.FMX}
-{$R *.Macintosh.fmx MACOS}
 
 procedure TFGrapheFFT.FrequenceMouseMove(Sender: TObject;
     Shift: TShiftState; X,Y: single);
@@ -207,7 +210,7 @@ begin with GrapheFrequence do begin
       end
       else begin
           iProche := PointProche(P,CourbeCourante,true,true);
-          // à la sortie P pointe sur le point proche
+          // Ã  la sortie P pointe sur le point proche
           yr := courbes.items[courbeCourante].valY[iProche];
           xr := courbes.items[courbeCourante].valX[iProche];
           if monde[mondeY].graduation=gdB
@@ -253,7 +256,7 @@ begin  // FrequenceMouseMove
         then begin
             with monde[mondeX] do begin
                  deltaM := (x-selection.position.x)/a;
-                 if deltaM>mini then deltaM := mini; // ne pas dépasser f=0
+                 if deltaM>mini then deltaM := mini; // ne pas dÃ©passer f=0
                  mini := mini-deltaM;
                  maxi := maxi-deltaM;
                  defini := true;
@@ -471,6 +474,8 @@ procedure TFGrapheFFT.FormCreate(Sender: TObject);
 var j : integer;
 begin
   enveloppeSpectre := false;
+  continuInclus := false;
+  ordonneeFFTgr := oNormal;
   AvecPoint := true;
   reelClick := false;
   ListeY := TstringList.Create;
@@ -565,7 +570,7 @@ begin with pages[Apage] do begin
                    end;
            end;
        listePic.Nettoie(FreqMax);
-       listePic.Tri; // selon la valeur alors que le remplissage est selon la fréquence
+       listePic.Tri; // selon la valeur alors que le remplissage est selon la frÃ©quence
 end end; // RemplitColonne
 
 Procedure AjouteCourbeFreq(var Nbre : integer);
@@ -579,11 +584,14 @@ begin with GrapheFrequence do begin
      monde[Amonde].graduation := monde[mondeY].graduation;
      monde[Amonde].MinidB := monde[mondeY].MinidB;
      Acourbe.setStyle(Acouleur,TStrokeDash.Solid,mCroix);
-     Acourbe.debutC := 1;
+     if continuInclus
+        then Acourbe.debutC := 0
+        else Acourbe.debutC := 1;
      Acourbe.decalage := decale;
 end end; // AddCourbe
 
-var harmMax : double;
+var i : integer;
+    harmMax : double;
 begin // AjouteCourbeFreq
      if grandeurs[indexY].fonct.genreC<>g_definitionFiltre then begin
           if NbreHarmoniqueOptimise then begin
@@ -593,11 +601,18 @@ begin // AjouteCourbeFreq
           end;
           if freqMax<Ax[pred(Nbre)] then freqMax := Ax[pred(Nbre)];
 // en cas de zoom (avec non puissance de 2)
-// avec zero padding, la période de calcul est plus grande que la période affichée
+// avec zero padding, la pÃ©riode de calcul est plus grande que la pÃ©riode affichÃ©e
      end;
+     if (ordonneeFFTgr=oReduite) and (AyMax>0) then
+         for i := 1 to pred(Nbre) do
+             Ay[i] := Ay[i]/AyMax;
+     if ordonneeFFTgr=oPuissance then
+         for i := 0 to pred(Nbre) do
+             Ay[i] := sqr(Ay[i]);
      AddCourbe;
      Acourbe.Adetruire := true;
-     if grandeurs[indexY].fonct.genreC=g_definitionFiltre
+     if (grandeurs[indexY].fonct.genreC=g_definitionFiltre) or
+        (grapheFrequence.monde[mondeY].graduation=gdB)
         then Acourbe.trace := [trLigne]
         else begin
            Acourbe.trace := [trPoint];
@@ -622,7 +637,7 @@ begin
       maxiA := Aa[i0]*precisionFFT;
       ligne0 := i0 div 8;
       if ligne0=0 then ligne0 := 1;
-      z := Ay[ligne0];
+      z := Aa[ligne0];
       zsuivant := Aa[ligne0+1];
       miniPrec := 0;
       maxiPrec := maxiA;
@@ -657,17 +672,32 @@ begin // AjouteCourbeEnv
          if Maxi<2048 then Maxi := 2048; // 1 point / pixel
          setlength(Af,Maxi);
          setlength(Aa,Maxi);
+         if fenetre=rectangleAjuste then begin
+            fenetre := rectangulaire;
+            genereSpectreFourierP(indexY);
+            fenetre := rectangleAjuste;
+         end;
          enveloppeFourier(NbreFFT,Maxi,PeriodeFFT,fenetreFourier[indexY],Af,Aa);
          Nbre := Maxi div 2;
+         if fenetre=rectangleAjuste then
+            genereSpectreFourierP(indexY);
      end;
      Acourbe := GrapheFrequence.AjouteCourbe(Af,Aa,Amonde,Nbre,
          grandeurs[cFrequence],grandeurs[indexY],Apage);
      Acourbe.setStyle(getCouleurPale(Acouleur),TStrokeDash.Solid,mLosange);
+     if (ordonneeFFTgr=oReduite) and (AyMax>0) then
+         for i := 0 to pred(Nbre) do
+             Aa[i] := Aa[i]/AyMax;
+     if ordonneeFFTgr=oPuissance then
+         for i := 0 to pred(Nbre) do
+             Aa[i] := sqr(Aa[i]);
      Acourbe.decalage := decale;
      i := 0;
-     repeat inc(i)
-     until (i>Nbre div 64) or (Aa[i]>Aa[i-1]) or (Aa[i]<aymax);
-           // fin du pic continu
+     if not continuInclus then begin
+        repeat inc(i)
+        until (i>Nbre div 64) or (Aa[i]>Aa[i-1]) or (Aa[i]<aymax);
+              // fin du pic continu
+     end;
      Acourbe.debutC := i;
      Acourbe.trace := [trLigne];
      Acourbe.Adetruire := true;
@@ -704,27 +734,24 @@ begin with GrapheFrequence,pages[Apage] do begin
      copyVecteur(Ax,grandeurs[cFrequence].valeur);
      AYmax := getMaxiFFT(NbreFFT div 2,fftAmpl[indexY]);
      avecEnveloppe := enveloppeSpectre and
-          (NbreFFT<(MaxMaxVecteur div 2)) and
-          (fenetre<>RectangleAjuste);
+          (NbreFFT<(MaxMaxVecteur div 2));
      Nbre := NbreFFT div 2;
      AjouteCourbeFreq(nbre);
      AjouteCourbeTemps;
-     if avecEnveloppe
-        then AjouteCourbeEnv
-        else if Apage=pageCourante
-             then RemplitColonne(colF,nbre);
+     if avecEnveloppe then AjouteCourbeEnv;
+     if (not avecEnveloppe) and (Apage=pageCourante) then
+        RemplitColonne(colF,nbre);
      decale := decale + decalageFFT;
 end end; // ajouteFFT
 
 var
   j : integer;
-  couleur,page : integer;
+  page : integer;
   mondeLoc : indiceMonde;
 begin // SetCoordonneeFFT
     freqMax := 0;
     mondeLoc := mondeY;
     with GrapheFrequence do begin
-       couleur := 1;
        decale := 0;
        for j := 1 to maxOrdonnee do
            Coordonnee[j].iMondeC := mondeY;
@@ -743,9 +770,8 @@ begin // SetCoordonneeFFT
                   end;
              end
              else begin
-                AjouteFFT(couleurInit[couleur],pageCourante,j,MondeLoc);
+                AjouteFFT(couleurInit[succ(j)],pageCourante,j,MondeLoc);
                 if OgAnalyseurLogique in OptionGraphe then inc(mondeLoc);
-                inc(couleur);
              end;
         end;
         grapheOK := true;
@@ -787,7 +813,7 @@ var indexY : integer;
 Procedure AjouteCourbeSonagramme;
 var Acourbe : Tcourbe;
 begin with Pages[pageCourante] do begin
-     if (grapheFrequence.monde[mondeY].graduation<>gdB)  then DecadeDB := 0; // linéaire
+     if (grapheFrequence.monde[mondeY].graduation<>gdB)  then DecadeDB := 0; // linÃ©aire
      finFFT := pred(nmes);
      debutFFT := 0;
      allDataFFT := true;
@@ -896,7 +922,7 @@ begin with GrapheFrequence do begin
            repeat inc(j) until valY[j]=0;
            finC := j-1;
            if trace=[trLigne] then
-              // cas de la courbe enveloppe à traiter
+              // cas de la courbe enveloppe Ã  traiter
               finC := MaxMaxVecteur div 2;
      end;
      PaintBoxFrequence.repaint
@@ -1111,7 +1137,7 @@ end;
 
 procedure TFGrapheFFT.ResetTemps;
 begin
-     if TempsBtn.isPressed and not PaintBoxTemps.Visible then begin // pas le même ordre !
+     if TempsBtn.isPressed and not PaintBoxTemps.Visible then begin // pas le mÃªme ordre !
              PaintBoxTemps.Visible := true;
              SplitterTemps.Visible := true;
              if (PaintBoxTemps.Height<=Height div 3)
@@ -1150,10 +1176,11 @@ begin
    writeBoolXML(ANode,'EnveloppeSpectre',enveloppeSpectre);
    writeBoolXML(ANode,'SonagrammeBtn',SonagrammeBtn.isPressed);
    writeBoolXML(ANode,'NbreHarmOpt',NbreHarmoniqueOptimise);
-//   writeBoolXML(ANode,'ContinuInclus',continuInclus);
+   writeIntegerXML(ANode,'TypeOrdonnee',ord(ordonneeFFTgr));
+   writeBoolXML(ANode,'ContinuInclus',continuInclus);
    writeBoolXML(ANode,'TempsBtn',TempsBtn.isPressed);
    writeIntegerXML(ANode,'DecadedB',DecadeDB);
-//   writeInteger('NbreHarmAff',NbreHarmoniqueAff);
+   writeIntegerXML(ANode,'NbreHarmAff',NbreHarmoniqueAff);
 //   writeFloat('PasTempsSonagramme',pasTempsSonagramme);
 //   writeInteger('PasSonCalcul',PasSonCalcul);
 //   writeFloat('FreqMaxSonagramme',FreqMaxSonagramme);{18}
@@ -1183,8 +1210,8 @@ begin
    ecritIntegerRW3(ord(enveloppeSpectre));{7}
    ecritIntegerRW3(ord(SonagrammeBtn.isPressed));{8}
    ecritIntegerRW3(ord(NbreHarmoniqueOptimise));{9}
-   ecritIntegerRW3(ord(false));{10}
-   ecritIntegerRW3(ord(false));{11}
+   ecritIntegerRW3(ord(ordonneeFFTgr));{10}
+   ecritIntegerRW3(ord(continuInclus));{11}
    ecritIntegerRW3(ord(TempsBtn.isPressed));{12}
    ecritFloatRW3(SplitterTemps.position.y);{13}
    ecritIntegerRW3(DecadeDB);{14}
@@ -1287,23 +1314,27 @@ begin
              lignesLues := true;
       end;
       if pos('OPTIONS',ligneWin)<>0 then begin
-         grapheFrequence.SuperposePage := litBooleanWin;    //1
+         grapheFrequence.SuperposePage := litBooleanRW3;    //1
          grapheTemps.SuperposePage := grapheFrequence.SuperposePage;
          zint := litIntegerRW3; //2
          grapheFrequence.monde[mondeY].graduation := Tgraduation(zint);
-         litBooleanWin; //3
+         litBooleanRW3; //3
          grapheFrequence.monde[mondeY].MinidB := litFloatRW3; //4
          if imax>=5 then litLigneWin;
          if imax>=6 then begin
             PrecisionFFT := litIntegerRW3;
             precisionFFT := precisionFFT/100;
          end;
-         if imax>=7 then enveloppeSpectre := litBooleanWin;
-         if imax>=8 then SonagrammeBtn.isPressed := litBooleanWin;
-         if imax>=9 then NbreHarmoniqueOptimise := litBooleanWin;
-         if imax>=10 then litBooleanWin;
-         if imax>=11 then litBooleanWin;
-         if imax>=12 then TempsBtn.isPressed := litBooleanWin;
+         if imax>=7 then enveloppeSpectre := litBooleanRW3;
+         if imax>=8 then SonagrammeBtn.isPressed := litBooleanRW3;
+         if imax>=9 then NbreHarmoniqueOptimise := litBooleanRW3;
+         if imax>=10 then begin
+            zint := litIntegerRW3;
+            if (zint >= ord(low(TordonneeFFT))) and (zint <= ord(high(TordonneeFFT))) then
+              ordonneeFFTgr := TordonneeFFT(zint);
+         end;
+         if imax>=11 then continuInclus := litBooleanRW3;
+         if imax>=12 then TempsBtn.isPressed := litBooleanRW3;
          if imax>=13 then begin
             zint := litIntegerRW3;
             PaintBoxTemps.height := zint;
@@ -1385,12 +1416,16 @@ begin
             NbreHarmoniqueOptimise := getBoolXML(ANode);
             exit
       end;
-      (*
+      if ANode.NodeName='TypeOrdonnee' then begin
+            zint := getIntegerXML(ANode);
+            if (zint >= ord(low(TordonneeFFT))) and (zint <= ord(high(TordonneeFFT))) then
+              ordonneeFFTgr := TordonneeFFT(zint);
+            exit;
+      end;
       if ANode.NodeName='ContinuInclus' then begin
-          continuInclus := getBool;
+          continuInclus := getBoolXML(ANode);
           exit;
       end;
-      *)
       if ANode.NodeName='TempsBtn' then begin
             TempsBtn.isPressed := getBoolXML(ANode);
             exit
@@ -1684,6 +1719,11 @@ begin
      MajGrapheFFT
 end;
 
+procedure TFGrapheFFT.HelpBtnClick(Sender: TObject);
+begin
+    ShowAide(HELP_FenetreFourier);
+end;
+
 procedure TFGrapheFFT.ImprimeBtnClick(Sender: TObject);
 var bas : single;
 begin
@@ -1814,7 +1854,8 @@ begin
                    debutFFT := finFFT-minPeriodeFFT;
                    grapheTemps.windowXY(valeurVar[indexTri,debutFFT],0,mondeY,point1);
                 end;
-          periodeFFT := valeurVar[indexTri,finFFT]-valeurVar[indexTri,debutFFT]/ (finFFT-debutFFT) * (finFFT-debutFFT+1);
+          if finFFT > debutFFT then
+            periodeFFT := ((valeurVar[indexTri,finFFT] - valeurVar[indexTri,debutFFT]) / (finFFT - debutFFT)) * (finFFT - debutFFT + 1);
       end;
       AffecteDebutFin;
 end;

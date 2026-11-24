@@ -23,6 +23,102 @@ begin
      FPath.free;
 end;
 
+Procedure Tequivalence.DrawLatex(var latexStr : TstringList);
+var exposantX,exposantY : double;
+
+Procedure TraceDroiteLatex(x,y,pente : double;
+   xMin,yMin,xMax,Ymax : double);
+var x1d,x2d : double;
+    y1d,y2d : double;
+begin
+    if pente=0
+       then begin
+          x1d := xMin;
+          x2d := xMax;
+       end
+       else begin
+          try
+          if pente>0
+             then begin
+                x1d := x+(yMin-y)/pente;
+                x2d := x+(yMax-y)/pente;
+             end
+             else begin
+                x1d := x+(yMax-y)/pente;
+                x2d := x+(yMin-y)/pente;
+             end;
+         if x1d<xMin then x1d := xMin;
+         if x2d>xMax then x2d := xMax;
+         except
+             x1d := xMin;
+             x2d := xMax;
+         end;
+    end;
+    y1d := y+pente*(x1d-x);
+    y2d := y+pente*(x2d-x);
+    latexStr.add('\draw[dashed,'+couleurLatex(couleur)+',thick] '+
+     '(axis cs:'+floatToStrLatex(x1d/exposantX)+','+floatToStrLatex(y1d/exposantY)+')'+
+     ' -- '+
+     '(axis cs:'+floatToStrLatex(x2d/exposantX)+','+floatToStrLatex(y2d/exposantY)+');');
+end;
+
+var ecart,x3,x4,y3,y4,xAxe : double;
+    strX,strY : string;
+begin with aGraphe do begin
+     latexStr.clear;
+     if monde[mondepH].axe = nil
+        then strY := formatReg(pHe / monde[mondepH].exposant) + ' '
+        else strY := monde[mondepH].axe.formatNombre(pHe / monde[mondepH].exposant,1) + ' ';
+     if monde[mondeX].axe = nil
+        then strX := formatReg(ve / monde[mondeX].exposant) + ' '
+        else strX := monde[mondeX].axe.formatNombre(ve / monde[mondeX].exposant,1) + ' ';
+     case mondepH of
+          mondeY : xAxe := monde[mondeX].mini;
+          mondeDroit : xAxe := monde[mondeX].maxi;
+          else xAxe := monde[mondeX].mini;
+     end;
+     exposantX := monde[mondeX].exposant;
+     exposantY := monde[mondepH].exposant;
+     if lrEquivalence in LigneRappel then begin
+         x3 := x1-(x2-x1)/2;
+         x4 := x2+(x2-x1)/2;
+         y3 := (y1+y2)/2-abs(y2-y1);
+         y4 := (y2+y1)/2+abs(y2-y1);
+         latexStr.add('\draw[dotted,thick] '+
+         '(axis cs:'+floatToStrLatex(xAxe/exposantX)+','+floatToStrLatex(phe/exposantY)+') node[above right] {'+strY+'} '+
+         '-- (axis cs:'+floatToStrLatex(ve/exposantX)+','+floatToStrLatex(phe/exposantY)+') '+
+         '-- (axis cs:'+floatToStrLatex(ve/exposantX)+','+floatToStrLatex(monde[mondepH].mini/exposantY)+') node[above right] {'+strX+'} ;');
+         traceDroiteLatex(x1,y1,pente,x3,y3,x4,y4);
+         traceDroiteLatex(x2,y2,pente,x3,y3,x4,y4);
+         traceDroiteLatex(ve,pHe,pente,x3,y3,x4,y4);
+     end;
+     if lrTangente in LigneRappel then begin
+         ecart := (monde[mondeX].maxi - monde[mondeX].mini)*LongueurTangente;
+         x3 := ve+ecart;
+         if x3>monde[mondeX].maxi then x3 := monde[mondeX].maxi;
+         x4 := ve-ecart;
+         if x4<monde[mondeX].mini then x4 := monde[mondeX].mini;
+         ecart := (monde[MondepH].maxi - monde[MondepH].mini)*LongueurTangente;
+         y3 := pHe+ecart;
+         if y3>monde[mondepH].maxi then y3 := monde[mondepH].maxi;
+         y4 := pHe-ecart;
+         if y4<monde[mondepH].mini then y4 := monde[mondepH].mini;
+         traceDroiteLatex(ve,pHe,pente,x4,y4,x3,y3);
+         setUnitePente(mondepH);
+         strX := unitePente.formatPenteUnite(pente);
+         latexStr.add('\draw '+
+                '(axis cs:'+floatToStrLatex(ve/exposantX)+','+
+                            floatToStrLatex(phe/exposantY)+') node[above right] {'+
+                            translateNomTexte(strX)+'} ;');
+     end;
+     if [lrXdeY,lrReticule]*ligneRappel<>[] then begin
+          latexStr.add('\draw[dash dot,thick] '+
+            '(axis cs:'+floatToStrLatex(xAxe/exposantX)+','+floatToStrLatex(phe/exposantY)+') node[above right] {'+strY+'} '+
+            '-- (axis cs:'+floatToStrLatex(ve/exposantX)+','+floatToStrLatex(phe/exposantY)+') '+
+            '-- (axis cs:'+floatToStrLatex(ve/exposantX)+','+floatToStrLatex(monde[mondepH].mini/exposantY)+') node[above right] {'+strX+'} ;');
+     end;
+end end; // equivalence.drawLatex
+
 Procedure Tequivalence.Paint;
 var pointEq, point1, point2 : TPointF;
     FontSizeEquiv, oldFontSize : single;
@@ -421,13 +517,33 @@ begin
      y1 := ph1;
      mondepH := mondeY;
      varY := nil;
-     couleur := CouleurPages[c mod NbreCouleur];
+     isIntersection := false;
+     couleur := GetCouleurPages(c);
+     modelisee := false;
+end;
+
+constructor Tequivalence.CreateEq(v,ph,p : double;gr : TgrapheReg);
+begin
+     agraphe := gr;
+     ve := v;
+     phe := pH;
+     pente := p;
+     x2 := 0;  y2 := 0;
+     x1 := 0;  y1 := 0;
+     mondepH := mondeY;
+     varY := nil;
+     isIntersection := false;
+     couleur := GetCouleurPages(pageCourante);
      modelisee := false;
 end;
 
 constructor Tequivalence.Create(gr : TgrapheReg);
 begin
      agraphe := gr;
+     varY := nil;
+     isIntersection := false;
+     modelisee := false;
+     mondepH := mondeY;
 end;
 
 Procedure TgrapheReg.AjouteEquivalence(i : integer;effaceDouble : boolean);
@@ -663,12 +779,18 @@ begin // AjouteEquivalence
                   exit;
             end;
         end;
-      NewEquivalence := Tequivalence.CreateEq(v11,ph11,v22,ph22,vee,phee,penteTg,pageCourante,self);
-      NewEquivalence.index1 := i;
-      NewEquivalence.index2 := i2;
-      NewEquivalence.modelisee := IsModelisee;
-      NewEquivalence.mondepH := mondeDerivee;
-      NewEquivalence.ligneRappel := [ligneRappelCourante];
+      NewEquivalence := Tequivalence.CreateEq(vee,phee,penteTg,self);
+      with NewEquivalence do begin
+         index1 := i;
+         index2 := i2;
+         modelisee := IsModelisee;
+         mondepH := mondeDerivee;
+         ligneRappel := [ligneRappelCourante];
+         x2 := v22;
+         y2 := ph22;
+         x1 := v11;
+         y1 := ph11;
+      end;
       equivalences[pageCourante].Add(NewEquivalence);
       equivalenceCourante := newEquivalence;
       Nmax := (NewEquivalence.index2 - NewEquivalence.index1) div 2;
@@ -731,7 +853,7 @@ begin
   writeFloatXML(ANode,'Phe',pHe);
   writeIntegerXML(ANode,'Index1',index1);
   writeIntegerXML(ANode,'Monde',mondepH);
-  writeIntegerXML(ANode,'isRappel',byte(LigneRappel));
+  writeIntegerXML(ANode,'isRappel',word(byte(LigneRappel)));
   writeBoolXML(ANode,'isModele',modelisee);
   writeStringXML(ANode,'Comment',commentaire);
   writeColorXML(ANode,'Couleur',couleur);
@@ -753,7 +875,7 @@ begin
   zI := litIntegerRW3;{7}
   aLigne := TligneRappel(zI);
   ligneRappel := [aLigne];
-  modelisee := litBooleanWin;{8}
+  modelisee := litBooleanRW3;{8}
   commentaire := litligneWinU;{9}
   litligneWin;
   try

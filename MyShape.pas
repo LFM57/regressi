@@ -1,4 +1,4 @@
-unit MyShape;
+﻿unit MyShape;
 
 interface
 
@@ -61,25 +61,31 @@ type
 
  TReticuleShape = class(TShape)
  private
- FisVert,FisHoriz : boolean;
+ FisVert,FisHoriz,FisPolaire : boolean;
  FComplet : boolean;
  Fcentre : TpointF;
+ Forigine : TpointF;
  Flayout : TTextLayout;
  FTexteX,FTexteY : string;
  protected
     procedure Paint; override;
     procedure setVert(value : boolean);
     procedure setHoriz(value : boolean);
+    procedure setPolaire(value : boolean);
     procedure setComplet(value : boolean);
     procedure setCentre(value : TpointF);
+    procedure setOrigine(value : TpointF);
  public
    IndexModele, IndexCourbe: integer;
    positionX : TpositionX;
    positionY : TpositionY;
+   numero : integer;
    property isVert : boolean read FisVert write setVert;
    property isHoriz : boolean read FisHoriz write setHoriz;
+   property isPolaire : boolean read FisPolaire write setPolaire;
    property complet : boolean read Fcomplet write setComplet;
    property centre : TpointF read Fcentre write setCentre;
+   property origine : TpointF read Forigine write setOrigine;
    property texteX : string read FTexteX write FTexteX;
    property texteY : string read FTexteY write FTexteY;
    constructor Create(AOwner: TComponent); override;
@@ -100,6 +106,7 @@ const
 implementation
 
 const DecaleLabel = 4;
+      rayonArcAngle : array[1..2] of single = (50,70);
 
 // Bornes
 constructor TBorneShape.Create(AOwner: TComponent);
@@ -261,8 +268,11 @@ begin
   Stroke.color := TAlphaColor($FF475569);
   FisVert := true;
   FisHoriz := true;
+  FisPolaire := false;
   Fcomplet := true;
   Fcentre := TpointF.Create(0,0);
+  Forigine := TpointF.Create(0,0);
+  numero := 1;
   Flayout := TTextLayoutManager.DefaultTextLayout.Create;
   Flayout.layoutCanvas := canvas;
 //  Flayout.Font.Family := FonteRegressi;
@@ -330,6 +340,26 @@ begin
    Flayout.RenderLayout(Canvas);
 end;
 
+procedure traceTexteRayon;
+var P : TPointF;
+begin
+   P := TpointF.create((Forigine.X + Fcentre.X)/2, (Forigine.Y + Fcentre.Y)/2);
+   traceTexte(P,FTexteY);
+end;
+
+procedure traceTexteAngle(angle : single);
+var P : TPointF;
+    rArc : single;
+begin
+   angle := angle/2;
+   if (numero >= 1) and (numero <= 2)
+      then rArc := rayonArcAngle[numero]
+      else rArc := rayonArcAngle[1];
+   P := TpointF.create(Forigine.X+round(rArc*cos(angle)),
+                       Forigine.Y+round(rArc*sin(angle)));
+   traceTexte(P,FTexteX);
+end;
+
 procedure traceTexteX;
 var P : TPointF;
     ecart : single;
@@ -364,8 +394,23 @@ begin
    traceTexte(P,FTexteY);
 end;
 
+procedure TracePolaire;
+var angle,r : single;
 begin
-   inherited;
+   r := round(sqrt(sqr(Forigine.X-Fcentre.x)+sqr(Forigine.Y-Fcentre.y)));
+   angle := system.math.arctan2(Fcentre.Y-Forigine.y,Fcentre.X-Forigine.x);
+   if Fcomplet then canvas.DrawEllipse(TrectF.create(Forigine.X - r,Forigine.Y - r,Forigine.x + r,Forigine.y + r),1);
+   if (numero >= 1) and (numero <= 2)
+      then r := rayonArcAngle[numero]
+      else r := rayonArcAngle[1];
+   canvas.DrawArc(Forigine, TpointF.Create(r,r), 0, radtodeg(angle), 1);
+   canvas.DrawLine(Forigine,Fcentre,1);
+   traceTexteAngle(angle);
+   traceTexteRayon;
+end;
+
+procedure traceCartesien;
+begin
    if FisVert then begin
    if Fcomplet
       then canvas.DrawLine(TpointF.Create(Fcentre.X,0),TpointF.Create(Fcentre.X,height),1)
@@ -380,9 +425,19 @@ begin
    end;
 end;
 
+begin
+   inherited;
+   if FisPolaire then tracePolaire else traceCartesien;
+end;
+
 procedure TReticuleShape.setVert(value : boolean);
 begin
     FisVert := value
+end;
+
+procedure TReticuleShape.setPolaire(value : boolean);
+begin
+    FisPolaire := value
 end;
 
 procedure TReticuleShape.setComplet(value : boolean);
@@ -393,6 +448,12 @@ end;
 procedure TReticuleShape.setCentre(value : TpointF);
 begin
     Fcentre := value;
+    Repaint;
+end;
+
+procedure TReticuleShape.setOrigine(value : TpointF);
+begin
+    Forigine := value;
     Repaint;
 end;
 

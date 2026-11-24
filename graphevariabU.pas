@@ -29,7 +29,15 @@ Uses
   FMX.Platform,
   FMX.Graphics,
   FMX.DialogService,
- 
+
+  FMX.TMSFNCCustomControl,
+  FMX.TMSFNCCustomScrollControl,
+  FMX.TMSFNCGridData, FMX.TMSFNCCustomGrid,
+  FMX.TMSFNCGrid, FMX.TMSFNCGridCell,
+  FMX.TMSFNCTypes, FMX.TMSFNCUtils,
+  FMX.TMSFNCGraphics,
+  FMX.TMSFNCGraphicsTypes, FMX.TMSFNCGridOptions,
+
   Xml.xmldom, Xml.XMLIntf, Xml.XMLDoc,
 
   aidekey,
@@ -65,8 +73,6 @@ type
       ValeurXDiff : vecteur;
       IsModeleSysteme : boolean;
       orthoAverifier : boolean;
-      courbeModele : Tcourbe;
-      indexCourbeModele : integer;
       BorneDebut,BorneFin : array[1..MaxIntervalles] of TBorneShape;
       BorneSelect : TBorneShape;
       TailleEq : single;
@@ -86,6 +92,7 @@ type
       procedure ConvertitXY(sender : TObject;var x,y : single);
       function setBorne(P : TpointF) : boolean;
       procedure ajusteBorne(P : TpointF);
+      function IndexCourbeLigne : integer;
   public
       BorneActive : codeIntervalle;
       modeleDependant : boolean;
@@ -140,6 +147,10 @@ type
       procedure SetStyleAnimation;
       procedure verifAnimation;
 // Fin procedure animation
+      procedure CalculCurseurModele(cellule : string);
+      Procedure InitCurseurModele;
+      procedure RemplitTableauEquivalence;
+      procedure BarreEspace;
   end;
 
 var
@@ -150,7 +161,8 @@ implementation
 uses
      fspec, regmain, cursData, options, choixModele,
      systDiff, CoordPhys, Graphfft, Valeurs,
-     optModele, PropCourbe, optionsvitesse, modif, choixParamAnim;
+     optModele, PropCourbe, optionsvitesse, modif, choixParamAnim,
+     curModeleU;
 
 const
     NcurseurModeleMax = 16;
@@ -638,35 +650,46 @@ begin
 end; // AffichePosition
 
 procedure AfficheResidu;
-var i : integer;
-    ref : double;
+var i, k : integer;
+    ref, residu, ecart : double;
     YY : string;
     P : tpointF;
 begin with pages[pageCourante] do begin
     if not(monde[mondeX].defini) then exit;
+    if (indexCourbeModele < 0) or (indexCourbeModele >= courbes.Count) then exit;
     P.create(x,y);
     i := pointProche(P,indexCourbeModele,true,false);
     if (i<debut[1]) or (i>fin[1]) then exit;
     if courbes[indexCourbeModele].IncertY<>nil
        then begin
+       try
           ref := courbes[indexCourbeModele].incertY[i];
           YY := stIncertitude;
+          ref := (valeurVar[fonctionTheorique[1].indexY,i]-valeurTheorique[1,i])/ref;
+          YY := stEcart+FloatToStrF(ref,ffGeneral,3,1)+' * '+YY;
+       except
+          YY := '';
+       end;
        end
        else if modeleCalcule and fonctionTheorique[1].residuStat.statOK
           then begin
-             ref := fonctionTheorique[1].residuStat.sigma;
-             YY := stSigmaResidu;
+             k := i - debut[1];
+             if (k < 0) or (k >= fonctionTheorique[1].residuStat.Nbre) then exit;
+             ref := fonctionTheorique[1].residuStat.t95;
+             if fonctionTheorique[1].residuStat.avecIncert then begin
+                residu := fonctionTheorique[1].residuStat.residusNormalises[k];
+                YY := stResiduNormalise;
+             end else begin
+                residu := fonctionTheorique[1].residuStat.residus[k];
+                YY := stResiduStudent;
+             end;
+             YY := YY+FloatToStrF(residu,ffGeneral,3,1)+
+                      stLimiteStudent95+FloatToStrF(ref,ffGeneral,3,1)+')';
           end
           else begin
-             ref := 1;
-             YY := '';
+             ecart := valeurVar[fonctionTheorique[1].indexY,i]-valeurTheorique[1,i];
+             YY := stEcart+FloatToStrF(ecart,ffGeneral,3,1);
           end;
-    try
-    ref := (valeurVar[fonctionTheorique[1].indexY,i]-valeurTheorique[1,i])/ref;
-    YY := stEcart+FloatToStrF(ref,ffGeneral,3,1)+' * '+YY;
-    except
-    YY := '';
-    end;
     FregressiMain.Aide.text := YY;
 end end; // AfficheResidu
 
@@ -697,6 +720,11 @@ begin // PaintBoxMouseMove
       exit;
    end;
    case curseur of
+        curReticuleModele : begin
+           hintLoc := hReticuleModele;
+           setReticuleModele(origin);
+           affichePosition;
+        end;
         curZoomAv,curEfface,curBornes : if deplacement then begin
                selection.width := x-selection.Position.x;
                selection.height := y-selection.position.y;
@@ -785,9 +813,12 @@ begin // PaintBoxMouseMove
            end;
    end;
    FregressiMain.Aide.text := hintLoc;
+   paintBox.hint := hintLoc;
 end; // PaintBoxMouseMove
 
 procedure TgrapheVariab.SetPenBrush(c : Tcurseur);
+var curModelePermis : boolean;
+    i : integer;
 begin
     if c=curOrigine then begin
        if monde[mondeX].axe.fonct.genreC<>g_experimentale then begin
@@ -802,6 +833,28 @@ begin
      end;
      curseur := c;
      case curseur of
+         curReticuleModele : begin
+             if nbreModele>1
+                then curModelePermis := (pages[pageCourante].modeleCalcule) and
+                       (ModeleConstruit in etatModele) and
+                       (monde[mondeX].axe=grandeurs[fonctionTheorique[1].indexX]) and
+                       (monde[mondeY].axe=grandeurs[fonctionTheorique[1].indexY])
+                else begin
+                     curModelePermis := false;
+                     i := 0;
+                     while (not curModelePermis) and (i < courbes.Count) do
+                         if (trLigne in courbes[i].trace) and
+                            (courbes[i].page=pageCourante)
+                            then curModelePermis := true
+                            else inc(i);
+                end;
+             if curModelePermis
+             then paintBox.cursor := crCross
+             else begin
+                afficheErreur(ErCurseurModele,0);
+                curseur := curSelect;
+             end;
+         end;
          curZoomAv : ;
          curBornes : ;
          curTexte : ;
@@ -814,7 +867,7 @@ begin
          else paintBox.cursor := crCross;
      end;// case curseur
      if not (curseur in [curZoomAv,curBornes,curEfface]) then selection.visible := false;
-     curseurOsc[1].visible := curseur in [curReticule,curReticuleData];
+     curseurOsc[1].visible := curseur in [curReticule,curReticuleData,curReticuleModele];
      ReticuleOrigine.visible := curseur = curOrigine;
      FregressiMain.cercle.Visible := curseur in [curEquivalence,curReticuleData];
      if curseur=curEquivalence then begin
@@ -831,8 +884,8 @@ begin
            not(lecturePage) and
            (NbreVariab>1) and
            (NbrePages>0) and
-           (ModeleDefini in etatModele) and
-           (ModeleConstruit in etatModele) and
+           (ModeleDefini in graphe.etatModele) and
+           (ModeleConstruit in graphe.etatModele) and
            pages[pageCourante].modeleCalcule;
         if grapheOK and
            (
@@ -915,6 +968,7 @@ begin // MouseDown
       exit;
    end;
    case curseur of
+       curReticuleModele : ;
        curZoomAv,curBornes,curEfface : afficheSelection;
        curLigne : if (dessinLineCourant<>nil) then
           dessinLineCourant.affectePoint1(x,y);
@@ -1102,6 +1156,8 @@ begin
              if BorneActive=succ(NbreModele) then begin
                    FonctionTheorique[succ(NbreModele)].indexX := indexX;
                    FonctionTheorique[succ(NbreModele)].indexY := indexY;
+                   if ChoixModeleDlg = nil then
+                      Application.CreateForm(TChoixModeleDlg, ChoixModeleDlg);
                    ChoixModeleDlg.coordonnee := coordonnee;
                    ChoixModeleDlg.appelMagnum := false;
                    ChoixModeleDlg.appelRGS := false;
@@ -1161,6 +1217,7 @@ begin // MouseUp
   end;
   if (sender is TBorneShape) then BorneSelect := sender as TborneShape;
   case curseur of
+       curReticuleModele : paintBox.repaint;
        curZoomAv : affecteZoomAv;
        curBornes : affecteBornes;
        curEfface : affecteEfface;
@@ -1345,6 +1402,7 @@ begin with pages[page] do begin
                                 AddIncert(courbeAdd);
                                 CourbeExpAffectee := true;
                                 couleurModeleCourant := couleurModele[c];
+                                couleurM := couleurModele[c];
                                 with coordonnee[i] do
                                      courbeAdd.setStyle(couleurModeleCourant,styleT,motif);
                                 ModeleGraphique[c].couleur := couleurModeleCourant;
@@ -1552,7 +1610,7 @@ begin
     end;
     if (nbreOrdonnee=0) and (nbreVariab>1) then begin
         with coordonnee[1] do begin
-          codeX := 0; codeY := 1;
+          codeX := 0; codeY := indexVariab[1];
           nomX := grandeurs[codeX].nom;
           nomY := grandeurs[codeY].nom;
           monde[mondeX].axe := grandeurs[codeX];
@@ -1664,6 +1722,51 @@ begin
 end;
 
 procedure TgrapheVariab.PaintBoxPaint;
+
+procedure MajIntersection;
+var i,j : integer;
+    equ : Tequivalence;
+    trouve,correct : boolean;
+    xr,yr : double;
+begin
+  if (PageCourante < 1) or (PageCourante > MaxPages) then exit;
+  if not traceIntersection or (NbreModele<2) then begin // suppression
+       j := 0;
+       while j<equivalences[pageCourante].count do begin
+         equ := equivalences[pageCourante].items[j];
+         if (lrReticule in equ.ligneRappel) and (equ.isIntersection)
+            then equivalences[pageCourante].Delete(j)
+            else inc(j);
+       end;
+       exit;
+  end;
+  for i := 2 to nbreModele do begin
+        trouve := false;
+        xr := pages[pageCourante].X_inter[i];
+        yr := pages[pageCourante].Y_inter[i];
+        Correct := not isNan(xr) and not isNan(yr);
+        for j := 0 to Pred(equivalences[pageCourante].count) do begin
+             equ := equivalences[pageCourante].items[j];
+             if (lrReticule in equ.ligneRappel) and (equ.isIntersection) then begin
+                trouve := true;
+                if correct then begin
+                   equ.ve := xr;
+                   equ.phe := yr;
+                end
+                else equivalences[pageCourante].Delete(j);
+                break;
+             end;
+        end;
+        if not trouve and Correct then begin
+                equ := Tequivalence.CreateEq(xr,yr,0,self);
+                equ.mondepH := mondeY;
+                equ.isIntersection := true;
+                equ.ligneRappel := [lrReticule];
+                ligneRappelCourante := lrReticule;
+                Equivalences[pageCourante].Add(equ);
+        end;
+  end;
+end; // MajIntersection
 
 Procedure TestModif;
 var i : integer;
@@ -1800,6 +1903,7 @@ begin // PaintBoxPaint
               ZoomSuperpose;
            end;
         limiteFenetre := TRectF.create(0,0,paintBox.width,paintBox.height);
+        MajIntersection;
         draw;
         effaceBornes;
         if FCoordonneesPhys.ModeleEnCours then traceBornes;
@@ -1828,6 +1932,11 @@ begin // PaintBoxPaint
               PropCourbeForm.Acourbe := courbes[iPropCourbe];
               PropCourbeForm.MaJ;
         end;
+        if curseur=CurReticuleModele then with curseurOsc[1] do begin
+              indexCourbe := indexCourbeLigne;
+              if indexCourbe >= 0 then
+                mondeC := courbes[indexCourbe].iMondeC;
+        end;
 end; // PaintBoxPaint
 
 destructor TgrapheResidu.Destroy;
@@ -1853,15 +1962,57 @@ begin
 end;
 
 Procedure TGrapheVariab.EcritConfigXML(Anode : IXMLNode);
+
+procedure ecritDefaut;
+
+procedure ecritMonde(m : indiceMonde);
+var  DefautXML : IXMLNode;
+begin with monde[m] do begin
+       if useZoom then getMinMaxdefaut;
+       DefautXML := ANode.AddChild(stDefaut);
+       DefautXML.Attributes[stIndex] := intToStr(ord(m));
+       writeFloatXML(DefautXML,'MinD',minDefaut);
+       writeFloatXML(DefautXML,'MaxD',maxDefaut);
+       writeFloatXML(DefautXML,'Delta',deltaAxe);
+       writeIntegerXML(DefautXML,'NTicks',NTicks);
+end end;
+
+var m : IndiceMonde;
+begin
+    if useDefaut or
+       useDefautX or
+       useZoom then begin
+       for m := mondeX to mondeDroit do
+           ecritMonde(m);
+    end;
+end; // ecritDefaut
+
+Procedure ecritAnimation;
+var i : integer;
+    AnimXML,ParamXML : IXMLNode;
+begin
+   AnimXML := Anode.AddChild('ANIMATION');
+   writeBoolXML(AnimXML,'AnimationTemporelle',false);
+   writeBoolXML(AnimXML,'AnimationManuelle',FregressiMain.AnimationBtn.isPressed);
+   writeBoolXML(AnimXML,'TitreAnimation',FregressiMain.titreAnimCB.isChecked);
+   writeIntegerXML(AnimXML,'NbreTick',round(FregressiMain.AnimationTB.value));
+   writeIntegerXML(AnimXML,'NbreParamAnim',NbreParamAnimation);
+   for i := 0 to pred(NbreParamAnimation) do begin
+       ParamXML := AnimXML.AddChild('ParamAnim');
+       ParamXML.Attributes[stIndex] := intToStr(i);
+       paramAnimation[i].ecritXML(ParamXML);
+   end;
+end;
+
 var i : integer;
     p : integer;
     OptionsXML,CoordXML : IXMLNode;
 begin
    for i := 1 to NbreOrdonnee do with coordonnee[i] do begin
        CoordXML := ANode.AddChild('COORD');
-       CoordXML.Attributes['Index'] := intToStr(i);
+       CoordXML.Attributes[stIndex] := intToStr(i);
        writeIntegerXML(CoordXML,'LIGNE',ord(ligne));
-       writeIntegerXML(CoordXML,'COULEUR',colorToInt(couleur));
+       writeColorXML(CoordXML,stCouleur,couleur);
        writeIntegerXML(CoordXML,'MOTIF',ord(Motif));
        writeStringXML(CoordXML,'X',coordonnee[i].nomX);
        writeStringXML(CoordXML,'Y',nomY);
@@ -1881,11 +2032,14 @@ begin
    writeIntegerXML(optionsXML,'OptModele',byte(optionModele));{2}
    writeBoolXML(optionsXML,'SuperPage',SuperposePage);
    writeBoolXML(optionsXML,'Ellipse',traceEllipse);
+   writeBoolXML(optionsXML,'Intersection',traceIntersection);
    writeBoolXML(optionsXML,'ProjeteVecteur',projeteVecteur);
    writeBoolXML(optionsXML,'ProlongeVect',ProlongeVecteur);
    writeBoolXML(optionsXML,'CouleurVitesseImposee',couleurVitesseImposee);
    writeIntegerXML(optionsXML,'ReperePage',ord(reperePage));
    writeIntegerXML(optionsXML,'OrdreLissage',OrdreLissage);
+   writeIntegerXML(optionsXML,'PenWidth',round(PenWidthEcran));
+   ecritDefaut;
    for i := 0 to pred(DessinTexts.count) do begin
        OptionsXML := ANode.addChild('TEXTE');
        dessinTexts[i].StoreXML(OptionsXML);
@@ -1894,12 +2048,16 @@ begin
        OptionsXML := ANode.addChild('SHAPE');
        dessinLines[i].StoreXML(OptionsXML);
    end;
-   for p := 1 to nbrePages do
+   for p := 1 to nbrePages do begin
+       OptionsXML := writeBoolXML(ANode,'MODELECALC',Pages[p].ModeleCalcule);
+       optionsXML.Attributes[stPage] := intToStr(p);
        for i := 0 to pred(Equivalences[p].count) do begin
-          OptionsXML := ANode.addChild('TANGENTE');
+          OptionsXML := ANode.addChild(stTangente);
           equivalences[p][i].StoreXML(OptionsXML);
-          optionsXML.Attributes['Page'] := intToStr(p);
+          optionsXML.Attributes[stPage] := intToStr(p);
        end;
+   end;
+   if FregressiMain.animationBtn.isPressed or (NbreParamAnimation>0) then ecritAnimation;
 end;  // ecritConfigXML
 
 Procedure TgrapheVariab.ecritConfig;
@@ -1998,10 +2156,14 @@ end; // ecritConfig
 
 Procedure TgrapheVariab.litConfigXML(ANode : IXMLNode);
 var CoordCourante : integer;
+    avecDefaut : boolean;
+    mondeCourant : indiceMonde;
 
 procedure ResetCoord;
 var i : integer;
 begin
+    avecDefaut := false;
+    mondeCourant := mondeY;
     for i := mondeX to mondeSans do with monde[i] do begin
         defini := false;
         axe := nil;
@@ -2017,6 +2179,18 @@ begin
 end;
 
 procedure VerifCoord;
+
+procedure affecteDefaut;
+var m : indiceMonde;
+begin
+    useDefaut := true;
+    useDefautX := true;
+    useZoom := false;
+    monde[mondeX].defini := true;
+    for m := mondeX to mondeDroit do with monde[m] do
+        SetMinMaxDefaut(mini, maxi);
+end;
+
 var i : integer;
 begin
     for i := 1 to maxOrdonnee do with coordonnee[i] do begin
@@ -2027,6 +2201,7 @@ begin
         if codeX<>grandeurInconnue then
            monde[mondeX].axe := grandeurs[codeX];
     end;
+    if avecDefaut then affecteDefaut;
 end;
 
 procedure LoadXMLInReg(ANode: IXMLNode);
@@ -2048,7 +2223,12 @@ var zByte : byte;
     newEquivalence : Tequivalence;
 begin // loadXMLInReg
       if ANode.NodeName='COORD' then begin
-         coordCourante := ANode.Attributes['Index'];
+         coordCourante := ANode.Attributes[stIndex];
+         suite;
+         exit;
+      end;
+      if SameText(ANode.NodeName, stDefaut) then begin
+         mondeCourant := IndiceMonde(Integer(ANode.Attributes[stIndex]));
          suite;
          exit;
       end;
@@ -2117,8 +2297,11 @@ begin // loadXMLInReg
          dessinLines.add(AdessinLine);
          exit;
       end;
-      if ANode.NodeName='MODELECALC' then begin;
-         p := ANode.Attributes['Index'];
+      if ANode.NodeName='MODELECALC' then begin
+         if ANode.HasAttribute(stPage) then
+            p := ANode.Attributes[stPage]
+         else
+            p := ANode.Attributes['Index'];
          pages[p].modeleCalcule := getBoolXML(ANode);
          exit;
       end;
@@ -2131,7 +2314,7 @@ begin // loadXMLInReg
          exclude(coordonnee[coordCourante].trace,trSonagramme);
          exit;
       end;
-      if ANode.NodeName='COULEUR' then begin
+      if SameText(ANode.NodeName, stCouleur) then begin
          coordonnee[coordCourante].couleur := getColorXML(ANode);
          exit;
       end;
@@ -2141,6 +2324,27 @@ begin // loadXMLInReg
       end;
       if ANode.NodeName='SuperPage' then begin
          superposePage := GetBoolXML(ANode);
+         exit;
+      end;
+      if ANode.NodeName='AutoTick' then begin
+         autoTick := GetBoolXML(ANode);
+         exit;
+      end;
+      if ANode.NodeName='NTicks' then begin
+         monde[mondeCourant].NTicks := GetIntegerXML(ANode);
+         exit;
+      end;
+      if ANode.NodeName='MinD' then begin
+         monde[mondeCourant].Mini := GetFloatXML(ANode);
+         avecDefaut := true;
+         exit;
+      end;
+      if ANode.NodeName='MaxD' then begin
+         monde[mondeCourant].Maxi := GetFloatXML(ANode);
+         exit;
+      end;
+      if ANode.NodeName='Delta' then begin
+         monde[mondeCourant].DeltaAxe := GetFloatXML(ANode);
          exit;
       end;
       if ANode.NodeName='EchelleAutoAnim' then begin
@@ -2158,6 +2362,10 @@ begin // loadXMLInReg
          TraceEllipse := GetBoolXML(ANode);
          exit;
       end;
+      if ANode.NodeName='Intersection' then begin
+         TraceIntersection := GetBoolXML(ANode);
+         exit;
+      end;
       if ANode.NodeName='ProlongeVect' then begin
          ProlongeVecteur := GetBoolXML(ANode);
          exit;
@@ -2172,7 +2380,7 @@ begin // loadXMLInReg
          coordonnee[coordCourante].motif := Tmotif(zByte);
          exit;
       end;
-      if ANode.NodeName='azerty' then begin
+      if (ANode.NodeName='PenWidth') or (ANode.NodeName='azerty') then begin
          penWidthEcran := GetIntegerXML(ANode);
          exit;
       end;
@@ -2180,11 +2388,42 @@ begin // loadXMLInReg
          ordreLissage := GetIntegerXML(ANode);
          exit;
       end;
-      if ANode.NodeName='TANGENTE' then begin
+      if SameText(ANode.NodeName, stTangente) then begin
          p := ANode.Attributes['Page'];
          NewEquivalence := Tequivalence.Create(self);
          NewEquivalence.LoadXML(ANode);
          equivalences[p].add(newEquivalence);
+         exit;
+      end;
+      if ANode.NodeName='AnimationTemporelle' then begin
+         exit;
+      end;
+      if ANode.NodeName='AnimationManuelle' then begin
+         FRegressiMain.AnimationBtn.isPressed := GetBoolXML(ANode);
+         exit;
+      end;
+      if ANode.NodeName='TitreAnimation' then begin
+         FRegressiMain.titreAnimCB.isChecked := GetBoolXML(ANode);
+         exit;
+      end;
+      if ANode.NodeName='NbreTick' then begin
+         FRegressiMain.AnimationTB.value := GetIntegerXML(ANode);
+         exit;
+      end;
+      if ANode.NodeName='LignePoint' then begin
+         exit;
+      end;
+      if ANode.NodeName='NbreParamAnim' then begin
+         NbreParamAnimation := GetIntegerXML(ANode);
+         exit;
+      end;
+      if ANode.NodeName='ANIMATION' then begin
+         suite;
+         exit;
+      end;
+      if ANode.NodeName='ParamAnim' then begin
+         p := ANode.Attributes[stIndex];
+         paramAnimation[p].litXML(ANode);
          exit;
       end;
 end; // LoadXMLInReg
@@ -2195,9 +2434,14 @@ begin
    configCharge := true;
    resetCoord;
    if ANode.HasChildNodes then
-      for I := 0 to ANode.ChildNodes.Count - 1 do
-          LoadXMLInReg(ANode.ChildNodes.Nodes[I]);
+      for i := 0 to ANode.ChildNodes.Count - 1 do
+          LoadXMLInReg(ANode.ChildNodes.Nodes[i]);
    verifCoord;
+   if FRegressiMain.AnimationBtn.isPressed then begin
+      verifAnimation;
+      FRegressiMain.PanelAnimation.visible := true;
+      setStyleAnimation;
+   end;
 end; // litConfigXML
 
 Procedure TgrapheVariab.litConfig;
@@ -2223,6 +2467,7 @@ end;
 
 procedure litOptions;
 var i : integer;
+    zInt : integer;
 begin
              litLigneWin; {1}
              optionGraphe := TsetOptionGraphe(byte(strToInt(ligneWin)));
@@ -2233,27 +2478,34 @@ begin
              OrdreLissage := strToInt(ligneWin);
              litLigneWin; {5}
              DimPointVGA := strToInt(ligneWin);
-             if imax>=6 then useDefaut := litBooleanWin; {6}
-             if imax>=7 then superposePage := litBooleanWin; {7}
-             if imax>=8 then traceEllipse := litBooleanWin; {8}
-             if imax>=9 then ProjeteVecteur := litBooleanWin;{9}
+             if imax>=6 then useDefaut := litBooleanRW3; {6}
+             if imax>=7 then superposePage := litBooleanRW3; {7}
+             if imax>=8 then traceEllipse := litBooleanRW3; {8}
+             if imax>=9 then ProjeteVecteur := litBooleanRW3;{9}
              if imax>=10 then litLigneWin;{10}
-             if imax>=11 then litBooleanWin; {11}
-             if imax>=12 then litBooleanWin;{12}
+             if imax>=11 then litBooleanRW3; {11}
+             if imax>=12 then litBooleanRW3;{12}
              if imax>=13 then begin
                 echelleVecteur := litIntegerRW3;// 13
                 echelleVecteur := echelleVecteur/100;
              end;
-             if imax>=14 then ProlongeVecteur := litBooleanWin; {14 }
+             if imax>=14 then ProlongeVecteur := litBooleanRW3; {14 }
              if imax>=15 then litLigneWin; // 15 autrefois entier
              if imax>=16 then pasPoint := litIntegerRW3; //16
-             if imax>=17 then couleurVitesseImposee := litBooleanWin; {17 }
-             if imax>=18 then ajusteOrigine := litBooleanWin; {18 }
-             if imax>=19 then useSelect := litBooleanWin; {19 }
+             if imax>=17 then couleurVitesseImposee := litBooleanRW3; {17 }
+             if imax>=18 then ajusteOrigine := litBooleanRW3; {18 }
+             if imax>=19 then useSelect := litBooleanRW3; {19 }
              if imax>=20 then NbreVecteurVitesseMax := litIntegerRW3; {20 }
              if imax>=21 then litLigneWin; // 21
              if imax>=22 then PenWidthEcran := litIntegerRW3; // 22
-             for i := 23 to imax do litLigneWin;
+             if imax>=23 then litFloatRW3;{23 zeroPolaire}
+             if imax>=24 then litBooleanRW3;{24 withBandeConfiance }
+             if imax>=25 then litBooleanRW3;{25 withBandePrediction}
+             if imax>=26 then begin {26}
+                 zint := litIntegerRW3;
+                 reperePage := TreperePage(zint);
+             end;
+             for i := 27 to imax do litLigneWin;
 end;
 
 procedure litGraduation;
@@ -2279,8 +2531,8 @@ var i : integer;
 begin // litConfig
    MajDefaut := false;
    Curseur := curSelect;
+   configCharge := true;
    while (Length(LigneWin)>0) and (ligneWin[1]=symbReg2) do begin
-      configCharge := true;
       imax := NbreLigneWin(ligneWin);
       if pos('X',ligneWin)<>0 then
            for i := 1 to imax do
@@ -2304,7 +2556,7 @@ begin // litConfig
       if pos('GRADUATION',ligneWin)<>0 then litGraduation else
       if pos('OPTIONS',ligneWin)<>0 then litOptions else
       if pos('ZERO',ligneWin)<>0 then for i := 1 to imax do
-                monde[pred(i)].zeroInclus := litBooleanWin else
+                monde[pred(i)].zeroInclus := litBooleanRW3 else
       if pos('MAXI',ligneWin)<>0 then
            for i := 1 to imax do with monde[pred(i)] do begin
                minDefaut := litFloatRW3;
@@ -2316,7 +2568,7 @@ begin // litConfig
                MajDefaut := true;
           end else
       if pos('MODELECALC',ligneWin)<>0 then
-         for i := 1 to imax do litBooleanWin else
+         for i := 1 to imax do litBooleanRW3 else
       if pos('TEMPSMINMAX',ligneWin)<>0 then begin
                 miniTemps := litFloatRW3;
                 maxiTemps := litFloatRW3;
@@ -2330,13 +2582,12 @@ begin // litConfig
            end else
       if pos('COULEUR',ligneWin)<>0 then
            for i := 1 to imax do begin
-               coordonnee[i].couleur := couleurInit[i];
                litLigneWin;
                try
                zLong := strToInt(ligneWin);
                couleur := intToColor(zLong);
                except
-               couleur := claBlack;
+               couleur := couleurInit[i];
                end;
                coordonnee[i].couleur := couleur;
            end else
@@ -2386,7 +2637,7 @@ begin
      courbePointCourant := c;
      if indexPointCourant>=0 then begin
         FValeurs.MesureCourante := indexPointCourant;
-      //  FValeurs.gridVariab.focusedCell := Cell(1,FValeurs.MesureCourante+2);
+        FValeurs.gridVariab.focusedCell := makeCell(1,FValeurs.MesureCourante+2);
      end;
      AffichePointCourant; // retrace
 end;
@@ -2432,9 +2683,11 @@ begin
 end;
 
 procedure TgrapheVariab.VecteursItemClick(Sender: TObject);
+var complement : array[1..2] of string;
 
 procedure SetVecteurs(j : integer);
 var nomVitesseX,nomVitesseY : string;
+    nomX : string;
     nomAccelerationX,nomAccelerationY : string;
 
 Function AddVitesse(y : string) : string;
@@ -2455,7 +2708,7 @@ end;
 
 Procedure AddNorme(x,y : string);
 begin
-    Fvaleurs.memo.lines.add(x[1]+'=Sqrt('+x+'^2+'+y+'^2)');
+    Fvaleurs.memo.lines.add(x[1]+complement[j]+'=Sqrt('+x+'^2+'+y+'^2)');
     recompiler := true;
 end;
 
@@ -2465,7 +2718,7 @@ var indexvX,indexvY : integer;
     creationvx,creationvy,creationax,creationay : boolean;
 begin
       indexX := indexNom(coordonnee[j].nomX);
-      if (indexX=0) and (NbreOrdonnee=2) and (j=1) then begin
+      if (indexX=0) and (NbreOrdonnee=2) and (j=1) then begin // x(t),y(t) transformé en y(x)
           coordonnee[1].nomX := coordonnee[1].nomY;
           indexX := indexNom(coordonnee[1].nomX);
           coordonnee[1].nomY := coordonnee[2].nomY;
@@ -2485,7 +2738,7 @@ begin
          exclude(coordonnee[j].trace,trAcceleration);
          exit;
       end;
-      indexvX := IndexVitesse(grandeurs[indexX].nom);
+      indexvX := IndexVitesse(coordonnee[j].nomX);
       creationvX := indexvX=GrandeurInconnue;
       if creationvX
          then nomVitesseX := AddVitesse(coordonnee[j].nomX)
@@ -2495,8 +2748,13 @@ begin
       if creationvY
          then nomVitesseY := AddVitesse(coordonnee[j].nomY)
          else nomVitesseY := grandeurs[indexvY].nom;
+      nomX := coordonnee[j].nomX;
+      if length(nomX)>1 then
+         complement[j] := copy(nomX,2,length(nomX)-1);
+      if (j=2) and (complement[1]=complement[2]) then
+         complement[2] := complement[2]+'N';
       if creationvX and creationvY then AddNorme(nomVitesseX,nomVitesseY);
-      if trAcceleration in coordonnee[1].trace then begin
+      if trAcceleration in coordonnee[j].trace then begin
          indexaX := IndexAcceleration(grandeurs[indexX].nom);
          creationaX := indexaX=GrandeurInconnue;
          if creationaX
@@ -2513,15 +2771,21 @@ end; // setVecteurs
 
 var j : integer;
 begin // VecteursItemClick
+     complement[1] := '';
+     complement[2] := '';
      (sender as TmenuItem).IsChecked := true;
      exclude(coordonnee[1].trace,trVitesse);
      exclude(coordonnee[1].trace,trAcceleration);
+     exclude(coordonnee[2].trace,trVitesse);
+     exclude(coordonnee[2].trace,trAcceleration);
      if FRegressiMain.AccelerItem.IsChecked or
         FRegressiMain.VitesseAccItem.IsChecked
         then include(coordonnee[1].trace,trAcceleration);
      if FRegressiMain.VitesseItem.IsChecked  or
         FRegressiMain.VitesseAccItem.IsChecked
         then include(coordonnee[1].trace,trVitesse);
+     for j := 2 to NbreOrdonnee do
+         coordonnee[j].trace := coordonnee[1].trace;
      if (trVitesse in coordonnee[1].trace) or
         (trAcceleration in coordonnee[1].trace)
         then begin
@@ -2575,6 +2839,20 @@ begin // ChoixCurseurClick
               pages[pageCourante].affecteConstParam;
               ligneRappelCourante := lrReticule;
           end;
+          curReticuleModele : begin
+              curseurVisible := true;
+              with CurseurOsc[1] do begin
+                 indexCourbe := indexCourbeLigne;
+                 if indexCourbe >= 0 then begin
+                    mondeC := courbes[indexCourbe].imondeC;
+                    Ic := (courbes[indexCourbe].finC + courbes[indexCourbe].debutC) div 2;
+                    Xr := courbes[indexCourbe].valX[Ic];
+                    Yr := courbes[indexCourbe].valY[Ic];
+                    windowRT(Xr, Yr, MondeC, Pc);
+                 end;
+              end;
+              paintBox.repaint;
+          end;
           curSelect, curReticuleData : paintBox.repaint;
           curLigne : begin
                DessinLineCourant := TdessinLine.createLine(self);
@@ -2592,45 +2870,44 @@ end;  // ChoixCurseurClick
 procedure TgrapheResidu.SetCoordonnee(miniX,maxiX : double);
 
 procedure TraceSigma;
-var Xlegende,dXlegende : double;
+var Xlegende : double;
 
-Procedure traceH(yr : double;couleur : TAlphaColor;titre : string);
+Procedure traceH(yr : double;titre : string);
 var dessinL : TdessinLine;
     dessinT : TdessinText;
 begin
      DessinL := TdessinLine.createLine(self);
      with DessinL do begin
-        couleur := couleur;
+        stroke.color := claNavy;
         stroke.Dash := TstrokeDash.Solid;
-        affectePoint1(windowX(monde[mondeX].mini),windowY(yr,mondeY));
-        width := windowX(monde[mondeX].maxi)-position.x;
-        height := 0;
+        xReal := monde[mondeX].mini;
+        yReal := yr;
      end;
+     DessinL.width := paintBox.width;
+     DessinL.height := 1;
      dessinLines.Add(DessinL);
-     if titre='' then  exit;
+     if titre='' then exit;
      DessinT := TdessinText.createText(self);
      with DessinT do begin
         couleurFond := claWhite;
+        texteBrut := titre;
         text := titre;
-        color := couleur;
-        position.X := xlegende;
+        color := claNavy;
+        xReal := xLegende;
+        yReal := yr;
      end;
      dessinTexts.Add(DessinT);
 end;
 
-begin with fonctionTheorique[1].residuStat,paintBox.Canvas do begin
+begin
       DessinTexts.clear;
       with monde[mondeX] do
          xLegende := (mini+maxi)/3;
-      dxLegende := xLegende/2;
-      traceH(moyenne-t95,claNavy,'95%');
-      traceH(moyenne+t95,claNavy,'95%');
-      Xlegende := xLegende+dXlegende;
-      traceH(moyenne,claTeal,stMoyenne);
-      Xlegende := xLegende+dXlegende;
-      traceH(moyenne-t99,claBlue,'99%');
-      traceH(moyenne+t99,claBlue,'99%');
-end end; // TraceSigma
+      traceH(-fonctionTheorique[1].residuStat.t95,'95%');
+      with monde[mondeX] do
+         xLegende := 2*(mini+maxi)/3;
+      traceH(+fonctionTheorique[1].residuStat.t95,'95%');
+end; // TraceSigma
 
 var Acourbe : Tcourbe;
     ValeurX,ValeurY : vecteur;
@@ -2646,8 +2923,8 @@ begin with pages[pageCourante] do begin
         if not fonctionTheorique[1].residuStat.statOK then exit;
         grapheOK := (NbreVariab>1) and (NbrePages>0) and
               pages[pageCourante].modeleCalcule and
-                (ModeleDefini in etatModele) and
-                (ModeleConstruit in etatModele);
+                (ModeleDefini in graphe.etatModele) and
+                (ModeleConstruit in graphe.etatModele);
         if not grapheOK  then exit;
         optionGraphe := [];
         iX := fonctionTheorique[1].indexX;
@@ -2662,17 +2939,13 @@ begin with pages[pageCourante] do begin
            setLength(dYresidu,NmesMax+1);
         end;
         for i := debut[1] to fin[1] do begin
+            if j >= fonctionTheorique[1].residuStat.Nbre then break;
             valeurX[j] := valeurVar[iX,i];
-            valeurY[j] := fonctionTheorique[1].residu[i];
+            valeurY[j] := fonctionTheorique[1].residuStat.residus[j];
             if traceEllipse then begin
                dXresidu[j] := incertVar[iX,i];
                dYresidu[j] := incertVar[iY,i];
             end;
-            inc(j);
-        end;
-        if (NbreModele>1) then for i := debut[2] to fin[2] do begin
-            valeurY[j] := fonctionTheorique[2].residu[i];
-            valeurX[j] := valeurVar[iX,i];
             inc(j);
         end;
         Acourbe := Tcourbe.create(valeurX,valeurY,0,pred(j),
@@ -2683,25 +2956,25 @@ begin with pages[pageCourante] do begin
         monde[mondeX].mini := miniX;
         monde[mondeX].maxi := maxiX;
         monde[mondeX].Axe := grandeurs[iX];
-        GetMinMax(valeurY,j,mini,maxi);
         monde[mondeY].Axe := grandeurs[iY];
-        if TraceEllipse then begin
+        if TraceEllipse then with fonctionTheorique[1].residuStat do begin
            Acourbe.IncertX := dXresidu;
            Acourbe.IncertY := dYresidu;
-           setLength(Vminmax,NmesMax+1);
-           for i := 0 to pred(fonctionTheorique[1].residuStat.Nbre) do
-               Vminmax[i] := fonctionTheorique[1].residu[i]+dyResidu[i];
-           GetMinMax(Vminmax,fonctionTheorique[1].residuStat.Nbre,tampon,maxi);
-           for i := 0 to pred(fonctionTheorique[1].residuStat.Nbre) do
-               Vminmax[i] := fonctionTheorique[1].residu[i]-dyResidu[i];
-           GetMinMax(Vminmax,fonctionTheorique[1].residuStat.Nbre,mini,tampon);
+           setLength(Vminmax,Max(NmesMax, Nbre)+1);
+           for i := 0 to pred(Nbre) do
+               Vminmax[i] := residus[i]+dyResidu[i];
+           GetMinMax(Vminmax,Nbre,tampon,maxi);
+           for i := 0 to pred(Nbre) do
+               Vminmax[i] := residus[i]-dyResidu[i];
+           GetMinMax(Vminmax,Nbre,mini,tampon);
            VminMax := nil;
-        end;
-        with fonctionTheorique[1] do begin
-           if maxi<(residuStat.moyenne+residuStat.t99*1.1) then
-               maxi := residuStat.moyenne+residuStat.t99*1.1;
-           if mini>(residuStat.moyenne-residuStat.t99*1.1) then
-               mini := residuStat.moyenne-residuStat.t99*1.1;
+        end
+        else GetMinMax(valeurY,j,mini,maxi);
+        with fonctionTheorique[1].residuStat do begin
+           if maxi<(t95*1.1) then
+               maxi := t95*1.1;
+           if mini>(-t95*1.1) then
+               mini := -t95*1.1;
         end;
         if maxi>abs(mini)
             then mini := -maxi
@@ -2981,7 +3254,32 @@ begin with pages[pageCourante] do begin
        if i>=nmes then i := pred(nmes);
 end end;
 
+procedure gereEquivalence(ajout : boolean);
 begin
+     if equivalenceCourante<>nil then with equivalenceCourante do begin
+          windowRT(Ve,pHe,mondeY,P);
+          i := PointProche(P,indexCourbeEquivalence,true,ligneRappelTangente=lrTangente);
+          if ajout and (i>=0) then begin
+              AjouteEquivalence(i,true);
+              setPointCourant(i,indexCourbeEquivalence);
+          end;
+          if majI then begin
+              SetValeurEquivalence(i);
+              paintBox.repaint; // trace
+          end;
+     end;
+end;
+
+begin
+     if keyChar=' ' then
+         case curseur of
+               curReticuleModele,curReticule : BarreEspace;
+               curEquivalence : gereEquivalence(true);
+               curReticuleData : begin
+                  GetCurseurProche(Origin,true);
+                  if curseurCourant>0 then i := curseurOsc[curseurCourant].Ic;
+               end;
+         end;
      with pages[pageCourante] do case curseur of
         curReticuleData : begin
             if key=vkEscape then begin
@@ -2993,7 +3291,7 @@ begin
         end;
         curTexte : ;
         curLigne : ;
-        curEfface,curReticule : if key=vkEscape then begin
+        curEfface,curReticule,curReticuleModele : if key=vkEscape then begin
            setPenBrush(CurSelect);
            exit;
         end;
@@ -3012,6 +3310,10 @@ begin
         end; // curEquivalence
      end; // case
      case key of
+          vkSpace : case curseur of
+               curReticuleModele,curReticule : BarreEspace;
+               curEquivalence : gereEquivalence(true);
+          end;
           vkDelete,vkBack : begin
              if (curseur in [curSelect,curReticule,curReticuleData]) and
                 (indexPointCourant>=0) then begin
@@ -3021,7 +3323,8 @@ begin
              end;
              if DessinTextCourant<>nil then dessinTexts.delete(dessinTexts.indexOf(DessinTextCourant));
              if DessinLineCourant<>nil then dessinLines.delete(dessinLines.indexOf(DessinLineCourant));
-          end
+          end;
+          vkReturn : if curseur=curEquivalence then gereEquivalence(true);
      end;
 end; // keyDown
 
@@ -3085,6 +3388,379 @@ begin
     if (Abs(oldCentre.X - P.X) > 0.5) or (Abs(oldCentre.Y - P.Y) > 0.5) then
        paintBox.Repaint;
 end; // ajusteBorne
+
+Procedure TGrapheVariab.CalculCurseurModele(cellule : string);
+var xr,yr : double;
+    LindexCourbe : integer;
+
+Procedure AffecteCurseurModele;
+var NewEquivalence : Tequivalence;
+    i : integer;
+begin with CurseurModeleDlg do
+  if (Ligne-2)>=equivalences[pageCourante].count
+    then begin
+       NewEquivalence := Tequivalence.CreateEq(xr,yr,0,self);
+       NewEquivalence.ligneRappel := [lrXdeY];
+       equivalences[pageCourante].Add(NewEquivalence);
+       with Tableau do
+            if ligne=pred(rowCount) then begin
+                rowCount := rowCount+1;
+                for i := 0 to 2 do cells[i,pred(rowCount)] := '';
+            end;
+    end
+    else begin
+       NewEquivalence := equivalences[pageCourante].items[Ligne-2];
+       NewEquivalence.ve := xr;
+       NewEquivalence.ligneRappel := [lrXdeY];
+       NewEquivalence.pHe := yr;
+    end;
+  paintBox.repaint;
+end;
+
+Function CalculExp : double;
+var posErreur,longErreur : integer;
+    i : integer;
+begin
+   if cellule=''
+     then result := Nan
+     else begin
+        PrevenirFonctionDeParam := false;
+        for i := 2 to length(cellule)-1 do begin
+            if (Cellule[i]=',') and
+                charInSet(Cellule[i-1],['0'..'9']) and
+                charInSet(Cellule[i+1],['0'..'9'])
+                then cellule[i] := '.';
+        end;
+        grandeurImmediate.fonct.expression := cellule;
+        if grandeurImmediate.compileG(posErreur,longErreur,0)
+           then begin
+              try
+              result := calcule(grandeurImmediate.fonct.calcul);
+              except
+              result := Nan;
+              end;
+           end
+           else result := Nan
+     end;
+end;
+
+procedure InterpoleX;
+var distanceMin,distance : single;
+    i : integer;
+    Pi : TPointF;
+    Lyr : double;
+begin
+          LindexCourbe := indexCourbeLigne;
+          if LindexCourbe<0 then exit;
+          xr := 1;
+          yr := calculExp;
+          with courbes[LindexCourbe] do begin
+               if nbreExtrapole>0 then begin
+                 windowRT(xr, yr,courbes[LindexCourbe].imondeC,Pi);
+                 distanceMin := 16;
+                 for i := 0 to NbreExtrapole-1 do begin
+                    distance := abs(Pi.y - valExtrapole[i].y);
+                    if distance < distanceMin then begin
+                       distanceMin := distance;
+                       Pi.x := valExtrapole[i].x;
+                    end;
+                 end;
+                 mondeRT(Pi,courbes[LindexCourbe].imondeC,xr, Lyr);
+                 curseurModeleDlg.tableau.cells[0,curseurModeleDlg.ligne] := FormatReg(xr);
+               end
+               else begin
+                    xr := Nan;
+                    curseurModeleDlg.tableau.cells[0,curseurModeleDlg.ligne] := '?';
+               end;
+          end;
+end;
+
+procedure InterpoleModeles;
+
+function InterpoleModele(iC : integer) : boolean;
+var i,i1 : integer;
+    ecartY,deltaY,deltaX : double;
+begin
+       result := false;
+       if (iC < 0) or (iC >= courbes.Count) then exit;
+       LindexCourbe := iC;
+       i := pointProcheReal(0,yr,courbes[iC],courbes[iC].imondeC);
+       if i<0 then exit;
+       with courbes[iC] do begin
+            ecartY := yr-valY[i];
+            if i<finC then i1 := succ(i) else i1 := pred(i);
+            deltaY := valY[i1]-valY[i];
+            deltaX := valX[i1]-valX[i];
+            try
+               xr := valX[i]+deltaX*ecartY/deltaY;
+            except
+               xr := valX[i];
+            end;
+            curseurModeleDlg.tableau.cells[0,curseurModeleDlg.ligne] := FormatReg(xr);
+            result := true;
+       end;
+end;
+
+var i : integer;
+    iModele : shortInt;
+begin
+     yr := calculExp;
+     xr := Nan;
+     if nbreModele=1
+        then InterpoleModele(indexCourbeModele)
+        else begin
+             for i := 0 to pred(courbes.count) do begin
+                 iModele := courbes[i].indexModele;
+                 if (iModele>0) and InterpoleModele(i) then begin
+                     if (xr>courbes[0].varX.valeur[pages[pageCourante].Debut[iModele]]) and
+                        (xr<courbes[0].varX.valeur[pages[pageCourante].Fin[iModele]])
+                     then begin
+                          courbeModele := courbes[i];
+                          indexCourbeModele := i;
+                          break;
+                     end;
+                 end;
+             end;
+        end;
+end;
+
+procedure InterpoleY;
+var distanceMin,distance : single;
+    i : integer;
+    Pi : TPointF;
+    Lxr : double;
+begin
+          LindexCourbe := indexCourbeLigne;
+          if LindexCourbe<0 then exit;
+          yr := 1;
+          xr := calculExp;
+          with courbes[LindexCourbe] do begin
+             if nbreExtrapole > 0 then begin
+                windowRT(xr, yr,courbes[LindexCourbe].imondeC,Pi);
+                distanceMin := 16;
+                for i := 0 to NbreExtrapole-1 do begin
+                    distance := abs(Pi.x - valExtrapole[i].x);
+                    if distance < distanceMin then begin
+                       distanceMin := distance;
+                       Pi.y := valExtrapole[i].y;
+                    end;
+                end;
+                mondeRT(Pi,courbes[LindexCourbe].imondeC,Lxr, yr);
+                curseurModeleDlg.tableau.cells[1,curseurModeleDlg.ligne] := FormatReg(yr);
+             end
+             else begin
+                yr := Nan;
+                curseurModeleDlg.tableau.cells[1,curseurModeleDlg.ligne] := '?';
+             end;
+          end;
+end;
+
+procedure CalculModeles;
+
+procedure CalculModele(im : codeIntervalle);
+begin
+         grandeurs[fonctionTheorique[im].indexX].valCourante := xr;
+         yr := calcule(fonctionTheorique[im].calcul);
+         curseurModeleDlg.tableau.cells[1,curseurModeleDlg.ligne] := FormatReg(yr);
+end;
+
+var i : integer;
+    iModele : shortInt;
+begin
+     xr := calculExp;
+     if nbreModele=1
+        then begin
+          calculModele(1);
+          LindexCourbe := indexCourbeModele;
+        end
+        else begin
+             for i := 0 to pred(courbes.count) do begin
+                 iModele := courbes[i].indexModele;
+                 if (iModele>0) then begin
+                     CalculModele(iModele);
+                     if (courbeModele<>nil) and
+                        (xr>courbeModele.varX.valeur[pages[pageCourante].Debut[iModele]]) and
+                        (xr<courbeModele.varX.valeur[pages[pageCourante].Fin[iModele]])
+                     then begin
+                          indexCourbeModele := i;
+                          LindexCourbe := i;
+                          courbeModele := courbes[indexCourbeModele];
+                          break;
+                     end;
+                 end;
+             end;
+        end;
+end;
+
+begin with curseurModeleDlg do begin
+    LindexCourbe := -1;
+    if (nbreModele=0) or (indexCourbeModele<0)
+    then if colonne=1
+        then interpoleX  // on a donné y
+        else interpoleY  // on a donné x
+    else if colonne=1
+       then interpoleModeles
+       else calculModeles;
+    if (LindexCourbe>=0) and not(isNan(xr)) then affecteCurseurModele;
+end end; // CalculCurseurModele
+
+Procedure TGrapheVariab.InitCurseurModele;
+begin
+   pages[pageCourante].affecteConstParam;
+   ligneRappelCourante := lrXdeY;
+   RemplitTableauEquivalence;
+   setPenBrush(curSelect);
+   curseurModeleDlg.show;
+end;
+
+procedure TGrapheVariab.RemplitTableauEquivalence;
+var ligne,i : integer;
+    codeDerivee : integer;
+begin
+     if LigneRappelCourante in [lrEquivalence,lrTangente]
+        then codeDerivee := indexDerivee(monde[mondeDerivee].axe,monde[mondeX].axe,true,true)
+        else codeDerivee := 0;
+     if codeDerivee=grandeurInconnue then exit;
+     if curseurModeleDlg=nil then
+        Application.CreateForm(TcurseurModeleDlg,curseurModeleDlg);
+     with curseurModeleDlg.tableau do begin
+          rowCount := equivalences[pageCourante].count+3;
+          cells[0,0] := monde[mondeX].axe.nom;
+          Cells[0,1] := monde[mondeX].axe.NomUnite;
+          cells[1,0] := monde[mondeDerivee].axe.nom;
+          Cells[1,1] := monde[mondeDerivee].axe.NomUnite;
+          Cells[2,0] := stCommentaire;
+          ligne := 1;
+          for i := 0 to pred(equivalences[pageCourante].count) do
+          with equivalences[pageCourante][i] do begin
+              inc(ligne);
+              cells[0,ligne] := formatReg(ve);
+              cells[1,ligne] := formatReg(phe);
+              cells[2,ligne] := commentaire;
+          end;
+          inc(ligne);
+          for i := 0 to 2 do cells[i,ligne] := ''
+     end;
+end;
+
+procedure TGrapheVariab.BarreEspace;
+
+Function Supprime(posSouris : TpointF;aMonde : indiceMonde) : boolean;
+var i : integer;
+    aEquivalence : Tequivalence;
+    aPoint : TPointF;
+    trouve,trouveI : boolean;
+begin
+     trouve := false;
+     i := 0;
+     while i<equivalences[pageCourante].count do begin
+            aEquivalence := equivalences[pageCourante].items[i];
+            with aEquivalence do if (lrReticule in ligneRappel) then begin
+               WindowRT(x1,y1,aMonde,aPoint);
+               trouveI := posSouris.distance(aPoint)<12;
+               if not trouveI then begin
+                  WindowRT(x2,y2,aMonde,aPoint);
+                  trouveI := posSouris.distance(aPoint)<12;
+               end;
+               if not trouveI then begin
+                  WindowRT(ve,pHe,aMonde,aPoint);
+                  trouveI := posSouris.distance(aPoint)<12;
+               end;
+                // supprime
+               if trouveI then begin
+                  equivalences[pageCourante].Remove(aEquivalence);
+                  trouve := true;
+               end
+               else inc(i);
+            end
+            else inc(i);
+         end; // while
+         if trouve then PaintBox.repaint;
+         result := trouve;
+end;
+
+Procedure affecteXY(x,y : double);
+var Lligne : integer;
+begin
+     if curseurModeleDlg=nil then
+        Application.CreateForm(TcurseurModeleDlg,curseurModeleDlg);
+     if curseurModeleDlg.visible then begin
+         Lligne := equivalences[pageCourante].count+1; // ligne 0 nom, 1 unité
+         if Lligne>(curseurModeleDlg.tableau.rowCount-2) then
+            curseurModeleDlg.tableau.rowCount := Lligne+2;
+         curseurModeleDlg.tableau.cells[0,Lligne] := FormatReg(x);
+         curseurModeleDlg.tableau.cells[1,Lligne] := FormatReg(y);
+     end;
+end;
+
+var posSouris : TpointF;
+    xrS,yrS : double;
+    NewEquivalence : Tequivalence;
+    icourbe : integer;
+    Lmonde : indiceMonde;
+begin // BarreEspace
+   case curseur of
+   curReticule : begin
+        PosSouris := curseurOsc[1].Pc;
+        iCourbe := courbeProche(posSouris);
+        if iCourbe<0
+            then Lmonde := curseurOsc[1].mondeC
+            else Lmonde := courbes[iCourbe].iMondeC;
+        if supprime(posSouris,Lmonde) then exit;
+        mondeRT(posSouris,Lmonde,xrS,yrS);
+        NewEquivalence := Tequivalence.CreateEq(xrS,yrS,0,self);
+        NewEquivalence.mondepH := Lmonde;
+        NewEquivalence.ligneRappel := [lrReticule];
+        equivalences[pageCourante].Add(NewEquivalence);
+        PaintBox.repaint;
+   end;// curReticule
+   curReticuleData : begin
+        PosSouris := curseurOsc[1].Pc;
+        if supprime(posSouris,curseurOsc[1].mondeC) then exit;
+        with curseurOsc[1] do
+        if mondeC<>mondeX then begin
+            NewEquivalence := Tequivalence.CreateEq(xr,yr,0,self);
+            NewEquivalence.mondepH := mondeC;
+            NewEquivalence.ligneRappel := [lrReticule];
+            equivalences[pageCourante].Add(NewEquivalence);
+         end;
+         PaintBox.repaint;
+   end;// curReticuleData
+   curReticuleModele : begin
+        PosSouris := curseurOsc[1].Pc;
+        if supprime(posSouris,curseurOsc[1].mondeC) then exit;
+        with curseurOsc[1] do
+        if mondeC<>mondeX then begin
+            NewEquivalence := Tequivalence.CreateEq(xr,yr,0,self);
+            NewEquivalence.mondepH := mondeC;
+            NewEquivalence.ligneRappel := [lrReticule];
+            equivalences[pageCourante].Add(NewEquivalence);
+            affecteXY(xr,yr);
+         end;
+         PaintBox.repaint;
+   end;// curReticuleModele
+   curSelect : if (not SpaceHeld) and (indexPointCourant>=0) then begin
+         Pages[pageCourante].PointActif[indexPointCourant] :=
+              not Pages[pageCourante].PointActif[indexPointCourant];
+         FRegressiMain.WMRegMaj(MajSupprPoints);
+   end;
+   end;// case curseur
+end; //Gestion barre d'espace
+
+function TGrapheVariab.IndexCourbeLigne : integer;
+var i : integer;
+begin
+      result := -1;
+      if nbreModele>1
+         then result := indexCourbeModele
+         else for i := 0 to pred(courbes.Count) do
+                  if (trLigne in courbes[i].trace) and
+                     (courbes[i].page=pageCourante)
+                        then begin
+                          result := i;
+                          break;
+                        end;
+end;
 
 end.
 

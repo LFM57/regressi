@@ -1,4 +1,4 @@
-// Axes.pas : fichier inclus de graphker.pas pour tracé des axes
+ï»¿// Axes.pas : fichier inclus de graphker.pas pour tracÃ© des axes
 
 procedure TGrapheReg.TraceTitreAxeY(g : tgrandeur;m : indiceMonde;
       indexCourbe : integer);
@@ -210,7 +210,7 @@ end;
     if monde[mondeX].axe<>nil then TraceTitreAxeX(Axe,0);
     with limiteFenetre do begin
           segmentXY(left,yAxeX,right,yAxeX);
-          // fléche X
+          // flÃ©che X
           segmentXY(right-marge*3,yAxeX+marge,right,yAxeX);
           segmentXY(right-marge*3,yAxeX-marge,right,yAxeX);
     end;
@@ -228,7 +228,7 @@ end;
       lastRect, curRect : TRectF;
       lblW, lblH, drawX, drawY : single;
   begin with monde[mondeX] do begin
-       Q := OgQuadrillage in OptionGraphe;
+       Q := (OgQuadrillage in OptionGraphe) and initialisation;
        Ticks := TickDebut;
        hasLast := False;
        if orthonorme
@@ -241,7 +241,7 @@ end;
                grandeGraduation := (Ticks mod NTicks)=0;
                graduationX(Ps,Q,grandeGraduation);
                if XcorrectNombre(Ps.x) and (grandeGraduation or not autoTick) then begin
-                  if abs(PointCourant)< (Maxi-Mini)/100 then pointCourant := 0;
+                  if abs(PointCourant) < 0.5 * deltaAxe then pointCourant := 0;
                   if GraduationPiActive
                      then NombreAff := formatRadian(pointCourant)
                      else NombreAff := formatMonde(pointCourant);
@@ -298,7 +298,7 @@ end;
       windowXY(0,0,mondeY,P0);
       SigneAligneY := +1;
       Ticks := monde[m].TickDebut;
-      if (OgQuadrillage in OptionGraphe)
+      if (OgQuadrillage in OptionGraphe) and initialisation
          then begin
             SetTextAlign(TTextAlign.leading,TTextAlign.leading);
             SigneAligneY := +1;
@@ -383,7 +383,8 @@ end;
       if axe.fonct.genreC=g_Texte then exit;
       Q := (OgQuadrillage in OptionGraphe) and
            ( not(GraduationYtrace) or
-            (OgAnalyseurLogique in OptionGraphe));
+            (OgAnalyseurLogique in OptionGraphe)) and
+           initialisation;
       GraduationYTrace := true;
       Ticks := TickDebut;
       hasLast := False;
@@ -394,11 +395,11 @@ end;
          else Ymax := maxi;
       repeat
            windowXY(monde[mondeX].Mini,PointCourant,m,Ps);
-             // coordonnée écran de la marque
+             // coordonnÃ©e Ã©cran de la marque
            if YcorrectGrad(Ps.y,m) then begin
                  grandeGraduation := (Ticks mod NTicks)=0;
                  if YcorrectNombre(Ps.y,m) and (grandeGraduation or not autoTick) then begin
-                    if abs(pointCourant) < (Maxi-Mini)/1000 then pointCourant := 0;
+                    if abs(pointCourant) < 0.5 * deltaAxe then pointCourant := 0;
                     if graduationPiActive
                        then NombreAff := formatRadian(pointCourant)
                        else NombreAff := formatMonde(pointCourant);
@@ -427,7 +428,7 @@ end;
       until ( pointCourant>=Ymax );
       CreatePen(TStrokeDash.Solid,penWidthAxe,CouleurAxeY);
       segmentXY(xAxeY,CourbeBottom,xAxeY,CourbeTop);
-      if avecAxeY then begin // flèche Y
+      if avecAxeY then begin // flÃ¨che Y
           segmentXY(xAxeY-marge,courbeTop+3*marge,xAxeY,courbeTop);
           segmentXY(xAxeY+marge,courbeTop+3*marge,xAxeY,courbeTop);
       end;
@@ -442,9 +443,9 @@ var i,j : integer;
     lblText, nextText : string;
 begin with Monde[mondeX] do begin
    try
-   Q := OgQuadrillage in OptionGraphe;
-   Intermediaire := (Maxi-Mini) <= 4;
-   Intermediaire25 := (Maxi-Mini) <= 6;
+   Q := (OgQuadrillage in OptionGraphe) and initialisation;
+   Intermediaire := (Maxi-Mini) < 6;
+   Intermediaire25 := (Maxi-Mini) < 9;
    hasLast := False;
    drawY := yAxeX+2*marge;
    for i := floor(Mini) to ceil(Maxi) do begin
@@ -511,9 +512,9 @@ var i,j : integer;
     lblText, nextText : string;
 begin with monde[m] do begin
    try
-   Q := (OgQuadrillage in OptionGraphe) and (m=mondeY);
-   Intermediaire := (Maxi-Mini) <= 3;
-   Intermediaire25 := (Maxi-Mini) <= 5;
+   Q := (OgQuadrillage in OptionGraphe) and (m=mondeY) and initialisation;
+   Intermediaire := (Maxi-Mini) <= 4;
+   Intermediaire25 := (Maxi-Mini) <= 6;
    hasLast := False;
    isRightAxis := (m=mondeDroit) and not(OgAnalyseurLogique in OptionGraphe);
    drawX := xAxeY+2.5*signeMargeX*marge;
@@ -572,7 +573,7 @@ begin with monde[m] do begin
    end; {for i}
    CreatePen(TStrokeDash.Solid,penWidthAxe,CouleurAxeY);
    segmentXY(xAxeY,CourbeBottom,xAxeY,CourbeTop);
-   if avecAxeY then begin // flèche Y
+   if avecAxeY then begin // flÃ¨che Y
        segmentXY(xAxeY-marge,courbeTop+3*marge,xAxeY,courbeTop);
        segmentXY(xAxeY+marge,courbeTop+3*marge,xAxeY,courbeTop);
    end;
@@ -598,7 +599,7 @@ end end; // traceAxeLogY
 	      CreatePen(TstrokeDash.Solid,penWidthAxe,CouleurAxeX);
               with limiteCourbe do begin
       	           segmentXY(P1.x,bottom,P1.x,top);
-                        { fléche Y }
+                        { flÃ©che Y }
                    segmentXY(P1.x-marge,top+3*marge,P1.x,top);
                    segmentXY(P1.x+marge,top+3*marge,P1.x,top);
               end;
@@ -618,7 +619,7 @@ end end; // traceAxeLogY
              CreatePen(TstrokeDash.Solid,penWidthAxe,Couleur);
              with limiteCourbe do begin
     	          segmentXY(left,P1.y,right,P1.y);
-                if avecFleche then begin // fléche X
+                if avecFleche then begin // flÃ©che X
                    segmentXY(right-marge*3,P1.y+marge,right,P1.y);
                    segmentXY(right-marge*3,P1.y-marge,right,P1.y);
                 end;   
@@ -668,7 +669,6 @@ begin // DrawAxis
         not superposePage then
         for m := mondeY to high(indiceMonde) do
             monde[m].PTitre.y := (monde[m].CourbeTop+monde[m].CourbeBottom)/2;
-     if initialisation then exit;
      if (OgPolaire in OptionGraphe) then begin
         monde[mondeY].Ptitre.x := limiteCourbe.right;
         WindowXY(0,0,mondeY,P0);

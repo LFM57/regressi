@@ -347,7 +347,6 @@ begin
 end;
 
 Procedure AjouteLigneLatex(const aligne : string);
-Procedure SautLigne; // tel quel sans traduction
 begin
     latexStr.add(aligne);
 end;

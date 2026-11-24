@@ -65,14 +65,18 @@ type
       modeleEnCours : boolean;
       MajModelePermis : boolean;
       avecModele : boolean;
-      modeleErrone : boolean;
       min,max : double;
+      FPanLastPos : TPointF;
+      FPanPrevCurseur : Tcurseur;
+      FPanActive : boolean;
       Procedure VerifCoordonnee;
       procedure AffecteModele;
       procedure ZoomModele;
+      procedure RazCoordParam;
       procedure ConvertitXY(sender : TObject;var x,y : single);
   public
       modeleDependant : boolean;
+      modeleErrone : boolean;
       CurMovePermis : boolean;
       IsModeleMagnum : boolean;
       verifGraphe : boolean;
@@ -104,6 +108,8 @@ type
          Shift: TShiftState; X, Y: single);
       procedure PaintBoxMouseUp(sender : Tobject;Button: TMouseButton;
          Shift: TShiftState; X, Y: single);
+      procedure PaintBoxMouseWheel(Sender: TObject; Shift: TShiftState;
+         WheelDelta: Integer; var Handled: Boolean);
       procedure verifIntervalles;
       procedure verifParametres;
       procedure majParametres;
@@ -125,6 +131,53 @@ const
 
 {$I modelCte.pas}
 
+procedure TgrapheParam.RazCoordParam;
+var i,j,cX : integer;
+    m : indiceMonde;
+    UnitePrec : string;
+begin
+    Curseur := curSelect;
+    j := 1;
+    m := mondeY;
+    UnitePrec := '';
+    if nbreConst>0
+       then cX := indexConst[0]
+       else if NbreParam > 0 then cX := ParamToIndex(1)
+       else exit;
+    for i := 1 to pred(NbreConst) do with Coordonnee[j] do begin
+        codeY := indexConst[i];
+        if codeY<>cX then begin
+             codeX := cX;
+             ligne := LiDroite;
+             nomX := grandeurs[codeX].nom;
+             nomY := grandeurs[codeY].nom;
+             if (j>1) and (UnitePrec<>grandeurs[codeY].nomUnite) and (m < high(indiceMonde)) then inc(m);
+             UnitePrec := grandeurs[codeY].nomUnite;
+             iMondeC := m;
+             monde[iMondeC].graduation := gLin;
+             inc(j);
+             if j>MaxOrdonnee then break;
+        end
+    end;
+    for i := 1 to NbreParam do with Coordonnee[j] do begin
+        codeY := ParamToIndex(i);
+        if codeY<>cX then begin
+          codeX := cX;
+          ligne := LiDroite;
+          nomX := grandeurs[codeX].nom;
+          nomY := grandeurs[codeY].nom;
+          if (j>1) and (UnitePrec<>grandeurs[codeY].nomUnite) and (m < high(indiceMonde)) then inc(m);
+          UnitePrec := grandeurs[codeY].nomUnite;
+          iMondeC := m;
+          monde[iMondeC].graduation := gLin;
+          inc(j);
+          if j>MaxOrdonnee then break;
+        end;
+    end;
+    useDefaut := false;
+    DessinTexts.clear;
+end; // RazCoordParam
+
 procedure TgrapheParam.PaintBoxMouseMove(Sender: TObject;
      Shift: TShiftState; X,Y: single);
 
@@ -143,6 +196,7 @@ end; // AffichePosition
 var deplacement : boolean;
     deltaM : double;
     hintLoc : string;
+    m : indiceMonde;
 begin // PaintBoxMouseMove
    if not grapheOK then exit;
    if ssRight in Shift then exit; // clic droit
@@ -185,31 +239,30 @@ begin // PaintBoxMouseMove
            AffichePosition;
            hintLoc := stBarreReticule;
         end;
-        curMove : if deplacement then begin
-            with monde[mondeX] do begin
-                 deltaM := (x-selection.position.X)/a;
-                 mini := mini+deltaM;
-                 maxi := maxi+deltaM;
-                 defini := true;
-            end;
-            with monde[mondeY] do begin
-                 deltaM := (y-selection.position.y)/a;
-                 mini := mini+deltaM;
-                 maxi := maxi+deltaM;
-                 defini := true;
-            end;
-            with monde[mondeDroit] do begin
-                 deltaM := (y-selection.position.y)/a;
-                 mini := mini+deltaM;
-                 maxi := maxi+deltaM;
-                 defini := true;
-            end;
-            if (abs(x-selection.position.x)+abs(y-selection.position.y)>8) then begin
+        curMove : if FPanActive and ((ssLeft in Shift) or (ssMiddle in Shift)) then begin
+            if (Abs(x - FPanLastPos.X) > 0) or (Abs(y - FPanLastPos.Y) > 0) then begin
+               if monde[mondeX].defini and (monde[mondeX].a <> 0) then begin
+                  deltaM := (x - FPanLastPos.X) / monde[mondeX].a;
+                  monde[mondeX].mini := monde[mondeX].mini - deltaM;
+                  monde[mondeX].maxi := monde[mondeX].maxi - deltaM;
+               end;
+               for m := mondeY to high(indiceMonde) do
+                  if monde[m].defini and (monde[m].a <> 0) then begin
+                     deltaM := (y - FPanLastPos.Y) / monde[m].a;
+                     monde[m].mini := monde[m].mini - deltaM;
+                     monde[m].maxi := monde[m].maxi - deltaM;
+                  end;
+               FPanLastPos := TPointF.Create(x, y);
+               useDefaut := False;
+               useDefautX := False;
+               include(modif, gmEchelle);
                paintBox.repaint;
-               selection.visible := true;
             end;
         end
-        else setPenBrush(curSelect);
+        else begin
+            FPanActive := False;
+            setPenBrush(FPanPrevCurseur);
+        end;
         curReticuleData : if deplacement and (curseurCourant>0)
            then begin
                setSegmentInt(origin);
@@ -221,8 +274,10 @@ begin // PaintBoxMouseMove
                    then paintBox.cursor := crDefault
                    else paintBox.cursor := crHandPoint;
            end;
+        curEquivalence : hintLoc := hEquivalence;
    end;
    FregressiMain.Aide.text := hintLoc;
+   paintBox.hint := hintLoc;
 end; // PaintBoxMouseMove
 
 procedure TgrapheParam.SetPenBrush(c : Tcurseur);
@@ -265,6 +320,13 @@ begin // MouseDown
    convertitXY(sender,X,Y);
    origin.x := x;
    origin.Y := y;
+   if Button = TMouseButton.mbMiddle then begin
+      FPanActive := True;
+      FPanPrevCurseur := curseur;
+      FPanLastPos := origin;
+      setPenBrush(curMove);
+      exit;
+   end;
    case curseur of
        curZoomAv : begin
           selection.Position.x := origin.X;
@@ -276,12 +338,10 @@ begin // MouseDown
        curTexte : affecteDessinText;
        curReticule : ;
        curSelect : if curMovePermis then begin
+              FPanActive := True;
+              FPanPrevCurseur := curSelect;
+              FPanLastPos := origin;
               setPenBrush(curMove);
-              selection.Position.x := origin.X;
-              selection.Position.y := origin.Y;
-              selection.width := 0;
-              selection.height := 0;
-              selection.Visible := true;
        end; // curSelect
        curReticuleData : begin
           GetCurseurProche(origin,true);
@@ -339,16 +399,35 @@ begin // MouseUp
        curReticuleData : ;
        curReticule : ;
        curEquivalence : if (ligneRappelTangente=lrTangente) then ;
-       curMove : setPenBrush(curSelect);
+       curMove : begin FPanActive := False; setPenBrush(FPanPrevCurseur); end;
   end;
   paintBox.repaint;
 end; // MouseUp
+
+procedure TgrapheParam.PaintBoxMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; var Handled: Boolean);
+var
+  P: TPointF;
+begin
+  if not grapheOK then Exit;
+  if Screen <> nil then
+    P := paintBox.ScreenToLocal(Screen.MousePos)
+  else
+    P := origin;
+  AffecteZoomWheel(WheelDelta, P);
+  curMovePermis := True;
+  include(modif, gmEchelle);
+  paintBox.Repaint;
+  Handled := True;
+end;
 
 constructor TgrapheParam.Create(apaintBox : TPaintBox);
 var m : codeIntervalle;
 begin
   inherited create(aPaintBox);
   curseur := curSelect;
+  FPanActive := False;
+  FPanPrevCurseur := curSelect;
   VerifGraphe := true;
   for m := 1 to MaxIntervalles do  begin
       valeurDeriveeX[m] := nil;
@@ -389,46 +468,65 @@ begin
          include(traceC,trPoint);
       end;
       if traceC=[] then traceC := [trPoint];
-      if (grandeurs[iY].genreG=constanteGlb) or
-         (grandeurs[iX].genreG=constanteGlb) then begin
-              setLength(y,MaxPages);
-              setLength(x,MaxPages);
-              n := 0;
-              for p := 1 to NbrePages do with pages[p] do begin
-                  if grandeurs[iY].genreG=constanteGlb
-                      then y[n] := grandeurs[iY].valCourante
-                      else y[n] := valeurParametre(iY);
-                  if grandeurs[iX].genreG=constanteGlb
-                      then x[n] := grandeurs[iX].valCourante
-                      else x[n] := valeurParametre(iX);
-                  inc(n);
+      if (grandeurs[iY].genreG in [constante,constanteGlb,paramNormal]) and
+         (grandeurs[iX].genreG in [constante,constanteGlb,paramNormal]) then begin
+              setLength(y, NbrePages);
+              setLength(x, NbrePages);
+              if traceEllipse then begin
+                 setlength(xIncert, NbrePages);
+                 setLength(yIncert, NbrePages);
               end;
-              Acourbe := AjouteCourbe(x,y,MondeLoc,NbrePages,
-                 grandeurs[iX],grandeurs[iY],0);
-              Acourbe.Trace := traceC;
-              Acourbe.Adetruire := true;
-              Acourbe.couleur := coordonnee[i].couleur;
-              Acourbe.styleT := coordonnee[i].styleT;
-              Acourbe.motif := coordonnee[i].motif;
-           exit;
+              for p := 1 to NbrePages do with pages[p] do begin
+                  n := p - 1;
+                  case grandeurs[iY].genreG of
+                    constanteGlb : begin
+                      y[n] := grandeurs[iY].valCourante;
+                      if traceEllipse then yIncert[n] := 0;
+                    end;
+                    constante : begin
+                      y[n] := valeurConst[iY];
+                      if traceEllipse then yIncert[n] := 0;
+                    end;
+                    paramNormal : begin
+                      y[n] := valeurParametre(iY);
+                      if traceEllipse then yIncert[n] := precisionParametre(iY);
+                    end;
+                  end;
+                  case grandeurs[iX].genreG of
+                    constanteGlb : begin
+                      x[n] := grandeurs[iX].valCourante;
+                      if traceEllipse then xIncert[n] := 0;
+                    end;
+                    constante : begin
+                      x[n] := valeurConst[iX];
+                      if traceEllipse then xIncert[n] := 0;
+                    end;
+                    paramNormal : begin
+                      x[n] := valeurParametre(iX);
+                      if traceEllipse then xIncert[n] := precisionParametre(iX);
+                    end;
+                  end;
+              end;
+      end else
+      begin
+        setLength(y, NbrePages);
+        setLength(x, NbrePages);
+        if traceEllipse then begin
+           setlength(xIncert, NbrePages);
+           setLength(yIncert, NbrePages);
+        end;
+        n := 0;
+        for p := 1 to NbrePages do with pages[p] do begin
+               x[n] := valeurParametre(iX);
+               y[n] := valeurParametre(iY);
+               if traceEllipse then begin
+                  xIncert[n] := precisionParametre(iX);
+                  yIncert[n] := precisionParametre(iY);
+               end;
+               inc(n);
+        end;
       end;
-// c'est un paramètre
-      setlength(x,MaxVecteurDefaut+1);
-      setLength(y,MaxVecteurDefaut+1);
-      if traceEllipse then begin
-         setlength(xIncert,MaxVecteurDefaut+1);
-         setLength(yIncert,MaxVecteurDefaut+1);
-      end;
-      n := 0;
-      for p := 1 to NbrePages do with pages[p] do begin
-             x[n] := valeurParametre(iX);
-             y[n] := valeurParametre(iY);
-             if traceEllipse then begin
-                xIncert[n] := precisionParametre(iX);
-                yIncert[n] := precisionParametre(iY);
-             end;
-             inc(n);
-      end;
+      n := NbrePages;
       Acourbe := AjouteCourbe(x,y,MondeLoc,NbrePages,
          grandeurs[iX],grandeurs[iY],0);
       if (i=1) then begin
@@ -530,12 +628,12 @@ var i : integer;
 begin
     for i := 1 to maxOrdonnee do with coordonnee[i] do begin
         codeY := indexNom(nomY);
-        if (codeY>maxGrandeurs) or
-           not (grandeurs[codeY].genreG in [constante,constanteGlb])
+        if (codeY<>grandeurInconnue) and
+           not (grandeurs[codeY].genreG in [constante,constanteGlb,paramNormal])
            then codeY := grandeurInconnue;
         codeX := indexNom(nomX);
         if (codeX<>grandeurInconnue) and
-           not (grandeurs[codeX].genreG in [constante,constanteGlb])
+           not (grandeurs[codeX].genreG in [constante,constanteGlb,paramNormal])
            then codeX := grandeurInconnue;
     end;
     nbreOrdonnee := 0;
@@ -554,19 +652,8 @@ begin
            nomY := '';
            ligne := liDroite;
     end;
-    if nbreOrdonnee=0 then begin
-       DessinTexts.clear;
-       for i := mondeX to MaxOrdonnee do Monde[i].graduation := gLin;
-       with coordonnee[1] do begin
-          codeX := indexConst[0];
-          nomX := grandeurs[codeX].nom;
-          curseur := curSelect;
-          codeY := indexConst[1];
-          nomY := grandeurs[codeY].nom;
-          iMondeC := mondeY;
-          nbreOrdonnee := 1;
-       end;
-    end // nbreOrdonnee=0
+    if nbreOrdonnee=0 then
+       RazCoordParam
     else begin
         AvecAxe := false;
         for i := 1 to NbreOrdonnee do with coordonnee[i] do
@@ -595,7 +682,7 @@ begin
 end; // affecteSuperpose
 
 begin // PaintBoxPaint
-        if (pageCourante=0) or not configCharge then exit;
+        if (pageCourante=0) or ((not grapheOK) and (not configCharge)) then exit;
         tailleEcran := PaintBox.Height;
         if ([gmXY,gmModele]*modif)<>[] then setCoordonnee;
         if not grapheOK then exit;
@@ -646,9 +733,9 @@ var i : integer;
 begin
    for i := 1 to NbreOrdonnee do with coordonnee[i] do begin
        CoordXML := ANode.AddChild('COORD');
-       CoordXML.Attributes['Index'] := intToStr(i);
+       CoordXML.Attributes[stIndex] := intToStr(i);
        writeIntegerXML(CoordXML,'LIGNE',ord(ligne));
-       writeIntegerXML(CoordXML,'COULEUR',colorToInt(couleur));
+       writeColorXML(CoordXML,stCouleur,couleur);
        writeIntegerXML(CoordXML,'MOTIF',ord(Motif));
        writeStringXML(CoordXML,'X',coordonnee[i].nomX);
        writeStringXML(CoordXML,'Y',nomY);
@@ -707,7 +794,7 @@ var zByte : byte;
     AdessinText : TdessinText;
 begin // loadXMLInReg
       if ANode.NodeName='COORD' then begin
-         coordCourante := ANode.Attributes['Index'];
+         coordCourante := ANode.Attributes[stIndex];
          suite;
          exit;
       end;
@@ -789,7 +876,7 @@ begin // loadXMLInReg
          exclude(coordonnee[coordCourante].trace,trSonagramme);
          exit;
       end;
-      if ANode.NodeName='COULEUR' then begin
+      if SameText(ANode.NodeName, stCouleur) then begin
          coordonnee[coordCourante].couleur := getColorXML(ANode);
          exit;
       end;
@@ -822,7 +909,7 @@ begin // loadXMLInReg
          coordonnee[coordCourante].motif := Tmotif(zByte);
          exit;
       end;
-      if ANode.NodeName='azerty' then begin
+      if (ANode.NodeName='PenWidth') or (ANode.NodeName='azerty') then begin
          penWidthEcran := GetIntegerXML(ANode);
          exit;
       end;
@@ -890,6 +977,7 @@ begin // ChoixCurseurClick
      if NewCurseur=curReticuleData then begin
         ReticuleDataDlg := TReticuleDataDlg.create(FregressiMain);
         ReticuleDataDlg.Agraphe := self;
+        CentreForm(ReticuleDataDlg);
         if ReticuleDataDlg.showModal<>mrOK then
            newCurseur := curSelect;
         ReticuleDataDlg.free;
@@ -920,15 +1008,13 @@ begin // ChoixCurseurClick
 end;  // ChoixCurseurClick
 
 procedure TgrapheParam.AffecteModele;
-var i,k,n : integer;
+var i : integer;
 begin
-for i := 0 to pred(courbes.count) do with courbes.items[i] do
+    for i := 0 to pred(courbes.count) do with courbes.items[i] do
     if (indexModele>0) then begin
-        n := 0;
-        for k := 1 to NbrePages do with pages[k] do begin
-            valY[n] := valeurTheoriqueGlb[indexModele];
-            valX[n] := valeurParametre(fonctionTheoriqueGlb[indexModele].indexX);
-            inc(n);
+        with fonctionTheoriqueGlb[indexModele] do begin
+             DebutC := 0;
+             GenereMGlb(valX,valY,min,max,monde[mondeX].graduation=gLog,FinC);
         end;
     end;
 end; // affecteModele

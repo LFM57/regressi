@@ -192,6 +192,7 @@ object FGrapheFFT: TFGrapheFFT
     TabOrder = 1
     object SourisBtn: TButton
       Align = Left
+      Hint = 'Menu outils graphiques'
       Images = ImagesData.ImagesList
       ImageIndex = 60
       Size.Width = 76.000000000000000000
@@ -205,6 +206,7 @@ object FGrapheFFT: TFGrapheFFT
     object OptionsBtn: TButton
       Align = Left
       HelpType = htKeyword
+      Hint = 'Choix de la grandeur et options'
       Images = ImagesData.ImagesList
       ImageIndex = 49
       Position.X = 158.000000000000000000
@@ -247,6 +249,7 @@ object FGrapheFFT: TFGrapheFFT
     end
     object ZoomBtn: TButton
       Align = Left
+      Hint = 'Zoom par cliquer glisser'
       Images = ImagesData.ImagesList
       ImageIndex = 48
       Position.X = 496.000000000000000000
@@ -292,6 +295,7 @@ object FGrapheFFT: TFGrapheFFT
       Align = Left
       TabOrder = 8
       Cursor = crIBeam
+      Hint = 'Nombre de valeurs des raies affich'#233'es sur le graphe'
       Max = 10.000000000000000000
       Value = 10.000000000000000000
       KeyboardType = Default
@@ -322,6 +326,7 @@ object FGrapheFFT: TFGrapheFFT
     end
     object FenetreBtn: TButton
       Align = Left
+      Hint = 'Choix de la fen'#234'tre'
       Images = ImagesData.ImagesList
       ImageIndex = 69
       PopupMenu = FenetreMenu
@@ -333,6 +338,19 @@ object FGrapheFFT: TFGrapheFFT
       Text = 'Fen'#234'trage'
       TextSettings.WordWrap = True
       OnClick = FenetreBtnClick
+    end
+    object HelpBtn: TButton
+      Align = Right
+      HelpContext = 23
+      Images = ImagesData.ImagesList
+      ImageIndex = 5
+      Position.X = 829.000000000000000000
+      Size.Width = 70.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 11
+      Text = 'Aide'
+      OnClick = HelpBtnClick
     end
   end
 end

@@ -135,7 +135,7 @@ procedure TCurseurModeleDlg.YdeXRBChange(Sender: TObject);
 var i : integer;
 begin
          for i := 0 to pred(graphe.equivalences[pageCourante].count) do
-             graphe.equivalences[pageCourante][i].ligneRappel := ligneRappelCourante;
+             graphe.equivalences[pageCourante][i].ligneRappel := [ligneRappelCourante];
          graphe.paintBox.repaint;
 end;
 
