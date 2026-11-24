@@ -62,6 +62,8 @@ type
     procedure PrecisionCBChange(Sender: TObject);
     procedure RazIncertitudeBtnClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure EditNomKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
     procedure HelpBtnClick(Sender: TObject);
   private
   public
@@ -78,6 +80,12 @@ implementation
 uses Valeurs, options, regmain, AideU;
 
 {$R *.FMX}
+
+procedure TModifDlg.EditNomKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+    FRegressiMain.VerifGrec(sender,key,keychar,shift);
+end;
 
 procedure TModifDlg.FormShow(Sender: TObject);
 begin

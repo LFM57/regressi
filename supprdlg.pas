@@ -178,6 +178,7 @@ begin
                    pages[p].TriAfaire := true;
                    pages[p].tri;
                end;
+               Fvaleurs.MajGridVariab := true;
                FichierTrie := TriCB.isChecked;
                FRegressiMain.WMRegMaj(MajTri);
           end; {TriVariable}

@@ -135,6 +135,7 @@ object ModifDlg: TModifDlg
     Size.Width = 99.000000000000000000
     Size.Height = 23.000000000000000000
     Size.PlatformDefault = False
+    OnKeyUp = EditNomKeyUp
   end
   object EditUnite: TEdit
     Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -145,6 +146,7 @@ object ModifDlg: TModifDlg
     Size.Width = 99.000000000000000000
     Size.Height = 23.000000000000000000
     Size.PlatformDefault = False
+    OnKeyUp = EditNomKeyUp
   end
   object PrecisionCB: TComboBox
     DropDownCount = 11
@@ -211,6 +213,7 @@ object ModifDlg: TModifDlg
     Size.Width = 285.000000000000000000
     Size.Height = 23.000000000000000000
     Size.PlatformDefault = False
+    OnKeyUp = EditNomKeyUp
   end
   object EditComm_LBL: TLabel
     StyledSettings = [FontColor]
@@ -232,6 +235,7 @@ object ModifDlg: TModifDlg
     Size.Width = 190.000000000000000000
     Size.Height = 23.000000000000000000
     Size.PlatformDefault = False
+    OnKeyUp = EditNomKeyUp
   end
   object EditIncertitude_LBL: TLabel
     AutoSize = True

@@ -64,13 +64,17 @@ Uses
   regutil,
   uniteker,
   valeurs,
+{$IFDEF HAS_FFMPEG}
+  avlib,
+{$ENDIF}
   images,
   aideU,
+  printPdfU,
 
   FMX.Memo.Types;
 
 const
-   maxMRU = 5;
+   maxMRU = 7;
 
 type
   TFRegressiMain = class(TForm)
@@ -159,7 +163,7 @@ type
     TraceAutoCB: TCheckBox;
     MemoResultat: TMemo;
     ModeleToolBar: TToolBar;
-    OptionsModeleBtn0: TButton;
+    OptionsModeleBtn: TButton;
     ModeleGrBtn: TButton;
     BornesBtn: TButton;
     InitEquaDiffBtn: TButton;
@@ -195,7 +199,7 @@ type
     SaveGraphItem: TMenuItem;
     PrintGraphItem: TMenuItem;
     IntersectionBis: TMenuItem;
-    MenuItem7: TMenuItem;
+    CopierGrapheItem: TMenuItem;
     VecteursMenu: TPopupMenu;
     VitesseItem: TMenuItem;
     AccelerItem: TMenuItem;
@@ -268,6 +272,35 @@ type
     SplitterStat: TSplitter;
     LayoutVocabulaire: TLayout;
     ParamGrid: TTMSFNCGrid;
+    MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    SaveCSVItem: TMenuItem;
+    OptiqueItem: TMenuItem;
+    CurModeleItem: TMenuItem;
+    CurReticuleModeleItem: TMenuItem;
+    Separ6: TMenuItem;
+    Separ8: TMenuItem;
+    OptionsVecteursBis: TMenuItem;
+    LatexMenu: TMenuItem;
+    CurModeleBis: TMenuItem;
+    MonteCarloItem: TMenuItem;
+    GrapheParamTab: TTabItem;
+    GrapheParamTB: TToolBar;
+    PanelModeleGlb: TPanel;
+    MemoResultatGlb: TMemo;
+    MemoModeleGlb: TMemo;
+    Panel2: TPanel;
+    ScrollBoxParam: TScrollBox;
+    paramGlbGrid: TTMSFNCGrid;
+    PaintBoxParam: TPaintBox;
+    PanelCentralParam: TPanel;
+    ModeleGlbBtn: TButton;
+    ZoomArrGlbBtn: TButton;
+    ZoomAutoGlbBtn: TButton;
+    CoordonneesGlbBtn: TButton;
+    ZoomGlbBtn: TButton;
+    CurseurGlbBtn: TButton;
+    AjusteGlbBtn: TButton;
     procedure FormCreate(Sender: TObject);
     procedure UpdateMenuItems(Sender: TObject);
     procedure FileOpenItemClick(Sender: TObject);
@@ -307,7 +340,7 @@ type
     procedure miniXeditExit(Sender: TObject);
     procedure miniYEditKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
-    procedure MenuItem6Click(Sender: TObject);
+    procedure FiltreItemClick(Sender: TObject);
     procedure Inter1Click(Sender: TObject);
     procedure CoordonneesBtnClick(Sender: TObject);
     procedure ZoomAutoBtnClick(Sender: TObject);
@@ -345,7 +378,7 @@ type
     procedure LegendeItemClick(Sender: TObject);
     procedure SelectItemClick(Sender: TObject);
     procedure VitesseItemClick(Sender: TObject);
-    procedure OptionsModeleBtn0Click(Sender: TObject);
+    procedure OptionsModeleBtnClick(Sender: TObject);
     procedure CurOrigineItemClick(Sender: TObject);
     procedure MemoModeleChange(Sender: TObject);
     procedure SaveGraphItemClick(Sender: TObject);
@@ -409,6 +442,44 @@ type
       var CellClassType: TTMSFNCGridCellClass);
     procedure ParamGridGetCellEditorProperties(Sender: TObject; ACol,
       ARow: Integer; CellEditor: TControl);
+    procedure SaveCSVItemClick(Sender: TObject);
+    procedure OptiqueItemClick(Sender: TObject);
+    procedure CurModeleItemClick(Sender: TObject);
+    procedure CurseurMenuPopup(Sender: TObject);
+    procedure VecteursMenuPopup(Sender: TObject);
+    procedure LatexMenuClick(Sender: TObject);
+    procedure MenuAxesPopup(Sender: TObject);
+    procedure PopupMenuModelePopup(Sender: TObject);
+    procedure BornesMenuPopup(Sender: TObject);
+    procedure OptionsModeleClick(Sender: TObject);
+    procedure MonteCarloItemClick(Sender: TObject);
+    procedure MemoModeleKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure CommentaireEditKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure PaintBoxParamPaint(Sender: TObject; Canvas: TCanvas);
+    procedure PaintBoxParamMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
+    procedure PaintBoxParamMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Single);
+    procedure PaintBoxParamMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
+    procedure ModeleGlbBtnClick(Sender: TObject);
+    procedure CoordonneesGlbBtnClick(Sender: TObject);
+    procedure AjusteGlbBtnClick(Sender: TObject);
+    procedure ZoomAutoGlbBtnClick(Sender: TObject);
+    procedure ZoomGlbBtnClick(Sender: TObject);
+    procedure ZoomArrGlbBtnClick(Sender: TObject);
+    procedure paramGlbGridCellButtonClick(Sender: TObject; ACol, ARow: Integer;
+      ACell: TTMSFNCGridCell);
+    procedure paramGlbGridCellEditSetData(Sender: TObject; ACol, ARow: Integer;
+      CellEditor: TControl; var CellString: string);
+    procedure paramGlbGridGetCellClass(Sender: TObject; ACol, ARow: Integer;
+      var CellClassType: TTMSFNCGridCellClass);
+    procedure paramGlbGridGetCellEditorProperties(Sender: TObject; ACol,
+      ARow: Integer; CellEditor: TControl);
+    procedure paramGlbGridGetCellEditorType(Sender: TObject; ACol,
+      ARow: Integer; var CellEditorType: TTMSFNCGridEditorType);
   private
     MruList : TStringList;
     MRUitem : array[0..maxMRU] of TMenuItem;
@@ -417,6 +488,8 @@ type
     FHandleDragDirectly : boolean;
     GrecActif : boolean;
     premiereFois : boolean;
+    appelExterieur : boolean;
+    MonteCarloActif : boolean;
     procedure OpenFile(const AFileName: string);
     procedure CloseAll;
     procedure ChangePage;
@@ -427,15 +500,15 @@ type
     procedure compileModeles;
     Procedure MajParametres;
     procedure MajModeleGr(NumeroGr : integer);
-    procedure MajResultat;
     procedure SetPanelModele(NouvelEtat : boolean);
+    procedure SetPanelModeleGlb(NouvelEtat : boolean);
     procedure UpdateResiduVisibility;
     procedure setMenu;
     procedure BarreEspace;
+    procedure OnApplicationHint(Sender: TObject);
   public
     NbreGrandeursSauvees : integer;
     GrapheResidu : TgrapheResidu;
-    GrapheParam : TgrapheParam;
     GrapheStat : TgrapheReg;
     function VerifSauve : boolean;
     procedure FinOuvertureFichier(LectureOK : boolean);
@@ -443,6 +516,7 @@ type
     procedure LanceCompileModele;
     procedure WMRegMaj(typeMaj : integer);
     procedure AjustePanelModele;
+    procedure AjustePanelModeleGlb;
     procedure ModeleMagnum(changeDebut : boolean);
     procedure LanceModele(ajuste : boolean);
     procedure LanceModeleGlb(ajuste : boolean);
@@ -450,6 +524,9 @@ type
     procedure DragOver(const Data: TDragObject; const Point: TPointF;
                    var OPeration: TDragOperation); override;
     procedure DragDrop(const Data: TDragObject; const Point: TPointF); override;
+    procedure MajResultat;
+    procedure MajResultatLatex(p : codePage);
+    procedure VerifGrec(Sender : TObject;var Key: Word;var KeyChar: Char;shift : TshiftState);
   end;
 
 var
@@ -458,13 +535,20 @@ var
 implementation
 
 uses about, varkeyb, options, newvar, supprDlg,
-     graphFft, regPrint, selPage, optStat, statCalc, optionsFiltrageU,
+     graphFft, regPrint, reglatex, selPage, optStat, statCalc, optionsFiltrageU,
      optModele, optionsvitesse, PropCourbe, modif, modeleGr, choixmodele,
-     optFFT, regFile, LoupeU;
-//       ArduinoUMac, arduinoOscMac,
-//     MediaPlayerForm, BitmapU, chronoBitmap;
+     optFFT, regFile, LoupeU, curModeleU, BitmapU2, chronoBitmap2, optiqueBitmap
+{$IFDEF HAS_FFMPEG}
+     , ffmpegU
+{$ENDIF}
+     ;
 
 {$R *.FMX}
+
+procedure TFRegressiMain.OnApplicationHint(Sender: TObject);
+begin
+  Aide.Text := Application.Hint;
+end;
 
 
 procedure TFRegressiMain.FormCreate(Sender: TObject);
@@ -501,6 +585,8 @@ begin
   Mruitem[3] := menuitem3;
   Mruitem[4] := menuitem4;
   Mruitem[5] := menuitem5;
+  Mruitem[6] := menuitem6;
+  Mruitem[7] := menuitem7;
   for i := 0 to maxMRU do begin
        Mruitem[i].visible := false;
        MRUItem[i].Text := '';
@@ -535,7 +621,14 @@ begin
 end;
 
 begin  // FormCreate
+{$IFDEF HAS_FFMPEG}
+   avlib.ffmpeg_DLL_Path := includeTrailingBackSlash(applicationPath);
+{$ENDIF}
    ModeAcquisition := AcqSimulation;
+   Application.ShowHint := true;
+   Application.OnHint := OnApplicationHint;
+   monteCarloActif := false;
+   appelExterieur := false;
    premiereFois := true;
    langue := fr;
    chaineLangue := 'fr';
@@ -551,13 +644,14 @@ begin  // FormCreate
   ModifFichier := false;
   NomFichierData := '';
   UpDateMenuItems(nil);
-  Fvaleurs := TFvaleurs.create(self);
+  Application.CreateForm(TFValeurs, FValeurs);
   EmbeddForm(ValeursPanel, Fvaleurs);
-  FgrapheFFT := TFgrapheFFT.create(self);
+  Application.CreateForm(TFGrapheFFT, FGrapheFFT);
   EmbeddForm(FourierPanel, FgrapheFFT);
   PanelAjuste.enabled := true;
   selectItem.IsChecked  := true;
   PanelModele.Visible := false;
+  PanelModeleGlb.Visible := false;
   GlobalDisableFocusEffect := true;
   PanelPage.Visible := false;
   MajFichierEnCours := true;
@@ -566,7 +660,10 @@ begin  // FormCreate
   Graphe := TgrapheVariab.create(paintBox1);
   graphe.zoneClipBoard := zoneClipBoard;
   createAnimation;
-  GrapheParam := TgrapheParam.create(paintBox1);
+  GrapheParam := TgrapheParam.create(paintBoxParam);
+  grapheParam.paramGrid := paramGlbGrid;
+  grapheParam.MemoModele := MemoModeleGlb;
+  grapheParam.MemoResultat := MemoResultatGlb;
   PanelCentral.OnKeyDown := graphe.PanelCentralKeyDown;
   graphe.LineEcartY := LineY;
   graphe.LineEcartX := LineX;
@@ -597,11 +694,16 @@ begin
     LanceModele(true)
 end;
 
+procedure TFRegressiMain.AjusteGlbBtnClick(Sender: TObject);
+begin
+    LanceModeleGlb(true)
+end;
+
 procedure TFRegressiMain.BornesBtnClick(Sender: TObject);
 var i : integer;
     P : TpointF;
 begin
-     if not (ModeleDefini in etatModele) then LanceCompileModele;
+     if not (ModeleDefini in graphe.etatModele) then LanceCompileModele;
      pages[pageCourante].VerifIntervalles;
      for i := 0 to BornesMenu.itemsCount-1 do with BornesMenu.items[i] do begin
          visible := (tag=0) or (tag<=nbreModele);
@@ -620,6 +722,12 @@ begin
      bornesMenu.popup(P.x,P.y);
 end;
 
+procedure TFRegressiMain.BornesMenuPopup(Sender: TObject);
+begin
+  IntersectionItem.IsChecked := traceIntersection;
+  IntersectionItem.visible := nbreModele>1;
+end;
+
 procedure TFRegressiMain.CloseAnimBtnClick(Sender: TObject);
 begin
    AnimationBtn.isPressed := false;
@@ -632,15 +740,15 @@ end;
 procedure TFRegressiMain.CloseAll;
 begin
      Caption := 'Regressi';
-     IntersectionItem.visible := false;
-     IntersectionBis.visible := false;
-     IntersectionTer.visible := false;
      BornesBtn.Enabled := false;
      ModeleBtn.IsPressed := false;
      setPanelModele(false);
+     setPanelModeleGlb(false);
      MemoModele.lines.Clear;
      MemoResultat.lines.Clear;
-     etatModele := [];
+     MemoModeleGlb.lines.Clear;
+     MemoResultatGlb.lines.Clear;
+     graphe.etatModele := [];
      splitterResidu.visible := false;
      PaintBoxResidu.visible := false;
      Fvaleurs.Feuillets.ActiveTab := FValeurs.ExpSheet;
@@ -665,6 +773,28 @@ begin
      P := ClientToScreen(P);
      vecteursMenu.popup(P.x,P.y);
 end;
+
+procedure TFRegressiMain.VecteursMenuPopup(Sender: TObject);
+var codeX,codeY : integer;
+    fildefer : boolean;
+begin with graphe do begin
+       filDeFer := (courbes.Count>1) and
+       (coordonnee[1].nomX<>coordonnee[2].nomX) and
+       (coordonnee[2].codeX<>grandeurInconnue);
+       if filDeFer then begin
+            codeX := coordonnee[1].codeX;
+            codeY := coordonnee[1].codeY;
+            OptionsVecteursMenu.text := 'Options '+grandeurs[codeX].nom+','+grandeurs[codeY].nom;
+            codeX := coordonnee[2].codeX;
+            codeY := coordonnee[2].codeY;
+            OptionsVecteursBis.text := 'Options '+grandeurs[codeX].nom+','+grandeurs[codeY].nom;
+            OptionsVecteursBis.visible := true;
+       end
+       else begin
+            OptionsVecteursMenu.text := 'Options';
+            OptionsVecteursBis.visible := false;
+       end;
+end end;
 
 Function TFregressiMain.VerifSauve : boolean;
 var zz : string;
@@ -696,12 +826,15 @@ end;
 
 procedure TFRegressiMain.VideoItemClick(Sender: TObject);
 begin
+{$IFDEF HAS_FFMPEG}
       if not verifSauve then exit;
-      (*
-      if VideoForm=nil then application.createForm(TVideoForm,videoForm);
-      CentreForm(videoForm);
-      VideoForm.show;
-      *)
+      majFichierEnCours := false;
+      if ffmpegForm=nil then application.createForm(TffmpegForm,ffmpegForm);
+      CentreForm(ffmpegForm);
+      ffmpegForm.show;
+{$ELSE}
+      ShowMessage('Capture vidéo non disponible (HAS_FFMPEG non défini)');
+{$ENDIF}
 end;
 
 procedure TFRegressiMain.VitesseItemClick(Sender: TObject);
@@ -734,9 +867,9 @@ begin
 end;
 
 procedure TFRegressiMain.ListeRegItemClick(Sender: TObject);
-const FileName = 'http://fr.groups.yahoo.com/group/regressi-demo';
+const FileName = 'https://framalistes.org/sympa/info/regressi';
 begin
-//  if not ouvreURL(FileName) then ShowMessage(stNoAcces+Filename)
+  if not ouvreURL(FileName) then ShowMessage(stNoAcces+Filename)
 end;
 
 procedure TFRegressiMain.OpenFile(const AFileName : string);
@@ -780,11 +913,17 @@ if FileExists(AFileName)
 end;
 
 procedure TFRegressiMain.FileSaveItemClick(Sender: TObject);
+var extension : string;
 begin
      if pageCourante>0 then if nomFichierData<>''
         then begin
-           nomFichierData := changeFileExt(NomFichierData,'.RXML');
-           FichierRegressi.EcritXML(NomFichierData);
+           extension := AnsiUpperCase(extractFileExt(nomFichierData));
+           if extension='.RW3'
+              then FichierRegressi.EcritWin(NomFichierData)
+              else begin
+                 nomFichierData := changeFileExt(NomFichierData,'.RXML');
+                 FichierRegressi.EcritXML(NomFichierData);
+              end;
            modifFichier := false;
         end
         else FileSaveAsItemClick(sender);
@@ -857,6 +996,58 @@ end;
 
 // ancien certificat
 // Mac Developer: Jean-Michel Millet (TZDZH23SJG)
+
+procedure TFRegressiMain.VerifGrec(Sender : TObject;var Key: Word;var KeyChar: Char;shift : TshiftState);
+const
+        GrecMaj : array[0..25] of char =
+  (AlphaMaj,BetaMaj,ChiMaj,deltaMaj,EpsilonMaj,phiMaj,gammaMaj,etaMaj,
+   iotaMaj,psiMaj,kappaMaj,lambdaMaj,MuMaj,NuMaj,omicronMaj,piMaj,thetaMaj,
+   rhoMaj,sigmaMaj,tauMaj,upsilonMaj,'V',omegaMaj,xiMaj,'Y',zetaMaj);
+        GrecMin : array[0..25] of char =
+  (alphaMin,betaMin,chiMin,deltaMin,epsilonMin,phiMin,gammaMin,etaMin,iotaMin,psiMin,kappaMin,lambdaMin,
+   muMin,nuMin,omicronMin,piMin,thetaMin,rhoMin,sigmaMin,tauMin,upsilonMin,'v',omegaMin,xiMin,'y',zetaMin);
+var CaretMemo : TCaretPosition;
+    LMemo : TMemo;
+    LEdit : TEdit;
+    Numero : integer;
+    caretEdit : integer;
+    texte : string;
+    isGrec : boolean;
+begin
+{$IFDEF MacOS}
+    Shift := KeyboardModifiers;
+{$ENDIF}
+    if (ssCtrl in Shift) then begin
+       numero := key-ord('A');
+       isGrec := (numero>0) and (numero<25) and not (numero in [2, 21, 23]); // preserve Ctrl+A/C/V/X/Z
+       if isGrec then begin
+          if (ssShift in Shift)
+               then keyChar := GrecMaj[numero]
+               else keyChar := GrecMin[numero];
+          if (sender is TEdit) then begin
+            LEdit := (sender as TEdit);
+            caretEdit := LEdit.caretPosition;
+            texte := LEdit.text;
+            texte.insert(caretEdit,keyChar);
+            LEdit.text := texte;
+            LEdit.caretPosition := caretEdit+1;
+          end;
+          if (sender is TMemo) then begin
+              LMemo := (sender as TMemo);
+              CaretMemo := LMemo.CaretPosition;
+              if (CaretMemo.line>=0) and (CaretMemo.line<LMemo.lines.count) then begin
+                 texte := LMemo.lines[CaretMemo.line];
+                 texte.insert(CaretMemo.Pos,keyChar);
+                 LMemo.lines[CaretMemo.line] := texte;
+                 CaretMemo.Pos := CaretMemo.Pos+1;
+                 Lmemo.caretPosition := CaretMemo;
+              end;
+          end;
+          keyChar := #0;
+          key := 0;
+       end;
+    end;
+end;
 
 procedure TFRegressiMain.FormKeyDown(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
@@ -1012,6 +1203,7 @@ end; //Gestion barre d'espace
 procedure TFRegressiMain.FormResize(Sender: TObject);
 begin
     if panelModele.visible then AjustePanelModele;
+    if panelModeleGlb.visible then AjustePanelModeleGlb;
     if PaintBoxResidu.visible
        then PaintBoxResidu.height := panelCentral.height/3;
     tailleEcran := PanelCentral.Height;
@@ -1029,11 +1221,10 @@ end;
 procedure TFRegressiMain.ChronoPhotoMenuClick(Sender: TObject);
 begin
       if not verifSauve then exit;
-      (*
+      majFichierEnCours := false;
       if ChronoBitmapForm=nil then application.createForm(TChronoBitmapForm,ChronoBitmapForm);
       CentreForm(ChronoBitmapForm);
       ChronoBitmapForm.show;
-      *)
 end;
 
 procedure TFRegressiMain.MajPages;
@@ -1060,11 +1251,11 @@ end;
 
 procedure TFRegressiMain.WebItemClick(Sender: TObject);
 {$IFNDEF Store}
-const FileName = 'https://jean-michel-millet.pagesperso-orange.fr/';
+const FileName = 'https://regressi.fr/';
 {$ENDIF}
 begin
 {$IFNDEF Store}
- // if ouvreURL(FileName) then else ShowMessage(stNoAcces+Filename)
+  if ouvreURL(FileName) then else ShowMessage(stNoAcces+Filename)
 {$ENDIF}
 end;
 
@@ -1104,7 +1295,7 @@ Procedure FaireMajFichier;
 var i : integer;
     ouvrirModele : boolean;
 begin
-       etatModele := [];
+       graphe.etatModele := [];
        Fvaleurs.prevenirPi := true;
        MajFichierEnCours := false;
        OuvrirModele := false;
@@ -1117,17 +1308,15 @@ begin
           MemoModele.Lines.Add('''Tapez votre fonction sous la forme');
           MemoModele.Lines.Add('''y(t)=a*t+b');
        end;
-       if graphe.configCharge
-         then begin
-              for i := 1 to NbrePages do
-                    pages[i].modeleErrone := false;
-         end
-         else RazCoord;
+       for i := 1 to NbrePages do pages[i].modeleErrone := false;
+       if not graphe.configCharge then RazCoord;
        setPanelModele(OuvrirModele);
+       setPanelModeleGlb(false);
        FValeurs.Feuillets.ActiveTab := FValeurs.ExpSheet;
        FValeurs.SimulationGB.visible := modeAcquisition=AcqSimulation;
        Fvaleurs.expressionsToolBar.enabled := (pageCourante>0) and (nbrePages>0);
        TrigoBtn.Text := captionAngle[angleEnDegre];
+       TrigoBtn.hint := hintAngle[angleEnDegre];
        if modeAcquisition=AcqSimulation then begin
           with grandeurs[0] do begin
                FValeurs.MaxiXEdit.text := formatNombre(maxiSimulation,1);
@@ -1140,6 +1329,13 @@ begin
        if NbrePages>0 then begin
           FValeurs.Memo.visible := true;
           FValeurs.recalculer;
+       end;
+       if AnimationBtn.isPressed then begin
+          PanelAnimation.visible := true;
+          panelModele.enabled := false;
+          modeleBtn.Enabled := false;
+          timerAnimation.enabled := false;
+          paintBox1.repaint;
        end;
        modifFichier := false;
 end; // faireMajFichier
@@ -1154,7 +1350,7 @@ begin
         Modif := [gmXY];
         grapheOK := false;
         OptionGraphe := OptionGrapheDefault;
-        etatModele := [];
+        graphe.etatModele := [];
         VerifGraphe := true;
         IsModeleMagnum := false;
         reset;
@@ -1174,8 +1370,8 @@ begin
        MesureCourante := 0;
        Memo.lines.Clear;
     end;
-    MemoModele.Lines.Add('Tapez votre fonction sous la forme');
-    MemoModele.Lines.Add('y(t)=a*t+b');
+    MemoModele.Lines.Add('''Tapez votre fonction sous la forme');
+    MemoModele.Lines.Add('''y(t)=a*t+b');
     if ModeleItem.isChecked then setPanelModele(false);
 end;
 
@@ -1215,10 +1411,10 @@ begin // WMRegMaj
               if FCoordonneesPhys.ModeleEnCours then begin
                  MajParametres;
                  include(graphe.Modif,gmValeurModele);
-                 if ([ModeleDefini,ModeleConstruit] <= etatModele) and
+                 if ([ModeleDefini,ModeleConstruit] <= graphe.etatModele) and
                     (pages[pageCourante].ModeleCalcule) then MajResultat;
               end;
-              if ([ModeleDefini,ModeleConstruit] <= etatModele)
+              if ([ModeleDefini,ModeleConstruit] <= graphe.etatModele)
                  and not(pages[pageCourante].ModeleCalcule)
                  and not(pages[pageCourante].ModeleErrone)
                  and FCoordonneesPhys.ModeleEnCours
@@ -1239,7 +1435,7 @@ begin // WMRegMaj
                  MajParametres;
                  include(graphe.Modif,gmValeurModele);
               end;
-              if ([ModeleDefini,ModeleConstruit] <= etatModele) and
+              if ([ModeleDefini,ModeleConstruit] <= graphe.etatModele) and
                  not(pages[1].ModeleErrone) and
                  FCoordonneesPhys.ModeleEnCours
                  then if graphe.isModeleMagnum
@@ -1273,27 +1469,26 @@ begin // WMRegMaj
           end;
           MajModele : begin
              Fvaleurs.TraceGridParam;
-             if panelModele.visible and residusItem.IsChecked  then begin
-                paintBoxResidu.Visible := true;
-                splitterResidu.visible := true;
+             UpdateResiduVisibility;
+             if panelModele.visible and residusItem.IsChecked  then
                 grapheResidu.setCoordonnee(graphe.monde[mondex].mini,graphe.monde[mondex].maxi);
-             end;
           end;
           MajVide : ResetForme;
           MajGrandeur : if not majFichierEnCours
-                    and (etatModele<>[])
+                    and (graphe.etatModele<>[])
                     and not ajoutDerivee then begin
-                       etatModele := [];
+                       graphe.etatModele := [];
                     // pour prévenir modif etatModele
                     end;
-          MajUnites : exclude(etatModele,UniteParamDefinie);
+          MajUnites : exclude(graphe.etatModele,UniteParamDefinie);
           MajUnitesParam : begin
              MajResultat;
              FValeurs.traceGridParam;
           end;
           MajFichier : if majFichierEnCours then FaireMajFichier else exit;
       end;
-      AnimationBtn.Enabled := NbreConstExp>0;
+      AnimationBtn.Visible := NbreConstExp>0;
+      if NbreConstExp=0 then AnimationBtn.isPressed := false;
       ModifParametre := TypeMaj in [MajSupprPage,MajModele];
       if TypeMaj in [MajIncertitude,MajValeur,MajValeurAcq]
           then begin
@@ -1306,17 +1501,99 @@ begin // WMRegMaj
            include(graphe.Modif,gmValeurModele);
       end;
       case typeMaj of
-           MajSupprPoints : if [ModeleConstruit,ModeleLineaire] <= etatModele
+           MajSupprPoints : if [ModeleConstruit,ModeleLineaire] <= graphe.etatModele
                then LanceModele(true);
            MajChangePage,MajAjoutPage,MajModele,MajSauvePage : ; // déjà fait
            else begin
                 pages[pageCourante].ModeleCalcule := false;
-                etatModele := [];
+                graphe.etatModele := [];
            end;
       end;
       if (graphe.Modif<>[]) and not MajFichierEnCours then
           paintBox1.repaint;
+      if (typeMaj in [MajChangePage,MajAjoutPage,MajSelectPage,MajSupprPage]) and
+         (WindowTab.activeTab=valeursTab) and
+         (Fvaleurs.Feuillets.activeTab=Fvaleurs.variabSheet)
+      then Fvaleurs.Majgraphe(typeMaj);
 end; // MajGraphe
+
+procedure MajGrapheParam;
+
+procedure ResetForme;
+var c : integer;
+begin
+    with grapheParam do begin
+        curseur := curSelect;
+        Modif := [gmXY];
+        grapheOK := false;
+        OptionGraphe := OptionGrapheDefault;
+        grapheParam.etatModele := [];
+        VerifGraphe := true;
+        reset;
+        for c := 1 to maxOrdonnee do with Coordonnee[c] do begin
+            nomX  := '';
+            nomY  := '';
+            codeX := grandeurInconnue;
+            codeY := grandeurInconnue;
+            iMondeC := mondeY;
+            trace := [];
+        end;
+    end;
+    MemoModeleGlb.Lines.Clear;
+    MemoModeleGlb.Lines.Add('Tapez votre fonction sous la forme');
+    MemoModeleGlb.Lines.Add('y(t)=a*t+b');
+    if ModeleGlbBtn.isPressed then setPanelModeleGlb(false);
+end;// ResetForme
+
+var modifParametre : boolean;
+begin // MajGrapheParam
+with grapheParam do begin
+      include(Modif,gmXY); // le + général
+      case TypeMaj of
+          MajNom : MajNomGr;
+          MajSauvePage,MajSelectPage : modif := [];
+          MajAjoutPage,MajSupprPage : include(Modif,gmPage);
+          MajValeurAcq,MajValeur,MajIncertitude,MajValeurConst : Modif := [gmValeurs];
+          MajSupprPoints : ;
+          MajValeurGr : ;
+          MajAjoutValeur : ;
+          MajTri : ;
+          MajModele : ;
+          MajVide : ResetForme;
+          MajGrandeur : etatModele := [];
+          MajUnites : exclude(etatModele,UniteParamDefinie);
+          MajUnitesParam : MajResultat;
+          MajFichier : exit;
+      end;
+      ModifParametre := TypeMaj in [MajSupprPage,MajModele];
+      if TypeMaj in [MajIncertitude,MajValeur,MajValeurAcq]
+          then begin
+             grapheParam.modeleCalcule := false;
+             grapheParam.modeleErrone := false;
+          end;
+      if ModifParametre and FCoordonneesPhys.ModeleEnCours then begin
+           MajParametres;
+           MajResultat;
+           include(Modif,gmValeurModele);
+      end;
+      case typeMaj of
+           MajSupprPoints : if [ModeleConstruit,ModeleLineaire] <= etatModele
+               then LanceModeleGlb(true);
+           MajChangePage,MajAjoutPage,MajModele,MajSauvePage : ; // déjà fait
+           else begin
+                grapheParam.ModeleCalcule := false;
+                etatModele := [];
+           end;
+      end;
+      if TypeMaj=MajModele then begin
+         MajParametres;
+         include(Modif,gmValeurModele);
+         if ([ModeleDefini,ModeleConstruit] <= etatModele) and
+            ModeleCalcule then MajResultat;
+      end;
+      if (Modif<>[]) and not MajFichierEnCours then
+          paintBoxParam.repaint;
+end end; // MajGrapheParam
 
 procedure MajStat;
 
@@ -1366,7 +1643,10 @@ begin
     UpDateMenuItems(nil);
     MajGraphe;
     if windowTab.activeTab=statTab then MajStat;
-    FgrapheFFT.WMRegMaj(typeMaj)
+    FgrapheFFT.WMRegMaj(typeMaj);
+    grapheParamTab.visible := (NbrePages>2) and ((NbreConst+NbreParam)>1);
+    if grapheParamTab.visible then
+       MajGrapheParam;
 end;
 
 procedure TFRegressiMain.ZoomAutoBtnClick(Sender: TObject);
@@ -1379,6 +1659,18 @@ begin with graphe do begin
      useDefautX := false;
      autoTick := true;
      paintBox1.repaint
+end end;
+
+procedure TFRegressiMain.ZoomAutoGlbBtnClick(Sender: TObject);
+begin with grapheParam do begin
+     curMovePermis := false;
+     if not grapheOK then exit;
+     include(modif,gmEchelle);
+     monde[mondeX].defini := false;
+     useDefaut := false;
+     useDefautX := false;
+     autoTick := true;
+     paintBoxParam.repaint
 end end;
 
 procedure TFRegressiMain.PageSuivClick(Sender: TObject);
@@ -1414,10 +1706,16 @@ begin
              if NbreConstExp>0 then begin
                 windowTab.ActiveTab := valeursTab;
                 FValeurs.Feuillets.ActiveTab := Fvaleurs.paramSheet;
-             end;
-             if FValeurs.Feuillets.ActiveTab=Fvaleurs.variabSheet then FValeurs.traceGridVariab;
+             end
+             else if FValeurs.Feuillets.ActiveTab=Fvaleurs.variabSheet then FValeurs.traceGridVariab;
           end;
           AcqFichier : FileAddItemClick(sender);
+          AcqVideo : VideoItemClick(sender);
+          AcqCourbes : ImageItemClick(Sender);
+          AcqBitMap : OptiqueItemClick(sender);
+          AcqClipBoard : ;
+          AcqChrono : ChronoPhotoMenuClick(sender);
+          AcqSon : ;
      end;
 end;
 
@@ -1430,6 +1728,7 @@ begin
        AcqClavier : PageNewItem.Text := 'Créer page vierge';
        AcqSimulation : PageNewItem.Text := 'Créer page simulée';
        AcqFichier : PageNewItem.Text := 'Fusionner';
+       AcqBitmap,AcqClipBoard,AcqVideo,AcqChrono,AcqCourbes : PageNewItem.Text := 'Ajouter';
        else PageNewItem.Visible := false;
   end;
 end;
@@ -1494,7 +1793,8 @@ end;
 
 procedure TFRegressiMain.FermerItemClick(Sender: TObject);
 begin
-    setPanelModele(false)
+    setPanelModele(false);
+    setPanelModeleGlb(false)
 end;
 
 procedure TFRegressiMain.FileAddItemClick(Sender: TObject);
@@ -1559,9 +1859,22 @@ begin
     paintBox1.repaint;
 end;
 
+procedure TFRegressiMain.ZoomArrGlbBtnClick(Sender: TObject);
+begin
+    if not grapheParam.grapheOK then exit;
+    grapheParam.affecteZoomArriere;
+    include(grapheParam.modif,gmEchelle);
+    paintBoxParam.repaint;
+end;
+
 procedure TFRegressiMain.ZoomBtnClick(Sender: TObject);
 begin
     if graphe.grapheOK then graphe.setPenBrush(curZoomAv)
+end;
+
+procedure TFRegressiMain.ZoomGlbBtnClick(Sender: TObject);
+begin
+    if grapheParam.grapheOK then grapheParam.setPenBrush(curZoomAv)
 end;
 
 procedure TFRegressiMain.WindowTabChange(Sender: TObject);
@@ -1569,8 +1882,8 @@ var i : integer;
 begin
      if windowTab.ActiveTab<>ValeursTab then
         Fvaleurs.recalculer;
-     if windowTab.ActiveTab=GrapheTab then begin
-     end;
+     if windowTab.ActiveTab=GrapheTab then ;
+     if windowTab.ActiveTab=GrapheParamTab then ;
      if windowTab.ActiveTab=StatTab then begin
         statistiqueOpen;
         ListeNom.enabled := false;
@@ -1594,15 +1907,20 @@ begin
         Fvaleurs.imprimeMenu.enabled := imprimanteDisponible;
         Fvaleurs.imprimeGridMenu.enabled := imprimanteDisponible;
         Fvaleurs.SimulationGB.visible := modeAcquisition=AcqSimulation;
+        if Fvaleurs.majGridVariab and
+           (Fvaleurs.feuillets.ActiveTab=Fvaleurs.variabSheet) then
+           Fvaleurs.traceGridVariab;
      end;
 end;
 
 procedure TFRegressiMain.TimerLoupeTimer(Sender: TObject);
 begin
+{$IFDEF MSWindows}
       if (loupeForm<>nil) and
           loupeForm.visible and
           not loupeForm.avecSouris then
             loupeForm.aForm.Active := true
+{$ENDIF}
 end;
 
 procedure TFRegressiMain.TimerAnimationTimer(Sender: TObject);
@@ -1614,14 +1932,15 @@ end;
 
 procedure TFRegressiMain.TimerDemarrageTimer(Sender: TObject);
 begin
-   FileNewSimulationItemClick(Sender);
    timerDemarrage.Enabled := false;
+   if not appelExterieur then
+      FileNewSimulationItemClick(Sender);
 end;
 
 procedure TFRegressiMain.TimerStatTimer(Sender: TObject);
 begin
-     PanelValeursStat.repaint;
      timerStat.enabled := false;
+     PanelValeursStat.repaint;
 end;
 
 procedure TFRegressiMain.TitreAnimCBClick(Sender: TObject);
@@ -1639,29 +1958,31 @@ begin
           identification := identAnimation;
           isOpaque := true;
           affecteXY(graphe.paintBox.width/2,graphe.paintBox.height/20);
-          couleurFond := couleurPages[1];
+          couleurFond := couleurPages[pageCourante];
+          color := claWhite;
        end;
        for i := 0 to pred(NbreParamAnimation) do
            if paramAnimation[i].active then
               if aTexte=''
-                 then aTexte := '%C'+intToStr(succ(i))
+                 then aTexte := ' %C'+intToStr(succ(i))
                  else aTexte := aTexte+' ; %C'+intToStr(succ(i));
-       dessin.text := aTexte;
+       dessin.text := aTexte+' ';
+       dessin.texteBrut := aTexte+' ';
        graphe.dessinTexts.add(Dessin);
 end; // ajouteTitre
 
 var i : integer;
 begin
      indexCourant := -1;
-     i := 0;
-     while (i<graphe.dessinTexts.count) and (indexCourant=-1) do
+     for i := 0 to pred(graphe.dessinTexts.count) do
        if graphe.dessinTexts[i].identification=identAnimation
-          then indexCourant := i
-          else inc(i);
+          then begin
+             indexCourant := i;
+             if not titreAnimCB.isChecked then with graphe do
+                Dessintexts.remove(dessinTexts[i]);
+             break;
+          end;
      if not titreAnimCB.enabled then exit;
-     if (indexCourant>=0) and not titreAnimCB.isChecked
-        then with graphe do
-              Dessintexts.remove(dessinTexts[indexCourant]);
      if (indexCourant<0) and titreAnimCB.isChecked
         then ajouteTitre;
      if (pageCourante>0) then graphe.paintBox.repaint;
@@ -1669,11 +1990,13 @@ end; // TitreAnimCBClick
 
 procedure TFRegressiMain.TOCitemClick(Sender: TObject);
 begin
-  //   if not ShellOpen(HelpFile) then showMessage(stNoAcces+'Aide Regressi')
+     if not ShellOpen(HelpFile) then showMessage(stNoAcces+'Aide Regressi')
 end;
 
 procedure TFRegressiMain.TBAnimationChange(Sender: TObject);
 begin
+     if majFichierEnCours then exit;
+     AnimationTB.hint := 'Intervalle : '+IntToStr(round(AnimationTB.value))+'ms';
      graphe.SliderAnimationChange(sender);
      paintBox1.repaint;
 end;
@@ -1686,6 +2009,7 @@ begin
         else Modif := OKreg(OkAngleDegre,0);
      if modif then Fvaleurs.ChangeAngle(not AngleEnDegre);
      TrigoBtn.Text := captionAngle[angleEnDegre];
+     TrigoBtn.hint := hintAngle[angleEnDegre];
 end;
 
 procedure TFRegressiMain.FinOuvertureFichier(LectureOK : boolean);
@@ -1731,7 +2055,8 @@ begin
      PagePrecItem.enabled := NbrePages>1;
      PageDelItem.enabled := NbrePages>1;
      PageNewClipItem.Visible := ModeAcquisition=AcqClipBoard;
-     PageNewItem.Visible := true;
+     PageNewItem.Visible := ModeAcquisition in [AcqClavier,AcqFichier,AcqBitmap,AcqClipBoard,
+                             AcqSimulation,AcqVideo,AcqChrono,AcqCourbes];
 end;
 
 procedure TFRegressiMain.miniXeditExit(Sender: TObject);
@@ -1767,6 +2092,11 @@ begin
    setPanelModele(ModeleBtn.IsPressed)
 end;
 
+procedure TFRegressiMain.ModeleGlbBtnClick(Sender: TObject);
+begin
+   setPanelModeleGlb(ModeleGlbBtn.IsPressed)
+end;
+
 procedure TFRegressiMain.ModeleGrBtnClick(Sender: TObject);
 var p : codePage;
     m : indiceMonde;
@@ -1798,7 +2128,7 @@ begin
               with FonctionTheorique[NbreModele] do
                 if enTete<>'' then begin
                       MemoModele.lines.Add(enTete+'='+expression);
-                      etatModele := [];
+                      graphe.etatModele := [];
                       lanceModele(genreC=g_fonction);
                       PaintBox1.repaint;
                       exit;
@@ -1834,7 +2164,8 @@ end;
 procedure TFRegressiMain.MemoModeleChange(Sender: TObject);
 var i : codePage;
 begin
-     etatModele := [];
+     if monteCarloActif then exit;
+     graphe.etatModele := [];
      MemoResultat.lines.clear;
      if length(MemoModele.text)>5 then
         MemoResultat.Lines.Add(stTest4);
@@ -1842,6 +2173,18 @@ begin
          pages[i].ModeleCalcule := false;
          pages[i].ModeleErrone := false;
      end;
+end;
+
+procedure TFRegressiMain.MemoModeleKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+    VerifGrec(MemoModele,key,keyChar,shift)
+end;
+
+procedure TFRegressiMain.MenuAxesPopup(Sender: TObject);
+begin
+  IntersectionBis.IsChecked  := traceIntersection;
+  IntersectionBis.visible := NbreModele>1;
 end;
 
 procedure TFRegressiMain.EditBidonKeyDown(Sender: TObject; var Key: Word;
@@ -1902,7 +2245,7 @@ begin
       windowTab.activeTab := valeursTab;
 end;
 
-procedure TFRegressiMain.MenuItem6Click(Sender: TObject);
+procedure TFRegressiMain.FiltreItemClick(Sender: TObject);
 var sauveFenetre : Tfenetre;
 begin
   inherited;
@@ -1948,22 +2291,19 @@ end;
 
 procedure TFRegressiMain.PrintPdfItemClick(Sender: TObject);
 begin
-(*
      PrintPdfForm := TPrintPdfForm.Create(self);
      CentreForm(printPDFForm);
      PrintPdfForm.showModal;
      PrintPdfForm.Free;
-     *)
 end;
 
 procedure TFRegressiMain.ImageItemClick(Sender: TObject);
 begin
       if not verifSauve then exit;
-      (*
+      majFichierEnCours := false;
       if BitmapForm=nil then application.createForm(TBitmapForm,bitmapForm);
       CentreForm(bitmapForm);
       bitmapForm.show;
-      *)
 end;
 
 procedure TFRegressiMain.PrintModeleClick(Sender: TObject);
@@ -1973,7 +2313,7 @@ end;
 
 procedure TFRegressiMain.ImprimeStatItemClick(Sender: TObject);
 begin
-    statOptDlg.imprimer
+    statOptDlg.imprimerBeginEnd
 end;
 
 procedure TFRegressiMain.IncertItemClick(Sender: TObject);
@@ -2044,16 +2384,20 @@ end;
 
 procedure TFRegressiMain.IntersectionItemClick(Sender: TObject);
 begin
-  if (sender as TmenuItem).IsChecked  then // suppression
-  IntersectionItem.IsChecked  := not (sender as TmenuItem).IsChecked ;
-  IntersectionBis.IsChecked  := IntersectionItem.IsChecked ;
-  IntersectionTer.IsChecked  := IntersectionItem.IsChecked ;
+  traceIntersection := not traceIntersection;
   paintBox1.repaint;
 end;
 
 procedure TFRegressiMain.CopyGridItemClick(Sender: TObject);
 begin
      StatGrid.CopyToClipBoard
+end;
+
+procedure TFRegressiMain.CurModeleItemClick(Sender: TObject);
+begin
+    if curseurModeleDlg=nil then
+       curseurModeleDlg := TcurseurModeleDlg.create(self);
+    graphe.initCurseurModele;
 end;
 
 procedure TFRegressiMain.CurOrigineItemClick(Sender: TObject);
@@ -2078,8 +2422,26 @@ begin
      editBidon.setFocus;
 end;
 
+procedure TFRegressiMain.CurseurMenuPopup(Sender: TObject);
+var i : integer;
+begin
+    curModeleItem.Visible := nbreModele>0;
+    curReticuleModeleItem.Visible := nbreModele>0;
+    if nbreModele=0 then begin
+    for i := 0 to graphe.courbes.Count-1 do
+        if trLigne in graphe.courbes[i].trace then begin
+           curReticuleModeleItem.Visible := true;
+           curReticuleModeleItem.text := 'Réticule données';
+           break;
+        end;
+    end
+    else curReticuleModeleItem.text := 'Réticule modèle'
+end;
+
 procedure TFRegressiMain.OptionsStatItemClick(Sender: TObject);
 begin
+  if statOptDlg = nil then
+       Application.CreateForm(TStatOptDlg, statOptDlg);
   CentreForm(statOptDlg);
   if statOptDlg.showModal=mrOK then begin
      include(grapheStat.modif,gmXY);
@@ -2098,11 +2460,18 @@ begin
        pages[pageCourante].commentaireP := CommentaireEdit.text
 end;
 
+procedure TFRegressiMain.CommentaireEditKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+    VerifGrec(sender,key,keychar,shift);
+end;
+
 procedure TFRegressiMain.CoordonneesBtnClick(Sender: TObject);
 var oldnomx,oldnomy : string;
 begin with FcoordonneesPhys do begin
         if not graphe.grapheOK then exit;
         agraphe := graphe;
+        listeConst := false;
         oldNomX := graphe.coordonnee[1].nomX;
         oldNomY := graphe.coordonnee[1].nomY;
         modelePermis := NbreModele>0;
@@ -2119,10 +2488,37 @@ begin with FcoordonneesPhys do begin
            if not(ModeleItem.isChecked) and
               not modeleEnCours then begin
                  nbreModele := 0;
-                 etatModele := [];
+                 graphe.etatModele := [];
                  setPanelModele(false);
            end;
            paintBox1.Repaint;
+      end;
+end end;
+
+procedure TFRegressiMain.CoordonneesGlbBtnClick(Sender: TObject);
+var oldNomX,oldNomY : string;
+begin with FcoordonneesPhys do with grapheParam do begin
+        if not grapheOK then exit;
+        agraphe := grapheParam;
+        listeConst := true;
+        oldNomX := coordonnee[1].nomX;
+        oldNomY := coordonnee[1].nomY;
+        modelePermis := NbreModeleGlb>0;
+        centreForm(FcoordonneesPhys);
+        if FcoordonneesPhys.ShowModal=mrOK then begin
+           Curseur := curSelect;
+           include(modif,gmXY);
+           if (coordonnee[1].nomX<>oldNomX) or
+              (coordonnee[1].nomY<>oldNomY) then begin
+              if not UseDefaut then DessinTexts.clear;
+           end;
+           if (ModeleGlbBtn.isPressed) and
+              not modeleEnCours then begin
+                 nbreModeleGlb := 0;
+                 grapheParam.etatModele := [];
+                 setPanelModeleGlb(false);
+           end;
+           paintBoxParam.Repaint;
       end;
 end end;
 
@@ -2157,16 +2553,30 @@ begin
 end; // FormClose
 
 procedure TFRegressiMain.OptionsVecteursMenuClick(Sender: TObject);
-var code : integer;
+var code, num : integer;
 begin
+     num := (sender as TMenuItem).tag;
+     if (num<1) or (num>MaxOrdonnee) then num := 1;
      OptionsVitesseDlg := TOptionsVitesseDlg.create(self);
-     code := graphe.coordonnee[1].codeX;
-     OptionsVitesseDlg.grandeurX := grandeurs[code];
-     code := graphe.coordonnee[1].codeY;
-     OptionsVitesseDlg.grandeurY := grandeurs[code];
-     centreForm(OptionsVitesseDlg);
-     if OptionsVitesseDlg.showModal=mrOK then PaintBox1.repaint;
-     OptionsVitesseDlg.free;
+     try
+        code := graphe.coordonnee[num].codeX;
+        OptionsVitesseDlg.grandeurX := grandeurs[code];
+        code := graphe.coordonnee[num].codeY;
+        OptionsVitesseDlg.grandeurY := grandeurs[code];
+        centreForm(OptionsVitesseDlg);
+        if OptionsVitesseDlg.showModal=mrOK then PaintBox1.repaint;
+     finally
+        OptionsVitesseDlg.free;
+     end;
+end;
+
+procedure TFRegressiMain.OptiqueItemClick(Sender: TObject);
+begin
+      if not verifSauve then exit;
+      majFichierEnCours := false;
+      if OptiqueBitmapForm=nil then application.createForm(TOptiqueBitmapForm,optiquebitmapForm);
+      CentreForm(optiqueBitmapForm);
+      optiqueBitmapForm.show;
 end;
 
 procedure TFRegressiMain.OscilloArduinoItemClick(Sender: TObject);
@@ -2183,6 +2593,8 @@ end;
 procedure TFRegressiMain.OptionsItemClick(Sender: TObject);
 var i : integer;
 begin
+     if optionsDlg = nil then
+        Application.CreateForm(TOptionsDlg, optionsDlg);
      CentreForm(optionsDlg);
      if OptionsDlg.showModal=mrOK then begin
         for i := 0 to pred(NbreGrandeurs) do with grandeurs[i]
@@ -2202,7 +2614,16 @@ begin
      end
 end;
 
-procedure TFRegressiMain.OptionsModeleBtn0Click(Sender: TObject);
+procedure TFRegressiMain.OptionsModeleBtnClick(Sender: TObject);
+var P : TpointF;
+begin
+   P := TpointF.Create(optionsModeleBtn.position.X,optionsModeleBtn.position.y);
+   P.Offset(0,3*OptionsModeleBtn.height+GrapheToolBar.Position.Y);
+   P := ClientToScreen(P);
+   popupMenuModele.popup(P.x,P.y);
+end;
+
+procedure TFRegressiMain.OptionsModeleClick(Sender: TObject);
 begin
    OptionModeleDlg := TOptionModeleDlg.create(self);
    OptionModeleDlg.DlgGraphique := graphe;
@@ -2242,8 +2663,13 @@ end;
 
 procedure TFRegressiMain.PaintBox1MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+var P : TPointF;
 begin
-  graphe.PaintBoxMouseDown(Sender,Button,Shift,X, Y)
+   if (ssRight in Shift) then begin
+      P := PaintBox1.LocalToScreen(TPointF.Create(X, Y));
+      MenuAxes.popup(P.x, P.y);
+   end
+   else graphe.PaintBoxMouseDown(Sender,Button,Shift,X, Y)
 end;
 
 procedure TFRegressiMain.PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
@@ -2273,7 +2699,8 @@ end;
 
 procedure TFRegressiMain.PaintBox1Paint(Sender: TObject; Canvas: TCanvas);
 begin
-  graphe.grapheOK := not majFichierEnCours and (pageCourante>0);
+  if majFichierEnCours then exit;
+  graphe.grapheOK := (pageCourante>0);
   graphe.paintBoxPaint;
   with graphe do VecteursBtn.visible :=
      (courbes.Count>0) and graphe.grapheOK and
@@ -2283,6 +2710,32 @@ begin
   LegendeItem.IsChecked := graphe.ShowLegend;
   modeleIncertItem.isChecked := traceEllipse;
   grapheToolBar.enabled := graphe.grapheOK;
+end;
+
+procedure TFRegressiMain.PaintBoxParamMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+begin
+   grapheParam.PaintBoxMouseDown(Sender,Button,Shift,X, Y)
+end;
+
+procedure TFRegressiMain.PaintBoxParamMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Single);
+begin
+   grapheParam.PaintBoxMouseMove(Sender,Shift,X, Y)
+end;
+
+procedure TFRegressiMain.PaintBoxParamMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+begin
+   grapheParam.PaintBoxMouseUp(Sender,Button,Shift,X, Y)
+end;
+
+procedure TFRegressiMain.PaintBoxParamPaint(Sender: TObject; Canvas: TCanvas);
+begin
+  if majFichierEnCours then exit;
+  grapheParam.grapheOK := (NbrePages>2) and ((NbreConst+nbreParam)>1);
+  grapheParam.paintBoxPaint;
+  grapheParamTB.enabled := grapheParam.grapheOK;
 end;
 
 procedure TFRegressiMain.PaintBoxResiduPaint(Sender: TObject; Canvas: TCanvas);
@@ -2320,6 +2773,73 @@ begin
   end;
 end;
 
+procedure TFRegressiMain.paramGlbGridCellButtonClick(Sender: TObject; ACol,
+  ARow: Integer; ACell: TTMSFNCGridCell);
+
+procedure ModifParam(paramCourant : integer;coeff : double);
+begin
+     ParametresGlb[paramCourant].valCourante :=
+              ParametresGlb[paramCourant].valCourante*coeff;
+     ParamGlbGrid.Cells[3,paramCourant-1] :=
+              formatGeneral(ParametresGlb[paramCourant].valCourante,3);
+     ParamGlbGrid.Enabled := not TraceAutoCB.isChecked;
+     if TraceAutoCB.isChecked then lanceModeleGlb(false)
+end;
+
+const
+   CoeffParam = 1.023;
+   CoeffParamRapide = 2;
+var numParam : integer;
+begin
+    numParam := Arow+1;
+    case acol of
+         0 : ;
+         1 : ModifParam(numParam,1/CoeffParamRapide);
+         2 : ModifParam(numParam,1/CoeffParam);
+         3 : begin
+              ParamGlbGrid.FocusedCell := makeCell(Acol,Arow);
+              ParamGlbGrid.EditCell(ParamGlbGrid.focusedCell);
+         end;
+         4 : ModifParam(numParam,CoeffParam);
+         5 : ModifParam(numParam,CoeffParamRapide);
+         6 : ModifParam(numParam,-1);
+    end;
+end;
+
+procedure TFRegressiMain.paramGlbGridCellEditSetData(Sender: TObject; ACol,
+  ARow: Integer; CellEditor: TControl; var CellString: string);
+begin
+    try
+       convertCell(cellString);
+       if cellString<>'' then ParametresGlb[Arow+1].valCourante := getFloat(cellString);
+       lanceModeleGlb(false);
+    except
+       paramGlbGrid.FocusedCell := MakeCell(Acol,Arow)
+    end;
+end;
+
+procedure TFRegressiMain.paramGlbGridGetCellClass(Sender: TObject; ACol,
+  ARow: Integer; var CellClassType: TTMSFNCGridCellClass);
+begin
+    if Acol in [1,2,4,5,6] then
+       CellClassType := TTMSFNCButtonGridCell;
+    if Acol = 0 then
+       CellClassType := TTMSFNCFixedGridCell;
+end;
+
+procedure TFRegressiMain.paramGlbGridGetCellEditorProperties(Sender: TObject;
+  ACol, ARow: Integer; CellEditor: TControl);
+begin
+    if (Acol=3) and (CellEditor is TTMSFNCGridEdit) then
+       (CellEditor as TTMSFNCGridEdit).validChars := '0123456789,.Ee+-';
+end;
+
+procedure TFRegressiMain.paramGlbGridGetCellEditorType(Sender: TObject; ACol,
+  ARow: Integer; var CellEditorType: TTMSFNCGridEditorType);
+begin
+    if Acol=3 then CellEditorType := etValidCharsEdit
+end;
+
 procedure TFRegressiMain.ParamGridCellButtonClick(Sender: TObject; ACol,
   ARow: Integer; ACell: TTMSFNCGridCell);
 
@@ -2346,8 +2866,7 @@ begin
          1 : ModifParam(numParam,1/CoeffParamRapide);
          2 : ModifParam(numParam,1/CoeffParam);
          3 : begin
-            //  paramGrid.FocusedRow := Arow;
-            //  paramGrid.FocusedCol := Acol;
+              paramGrid.FocusedCell := makeCell(Acol,Arow);
               paramGrid.EditCell(paramGrid.focusedCell);
          end;
          4 : ModifParam(numParam,CoeffParam);
@@ -2364,24 +2883,24 @@ begin
        if cellString<>'' then Pages[pageCourante].valeurParam[Arow+1] := getFloat(cellString);
        lanceModele(false);
     except
-       //paramGrid.FocusedCell := Cell(Acol,Arow)
+       paramGrid.FocusedCell := MakeCell(Acol,Arow)
     end;
 end;
 
 procedure TFRegressiMain.ParamGridGetCellClass(Sender: TObject; ACol,
   ARow: Integer; var CellClassType: TTMSFNCGridCellClass);
 begin
- if Acol in [1,2,4,5,6] then
+    if Acol in [1,2,4,5,6] then
        CellClassType := TTMSFNCButtonGridCell;
     if Acol = 0 then
        CellClassType := TTMSFNCFixedGridCell;
-
 end;
 
 procedure TFRegressiMain.ParamGridGetCellEditorProperties(Sender: TObject; ACol,
   ARow: Integer; CellEditor: TControl);
 begin
-   //if Acol=3 then (CellEditor as TTMSFNCEdit).validChars := '0123456789,.Ee+-';
+    if (Acol=3) and (CellEditor is TTMSFNCGridEdit) then
+       (CellEditor as TTMSFNCGridEdit).validChars := '0123456789,.Ee+-';
 end;
 
 procedure TFRegressiMain.ParamGridGetCellEditorType(Sender: TObject; ACol,
@@ -2393,6 +2912,12 @@ end;
 procedure TFRegressiMain.PlayAnimBtnClick(Sender: TObject);
 begin
     TimerAnimation.enabled := true;
+end;
+
+procedure TFRegressiMain.PopupMenuModelePopup(Sender: TObject);
+begin
+  IntersectionTer.IsChecked := traceIntersection;
+  IntersectionTer.visible := nbreModele>1;
 end;
 
 procedure TFRegressiMain.ProprieteCourbeClick(Sender: TObject);
@@ -2450,7 +2975,7 @@ begin
            MemoModele.lines.clear;
            MemoResultat.lines.clear;
            graphe.IsModeleMagnum := false;
-           EtatModele := [PasDeModele];
+           graphe.EtatModele := [PasDeModele];
            exclude(graphe.modif,gmModele);
      end;
 end;
@@ -2458,6 +2983,7 @@ end;
 procedure TFRegressiMain.RazTgItemClick(Sender: TObject);
 begin
      graphe.resetEquivalence;
+     graphe.paintBox.repaint;
 end;
 
 procedure TFRegressiMain.ResidusItemClick(Sender: TObject);
@@ -2514,12 +3040,35 @@ begin
      OpenFile(openDialog.FileName);
 end;
 
+procedure TFRegressiMain.SaveCSVItemClick(Sender: TObject);
+var oldFilter, oldExt, oldFile, nomFichier : string;
+begin with SaveDialog do begin
+    oldFilter := Filter;
+    oldExt := DefaultExt;
+    oldFile := FileName;
+    try
+       Filter := 'Tableur csv|*.csv';
+       DefaultExt := 'csv';
+       FileName := extractFileName(nomFichierData);
+       if FileName='' then FileName := 'donnees';
+       FileName := changeFileExt(FileName,'.csv');
+       if Execute then begin
+          nomFichier := changeFileExt(FileName,'.csv');
+          FichierRegressi.ecritTableur(nomFichier);
+       end;
+    finally
+       Filter := oldFilter;
+       DefaultExt := oldExt;
+       FileName := oldFile;
+    end;
+end end;
+
 procedure TFRegressiMain.SaveGrapheStatItemClick(Sender: TObject);
 var abitmap : Tbitmap;
     nomFichier : string;
 begin
     if grapheSaveDialog.Execute then begin
-       aBitmap := ZoneClipBoard.MakeScreenshot;
+       aBitmap := ZoneClipBoardStat.MakeScreenshot;
        nomFichier := grapheSaveDialog.fileName;
        nomFichier := changeFileExt(nomFichier,'.png');
        abitmap.saveToFile(nomFichier);
@@ -2562,16 +3111,44 @@ begin
       then begin
            PanelModele.repaint;
            graphe.VerifGraphe := false;
-           if not(ModeleDefini in etatModele)
+           if not(ModeleDefini in graphe.etatModele)
                then begin
                   LanceCompileModele;
                   MajParametres;
                end;
       end
       else begin
-        if ModeleDefini in etatModele then
+        if ModeleDefini in graphe.etatModele then
         for i := 1 to Graphe.NbreOrdonnee do
             with Graphe.Coordonnee[i] do begin
+                 include(trace,trLigne);
+                 ligne := liModele;
+                 include(trace,trPoint);
+            end;
+     end;
+end;
+
+procedure TFRegressiMain.SetPanelModeleGlb(NouvelEtat : boolean);
+var i : integer;
+begin
+   if not grapheParam.grapheOK then NouvelEtat := false;
+   PanelModeleGlb.Visible := NouvelEtat;
+   FcoordonneesPhys.modeleEnCours := NouvelEtat;
+   ModeleGlbBtn.IsPressed := NouvelEtat;
+   if NouvelEtat
+      then begin
+           PanelModeleGlb.repaint;
+           grapheParam.VerifGraphe := false;
+           if not(ModeleDefini in grapheParam.etatModele)
+               then begin
+                  grapheParam.LanceCompileModele;
+                  grapheParam.MajParametres;
+               end;
+      end
+      else begin
+        if ModeleDefini in grapheParam.etatModele then
+        for i := 1 to GrapheParam.NbreOrdonnee do
+            with GrapheParam.Coordonnee[i] do begin
                  include(trace,trLigne);
                  ligne := liModele;
                  include(trace,trPoint);
@@ -2585,9 +3162,9 @@ var memoActif : boolean;
 begin
      memoActif := memoModele=activeControl;
      LanceCompileModele;
-     if ModeleDefini in etatModele
+     if ModeleDefini in graphe.etatModele
         then begin
-          if (ModeleLineaire in etatModele)
+          if (ModeleLineaire in graphe.etatModele)
           then lanceModele(true)
           else begin
              WMRegMaj(MajModele);
@@ -2601,7 +3178,7 @@ begin
              else if panelModele.visible then AjustePanelModele;
           end;
       end
-      else if PasDeModele in etatModele then
+      else if PasDeModele in graphe.etatModele then
            WMRegMaj(MajModele);
 end;
 
@@ -2623,9 +3200,28 @@ begin
      PanelAjuste.height := hauteurAjuste;
 end;
 
+procedure TFRegressiMain.AjustePanelModeleGlb;
+const HauteurMini = 76;
+var hauteurAjuste,hauteurPanel,hauteurResultat : single;
+begin
+     hauteurPanel := PanelModeleGlb.height;
+     if hauteurPanel<=0 then hauteurPanel := ClientHeight-GrapheParamTB.height;
+// valeurs par défaut
+     HauteurAjuste := NbreParamGlb*ParamGlbGrid.defaultRowHeight+Panel2.height+16;
+     hauteurResultat := hauteurPanel-MemoModeleGlb.height-HauteurAjuste;
+// on teste si résultat pas trop petit
+     if (hauteurResultat<HauteurMini) then
+        if ((HauteurPanel-MemoModeleGlb.height-HauteurMini)>HauteurMini)
+           then HauteurAjuste := HauteurPanel-MemoModeleGlb.height-HauteurMini
+ // on ajuste ScrollBoxParam résultat à mini
+           else HauteurAjuste := HauteurPanel/3; // on divise en trois
+// on affecte
+     ScrollBoxParam.height := hauteurAjuste;
+end;
+
 procedure TFRegressiMain.AnimationBtnClick(Sender: TObject);
 begin
-   if (pageCourante=0) or (NbreConstExp=0) then exit;
+   if (pageCourante=0) or (NbreConstExp=0) or majFichierEnCours then exit;
  //  AnimationBtn.isPressed := not (AnimationBtn.isPressed);
    if AnimationBtn.isPressed then graphe.setAnimation;
    PanelAnimation.visible := animationBtn.isPressed;
@@ -2650,7 +3246,7 @@ end;
 procedure TFregressiMain.LanceCompileModele;
 var PosErreur,longErreur,i : integer;
 begin
-     etatModele := [];
+     graphe.etatModele := [];
      NbreModele := 0;
      NbreFonctionSuper := 0;
      NbreParam := 0;
@@ -2663,7 +3259,7 @@ begin
            (MemoModele.lines[MemoModele.lines.count-2]='')
           do MemoModele.lines.delete(MemoModele.lines.count-1);
      graphe.compileModele(posErreur,longErreur);
-     if ModeleDefini in etatModele
+     if ModeleDefini in graphe.etatModele
         then begin
              graphe.ConstruitModele;
              InitEquaDiffBtn.visible := (fonctionTheorique[1].genreC=g_diff2) or
@@ -2675,7 +3271,7 @@ begin
              for i := succ(NbreParam) to maxParametres do
                  pages[pageCourante].nomParam[i] := '';
         end
-        else if not (PasDeModele in etatModele) then with memoModele do begin
+        else if not (PasDeModele in graphe.etatModele) then with memoModele do begin
              selStart := pred(posErreur);
              selLength := longErreur;
              InitEquaDiffBtn.visible := false;
@@ -2750,7 +3346,7 @@ begin with ModeleGraphique[NbreModele] do begin
      if ChoixModeleDlg.effaceModele then MemoModele.lines.clear;
      for j := 0 to pred(expression.count) do
          MemoModele.lines.Add(expression[j]);
-     etatModele := [];
+     graphe.etatModele := [];
      graphe.IsModeleMagnum := true;
      LanceCompileModele;
      include(Graphe.modif,gmModele);
@@ -2790,7 +3386,7 @@ begin
               with FonctionTheorique[NbreModele] do
                 if enTete<>'' then begin
                       MemoModele.lines.Add(enTete+'='+expression);
-                      etatModele := [];
+                      graphe.etatModele := [];
                       lanceModele(genreC=g_fonction);
                       PaintBox1.repaint;
                       exit;
@@ -2813,7 +3409,9 @@ var m : integer;
     PourCent : string;
     DebutCalcul : integer;
     setParam : TsetGrandeur;
-begin with pages[pageCourante] do begin
+begin
+if monteCarloActif then exit;
+with pages[pageCourante] do begin
     MemoResultat.lines.Clear;
     TexteResultatModele.clear;
     setParam := [];
@@ -2832,18 +3430,14 @@ begin with pages[pageCourante] do begin
         end;
         if ErreurModele then Ajoute(erPointModele+IntToStr(PosErreurModele));
     end;
-    IntersectionItem.visible := false;
     for m := 2 to NbreModele do with fonctionTheorique[m] do
         if not isNan(Y_inter[m]) and not isNan(X_inter[m]) then begin
-             Ajoute(stIntersection+
+             Ajoute(stIntersection+' '+
                     IntToStr(pred(m))+'-'+IntToStr(m)+' : ');
              Ajoute(grandeurs[indexX].formatNomEtUnite(X_inter[m])+'  '+
                     grandeurs[indexY].formatNomEtUnite(Y_inter[m]));
              Ajoute('');
-             IntersectionItem.visible := true;
         end;
-    IntersectionBis.visible := IntersectionItem.visible;
-    IntersectionTer.visible := IntersectionItem.visible;
     if ParamAjustes
        then begin
           for i := 1 to NbreParam do begin
@@ -2865,29 +3459,69 @@ begin with pages[pageCourante] do begin
     end; // ModeleCalcule
 end end; // MajResultat
 
+procedure TFRegressiMain.MajResultatLatex(p : codePage);
+
+Procedure Ajoute(Aligne : string;Acolor : TAlphaColor);
+begin
+    if (Acolor<>claBlack) and (NbreModele>1) then Aligne := '{\color{'+couleurLatex(Acolor)+'} '+Aligne+'}';
+    Pages[p].TexteResultatModele.add(Aligne);
+end;
+
+var m : shortInt;
+    i : integer;
+    hintOrigine : string;
+begin with pages[p] do begin
+   TexteResultatModele.clear;
+   if not ModeleCalcule then exit;
+   for m := 1 to NbreModele do with fonctionTheorique[m] do
+       Ajoute(stEcartRelatif+'  '+enTete+' : '+chainePrec(PrecisionModele[m]),couleurM);
+   for m := 1 to NbreModele do with fonctionTheorique[m] do begin
+       if Chi2Actif
+          then Ajoute('Chi2/(N-p)='+formatGeneral(chi2Relatif,precisionMin),couleurM)
+          else Ajoute(stSigmaY+' '+addrY.formatNomEtUnite(sigmaY),couleurM);
+       if ErreurModele then Ajoute(erPointModele+IntToStr(PosErreurModele),couleurM);
+   end; // for m
+   for m := 2 to NbreModele do with fonctionTheorique[m] do
+       if not(isNan(Y_inter[m])) and not(isNan(X_inter[m])) then begin
+           hintOrigine := stIntersection+IntToStr(pred(m))+'-'+IntToStr(m)+' : ';
+           hintOrigine := hintOrigine+grandeurs[indexX].formatValeuretUnite(X_inter[m]);
+           hintOrigine := hintOrigine+', ';
+           hintOrigine := hintOrigine+grandeurs[indexY].formatValeurEtUnite(Y_inter[m]);
+           Ajoute(hintOrigine,claBlack);
+   end;
+   if ParamAjustes then begin
+        Ajoute('Les incertitudes sont des incertitudes types',claBlack);
+        for i := 1 to NbreParam do begin
+            hintOrigine := ParamEtPrec(i,true);
+            if abs(incertParam[i]/ValeurParam[i])<PrecisionMaxParam
+                then Ajoute(hintOrigine+ ' '+stTropPrecis,claRed)
+                else Ajoute(hintOrigine,claBlack);
+        end;
+   end;
+end end; // MajResultatLatex
+
 procedure TFregressiMain.LanceModele(ajuste : boolean);
 var m : integer;
 label finProc;
 begin
      if not(FCoordonneesPhys.ModeleEnCours) then exit;
      PanelAjuste.enabled := true;
-     if not (ModeleDefini in etatModele) then begin
+     if not (ModeleDefini in graphe.etatModele) then begin
         lanceCompileModele;
-        if not (ModeleDefini in etatModele) then begin
-
+        if not (ModeleDefini in graphe.etatModele) then begin
            goto finProc;
         end;
      end;
-     if not (ModeleConstruit in etatModele) then begin
+     if not (ModeleConstruit in graphe.etatModele) then begin
         graphe.ConstruitModele;
-        if not (ModeleConstruit in etatModele) then begin
+        if not (ModeleConstruit in graphe.etatModele) then begin
         // erreur ?
            goto finProc;
         end;
      end;
-     if not (UniteParamDefinie in etatModele) then begin
+     if not (UniteParamDefinie in graphe.etatModele) then begin
          chercheUniteParametre;
-         include(etatModele,UniteParamDefinie);
+         include(graphe.etatModele,UniteParamDefinie);
      end;
      pages[pageCourante].VerifIntervalles;
      VerifParametres;
@@ -2904,7 +3538,7 @@ begin
      finProc :
      PanelAjuste.enabled := true;
      if ajuste then ModifFichier := true;
-     WMRegMaj(MajModele);
+     if not monteCarloActif then WMRegMaj(MajModele);
      ParamGrid.enabled := true;
      BornesBtn.Enabled := nbreModele>0;
 end;// LanceModele
@@ -2913,25 +3547,24 @@ procedure TFregressiMain.LanceModeleGlb(ajuste : boolean);
 label finProc;
 begin
      if not(FCoordonneesPhys.ModeleEnCours) then exit;
-     PanelAjuste.enabled := true;
-     if not (ModeleDefini in etatModele) then begin
+     if not (ModeleDefini in grapheParam.etatModele) then begin
         grapheParam.lanceCompileModele;
-        AjustePanelModele;
-        ParamGrid.enabled := true;
-        if not (ModeleDefini in etatModele) then begin
+        AjustePanelModeleGlb;
+        ParamGlbGrid.enabled := true;
+        if not (ModeleDefini in grapheParam.etatModele) then begin
            goto finProc;
         end;
      end;
-     if not (ModeleConstruit in etatModele) then begin
+     if not (ModeleConstruit in grapheParam.etatModele) then begin
         grapheParam.ConstruitModele;
-        if not (ModeleConstruit in etatModele) then begin
+        if not (ModeleConstruit in grapheParam.etatModele) then begin
         //  erreur ?
            goto finProc;
         end;
      end;
-     if not (UniteParamDefinie in etatModele) then begin
+     if not (UniteParamDefinie in grapheParam.etatModele) then begin
          chercheUniteParametreGlb;
-         include(etatModele,UniteParamDefinie);
+         include(grapheParam.etatModele,UniteParamDefinie);
      end;
      grapheParam.VerifIntervalles;
      grapheParam.VerifParametres;
@@ -2939,11 +3572,9 @@ begin
      if (OmEchelle in grapheParam.OptionModele) then
         grapheParam.monde[mondeX].Defini := false;
      finProc :
-     PanelAjuste.enabled := true;
      if ajuste then ModifFichier := true;
      WMRegMaj(MajModele);
-     ParamGrid.enabled := true;
-     BornesBtn.Enabled := nbreModele>0;
+     ParamGlbGrid.enabled := true;
 end;// LanceModeleGlb
 
 procedure TFregressiMain.DragEnter(const Data: TDragObject; const Point: TPointF);
@@ -3014,6 +3645,12 @@ begin
      grapheTab.Text := 'Graph';
      FFTTab.Text := 'Fourier';
      StatTab.Text := 'Statistics';
+     GrapheParamTab.Text := 'Param. graph';
+
+     SaveCSVItem.Text := 'Export CSV…';
+     OptiqueItem.Text := 'Diffraction…';
+     LatexMenu.Text := 'Export LaTeX…';
+     MonteCarloItem.Text := 'Monte-Carlo';
 
   end;
   if langue=fr then begin
@@ -3059,7 +3696,111 @@ begin
      grapheTab.Text := 'Graphe';
      FFTTab.Text := 'Fourier';
      StatTab.Text := 'Statistique';
+     GrapheParamTab.Text := 'Graphe param.';
+
+     SaveCSVItem.Text := 'Exporter CSV…';
+     OptiqueItem.Text := 'Optique…';
+     LatexMenu.Text := 'Exporter LaTeX…';
+     MonteCarloItem.Text := 'Monte-Carlo';
   end;
+end;
+
+procedure TFRegressiMain.LatexMenuClick(Sender: TObject);
+begin
+     LatexDlg := TLatexDlg.Create(self);
+     CentreForm(LatexDlg);
+     LatexDlg.showModal;
+     LatexDlg.Free;
+end;
+
+procedure TFRegressiMain.MonteCarloItemClick(Sender: TObject);
+var i,j,k,m : integer;
+    StatParam : array of TcalculStatistique;
+    sauveValeur : array of Tvecteur;
+    g : TGrandeur;
+    somme,z,coeffChi2 : double;
+    incertitudeConnue : array[codeGrandeur] of boolean;
+    dy,dt : double;
+    indexG : codeGrandeur;
+begin
+    for j := 0 to pred(NbreVariab) do
+        incertitudeConnue[j] := pages[pageCourante].isIncertitudeDefinie(j);
+    for j := 1 to NbreModele do with fonctionTheorique[j] do begin
+        if not(incertitudeConnue[indexY]) or
+           not(incertitudeConnue[indexX]) then begin
+               afficheErreur('Incertitudes non définies',0);
+               exit;
+         end;
+    end;
+    MonteCarloActif := true;
+    setLength(statParam,NbreParam+1);
+    for j := 1 to NbreParam do begin
+        statParam[j] := TcalculStatistique.create;
+        statParam[j].nbre := NbreMC;
+        setLength(statParam[j].Donnees,NbreMC);
+    end;
+    setLength(sauveValeur, NbreGrandeurs);
+    pages[pageCourante].affecteVariableP(false);
+    for j := 0 to pred(NbreVariabExp) do begin
+        indexG := indexVariabExp[j];
+        copyVecteur(sauveValeur[indexG],grandeurs[indexG].valeur);
+    end;
+    for i := 0 to pred(NbreMC) do begin
+         for j := 0 to pred(NbreVariabExp) do begin
+             indexG := indexVariabExp[j];
+             if incertitudeConnue[indexG] then begin
+                G := grandeurs[indexG];
+                for k := 0 to pred(pages[pageCourante].nmes) do
+                    G.valeur[k] := randG(sauveValeur[indexG][k],G.ValIncert[k]);
+             end;
+         end;
+         pages[pageCourante].recalculP; // MonteCarlo sur grandeurs calculées
+         LanceModele(true);
+         for j := 1 to NbreParam do
+             statParam[j].donnees[i] := parametres[j].valCourante;
+    end;
+    for j := 0 to pred(NbreVariabExp) do begin
+        indexG := indexVariabExp[j];
+        for k := 0 to pred(pages[pageCourante].nmes) do
+            grandeurs[indexG].valeur[k] := sauveValeur[indexG][k];
+        sauveValeur[indexG] := nil;
+    end;
+    pages[pageCourante].recalculP; // les grandeurs calculées reprennent leur valeurs iniitiales
+    memoResultat.Lines.Clear;
+    memoResultat.Lines.Add('Méthode de Monte-Carlo');
+    memoResultat.Lines.Add(intToStr(NbreMC)+' itérations');
+    memoResultat.Lines.Add('u(x)=incertitude-type sur x');
+    for j := 1 to NbreParam do begin
+        statParam[j].calcul;
+        memoResultat.Lines.add(parametres[j].nom+'='+parametres[j].formatValeurEtUnite(statParam[j].moyenne));
+        memoResultat.Lines.add('u('+parametres[j].nom+')='+parametres[j].formatValeurEtUnite(statParam[j].sigma));
+        pages[pageCourante].valeurParam[j] := statParam[j].moyenne;
+        parametres[j].valCourante := statParam[j].moyenne;
+        statParam[j].free;
+    end;
+    for m := 1 to NbreModele do with fonctionTheorique[m] do begin
+        somme := 0;
+        for k := pages[pageCourante].debut[m] to pages[pageCourante].fin[m] do begin
+           AffecteVariableE(k);
+           z := calcule(calcul);
+           try
+              dy := grandeurs[indexY].ValIncert[k];
+              if isNan(dy) then dy := 0;
+              dt := grandeurs[indexX].ValIncert[k];
+              if isNan(dt)
+                 then dt := 0
+                 else dt := dt*graphe.valeurDeriveeX[m,k];
+              coeffChi2 := 1/(sqr(dy)+sqr(dt));
+           except
+              coeffChi2 := 1;
+           end;
+           z := sqr(z-grandeurs[indexY].valeur[k])*coeffChi2;
+           somme := somme+z;
+        end;
+        somme := somme/NbrePointsModele;
+        memoResultat.Lines.add('Chi2/(N-p)='+formatGeneral(somme,precisionMin))
+    end;
+    MonteCarloActif := false;
 end;
 
 end.

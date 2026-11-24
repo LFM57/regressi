@@ -6,6 +6,7 @@ Uses
   System.SysUtils,
   System.Types,
   System.UITypes,
+  System.UIConsts,
   System.Classes,
   System.Math,
   System.Rtti,
@@ -38,6 +39,7 @@ Uses
   images,
   compile,
   constreg,
+  graphker,
   maths,
   modif,
   regUtil, 
@@ -57,9 +59,25 @@ Uses
 
 const
      ReperageConstGlb = '-->';
-     captionAngle : array[boolean] of string = ('Radian','Degré');
+     largeurMinGrapheValeur = 50;
 
 type
+  TgrapheValeur = class(TgrapheReg)
+  private
+  public
+      constructor Create(apaintBox : TPaintBox);
+      Procedure SetCoordonnee;
+      procedure PaintBoxPaint;
+      procedure PaintBoxMouseMove(sender : Tobject;Shift: TShiftState;
+         X,Y: single);
+      procedure PaintBoxMouseDown(sender : Tobject;Button: TMouseButton;
+         Shift: TShiftState; X, Y: single);
+      procedure PaintBoxMouseUp(sender : Tobject;Button: TMouseButton;
+         Shift: TShiftState; X, Y: single);
+      procedure SetPenBrush(c : Tcurseur);
+      destructor Destroy; override;
+  end;
+
   TFValeurs = class(TForm)
     Feuillets: TTabControl;
     PopupMenuExpr: TPopupMenu;
@@ -163,6 +181,17 @@ type
     GrecGrid: TTMSFNCGrid;
     SplitterExp1: TSplitter;
     SplitterExp2: TSplitter;
+    Splitter1: TSplitter;
+    GraphePanel: TPanel;
+    GrapheToolBar: TToolBar;
+    CoordonneesBtn: TButton;
+    AutoBtn: TButton;
+    ZoomBtn: TButton;
+    ZoomArrBtn: TButton;
+    PaintBox1: TPaintBox;
+    Label6: TLabel;
+    VarHelpBtn: TButton;
+    parHelpBtn: TButton;
     procedure DeleteBtnClick(Sender: TObject);
     procedure CompileItemClick(Sender: TObject);
     procedure FeuilletsClick(Sender: TObject);
@@ -241,12 +270,29 @@ type
       var CellString: string);
     procedure GridVariabGetCellData(Sender: TObject; ACol, ARow: Integer;
       var CellString: string);
+    procedure CoordonneesBtnClick(Sender: TObject);
+    procedure PaintBox1Paint(Sender: TObject; Canvas: TCanvas);
+    procedure PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
+    procedure PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
+    procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Single);
+    procedure Splitter1Paint(Sender: TObject; Canvas: TCanvas;
+      const ARect: TRectF);
+    procedure AutoBtnClick(Sender: TObject);
+    procedure ZoomBtnClick(Sender: TObject);
+    procedure ZoomArrBtnClick(Sender: TObject);
+    procedure VarHelpBtnClick(Sender: TObject);
+    procedure parHelpBtnClick(Sender: TObject);
  private
      ColPermiseParam,ColPermiseVariab : TsetGrandeur;
+     derniereColvariab : integer;
      ErreurCompile : boolean;
      aideFonction : TDictionary<String,String>;
      premierCR : boolean;
      MajSimulation : boolean;
+     graphe : TgrapheValeur;
      Function FormatGridVariab(Acol,Arow : Integer) : string;
      Function FormatGridConst(Acol,Arow : Integer) : string;
      procedure MajValeurConstGlb(i,posDebutLigne : integer);
@@ -256,15 +302,18 @@ type
      Procedure CompileP;
      Procedure Remplit;
      Procedure ResetListeGrandeurs;
+     procedure AppelCoordonnees;
   public
       prevenirPi : boolean;
       MesureCourante : integer;
+      MajGridVariab : boolean;
       Procedure SupprimeGrandeurCalc(anom : string);
       procedure ChangeAngle(isDegre : boolean);
       procedure PassageEnRadian(force : boolean);
       Procedure TraceGridVariab;
       Procedure TraceGridParam;
       procedure Recalculer;
+      procedure MajGraphe(typeMaj : integer);
   end;
 
 var
@@ -272,8 +321,8 @@ var
 
 implementation
 
-uses UniteKer, NewVar, varkeyb,
-     supprDlg, regmain, options, fft, optionsFiltrageU;
+uses UniteKer, NewVar, varkeyb, coordphys,
+     supprDlg, regmain, options, fft, optionsFiltrageU, AideU;
 
 {$R *.FMX}
 
@@ -292,6 +341,271 @@ const
        nuMaj, xiMaj, omicronMaj, piMaj, rhoMaj, sigmaMaj,
        tauMaj, upsilonMaj, phiMaj, chiMaj, psiMaj, omegaMaj);
 
+procedure TgrapheValeur.PaintBoxMouseMove(Sender: TObject;
+     Shift: TShiftState; X,Y: single);
+var deplacement : boolean;
+begin // PaintBoxMouseMove
+   if not grapheOK then exit;
+   if ssRight in Shift then exit; // clic droit
+   deplacement := ssLeft in Shift;
+   if curseur=curZoomAv then if deplacement then begin
+        selection.width := x-selection.Position.x;
+        selection.height := y-selection.position.y;
+   end;
+end; // PaintBoxMouseMove
+
+procedure TgrapheValeur.PaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: single);
+
+procedure AfficheSelection;
+begin
+     selection.Position.x := x;
+     selection.Position.y := y;
+     selection.width := 0;
+     selection.height := 0;
+     selection.Visible := true;
+     selection.BringToFront;
+end;
+
+begin // MouseDown
+   if not grapheOK then exit;
+   if curseur=curZoomAv
+      then afficheSelection
+      else selection.Visible := false;
+end; // PaintBoxMouseDown
+
+procedure TgrapheValeur.PaintBoxMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: single);
+
+Procedure affecteZoomAv;
+begin
+   if (selection.width=0) or
+      (selection.Height=0) then exit;
+   affecteZoomAvant(true);
+   include(modif,gmEchelle);
+end; // affecteZoomAvant
+
+begin // MouseUp
+  if (x<0) or (y<0) or not(grapheOK) then exit;
+  if curseur=curZoomAv then begin
+     affecteZoomAv;
+     curseur := curSelect;
+     selection.Visible := false;
+  end;
+  paintBox.repaint;
+end; // MouseUp
+
+constructor TgrapheValeur.Create(apaintBox : TPaintBox);
+begin
+  inherited create(aPaintBox);
+  curseur := curSelect;
+  Selection.SetMoveDown(PaintBoxMouseMove,PaintBoxMouseDown,PaintBoxMouseUp);
+end; // TgrapheValeur.Create
+
+procedure TgrapheValeur.SetCoordonnee;
+
+Procedure AjouteVariab(m : TindiceMonde;i : indiceOrdonnee;page : codePage);
+var courbeVariab : Tcourbe;
+    iX,iY : integer;
+    traceV : TsetTrace;
+    ligneV : Tligne;
+
+Procedure AddIncert(Acourbe : Tcourbe);
+begin
+      with pages[page] do begin
+         Acourbe.IncertX := incertVar[iX];
+         Acourbe.IncertY := incertVar[iY];
+      end;
+end;
+
+begin with pages[page] do begin
+      if m>=MaxMonde then exit;
+      with Coordonnee[i] do begin
+           iX := CodeX;
+           iY := CodeY;
+           exclude(trace,trSonagramme);
+           TraceV := trace;
+           LigneV := ligne;
+           if (LigneV=LiModele) and (NbreModele=0) then LigneV := LiDroite;
+      end;
+      courbeVariab := AjouteCourbe(valeurVar[iX],valeurVar[iY],m,nmes,
+                                   grandeurs[iX],grandeurs[iY],page);
+      with coordonnee[i] do courbeVariab.setStyle(couleur,styleT,motif);
+      AddIncert(courbeVariab);
+      if traceV=[] then TraceV := [trPoint];
+      courbeVariab.Trace := TraceV;
+      if TrLigne in TraceV then case LigneV of
+        LiSpline,LiSinc : if (pages[page].nmes<maxVecteurDefaut) then begin
+              courbeVariab.courbeExp := true;
+              courbeVariab.optionLigne := ligneV;
+        end;
+      end; // case ligneV
+      if TraceV<>[] then
+        courbeVariab.trace := courbeVariab.trace+traceV;
+end end; // AjouteVariab
+
+procedure VerifCoordonnee;
+var i : integer;
+begin
+    nbreOrdonnee := 0;
+    for i := 1 to maxOrdonnee do with coordonnee[i] do begin
+        codeY := indexNom(nomY);
+        if codeY<>grandeurInconnue
+           then monde[iMondeC].axe := grandeurs[codeY];
+        codeX := indexNom(nomX);
+        if codeX<>grandeurInconnue then
+           monde[mondeX].axe := grandeurs[codeX];
+        if (codeY<>grandeurInconnue) and
+           (codeX<>grandeurInconnue) then inc(nbreOrdonnee);
+    end;
+    if (nbreOrdonnee=0) and (nbreVariab>1) then begin
+        with coordonnee[1] do begin
+          codeX := 0; codeY := indexVariab[1];
+          nomX := grandeurs[codeX].nom;
+          nomY := grandeurs[codeY].nom;
+          iMondeC := mondeY;
+          monde[mondeX].axe := grandeurs[codeX];
+          monde[mondeY].axe := grandeurs[codeY];
+        end;
+        nbreOrdonnee := 1;
+        if (nbreVariabExp>2) and (grandeurs[indexVariab[2]].fonct.genreC=g_experimentale) then begin
+           with coordonnee[2] do begin
+              codeX := 0; codeY := indexvariab[2];
+              nomX := grandeurs[codeX].nom;
+              nomY := grandeurs[codeY].nom;
+              if grandeurs[1].uniteEgale(grandeurs[codeY])
+                 then iMondeC := mondeY
+                 else iMondeC := mondeDroit;
+              monde[mondeX].axe := grandeurs[codeX];
+              monde[iMondeC].axe := grandeurs[codeY];
+           end;
+           nbreOrdonnee := 2;
+        end;
+    end;
+end;
+
+var
+  i,n : integer;
+  p : codePage;
+  Lmonde : TindiceMonde;
+begin // SetCoordonnee
+   VerifCoordonnee;
+   Lmonde := mondeY;
+   for p := 1 to NbrePages do Pages[p].tri;
+   for i := 1 to maxOrdonnee do with Coordonnee[i] do
+     if (codeX<>grandeurInconnue) and (codeY<>grandeurInconnue) then begin
+        if superposePage and
+           (NbrePages>1) and
+           (OgAnalyseurLogique in OptionGraphe) then Lmonde := mondeY;
+        if OgPolaire in OptionGraphe then begin
+            iMondeC := mondeY;
+            if (i=1) then if codeY=grandeurInconnue
+                  then monde[mondeY].Axe := nil
+                  else monde[iMondeC].Axe := grandeurs[codeY];
+        end;
+        superposePage := superposePage and (NbrePages>1);
+        if superposePage then begin
+           N := 0;
+           for p := 1 to NbrePages do
+               if pages[p].active then inc(N);
+           superposePage := N>1;
+           if N=0 then pages[pageCourante].Active := true;
+        end;
+        if superposePage
+           then for p := 1 to NbrePages do begin
+              if pages[p].active then
+                 if OgAnalyseurLogique in OptionGraphe
+                      then begin
+                          AjouteVariab(Lmonde,i,p);
+                          inc(Lmonde);
+                      end
+                      else AjouteVariab(iMondeC,i,p)
+           end
+           else AjouteVariab(iMondeC,i,pageCourante);
+     end;
+   modif := [gmEchelle];
+   grapheOK := true;
+end; // SetCoordonnee
+
+procedure TgrapheValeur.SetPenBrush(c : Tcurseur);
+begin
+     curseur := c;
+     if curseur=curSelect then paintBox.cursor := crCross;
+     selection.visible := curseur=curZoomAv;
+end; // SetPenBrush
+
+procedure TgrapheValeur.PaintBoxPaint;
+
+Procedure TestModif;
+var i : integer;
+begin
+        if (([gmXY,gmModele,gmPage,gmValeurs]*modif)<>[]) or
+           (courbes.count=0)
+            then begin
+              courbes.clear;
+              if ([gmValeurs]<>modif) then begin
+                 monde[mondeX].defini := False;
+                 AutoTick  := True;
+                 for i := mondeX to mondeSans do begin
+                     if not useDefaut then monde[i].reset(false);
+                     monde[i].axe := nil;
+                 end;
+              end;
+              setCoordonnee;
+              if UseDefaut then begin
+                  monde[mondeX].defini := true;
+                  for i := 1 to maxOrdonnee do with Coordonnee[i] do
+                      if codeX<>grandeurInconnue then
+                         monde[iMondeC].defini := true;
+              end;
+            end;
+end;
+
+Procedure FondBlanc;
+begin with paintBox.canvas do begin
+      Fill.kind := TBrushKind.Solid;
+      Fill.Color := claWhite;
+      stroke.Color := claBlack;
+      stroke.kind := TBrushKind.Solid;
+      with limiteFenetre do
+           FillRect(TrectF.Create(0,0,Width,Height),0,0,[],1);
+      Fill.kind := TBrushKind.None;
+end  end;
+
+Procedure Encadre;
+begin with paintBox.canvas do begin
+      stroke.Color := claBlack;
+      stroke.kind := TBrushKind.Solid;
+      with limiteFenetre do
+           DrawRect(TrectF.Create(0,0,Width,Height),0,0,[],1);
+end  end;
+
+begin // PaintBoxPaint
+        limiteFenetre := TRectF.create(0,0,paintBox.width,paintBox.height);
+        if paintBox.Width<largeurMinGrapheValeur then begin
+           FondBlanc;
+           exit;
+        end;
+        grapheOK := (NbreVariab>1) and (NbrePages>0);
+        if not grapheOK then begin
+           reset;
+           optionGraphe := optionGrapheDefault;
+        end;
+        if grapheOK then TestModif;
+        if not useDefaut and (Pages[pageCourante].nmes>0) then begin
+           miniTemps := Pages[pageCourante].valeurVar[0,0];
+           maxiTemps := Pages[pageCourante].valeurVar[0,pred(Pages[pageCourante].nmes)];
+        end;
+        if grapheOK then chercheMonde;
+        draw;
+        Encadre;
+end; // PaintBoxPaint
+
+destructor TgrapheValeur.Destroy;
+begin
+     inherited destroy;
+end;
+
 Function TFValeurs.FormatGridVariab(Acol,Arow : Integer) : string;
 var isPrec : boolean;
     indexV : integer;
@@ -299,7 +613,7 @@ begin
     result := '';
     if Acol=0 then begin
        if Arow=0 then result := 'Nom'
-       else if Arow=1 then result := 'Unité'
+       else if Arow=1 then result := stUnite
        else result := intToStr(Arow-2);
        exit;
     end;
@@ -315,14 +629,13 @@ begin
     end;
     if Arow<2 then exit;
     Arow := Arow-2;
-    if indexV<>grandeurInconnue
-       then with grandeurs[indexV] do begin
-           if fonct.genreC=g_texte
-           then result := pages[pageCourante].texteVar[indexV,Arow]
-           else if isPrec
-              then result := FormatIncert(pages[pageCourante].incertVar[indexV,Arow],CoeffAff)
-              else result := FormatNombre(pages[pageCourante].valeurVar[indexV,Arow],CoeffAff)
-       end;
+    with grandeurs[indexV] do begin
+        if fonct.genreC=g_texte
+        then result := pages[pageCourante].texteVar[indexV,Arow]
+        else if isPrec
+           then result := FormatIncert(pages[pageCourante].incertVar[indexV,Arow],CoeffAff)
+           else result := FormatNombre(pages[pageCourante].valeurVar[indexV,Arow],CoeffAff)
+    end;
 end;
 
 Function TFValeurs.FormatGridConst(Acol,Arow : Integer) : string;
@@ -375,6 +688,7 @@ var maximum,z : double;
     modifiable : boolean;
 begin with pages[PageCourante] do begin
     ColPermiseVariab := [];
+    derniereColVariab := 0;
     for k := 0 to (NbreVariab-1) do begin
         indexVar := indexVariab[k];
         colonne := indexVar;
@@ -392,6 +706,7 @@ begin with pages[PageCourante] do begin
               if DeltaItem.isChecked and (incertCalc.expression='') then
                  include(ColPermiseVariab,succ(colonne));
            end;
+           if modifiable then derniereColVariab := colonne;
            if not modifiable and
                correct and
                not(UniteDonnee) and
@@ -442,12 +757,18 @@ begin
 end end; // AffichePage
 
 begin
-//   if not GridVariab.visible then exit;
+   if not GridVariab.visible then begin
+      MajGridVariab := true;
+      exit;
+   end;
    GridVariab.BeginUpdate;
    if (NbreVariab>0) and (pageCourante>0) then affichePage;
    DelGrandeurItem.enabled := NbreVariabExp>0;
    DelSelectItem.enabled := true;
    GridVariab.EndUpdate;
+   DeltaItem.text := hintIncert[DeltaItem.isChecked];
+   incertVarBtn.Hint := hintIncert[DeltaItem.isChecked];
+   MajGridVariab := false;
 end; // TraceGridVariab
 
 procedure TFValeurs.FonctionBtnMouseMove(Sender: TObject; Shift: TShiftState;
@@ -580,6 +901,7 @@ begin
       else GridParam.columnCount := 1;
    TrierItem.enabled := NbrePages>2;
    DelGrandeurItem.enabled := NbreConstExp>0;
+   incertParamBtn.Hint := hintIncert[DeltaItem.isChecked];
    GridParam.endUpdate;
 end;// TraceGridParam
 
@@ -587,7 +909,9 @@ end;// TraceGridParam
 procedure TFValeurs.GridVariabGetCellData(Sender: TObject; ACol, ARow: Integer;
   var CellString: string);
 begin
-    cellString := formatGridVariab(Acol,ARow);
+    if nbreVariab=0
+       then CellString := ''
+       else cellString := formatGridVariab(Acol,ARow);
 end;
 
 procedure TFValeurs.GridVariabGetCellEditorProperties(Sender: TObject; ACol,
@@ -855,8 +1179,6 @@ var indexVar,posDebutLigne : integer;
     memoActif,compileOK : boolean;
     oldNbreGrandeurs : integer;
 begin // CompileP
-     memo.selStart := 1;
-     memo.selLength := length(memo.text);
      erreurDetectee := false;
      oldNbreGrandeurs := NbreGrandeurs;
      memoActif := active and (memo=activeControl);
@@ -889,6 +1211,7 @@ begin // CompileP
             codeErreurC := erForward;
      finCompileG;
      FRegressiMain.TrigoBtn.Text := captionAngle[angleEnDegre];
+     FRegressiMain.TrigoBtn.hint := hintAngle[angleEnDegre];
      RadDegTabBtn.ImageIndex := indexImageAngle[AngleEnDegre];
      RadDegExpBtn.ImageIndex := RadDegTabBtn.ImageIndex;
      ResetListeGrandeurs;
@@ -1053,10 +1376,12 @@ begin
    GlobalDisableFocusEffect := True;
    compilationEnCours := false;
    MesureCourante := 0;
+   MajGridVariab := false;
    Recompiler := false;
    GridVariab.columnWidths[0] := 45;
    GridParam.columnWidths[0] := 45;
    prevenirPi := true;
+   Graphe := TgrapheValeur.create(paintBox1);
    GrecGrid.ColumnCount := 5;
    GrecGrid.RowCount := 5;
    for col := 0 to GrecGrid.columnCount-1 do
@@ -1202,6 +1527,7 @@ begin
 {$ENDIF}
        and ((char(key)='C') or (char(key)='c')) then begin
        Memo.copyToClipBoard;
+       exit;
     end;
 {$IFDEF MACOS}
     if (ssCommand in Shift)
@@ -1210,7 +1536,9 @@ begin
 {$ENDIF}
        and ((char(key)='V') or (char(key)='v')) then begin
        Memo.pasteFromClipBoard;
+       exit;
     end;
+    FRegressiMain.VerifGrec(memo,key,keychar,shift);
 end;
 
 procedure TFValeurs.MinixEditExit(Sender: TObject);
@@ -1272,6 +1600,7 @@ end;
 procedure TFValeurs.FormDestroy(Sender: TObject);
 begin
     AideFonction.free;
+    graphe.Free;
 end;
 
 procedure TFValeurs.pageNewItemClick(Sender: TObject);
@@ -1451,7 +1780,7 @@ end;
 procedure TFValeurs.GridVariabCellEditSetData(Sender: TObject; ACol,
   ARow: Integer; CellEditor: TControl; var CellString: string);
 var i,ii : integer;
-    vide,isPrec,ajoutValeur : boolean;
+    isPrec,ajoutValeur,ligneSuivante : boolean;
     indexV : integer;
 begin with pages[PageCourante],GridVariab do begin
      if cellString=formatGridVariab(Acol,Arow) then exit;
@@ -1471,6 +1800,7 @@ begin with pages[PageCourante],GridVariab do begin
             exit;
          end;
      end;
+     triAfaire := triAfaire or (indexV=0);
      if (grandeurs[indexV].fonct.genreC in [g_experimentale,g_equation]) then begin
            try
            if isPrec
@@ -1478,35 +1808,47 @@ begin with pages[PageCourante],GridVariab do begin
               else valeurVar[indexV,arow-2] := GetFloatDate(cellString,grandeurs[indexV].formatU);
            if not isPrec and
               (ModeAcquisition in [AcqClavier,AcqFichier,AcqClipBoard]) then begin
-              vide := false;
-              for i := 0 to NbreVariab-1 do begin
-                  ii := indexVariab[i];
-                  if (grandeurs[ii].fonct.genreC=g_experimentale) and
-                     isNan(ValeurVar[ii,arow-2])
-                     then begin
-                        vide := true;
-                        break;
-                     end;
+              ligneSuivante := false;
+              if acol>=derniereColvariab then begin
+                 for i := 0 to pred(NbreVariab) do begin
+                     ii := indexVariab[i];
+                     if (grandeurs[ii].fonct.genreC=g_experimentale) and
+                        not(isNan(ValeurVar[ii,arow-2]))
+                        then ligneSuivante := true;
+                 end;
               end;
-              if not vide and (arow=nmes+2) and (nmes<MaxMaxVecteur) then begin
-                 nmes := nmes+1;
+              if ligneSuivante then begin
                  ModifFichier := true;
-                 AjoutValeur := true;
-                 RowCount := nmes+3;
-                 cells[0,nmes+2] := intToStr(nmes);
-                 for i := 1 to (columnCount-1) do
-                     Cells[i,nmes+2] := '';
-                // FocusedCell := cell(columnCount-1,nmes+1);
+                 if (arow=rowCount-1) and (nmes<MaxMaxVecteur) then begin
+                    nmes := nmes+1;
+                    AjoutValeur := true;
+                    RowCount := nmes+3;
+                    cells[0,nmes+2] := intToStr(nmes);
+                    for i := 1 to (columnCount-1) do
+                        Cells[i,nmes+2] := '';
+                    editCell(makeCell(1,nmes+2));
+                 end
+                 else if arow<rowCount-1 then
+                    editCell(makeCell(1,arow+1));
               end;
            end;
            calculLigne(arow-2);
            for i := acol to (columnCount-1) do
                Cells[i,arow] := FormatGridVariab(i,arow);
            if isPrec
-               then FRegressiMain.WMRegMaj(MajIncertitude)
+               then begin
+                  FRegressiMain.WMRegMaj(MajIncertitude);
+                  MajGraphe(MajIncertitude);
+               end
                else if ajoutValeur
-                  then FRegressiMain.WMRegMaj(MajAjoutValeur)
-                  else FRegressiMain.WMRegMaj(MajValeur);
+                  then begin
+                     FRegressiMain.WMRegMaj(MajAjoutValeur);
+                     MajGraphe(MajAjoutValeur);
+                  end
+                  else begin
+                     FRegressiMain.WMRegMaj(MajValeur);
+                     MajGraphe(MajValeur);
+                  end;
            except
            end;
      end;
@@ -1717,7 +2059,7 @@ begin
      if acol<=NbreConst
         then result := indexConst[acol-1]
         else begin
-             Acol := Acol+1-NbreConst;
+             Acol := Acol-NbreConst;
              result := ParamToIndex(acol);
         end;
 end;
@@ -1800,6 +2142,121 @@ begin
         end;
      compilationEnCours := false;
      MajSimulation := false;
+end;
+
+procedure TFValeurs.AppelCoordonnees;
+begin
+if FCoordonneesPhys = nil then
+        Application.CreateForm(TFcoordonneesPhys, FCoordonneesPhys);
+with FcoordonneesPhys do begin
+        agraphe := graphe;
+        listeConst := false;
+        modelePermis := false;
+        centreForm(FcoordonneesPhys);
+        if FcoordonneesPhys.ShowModal=mrOK then begin
+           include(graphe.modif,gmXY);
+           graphe.curseur := curSelect;
+           nbreModele := 0;
+           graphe.etatModele := [];
+           paintBox1.Repaint;
+      end;
+end end;
+
+procedure TFValeurs.CoordonneesBtnClick(Sender: TObject);
+begin
+    AppelCoordonnees;
+end;
+
+procedure TFValeurs.AutoBtnClick(Sender: TObject);
+begin with graphe do begin
+     if not grapheOK then exit;
+     include(modif,gmEchelle);
+     monde[mondeX].defini := false;
+     useDefaut := false;
+     useDefautX := false;
+     autoTick := true;
+     paintBox1.repaint;
+end end;
+
+procedure TFValeurs.ZoomArrBtnClick(Sender: TObject);
+begin
+    if not graphe.grapheOK then exit;
+    graphe.affecteZoomArriere;
+    include(graphe.modif,gmEchelle);
+    paintBox1.repaint;
+end;
+
+procedure TFValeurs.ZoomBtnClick(Sender: TObject);
+begin
+    if graphe.grapheOK then graphe.setPenBrush(curZoomAv);
+end;
+
+procedure TFValeurs.PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single);
+begin
+    graphe.PaintBoxMouseDown(Sender,Button,Shift,X,Y);
+end;
+
+procedure TFValeurs.PaintBox1MouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Single);
+begin
+    graphe.PaintBoxMouseMove(Sender,Shift,X,Y);
+end;
+
+procedure TFValeurs.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single);
+begin
+    graphe.PaintBoxMouseUp(Sender,Button,Shift,X,Y);
+end;
+
+procedure TFValeurs.PaintBox1Paint(Sender: TObject; Canvas: TCanvas);
+begin
+    if pageCourante>0 then graphe.paintBoxPaint;
+end;
+
+procedure TFValeurs.Splitter1Paint(Sender: TObject; Canvas: TCanvas;
+  const ARect: TRectF);
+begin with canvas do begin
+      Fill.kind := TBrushKind.Solid;
+      Fill.Color := claBlue;
+      stroke.Color := claPurple;
+      stroke.kind := TBrushKind.Solid;
+      FillRect(Arect,0,0,[],1);
+      Fill.kind := TBrushKind.None;
+end end;
+
+procedure TFValeurs.VarHelpBtnClick(Sender: TObject);
+begin
+    if Sender is TButton then
+      ShowAide(TButton(Sender).HelpContext, True)
+    else
+      ShowAide(HELP_Valeurs, True);
+end;
+
+procedure TFValeurs.parHelpBtnClick(Sender: TObject);
+begin
+    if Sender is TButton then
+      ShowAide(TButton(Sender).HelpContext, True)
+    else
+      ShowAide(HELP_Constantes, True);
+end;
+
+procedure TFValeurs.MajGraphe(typeMaj : integer);
+begin
+      if graphePanel.Width<largeurMinGrapheValeur then begin
+         paintBox1.repaint;
+         exit;
+      end;
+      include(graphe.Modif,gmXY); // le + général
+      case TypeMaj of
+          MajNom : graphe.MajNomGr;
+          MajChangePage,MajAjoutPage,MajSupprPage : include(graphe.Modif,gmPage);
+          MajSelectPage : graphe.modif := [gmXY,gmOptions];
+          MajValeur,MajIncertitude,MajAjoutValeur : graphe.Modif := [gmValeurs];
+          MajSupprPoints : graphe.Modif := [gmValeurs];
+          else graphe.modif := [];
+      end;
+      if (graphe.Modif<>[]) then paintBox1.repaint;
 end;
 
 end.

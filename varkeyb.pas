@@ -63,6 +63,8 @@ type
     procedure OKBtnClick(Sender: TObject);
     procedure GridConstExit(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure GridVariabKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
     procedure HelpBtnClick(Sender: TObject);
   private
   public
@@ -73,7 +75,7 @@ var
 
 implementation
 
-uses AideU;
+uses regMain, AideU;
 
 {$R *.FMX}
 
@@ -110,6 +112,12 @@ end;
 procedure TNewClavierDlg.GridConstExit(Sender: TObject);
 begin
  //    (GridConst.ActiveEditControl as TTMSFMXEdit).
+end;
+
+procedure TNewClavierDlg.GridVariabKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+    FRegressiMain.VerifGrec(sender,key,keychar,shift);
 end;
 
 procedure TNewClavierDlg.OKBtnClick(Sender: TObject);

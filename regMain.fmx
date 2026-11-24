@@ -79,6 +79,7 @@ object FRegressiMain: TFRegressiMain
       Size.PlatformDefault = False
       StyledSettings = [Style, FontColor]
       OnChange = CommentaireEditChange
+      OnKeyUp = CommentaireEditKeyUp
     end
     object PanelNumPage: TLabel
       Align = Left
@@ -123,6 +124,8 @@ object FRegressiMain: TFRegressiMain
     TabPosition = Top
     OnChange = WindowTabChange
     Sizes = (
+      1094s
+      451s
       1094s
       451s
       1094s
@@ -396,6 +399,7 @@ object FRegressiMain: TFRegressiMain
               Left = 1
               Top = 1
               object CurseurMenu: TPopupMenu
+                OnPopup = CurseurMenuPopup
                 Left = 376
                 Top = 83
                 object SelectItem: TMenuItem
@@ -439,23 +443,41 @@ object FRegressiMain: TFRegressiMain
                   Text = 'R'#233'ticule donn'#233'es'
                   OnClick = SelectItemClick
                 end
+                object Separ6: TMenuItem
+                  Text = '-'
+                end
                 object CurOrigineItem: TMenuItem
                   Tag = 6
                   GroupIndex = 1
                   RadioItem = True
                   Text = 'Origine abscisse'
+                  Visible = False
                   OnClick = CurOrigineItemClick
                 end
-                object addModeleItem: TMenuItem
-                  Text = 'Afficher le mod'#232'le'
+                object CurReticuleModeleItem: TMenuItem
+                  Tag = 16
+                  Text = 'R'#233'ticule mod'#232'le'
+                  OnClick = SelectItemClick
                 end
                 object TangenteItem: TMenuItem
                   Tag = 10
                   Text = 'Equivalence'
                   OnClick = SelectItemClick
                 end
+                object Separ8: TMenuItem
+                  Text = '-'
+                end
+                object CurModeleItem: TMenuItem
+                  Tag = 16
+                  Text = '&Valeur mod'#233'lis'#233'e'
+                  OnClick = CurModeleItemClick
+                end
+                object addModeleItem: TMenuItem
+                  Text = 'Afficher le mod'#232'le'
+                end
               end
               object MenuAxes: TPopupMenu
+                OnPopup = MenuAxesPopup
                 Left = 592
                 Top = 128
                 object CoordonneesItem: TMenuItem
@@ -491,13 +513,18 @@ object FRegressiMain: TFRegressiMain
                   Text = 'Enregistrer graphe'
                   OnClick = SaveGraphItemClick
                 end
-                object MenuItem7: TMenuItem
+                object CopierGrapheItem: TMenuItem
                   Text = 'Copier graphe'
                   OnClick = CopyGraphItem
                 end
                 object IntersectionBis: TMenuItem
                   Text = 'Trac'#233' des intersections'
                   Visible = False
+                  OnClick = IntersectionItemClick
+                end
+                object CurModeleBis: TMenuItem
+                  Text = 'Tableau de valeurs'
+                  OnClick = CurModeleItemClick
                 end
                 object RazTgItem: TMenuItem
                   Text = 'R'#224'Z tangente'
@@ -505,6 +532,7 @@ object FRegressiMain: TFRegressiMain
                 end
               end
               object VecteursMenu: TPopupMenu
+                OnPopup = VecteursMenuPopup
                 Left = 752
                 Top = 88
                 object VitesseItem: TMenuItem
@@ -535,8 +563,15 @@ object FRegressiMain: TFRegressiMain
                   OnClick = VitesseItemClick
                 end
                 object OptionsVecteursMenu: TMenuItem
+                  Tag = 1
                   GroupIndex = 1
                   Text = 'Options'
+                  OnClick = OptionsVecteursMenuClick
+                end
+                object OptionsVecteursBis: TMenuItem
+                  Tag = 2
+                  GroupIndex = 1
+                  Text = 'Options Bis'
                   OnClick = OptionsVecteursMenuClick
                 end
               end
@@ -596,6 +631,7 @@ object FRegressiMain: TFRegressiMain
                   Size.PlatformDefault = False
                   TabOrder = 0
                   Value = 50.000000000000000000
+                  OnChange = TBAnimationChange
                 end
                 object StopAnimBtn: TButton
                   Images = ImagesData.ImagesList
@@ -820,17 +856,18 @@ object FRegressiMain: TFRegressiMain
             Size.Height = 30.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            object OptionsModeleBtn0: TButton
+            object OptionsModeleBtn: TButton
               Align = Left
               Images = ImagesData.ImagesList
               ImageIndex = 49
+              PopupMenu = PopupMenuModele
               Size.Width = 64.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
               Text = 'Options'
               TextSettings.WordWrap = True
-              OnClick = OptionsModeleBtn0Click
+              OnClick = OptionsModeleBtnClick
             end
             object ModeleGrBtn: TButton
               Action = ModelesAction
@@ -880,6 +917,7 @@ object FRegressiMain: TFRegressiMain
             end
           end
           object PopupMenuModele: TPopupMenu
+            OnPopup = PopupMenuModelePopup
             Left = 72
             Top = 96
             object FermerItem: TMenuItem
@@ -901,16 +939,23 @@ object FRegressiMain: TFRegressiMain
             end
             object OptionsModele: TMenuItem
               Text = 'Options de mod'#233'lisation'
+              OnClick = OptionsModeleClick
             end
             object intersectionTer: TMenuItem
               Text = 'Trac'#233' des intersections'
+              OnClick = IntersectionItemClick
             end
             object ModeleIncertItem: TMenuItem
               Text = 'Incertitudes et '#967#178
               OnClick = IncertItemClick
             end
+            object MonteCarloItem: TMenuItem
+              Text = 'MonteCarlo'
+              OnClick = MonteCarloItemClick
+            end
           end
           object BornesMenu: TPopupMenu
+            OnPopup = BornesMenuPopup
             Left = 171
             Top = 96
             object Inter1: TMenuItem
@@ -953,6 +998,7 @@ object FRegressiMain: TFRegressiMain
             Size.Height = 100.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 2
+            OnKeyUp = MemoModeleKeyUp
             Viewport.Width = 252.000000000000000000
             Viewport.Height = 92.000000000000000000
           end
@@ -1315,6 +1361,284 @@ object FRegressiMain: TFRegressiMain
         end
       end
     end
+    object GrapheParamTab: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 194.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Graphe param.'
+      ExplicitSize.cx = 222.000000000000000000
+      ExplicitSize.cy = 30.000000000000000000
+      object PanelModeleGlb: TPanel
+        Align = Left
+        Size.Width = 260.000000000000000000
+        Size.Height = 451.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object MemoResultatGlb: TMemo
+          Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+          DataDetectorTypes = []
+          Align = Client
+          Size.Width = 260.000000000000000000
+          Size.Height = 99.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Viewport.Width = 252.000000000000000000
+          Viewport.Height = 99.000000000000000000
+        end
+        object MemoModeleGlb: TMemo
+          Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+          DataDetectorTypes = []
+          Align = Top
+          Size.Width = 260.000000000000000000
+          Size.Height = 121.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          OnKeyUp = CommentaireEditKeyUp
+          Viewport.Width = 252.000000000000000000
+          Viewport.Height = 121.000000000000000000
+        end
+        object Panel2: TPanel
+          Align = Top
+          Position.Y = 121.000000000000000000
+          Size.Width = 260.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          object AjusteGlbBtn: TButton
+            Align = Left
+            Hint = 'Ajuster les param'#232'tres du mod'#232'le'
+            Images = ImagesData.ImagesList
+            ImageIndex = 2
+            Size.Width = 80.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 3
+            Text = 'Ajuster'
+            OnClick = AjusteGlbBtnClick
+          end
+        end
+        object ScrollBoxParam: TScrollBox
+          Align = Top
+          Position.Y = 151.000000000000000000
+          Size.Width = 260.000000000000000000
+          Size.Height = 201.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          Viewport.Width = 252.000000000000000000
+          Viewport.Height = 201.000000000000000000
+          object paramGlbGrid: TTMSFNCGrid
+            Align = Client
+            Size.Width = 260.000000000000000000
+            Size.Height = 201.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            ColumnCount = 7
+            RowCount = 5
+            Options.Editing.CalcFormat = '%g'
+            Options.Grouping.CalcFormat = '%g'
+            Options.Grouping.GroupCountFormat = '(%d)'
+            Options.IO.XMLEncoding = 'ISO-8859-1'
+            Options.Mouse.ClickMargin = 0
+            Options.Mouse.ColumnSizeMargin = 6
+            Options.Mouse.RowSizeMargin = 6
+            Columns = <
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 40.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 28.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 28.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 64.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 28.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 28.000000000000000000
+              end
+              item
+                BorderWidth = 1
+                FixedFont.Name = 'Segoe UI'
+                FixedFont.StyleExt = {00070000000000000004000000}
+                Font.Name = 'Segoe UI'
+                ID = ''
+                Width = 28.000000000000000000
+              end>
+            DefaultFont.Name = 'Segoe UI'
+            TopRow = 1
+            Appearance.FixedLayout.Fill.Color = xFFE6E6E6
+            Appearance.FixedLayout.Font.Name = 'Segoe UI'
+            Appearance.FixedLayout.Font.StyleExt = {00070000000000000004000000}
+            Appearance.NormalLayout.Fill.Color = claNull
+            Appearance.NormalLayout.Font.Name = 'Segoe UI'
+            Appearance.GroupLayout.Fill.Color = xFF6E93C3
+            Appearance.GroupLayout.Font.Color = claWhite
+            Appearance.GroupLayout.Font.Name = 'Segoe UI'
+            Appearance.SummaryLayout.Fill.Color = xFFB9C5D5
+            Appearance.SummaryLayout.Font.Name = 'Segoe UI'
+            Appearance.SelectedLayout.Fill.Color = claLightsteelblue
+            Appearance.SelectedLayout.Font.Color = claWhite
+            Appearance.SelectedLayout.Font.Name = 'Segoe UI'
+            Appearance.FocusedLayout.Fill.Color = claLightsteelblue
+            Appearance.FocusedLayout.Font.Color = claWhite
+            Appearance.FocusedLayout.Font.Name = 'Segoe UI'
+            Appearance.FixedSelectedLayout.Fill.Color = claLightsteelblue
+            Appearance.FixedSelectedLayout.Font.Name = 'Segoe UI'
+            Appearance.BandLayout.Fill.Color = claLightyellow
+            Appearance.BandLayout.Font.Name = 'Segoe UI'
+            Appearance.ProgressLayout.Format = '%.0f%%'
+            LeftCol = 1
+            ScrollMode = scmItemScrolling
+            GlobalFont.Scale = 1.000000000000000000
+            GlobalFont.Style = []
+            DesignTimeSampleData = False
+            OnGetCellClass = paramGlbGridGetCellClass
+            OnGetCellEditorType = paramGlbGridGetCellEditorType
+            OnCellEditSetData = paramGlbGridCellEditSetData
+            OnGetCellEditorProperties = paramGlbGridGetCellEditorProperties
+            OnCellButtonClick = paramGlbGridCellButtonClick
+          end
+        end
+      end
+      object PanelCentralParam: TPanel
+        Align = Client
+        Size.Width = 834.000000000000000000
+        Size.Height = 451.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object GrapheParamTB: TToolBar
+          Size.Width = 834.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object ModeleGlbBtn: TButton
+            StaysPressed = True
+            Align = Left
+            Images = ImagesData.ImagesList
+            ImageIndex = 19
+            Size.Width = 80.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 5
+            Text = 'Mod'#232'le'
+            OnClick = ModeleGlbBtnClick
+          end
+          object ZoomArrGlbBtn: TButton
+            Align = Left
+            Hint = 'Zoom arri'#232're'
+            Images = ImagesData.ImagesList
+            ImageIndex = 51
+            Position.X = 400.000000000000000000
+            Size.Width = 80.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 4
+            Text = 'Zoom arr.'
+            OnClick = ZoomArrGlbBtnClick
+          end
+          object ZoomGlbBtn: TButton
+            Align = Left
+            Hint = 'D'#233'finir la zone par cliquer glisser'
+            Images = ImagesData.ImagesList
+            ImageIndex = 48
+            Position.X = 320.000000000000000000
+            Size.Width = 80.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 3
+            Text = 'Loupe'
+            OnClick = ZoomGlbBtnClick
+          end
+          object CoordonneesGlbBtn: TButton
+            Align = Left
+            Hint = 'Coordonn'#233'es'
+            Images = ImagesData.ImagesList
+            ImageIndex = 16
+            Position.X = 160.000000000000000000
+            Size.Width = 80.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 2
+            Text = 'Coord.'
+            OnClick = CoordonneesGlbBtnClick
+          end
+          object ZoomAutoGlbBtn: TButton
+            Align = Left
+            Hint = 'Echelle automatique'
+            Images = ImagesData.ImagesList
+            ImageIndex = 51
+            Position.X = 240.000000000000000000
+            Size.Width = 80.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            Text = 'Auto'
+            OnClick = ZoomAutoGlbBtnClick
+          end
+          object CurseurGlbBtn: TButton
+            Align = Left
+            Images = ImagesData.ImagesList
+            ImageIndex = 49
+            Position.X = 80.000000000000000000
+            Size.Width = 80.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            Text = 'Outils gr.'
+          end
+        end
+        object PaintBoxParam: TPaintBox
+          Align = Client
+          Size.Width = 834.000000000000000000
+          Size.Height = 421.000000000000000000
+          Size.PlatformDefault = False
+          OnMouseDown = PaintBoxParamMouseDown
+          OnMouseMove = PaintBoxParamMouseMove
+          OnMouseUp = PaintBoxParamMouseUp
+          OnPaint = PaintBoxParamPaint
+        end
+      end
+    end
   end
   object StatPopupMenu: TPopupMenu
     Left = 457
@@ -1361,7 +1685,7 @@ object FRegressiMain: TFRegressiMain
       end
       object ExitItem: TMenuItem
         Locked = True
-        ShortCut = 4177
+        ShortCut = 16465
         Text = 'Quitter'
         OnClick = FileExitItemClick
       end
@@ -1372,7 +1696,7 @@ object FRegressiMain: TFRegressiMain
       OnClick = UpdateMenuItems
       object FileNewItem: TMenuItem
         Locked = True
-        ShortCut = 4174
+        ShortCut = 16462
         Text = 'Nouveau'
         object FileNewClavierItem: TMenuItem
           Locked = True
@@ -1404,6 +1728,11 @@ object FRegressiMain: TFRegressiMain
           Text = 'Num'#233'risation courbes'
           OnClick = ImageItemClick
         end
+        object OptiqueItem: TMenuItem
+          Locked = True
+          Text = 'Interf'#233'rences'
+          OnClick = OptiqueItemClick
+        end
         object ArduinoItem: TMenuItem
           Locked = True
           Text = 'Arduino'
@@ -1417,25 +1746,25 @@ object FRegressiMain: TFRegressiMain
       end
       object FileOpenItem: TMenuItem
         Locked = True
-        ShortCut = 4175
+        ShortCut = 16463
         Text = 'Ouvrir...'
         OnClick = FileOpenItemClick
       end
       object fileCloseItem: TMenuItem
         Locked = True
-        ShortCut = 4183
+        ShortCut = 16471
         Text = 'Fermer'
         OnClick = fileCloseItemClick
       end
       object FileSaveItem: TMenuItem
         Locked = True
-        ShortCut = 4179
+        ShortCut = 16467
         Text = 'Enregistrer'
         OnClick = FileSaveItemClick
       end
       object FileSaveAsItem: TMenuItem
         Locked = True
-        ShortCut = 12371
+        ShortCut = 24659
         Text = 'Enregistrer sous...'
         OnClick = FileSaveAsItemClick
       end
@@ -1446,7 +1775,7 @@ object FRegressiMain: TFRegressiMain
       end
       object FilePrintItem: TMenuItem
         Locked = True
-        ShortCut = 4176
+        ShortCut = 16464
         Text = 'Imprimer...'
         OnClick = FilePrintItemClick
       end
@@ -1454,6 +1783,16 @@ object FRegressiMain: TFRegressiMain
         Locked = True
         Text = 'Exporter PDF...'
         OnClick = PrintPdfItemClick
+      end
+      object LatexMenu: TMenuItem
+        Locked = True
+        Text = 'Exporter Latex'
+        OnClick = LatexMenuClick
+      end
+      object SaveCSVItem: TMenuItem
+        Locked = True
+        Text = 'Exporter CSV'
+        OnClick = SaveCSVItemClick
       end
       object MRUseparator: TMenuItem
         Locked = True
@@ -1494,6 +1833,18 @@ object FRegressiMain: TFRegressiMain
         Text = 'MenuItem5'
         OnClick = MruItemClick
       end
+      object MenuItem6: TMenuItem
+        Tag = 6
+        Locked = True
+        Text = 'MenuItem6'
+        OnClick = MruItemClick
+      end
+      object MenuItem7: TMenuItem
+        Tag = 7
+        Locked = True
+        Text = 'MenuItem7'
+        OnClick = MruItemClick
+      end
     end
     object EditionItem: TMenuItem
       GroupIndex = 1
@@ -1502,26 +1853,26 @@ object FRegressiMain: TFRegressiMain
       OnClick = EditionItemClick
       object UndoItem: TMenuItem
         Locked = True
-        ShortCut = 4186
+        ShortCut = 16474
         Text = 'Annuler suppression'
         OnClick = UndoItemClick
       end
       object CutItem: TMenuItem
         Tag = 1
         Locked = True
-        ShortCut = 4184
+        ShortCut = 16472
         Text = 'Couper'
       end
       object CopyItem: TMenuItem
         Tag = 2
         Locked = True
-        ShortCut = 4163
+        ShortCut = 16451
         Text = 'Copier'
       end
       object PasteItem: TMenuItem
         Tag = 3
         Locked = True
-        ShortCut = 4182
+        ShortCut = 16470
         Text = 'Coller'
       end
       object DeleteItem: TMenuItem
@@ -1562,7 +1913,7 @@ object FRegressiMain: TFRegressiMain
       object FiltreItem: TMenuItem
         Locked = True
         Text = 'Options filtrage'
-        OnClick = MenuItem6Click
+        OnClick = FiltreItemClick
       end
     end
     object PagesItem: TMenuItem
@@ -1993,7 +2344,6 @@ object FRegressiMain: TFRegressiMain
     end
     object ControlAction: TAction
       Text = 'Control+'
-      ShortCut = 16451
     end
     object EnglishAction: TAction
       Text = 'English'

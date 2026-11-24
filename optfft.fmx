@@ -127,6 +127,7 @@ object OptionsFFTDlg: TOptionsFFTDlg
           Size.Width = 57.000000000000000000
           Size.Height = 23.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = EditNomFrequenceKeyUp
         end
         object OptimiseNbreHarmCB: TCheckBox
           Position.X = 8.000000000000000000

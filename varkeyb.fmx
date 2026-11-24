@@ -92,6 +92,7 @@ object NewClavierDlg: TNewClavierDlg
       Size.Height = 143.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 38
+      OnKeyUp = GridVariabKeyUp
       FixedColumns = 0
       ColumnCount = 3
       RowCount = 5

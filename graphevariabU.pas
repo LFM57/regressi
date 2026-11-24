@@ -69,7 +69,7 @@ type
       derf : matriceFonction;   // Dérivées premières / aux paramètres
       erreurCalcul,erreurParam : boolean;
       xOrigine : double;
-      ValeurDeriveeX,ValeurYDiff,ValeurYpDiff : TvecteurExtrapole;
+      ValeurYDiff,ValeurYpDiff : TvecteurExtrapole;
       ValeurXDiff : vecteur;
       IsModeleSysteme : boolean;
       orthoAverifier : boolean;
@@ -103,6 +103,7 @@ type
       configCharge : boolean;
       Origin : TpointF;
       iPropCourbe : integer;
+      ValeurDeriveeX : TvecteurExtrapole;
       constructor Create(apaintBox : TPaintBox);
       procedure PanelCentralKeyDown(Sender: TObject; var Key: Word;
           var KeyChar: Char; Shift: TShiftState);
@@ -1635,6 +1636,7 @@ begin // SetCoordonnee
    CourbeExpAffectee := false;
    SimulationAffectee := false;
    mondeLoc := mondeY;
+   Fvaleurs.majGridVariab := Pages[pageCourante].triAfaire;
    for p := 1 to NbrePages do Pages[p].tri;
    for i := 1 to maxOrdonnee do with Coordonnee[i] do
      if (codeX<>grandeurInconnue) and (codeY<>grandeurInconnue) then begin

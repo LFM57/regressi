@@ -81,6 +81,18 @@ object FValeurs: TFValeurs
           TextSettings.WordWrap = True
           OnClick = IncertParamBtnClick
         end
+        object parHelpBtn: TButton
+          Align = Right
+          HelpContext = 15
+          Images = ImagesData.ImagesList
+          ImageIndex = 5
+          Size.Width = 80.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          Text = 'Aide'
+          OnClick = parHelpBtnClick
+        end
       end
       object GridParam: TTMSFNCGrid
         Align = Client
@@ -88,6 +100,7 @@ object FValeurs: TFValeurs
         Size.Height = 518.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
+        OnExit = GridParamExit
         Options.Editing.CalcFormat = '%g'
         Options.Grouping.CalcFormat = '%g'
         Options.Grouping.GroupCountFormat = '(%d)'
@@ -279,13 +292,38 @@ object FValeurs: TFValeurs
           TextSettings.WordWrap = True
           OnClick = RadDegTabBtnClick
         end
+        object Label6: TLabel
+          Align = Left
+          Position.X = 394.000000000000000000
+          Size.Width = 420.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          Text = 
+            ' Glisser la barre verticale pour faire apparaitre le graphe (ou ' +
+            'changer la taille)'
+          TabOrder = 5
+        end
+        object VarHelpBtn: TButton
+          Align = Right
+          HelpContext = 16
+          Images = ImagesData.ImagesList
+          ImageIndex = 5
+          Position.X = 827.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 6
+          Text = 'Aide'
+          OnClick = VarHelpBtnClick
+        end
       end
       object GridVariab: TTMSFNCGrid
         Align = Client
-        Size.Width = 907.000000000000000000
+        Size.Width = 659.000000000000000000
         Size.Height = 518.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
+        OnExit = GridVariabExit
         Options.Editing.CalcFormat = '%g'
         Options.Grouping.CalcFormat = '%g'
         Options.Grouping.GroupCountFormat = '(%d)'
@@ -371,6 +409,97 @@ object FValeurs: TFValeurs
         OnGetCellEditorType = TMSFNCGrid1GetCellEditorType
         OnGetCellEditorProperties = GridVariabGetCellEditorProperties
         OnCellEditSetData = GridVariabCellEditSetData
+      end
+      object Splitter1: TSplitter
+        Align = Right
+        Cursor = crHSplit
+        Hint = 'Faire glisser pour changer la taille du graphe'
+        MinSize = 8.000000000000000000
+        Position.X = 659.000000000000000000
+        Position.Y = 30.000000000000000000
+        Size.Width = 8.000000000000000000
+        Size.Height = 518.000000000000000000
+        Size.PlatformDefault = False
+        ParentShowHint = False
+        ShowHint = True
+        OnPaint = Splitter1Paint
+      end
+      object GraphePanel: TPanel
+        Align = Right
+        Position.X = 667.000000000000000000
+        Position.Y = 30.000000000000000000
+        Size.Width = 240.000000000000000000
+        Size.Height = 518.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        object GrapheToolBar: TToolBar
+          Size.Width = 240.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object CoordonneesBtn: TButton
+            Align = Left
+            Images = ImagesData.ImagesList
+            ImageIndex = 16
+            Size.Width = 62.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            Text = 'Coord.'
+            TextSettings.WordWrap = True
+            OnClick = CoordonneesBtnClick
+          end
+          object AutoBtn: TButton
+            Align = Left
+            Hint = 'Echelle automatique'
+            Images = ImagesData.ImagesList
+            ImageIndex = 51
+            Position.X = 62.000000000000000000
+            Size.Width = 54.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            Text = 'Auto'
+            TextSettings.WordWrap = True
+            OnClick = AutoBtnClick
+          end
+          object ZoomBtn: TButton
+            Align = Left
+            Images = ImagesData.ImagesList
+            ImageIndex = 48
+            Position.X = 116.000000000000000000
+            Size.Width = 60.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 2
+            Text = 'Loupe'
+            TextSettings.WordWrap = True
+            OnClick = ZoomBtnClick
+          end
+          object ZoomArrBtn: TButton
+            Align = Left
+            Images = ImagesData.ImagesList
+            ImageIndex = 51
+            Position.X = 176.000000000000000000
+            Size.Width = 64.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 3
+            Text = 'Zoom ar.'
+            TextSettings.WordWrap = True
+            OnClick = ZoomArrBtnClick
+          end
+        end
+        object PaintBox1: TPaintBox
+          Align = Client
+          Size.Width = 240.000000000000000000
+          Size.Height = 488.000000000000000000
+          Size.PlatformDefault = False
+          OnMouseDown = PaintBox1MouseDown
+          OnMouseMove = PaintBox1MouseMove
+          OnMouseUp = PaintBox1MouseUp
+          OnPaint = PaintBox1Paint
+        end
       end
     end
     object ExpSheet: TTabItem
@@ -1179,12 +1308,12 @@ object FValeurs: TFValeurs
       OnClick = AddBtnClick
     end
     object CopierItem: TMenuItem
-      ShortCut = 4163
+      ShortCut = 16451
       Text = 'Copier'
       OnClick = CopierItemClick
     end
     object CollerItem: TMenuItem
-      ShortCut = 4182
+      ShortCut = 16470
       Text = 'Coller'
       OnClick = CollerItemClick
     end

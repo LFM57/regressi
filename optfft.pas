@@ -74,6 +74,8 @@ type
     procedure dBCheckBoxClick(Sender: TObject);
     procedure PagesBtnClick(Sender: TObject);
     procedure SuperPagesCBClick(Sender: TObject);
+    procedure EditNomFrequenceKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
     procedure HelpBtnClick(Sender: TObject);
   private
   public
@@ -86,7 +88,7 @@ var
 
 implementation
 
-uses Graphfft, AideU;
+uses Graphfft, regMain, AideU;
 
 {$R *.FMX}
 
@@ -137,6 +139,12 @@ procedure TOptionsFFTDlg.dBCheckBoxClick(Sender: TObject);
 begin
      LabeldB.Visible := decibelCB.ischecked;
      SpinMindB.Visible := LabeldB.isVisible;
+end;
+
+procedure TOptionsFFTDlg.EditNomFrequenceKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  FRegressiMain.VerifGrec(sender,key,keychar,shift);
 end;
 
 procedure TOptionsFFTDlg.PagesBtnClick(Sender: TObject);
