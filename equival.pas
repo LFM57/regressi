@@ -1,4 +1,4 @@
-// equival.pas = include graphker
+ï»¿// equival.pas = include graphker
 
 procedure TgrapheReg.traceUneCourbe(xvecteur,yvecteur : vecteur;N,Neq : integer;AColor : TAlphaColor);
 var i,j : integer;
@@ -252,7 +252,7 @@ var L,H : single;
 begin with agraphe do begin
    L := Canvas.TextWidth(TexteX);
    H := Canvas.TextHeight(TexteX);
-   P := TpointF.create(pointEq.x,limiteCourbe.bottom-3); // -3 pour ne pas écrire sur l'axe
+   P := TpointF.create(pointEq.x,limiteCourbe.bottom-3); // -3 pour ne pas Ã©crire sur l'axe
    P.offset(-L/2,-H);
    MyFillText(P,TexteX,FondReticule);
 end end;
@@ -327,6 +327,7 @@ with agraphe do begin
              y4 := pHe-ecart;
              if y4<agraphe.monde[mondepH].mini then y4 := monde[mondepH].mini;
              traceDroite(ve,pHe,pente,x4,y4,x3,y3);
+             traceTextePente;
       end;
       if [lrXdeY,lrReticule]*ligneRappel<>[] then begin
             createPen(styleTangente,1,couleurReticule);
@@ -346,7 +347,7 @@ with agraphe do begin
             CreatePen(TStrokeDash.Solid,1,claBlue);
             posTrait := limiteCourbe.top + hautCarac/2;
             SegmentXY(point1.x,posTrait,point2.x,posTrait);
-            // fléches
+            // flÃ©ches
             if point1.x < point2.x
                then signe := 1
                else signe := -1;
@@ -376,7 +377,7 @@ with agraphe do begin
             CreatePen(TStrokeDash.Solid,1,claBlue);
             posTrait := limiteCourbe.right - 4*largCarac;
             SegmentXY(posTrait,point1.y,posTrait,point2.y);
-            // fléches
+            // flÃ©ches
             if point1.y < point2.y
                then signe := 1
                else signe := -1;
@@ -465,11 +466,11 @@ begin with courbes[indexCourbeEquivalence] do begin
      iprec := i2-2;
      if iprec<0 then iprec := 0;
      isuiv := i2+2;
-     if iprec>finc then iprec := finc;
+     if isuiv>finc then isuiv := finc;
      VcroissantSelonI := valX[isuiv]>valX[iprec];
      repeat inc(i2)
      until (i2>=finC) or
-           (abs(valYder[i2])>(derRef*1.25)); // un peu d'hystérèsis
+           (abs(valYder[i2])>(derRef*1.25)); // un peu d'hystÃ©rÃ¨sis
      if i2>=finC then begin
         croissant := false;
         i2 := i;
@@ -489,19 +490,19 @@ begin with courbes[indexCourbeEquivalence] do begin
          if i2>=finC then exit;
      end;
      if not croissant then swap(i,i2);
-// i2 : point après l'équivalence de même pente
+// i2 : point aprÃ¨s l'Ã©quivalence de mÃªme pente
      v11 := valX[i];
      ph11 := valY[i];
      v22 := valX[i2];
      ph22 := valY[i2];
-{ valeur approchée de ve pHe }
+{ valeur approchÃ©e de ve pHe }
      veAp := (v11+v22)/2;
      pHeAp := (pH11+pH22)/2;
 { cherche intersection avec courbe }
      i3 := i;
      repeat
        inc(i3)
-     until (valX[i3]>veAp) or (i3>i2); // hypothèse VcroissantSelonI
+     until (valX[i3]>veAp) or (i3>i2); // hypothÃ¨se VcroissantSelonI
      i3ap := i3;
      k := 0;
      kmax := (i2-i) div 2;
@@ -519,7 +520,7 @@ begin with courbes[indexCourbeEquivalence] do begin
         end;
      until result or (k>kmax) or (i3>i2) or (i3<i);
      if not result then chercheEqui(i3Ap);
-// on remet à la valeur approchée la plus raisonnable
+// on remet Ã  la valeur approchÃ©e la plus raisonnable
      result := (vee<monde[mondeX].maxi) and (vee>monde[mondeX].mini);
 end end; // ChercheVpHmodele
 
@@ -553,8 +554,8 @@ begin
      iprec := i2-2;
      if iprec<0 then iprec := 0;
      isuiv := i2+2;
-     if iprec>=pages[pageCourante].nmes
-        then iprec := pred(pages[pageCourante].nmes);
+     if isuiv>=pages[pageCourante].nmes
+        then isuiv := pred(pages[pageCourante].nmes);
      with monde[mondeX].axe do VcroissantSelonI :=
           valeur[isuiv]>valeur[iprec];
      repeat inc(i2)
@@ -579,7 +580,7 @@ begin
          if i2>=pages[pageCourante].nmes then exit;
      end;
      if not croissant then swap(i,i2);
-// i2 : point après l'équivalence de même pente 
+// i2 : point aprÃ¨s l'Ã©quivalence de mÃªme pente 
      v11 := monde[mondeX].axe.valeur[i];
      ph11 := monde[mondeY].axe.valeur[i];
      v22 := monde[mondeX].axe.valeur[i2]+(penteTg-grandeurs[codeDerivee].valeur[i2])*
@@ -588,7 +589,7 @@ begin
      ph22 := monde[mondeY].axe.valeur[i2]+(v22-monde[mondeX].axe.valeur[i2])*
         (monde[mondeY].axe.valeur[i2]-monde[mondeY].axe.valeur[pred(i2)])/
         (monde[mondeX].axe.valeur[i2]-monde[mondeX].axe.valeur[pred(i2)]);
-// valeur approchée de ve pHe
+// valeur approchÃ©e de ve pHe
      veAp := (v11+v22)/2;
      pHeAp := (pH11+pH22)/2;
 // cherche intersection avec courbe
@@ -609,7 +610,7 @@ begin
         end;
      until result or (k>kmax) or (i3>i2) or (i3<i);
      if not result then chercheEqui((i+i2) div 2);
-// on remet à la valeur approchée la plus raisonnable
+// on remet Ã  la valeur approchÃ©e la plus raisonnable
      result := (vee<monde[mondeX].maxi) and (vee>monde[mondeX].mini);
 end; // ChercheVpH
 
@@ -717,7 +718,7 @@ begin
   ecritIntegerRW3(0);{4}
   ecritIntegerRW3(0);{5}
   ecritIntegerRW3(mondepH);{6}
-  ecritIntegerRW3(ord(lrXdeY));{7} // à voir
+  ecritIntegerRW3(ord(lrXdeY));{7} // Ã  voir
   ecritIntegerRW3(ord(modelisee));{8}
   ecritLigneRW3U(commentaire);{9}
   ecritColorRW3(couleur);{10}
@@ -874,11 +875,11 @@ begin with acourbe do begin
      iprec := i2-2;
      if iprec<0 then iprec := 0;
      isuiv := i2+2;
-     if iprec>finc then iprec := finc;
+     if isuiv>finc then isuiv := finc;
      VcroissantSelonI := valX[isuiv]>valX[iprec];
      repeat inc(i2)
      until (i2>=finC) or
-           (abs(valYder[i2])>(derRef*1.25)); // un peu d'hystérèsis
+           (abs(valYder[i2])>(derRef*1.25)); // un peu d'hystÃ©rÃ¨sis
      if i2>=finC then begin
         croissant := false;
         i2 := index1;
@@ -898,19 +899,19 @@ begin with acourbe do begin
          if i2>=finC then exit;
      end;
      if not croissant then swap(index1,i2);
-// i2 : point après l'équivalence de même pente
+// i2 : point aprÃ¨s l'Ã©quivalence de mÃªme pente
      x1 := valX[index1];
      y1 := valY[index1];
      x2 := valX[i2];
      y2 := valY[i2];
-// valeur approchée de ve pHe
+// valeur approchÃ©e de ve pHe
      veAp := (x1+x2)/2;
      pHeAp := (y1+y2)/2;
 // cherche intersection avec courbe
      i3 := index1;
      repeat
        inc(i3)
-     until (valX[i3]>veAp) or (i3>i2); // hypothèse VcroissantSelonI
+     until (valX[i3]>veAp) or (i3>i2); // hypothÃ¨se VcroissantSelonI
      i3ap := i3;
      k := 0;
      kmax := (i2-index1) div 2;
@@ -928,7 +929,7 @@ begin with acourbe do begin
         end;
      until result or (k>kmax) or (i3>i2) or (i3<index1);
      if not result then chercheEqui(i3Ap);
-// on remet à la valeur approchée la plus raisonnable
+// on remet Ã  la valeur approchÃ©e la plus raisonnable
      result := (ve<aGraphe.monde[mondeX].maxi) and
                (ve>aGraphe.monde[mondeX].mini);
 end end; // ChercheVpHmodele
@@ -963,8 +964,8 @@ begin with agraphe do begin
      iprec := i2-2;
      if iprec<0 then iprec := 0;
      isuiv := i2+2;
-     if iprec>=pages[pageCourante].nmes
-        then iprec := pred(pages[pageCourante].nmes);
+     if isuiv>=pages[pageCourante].nmes
+        then isuiv := pred(pages[pageCourante].nmes);
      with monde[mondeX].axe do VcroissantSelonI :=
           valeur[isuiv]>valeur[iprec];
      repeat inc(i2)
@@ -989,7 +990,7 @@ begin with agraphe do begin
          if i2>=pages[pageCourante].nmes then exit;
      end;
      if not croissant then swap(index1,i2);
-// i2 : point après l'équivalence de même pente
+// i2 : point aprÃ¨s l'Ã©quivalence de mÃªme pente
      x1 := monde[mondeX].axe.valeur[index1];
      y1 := monde[mondeY].axe.valeur[index1];
      x2 := monde[mondeX].axe.valeur[i2]+(pente-grandeurs[codeDerivee].valeur[i2])*
@@ -998,7 +999,7 @@ begin with agraphe do begin
      y2 := monde[mondeY].axe.valeur[i2]+(x2-monde[mondeX].axe.valeur[i2])*
         (monde[mondeY].axe.valeur[i2]-monde[mondeY].axe.valeur[pred(i2)])/
         (monde[mondeX].axe.valeur[i2]-monde[mondeX].axe.valeur[pred(i2)]);
-// valeur approchée de ve pHe
+// valeur approchÃ©e de ve pHe
      veAp := (x1+x2)/2;
      pHeAp := (y1+y2)/2;
 // cherche intersection avec courbe
@@ -1019,7 +1020,7 @@ begin with agraphe do begin
         end;
      until result or (k>kmax) or (i3>i2) or (i3<index1);
      if not result then chercheEqui((index1+i2) div 2);
-// on remet à la valeur approchée la plus raisonnable
+// on remet Ã  la valeur approchÃ©e la plus raisonnable
      result := (ve<monde[mondeX].maxi) and (ve>monde[mondeX].mini);
 end end; // ChercheVpH
 

@@ -1,15 +1,15 @@
-Procedure TgrapheParam.EffectueModele(Ajuste : boolean);
+ï»¿Procedure TgrapheParam.EffectueModele(Ajuste : boolean);
 
-{------- boucle de recherche par méthode gradient-Newton -------}
+{------- boucle de recherche par mÃ©thode gradient-Newton -------}
 var
     J,Jprecedent,chi2Precedent,coeffJ : tableauReal;
 // (FonctionTheorique(x,param)-FonctionExperimentale(x))^2 
     derJ  : TableauParam;
-// derj = dérivée de J = (fonctionTheorique-Fexp)*dfonctionTheorique/dParam
+// derj = dÃ©rivÃ©e de J = (fonctionTheorique-Fexp)*dfonctionTheorique/dParam
     der2J : MatriceParam;
-{ der2j = dérivée seconde de J (approximative) =
+{ der2j = dÃ©rivÃ©e seconde de J (approximative) =
   DfonctionTheorique/dparam*DfonctionTheorique/dparam
-  on néglige (fonctionTheorique-Fexp)d2Fth/dparam*dparam }
+  on nÃ©glige (fonctionTheorique-Fexp)d2Fth/dparam*dparam }
     IncParam : TableauParam;
     diverge,stable : boolean;
 
@@ -58,7 +58,7 @@ begin
             v := v-U[k,i]*Y[k];
         Y[i] := v/U[i,i];
      end;{i}
-// passage à der2J
+// passage Ã  der2J
      for i := NbreParamGlb downto 1 do begin
          v := Y[i];
          for k := succ(i) to NbreParamGlb do
@@ -75,7 +75,7 @@ var i,j : integer;
 begin // calculprecision
   construireU;
   erreurCalcul := false;
-// résolution successive avec B=(1..0) jusqu'à (0..1)
+// rÃ©solution successive avec B=(1..0) jusqu'Ã  (0..1)
   for i := 1 to NbreParamGlb do resoudreU(i);
   for i := 1 to NbreParamGlb do begin
      try
@@ -91,9 +91,8 @@ begin // calculprecision
      delta := sqrt(delta/N);
      incertParamGlb[i] := sqrt(coeffInvDer2j*invDer2j[i,i])*delta;
      studentParamGlb[i] := incertParamGlb[i]*Student95(N);
-// intervalle de confiance (Student) à 95 % }
-     puissance := dix(floor(log10(incertParamGlb[i]))-1);
-     parametresGlb[i].incertCourante := puissance*int(incertParamGlb[i]/puissance);
+// intervalle de confiance (Student) Ã  95 %
+     parametresGlb[i].incertCourante := incertParamGlb[i];
 // covariance param(i,j) = invder2J[i,j] }
       incParam[i] := 0;
       for j := 1 to NbreParamGlb do
@@ -107,7 +106,7 @@ begin // calculprecision
 end; // calculprecision
 
 function InitCalculJ : boolean;
-// On calcule une valeur relative à l'étendue des mesures
+// On calcule une valeur relative Ã  l'Ã©tendue des mesures
 var i : codePage;
     m : codeIntervalle;
     chi2PermisGlb : boolean;
@@ -131,9 +130,9 @@ begin
         chi2Precedent[m] := NbrePointsModele*100.0;
         chi2PermisGlb := chi2PermisGlb and chi2Permis;
     end;
-    Chi2ActifGlb := chi2PermisGlb and traceEllipse;
+    Chi2ActifGlb := chi2PermisGlb and avecChi2;
     if Chi2ActifGlb
-       then // dèjà pris en compte par incertitude
+       then // dÃ¨jÃ  pris en compte par incertitude
           for m := 1 to NbreModeleGlb do coeffJ[m] := 1
        else for m := 1 to NbreModeleGlb do
               coeffJ[m] := Jprecedent[1]/Jprecedent[m];
@@ -146,8 +145,8 @@ procedure CalculJ(avecDerivee : boolean);
 procedure calculFonction;
 var k1,k2  : integer;
     i : codePage;
-    ecart : extended; // valeur de l'écart entre la fonction théorique et expérimentale
-    ValDerf : TableauParam; // valeur de la dérivée première
+    ecart : extended; // valeur de l'Ã©cart entre la fonction thÃ©orique et expÃ©rimentale
+    ValDerf : TableauParam; // valeur de la dÃ©rivÃ©e premiÃ¨re
     dt,dy,coeffChi2 : double;
     m : codeIntervalle;
 begin
@@ -187,7 +186,7 @@ begin
           for k2 := 1 to k1 do
               der2j[k1,k2] := der2j[k1,k2]+Coeffchi2*valDerf[k2]*valDerf[k1];
      end;{k1}
-     end;{dérivee}
+     end;{dÃ©rivee}
      end;{active}
      end;{m}
    end;{i}
@@ -242,12 +241,12 @@ end; // calculJ
 
 const
     Maxi_i1 = 10; // time out
-    Maxi_i2 = 6; // µ mini =(1/2)^7=1%
+    Maxi_i2 = 6; // Âµ mini =(1/2)^7=1%
 var k : integer;
     i2,i1  : integer;
     mu : double;
     sauveValeurParam : tableauParam;
-begin // effectueModeleGlb : boucle de recherche par méthode gradient-Newton
+begin // effectueModeleGlb : boucle de recherche par mÃ©thode gradient-Newton
     i1 := 0;
     if not InitCalculJ then exit;
     CalculJ(ajuste);
@@ -313,7 +312,7 @@ begin // effectueModeleGlb : boucle de recherche par méthode gradient-Newton
               parametresGlb[Phase].valCourante := parametresGlb[Phase].valCourante+AngleUtilisateur(pi);
            end;
            if parametresGlb[PeriodeOuFrequence].valCourante<0 then
-// Période peut être commune donc ne modifier T qu'après
+// PÃ©riode peut Ãªtre commune donc ne modifier T qu'aprÃ¨s
               if IsCosinus
                  then parametresGlb[Phase].valCourante :=
                         -parametresGlb[Phase].valCourante
@@ -472,7 +471,7 @@ begin
              if ParamGlbToIndex(j) in dependPossible then
                 exclude(etatModele,ModeleLineaire);
       end;{for k}
-      if traceEllipse
+      if traceEllipse or avecChi2
          then DeriveeForm(fonctionTheoriqueGlb[m],
               grandeurs[indexX],fchi2,dependPossible)
          else libere(fchi2);

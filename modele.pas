@@ -1,4 +1,4 @@
-// modele.pas include de graphevariabU
+ï»¿// modele.pas include de graphevariabU
 
 Procedure TgrapheVariab.EffectueModele(Ajuste,withMessage : boolean);
 const LambdaMin = 1e-4;
@@ -6,17 +6,17 @@ const LambdaMin = 1e-4;
 var Lambda : double;
     diverge,stable : boolean;
 
-{------- boucle de recherche par méthode gradient-Newton -------}
+{------- boucle de recherche par mÃ©thode gradient-Newton -------}
 var
    J,Jprecedent,chi2Precedent,coeffJ : tableauReal;
 { (FonctionTheorique(x,param)-FonctionExperimentale(x))^2
-  coeffJ pour pondérer de manière égale deux modèles qqsoit les ordres de grandeur }
+  coeffJ pour pondÃ©rer de maniÃ¨re Ã©gale deux modÃ¨les qqsoit les ordres de grandeur }
   derJ  : TableauParam;
-{ derj = dérivée de J = (fonctionTheorique-Fexp)*dfonctionTheorique/dParam }
+{ derj = dÃ©rivÃ©e de J = (fonctionTheorique-Fexp)*dfonctionTheorique/dParam }
   der2J : MatriceParam;
-{ der2j = dérivée seconde de J (approximative) =
+{ der2j = dÃ©rivÃ©e seconde de J (approximative) =
   DfonctionTheorique/dparam*DfonctionTheorique/dparam
-  on néglige (fonctionTheorique-Fexp)d2Fth/dparam*dparam }
+  on nÃ©glige (fonctionTheorique-Fexp)d2Fth/dparam*dparam }
   IncParam : TableauParam;
 
 procedure calculPrecision;
@@ -50,7 +50,7 @@ begin
 end;{construireU}
 
 procedure resoudreU(l : codeParam);
-{ Inversion de der2J = symétrique définie positive par  Méthode de Choleski
+{ Inversion de der2J = symÃ©trique dÃ©finie positive par  MÃ©thode de Choleski
   Trigeassou p 105 }
 var i,k : integer;
     Y   : TableauParam;
@@ -67,7 +67,7 @@ begin
               Y[i] := 0
            end;
         end;{else}
-{ passage à invder2J }
+{ passage Ã  invder2J }
      for i := NbreParam downto 1 do begin
          v := Y[i];
          for k := succ(i) to NbreParam do
@@ -81,13 +81,13 @@ begin
 end;// resoudreU
 
 { Trigeassou p 267 }
-var puissance,coeffInvDer2j : double;
+var coeffInvDer2j : double;
     m,i,l : integer;
     N : integer;
     sigmaLoc : double;
 begin // calculPrecision
 with pages[pageCourante] do begin
-  construireU; { résolution successive avec B=(1..0) jusqu'à (0..1) }
+  construireU; { rÃ©solution successive avec B=(1..0) jusqu'Ã  (0..1) }
   erreurCalcul := false;
   for i := 1 to NbreParam do resoudreU(i);
 //  invMat(der2J,NbreParam,invDer2j);
@@ -105,41 +105,43 @@ with pages[pageCourante] do begin
      if chi2actif
         then sigmaLoc := 1
         else sigmaLoc := sqrt(sigmaLoc/coeffInvDer2j);
-// pas d'incertitude => on évalue celle-ci comme écart data-fit
+// pas d'incertitude => on Ã©value celle-ci comme Ã©cart data-fit
 // avec incertitude, prise en compte dans der2J
-// deltaReg est pondéré par Npoints et coeffJ
+// deltaReg est pondÃ©rÃ© par Npoints et coeffJ
      ecartTypeParam[i] := sqrt(invDer2j[i,i])*sigmaLoc;
      if paramInverse[i] then
         ecartTypeParam[i] := ecartTypeParam[i]/sqr(parametres[i].valCourante);
      studentParam[i] := student95(N);
      incertParam[i] := ecartTypeParam[i]*studentParam[i];
-// intervalle de confiance (Student) à 95 % 
-     if incertParam[i]>0 then begin
-           puissance := dix(floor(log10(incertParam[i]))-1);
-           incertParam[i] := puissance*int(incertParam[i]/puissance);
-     end;
-// covariance param(i,l) = invder2J[i,l] 
+// covariance param(i,l) = invder2J[i,l]
      incParam[i] := 0;
      for l := 1 to NbreParam do
          incParam[i] := incParam[i] - invDer2j[l,i]*derj[l];
-     erreurCalcul := erreurCalcul;
+     erreurCalcul := erreurCalcul or isNan(incParam[i]) or isInfinite(incParam[i]) or (abs(incParam[i])>MaxReal);
      except
          incertParam[i] := Nan;
          incParam[i] := 0;
          ecartTypeParam[i] := Nan;
      end;
   end;{i}
+  if chi2Actif then
+     for i := 1 to NbreParam do
+         for l := 1 to NbreParam do
+             CovarianceParam[i,l] := invDer2J[i,l];
 end end; // calculprecision
 
 function InitCalculJ : boolean;
-// On calcule une valeur relative à l'étendue des mesures
+// On calcule une valeur relative Ã  l'Ã©tendue des mesures
 var m,k : integer;
     i : integer;
     valeur : double;
 begin with pages[pageCourante] do begin
    InitCalculJ := false;
+   if nmes<3 then exit;
    for m := 1 to NbreModele do with fonctionTheorique[m] do begin
+      if (debut[m]<0) or (fin[m]<0) then exit;
       if fin[m]<debut[m] then swap(fin[m],debut[m]);
+      if fin[m]>=nmes then fin[m] := pred(nmes);
       NbrePointsModele := succ(fin[m]-debut[m]);
       if (NbrePointsModele<NbreParamModele) then begin
            afficheErreur(erNombrePetit,0);
@@ -162,12 +164,14 @@ begin with pages[pageCourante] do begin
       chi2Precedent[m] := NbrePointsModele*100.0;
    end;
    if Chi2Actif
-     then // dèjà pris en compte par incertitude
+     then // dÃ¨jÃ  pris en compte par incertitude
         for m := 1 to NbreModele do coeffJ[m] := 1
      else for m := 1 to NbreModele do
-        coeffJ[m] := Jprecedent[1]/Jprecedent[m];
+        if Jprecedent[m]>0
+           then coeffJ[m] := Jprecedent[1]/Jprecedent[m]
+           else coeffJ[m] := 1;
    for k := 1 to MaxParametres do incertParam[k] := Nan;
-   InitCalculJ := (fonctionTheorique[1].SommeCarreY>1E-16*nmes);
+   InitCalculJ := (fonctionTheorique[1].SommeCarreY>1E-22*nmes);
 end end; // initCalculJ
 
 procedure CalculJ(avecDerivee : boolean);
@@ -188,8 +192,8 @@ for m := mDebut to mFin do with fonctionTheorique[m] do begin
         AffecteVariableE(i);
         try
         z := calcule(calcul);
-        if isNan(z)
-           then EMathError.Create('Erreur de calcul')
+        if isNan(z) or isInfinite(z)
+           then raise EMathError.Create('Erreur de calcul')
            else valeurTheorique[m,i] := z;
         if avecDerivee then
            for k1 := 1 to NbreParam do
@@ -200,7 +204,7 @@ for m := mDebut to mFin do with fonctionTheorique[m] do begin
         except
             on E : exception do begin
                if ErreurModele then raise EMathError.Create(E.message);
-// une erreur permise à la deuxième on réarme
+// une erreur permise Ã  la deuxiÃ¨me on rÃ©arme
                erreurModele := true;
                PosErreurModele := i;
                derniereErreur := E.message;
@@ -213,8 +217,8 @@ end end;{calculFonction}
 procedure calculLoc;
 var k1,k2,m : integer;
     i : integer;
-    ValDerf : TableauParam;// valeur de la dérivée première
-    ecart : double; // valeur de l'écart entre la fonction théorique et expérimentale
+    ValDerf : TableauParam;// valeur de la dÃ©rivÃ©e premiÃ¨re
+    ecart : double; // valeur de l'Ã©cart entre la fonction thÃ©orique et expÃ©rimentale
     CoeffChi2 : double;
     dy,dt : double;
 begin with pages[pageCourante] do begin
@@ -232,6 +236,7 @@ begin with pages[pageCourante] do begin
                   then begin
                      try
                      dy := incertVar[indexY,i];
+                     if isNan(dy) then dy := 0;
                      try
                      dt := incertVar[indexX,i];
                      if isNan(dt)
@@ -258,7 +263,7 @@ begin with pages[pageCourante] do begin
             for k2 := 1 to k1 do
                 der2j[k1,k2] := der2j[k1,k2]+coeffChi2*valDerf[k2]*valDerf[k1];
          end;// for k1
-         end;// dérivée
+         end;// dÃ©rivÃ©e
      end;// for i
     end;// for m
     except
@@ -267,7 +272,7 @@ begin with pages[pageCourante] do begin
 end end;// calculLoc
 
 procedure calculDiff2(mDebut,mFin : codeIntervalle);
-// calcul_J pour équation diff d'ordre 2
+// calcul_J pour Ã©quation diff d'ordre 2
 var m : integer;
     i : integer;
 begin
@@ -287,7 +292,7 @@ begin
 end; // calculDiff2
 
 procedure calculDiff1(mDebut,mFin : codeIntervalle);
-// calcul_J pour équation diff d'ordre 1 
+// calcul_J pour Ã©quation diff d'ordre 1 
 var m : integer;
     i : integer;
 begin
@@ -308,7 +313,7 @@ end; // calculDiff1
 Const
       PrecisionAbsolueJ = 0.001;
       PrecisionRelative = 0.001;
-      PrecisionZero = 0.0000001; // prise en compte erreur arrondi dans comparaison à zéro
+      PrecisionZero = 0.0000001; // prise en compte erreur arrondi dans comparaison Ã  zÃ©ro
       PrecisionAbsolueChi2 = 0.1;
 var k1,k2,m : integer;
     Delta : double;
@@ -319,13 +324,13 @@ with pages[pageCourante] do begin
    AffecteVariableP(false);
    erreurCalcul := false;
    erreurParam := false;
-   Chi2Actif := traceEllipse;
+   Chi2Actif := avecChi2;
    for m := 1 to NbreModele do with fonctionTheorique[m] do begin
        J[m] := 0;
        chi2[m] := 0;
        ErreurModele := false;
        PosErreurModele := -1;
-       Chi2Actif := chi2Actif and traceEllipse;
+       Chi2Actif := chi2Actif and chi2Permis;
    end;
    for k1 := 1 to NbreParam do begin
        derJ[k1] := 0;
@@ -369,9 +374,9 @@ with pages[pageCourante] do begin
               chi2Relatif := chi2[m]/NbrePointsModele;
               Delta := chi2[m]-chi2Precedent[m];
               Stable := Stable and
-                    ( (abs(Delta)<(NbrePointsModele*PrecisionRelative)) or
+                    ( (abs(Delta)<(chi2Precedent[m]*PrecisionRelative)) or
                      (chi2[m]<(NbrePointsModele*PrecisionAbsolueChi2)) );
-              Diverge := Diverge or (Delta>J[m]*PrecisionZero);
+              Diverge := Diverge or (Delta>chi2[m]*PrecisionZero);
            end
            else begin
               sigmay := sqrt(J[m]/NbrePointsModele);
@@ -409,16 +414,78 @@ begin
       remplitVarLisse;
 end end; // completeValTh
 
-var sauveValeurParam,ValeurParamInit : tableauParam;
+var sauveValeurParam,ValeurParamInit,BestValeurParam : tableauParam;
+    BestPrecision : double;
+
+Function EffectueLevenbergMarquardt : boolean;
+const Maxi_i1 = 32; // time out
+var i1 : integer;
+    k : codeParam;
+begin with pages[pageCourante] do begin
+    Lambda := 1e-3; // calcul quasi Gauss Newton
+    i1 := 0;
+    result := false;
+    repeat
+        inc(i1);
+        Jprecedent := J;
+        chi2Precedent := chi2;
+        sauveValeurParam := ValeurParam;
+        calculPrecision;
+        if erreurCalcul then begin
+           if withMessage then TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
+           TMsgDlgType.mtError,[TMsgDlgBtn.mbOk],TMsgDlgBtn.mbOk,HELP_ErreurDomaineDefinition,nil);
+           valeurParam := sauveValeurParam;
+           exit;
+        end;
+        for k := 1 to NbreParam do
+            if paramInverse[k]
+               then valeurParam[k] := 1/(1/valeurParam[k]+incParam[k])
+               else valeurParam[k] := valeurParam[k]+incParam[k];
+        CalculJ(true);
+        if erreurParam then begin
+           if withMessage then TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
+           TMsgDlgType.mtError,[TMsgDlgBtn.mbOk],TMsgDlgBtn.mbOk,HELP_ErreurDomaineDefinition,nil);
+           valeurParam := sauveValeurParam;
+           exit;
+        end;
+        if diverge or ErreurCalcul then begin // retour en arriÃ¨re
+           valeurParam := sauveValeurParam;
+           // on tend vers mÃ©thode du gradient
+           if Lambda<LambdaMax
+              then Lambda := 10*Lambda
+              else begin
+                 CalculJ(true);
+                 break;
+              end;
+           CalculJ(true);
+           stable := false;
+           inc(i1);
+        end
+        else if Lambda>LambdaMin then // on tend vers MÃ©thode de Gauss Newton
+           Lambda := Lambda/10;
+    until (i1>Maxi_i1) or stable;
+    if diverge then begin
+       ValeurParam := sauveValeurParam;
+       CalculJ(true);
+       if not stable then begin
+          if withMessage then afficheErreur(erDivergence,HELP_DivergenceModelisation);
+          exit;
+       end;
+    end;
+    if (i1>Maxi_i1) and withMessage then afficheErreur(erTimeOut,HELP_Timeout);
+    result := true;
+    Lambda := 0;
+    calculPrecision;
+end end; // EffectueLevenbergMarquardt
 
 Function EffectueGaussNewton : boolean;
 const
     Maxi_i1 = 32; // time out
-    Maxi_i2 = 6; // µ mini =(1/2)^7=1%
+    Maxi_i2 = 6; // Âµ mini =(1/2)^7=1%
 var k : codeParam;
     i1,i2 : integer;
     mu : double;
-// boucle de recherche par méthode gradient-Newton
+// boucle de recherche par mÃ©thode gradient-Newton
 begin with pages[pageCourante] do begin
     i1 := 0;
     Lambda := 0;
@@ -457,7 +524,7 @@ begin with pages[pageCourante] do begin
       end; // while diverge
       if diverge and (stable or (i1<=1)) then begin
          ValeurParam := sauveValeurParam;
-         calculJ(not stable); // calcul dans l'état initial
+         calculJ(not stable); // calcul dans l'Ã©tat initial
          diverge := false;
          stable := true;
          i2 := 0;
@@ -472,19 +539,19 @@ begin with pages[pageCourante] do begin
            end
            else sauveValeurParam := ValeurParam;
       if (i2>0) and not stable then begin
-           inc(i1); // prise en compte du temps de calcul du retour en arrière
+           inc(i1); // prise en compte du temps de calcul du retour en arriÃ¨re
            calculJ(true);
       end;
    until (i1>Maxi_i1) or stable;
-   if (i1>Maxi_i1) then afficheErreur(erTimeOut,HELP_Timeout);
+   if (i1>Maxi_i1) and withMessage then afficheErreur(erTimeOut,HELP_Timeout);
    result := true;
+   calculPrecision;
 end end;
 
-var iModele : integer;
-label finProc;
+var iModele,iParam,i,l,iRecuit : integer;
 begin // effectueModele
 with pages[pageCourante] do begin
-// boucle de recherche par méthode gradient-Newton 
+// boucle de recherche par mÃ©thode gradient-Newton / Levenberg-Marquardt
     ModeleCalcule := false;
     ModeleErrone := true;
     if not InitCalculJ then exit;
@@ -496,9 +563,46 @@ with pages[pageCourante] do begin
     sauveValeurParam := ValeurParam;
     ValeurParamInit := ValeurParam;
     if ajuste
-       then modeleErrone := not EffectueGaussNewton
+       then if LevenbergMarquardt
+          then modeleErrone := not EffectueLevenbergMarquardt
+          else modeleErrone := not EffectueGaussNewton
        else modeleErrone := false;
     if modeleErrone then exit;
+    if Recuit and (PrecisionModele[1]>0.2) and ajuste then begin
+       BestValeurParam := ValeurParam;
+       BestPrecision := PrecisionModele[1];
+       iRecuit := 0;
+       repeat
+          inc(iRecuit);
+          ValeurParam := ValeurParamInit;
+          for iModele := 1 to NbreModele do with fonctionTheorique[iModele] do
+              if IsSinusoide then begin
+                 valeurParam[amplitude] := valeurParam[amplitude]*(0.5+random);
+                 valeurParam[Phase] := (random*2-1)*AngleUtilisateur(pi);
+                 if (periodeOuFrequence<>grandeurInconnue) then
+                    valeurParam[PeriodeOuFrequence] :=
+                       valeurParam[PeriodeOuFrequence]*(0.5+random);
+              end
+              else for iParam := 1 to NbreParam do
+                       if ParamToIndex(iParam) in depend then
+                          valeurParam[iParam] := valeurParam[iParam]*(0.5+2*random);
+          CalculJ(true);
+          if not (erreurCalcul or ErreurParam) then begin
+             if LevenbergMarquardt
+                then modeleErrone := not EffectueLevenbergMarquardt
+                else modeleErrone := not EffectueGaussNewton;
+             if (not modeleErrone) and (PrecisionModele[1]<BestPrecision) then begin
+                BestPrecision := PrecisionModele[1];
+                BestValeurParam := ValeurParam;
+             end;
+          end;
+       until (iRecuit=6) or (BestPrecision<0.2);
+       ValeurParam := BestValeurParam;
+       CalculJ(true);
+       Lambda := 0;
+       calculPrecision;
+       modeleErrone := false;
+    end; // recuit
     calcIntersection;
     ParamAjustes := ajuste and stable;
     ModeleCalcule := true;
@@ -515,7 +619,7 @@ with pages[pageCourante] do begin
            end;
            if (periodeOuFrequence<>grandeurInconnue) and
               (valeurParam[PeriodeOuFrequence]<0) then
-// Période peut être commune à deux modèles donc ne modifier T qu'après
+// PÃ©riode peut Ãªtre commune Ã  deux modÃ¨les donc ne modifier T qu'aprÃ¨s
               if IsCosinus
                  then valeurParam[Phase] := -valeurParam[Phase]
                  else valeurParam[Phase] := -valeurParam[Phase]+
@@ -527,7 +631,11 @@ with pages[pageCourante] do begin
         if IsSinusoide and
            (periodeOuFrequence<>grandeurInconnue) then with pages[pageCourante] do
            valeurParam[PeriodeOuFrequence] := abs(valeurParam[PeriodeOuFrequence]);
-end;
+    end;
+    if not chi2Actif then
+       for i := 1 to NbreParam do
+           for l := 1 to NbreParam do
+               CovarianceParam[i,l] := 0;
 end end; // EffectueModele
 
 Procedure TgrapheVariab.CalcIntersection;
@@ -712,7 +820,7 @@ begin
                 if not paramInverse[j] then inversePermis[j] := false;
          end;
      end; // while i
- // recompiler les modéles si modifInverse
+ // recompiler les modÃ©les si modifInverse
      if codeErreurC=''
         then begin
            TexteModele.Clear;
@@ -728,13 +836,13 @@ begin
               then include(etatModele,ModeleDefini)
               else include(etatModele,PasDeModele);
            if NbreFonctionSuper>0 then include(etatModele,SimulationDefinie);
-           { TODO :  rechercher si y ne dépend que de x } 
+           { TODO :  rechercher si y ne dÃ©pend que de x } 
         end
         else afficheErreur(codeErreurC,0);
     include(Modif,gmModele);
     modeleDependant := false;
     for i := 1 to NbreModele do
-        for j := succ(NbreModele) to NbreModele do
+        for j := succ(i) to NbreModele do
             modeleDependant := modeleDependant or
             ((fonctionTheorique[i].depend * fonctionTheorique[j].depend)<>[]);
 end; // CompileModele
@@ -746,10 +854,10 @@ var l,k : integer;
     dependPossible : TsetGrandeur;
 begin
   with fonctionTheorique[m] do begin
-     lineaire := true; { par défaut }
+     lineaire := true; { par dÃ©faut }
      DeriveeForm(fonctionTheorique[m],
              grandeurs[indexX],fchi2,dependPossible);
-     if not traceEllipse then libere(fchi2);
+     if not (traceEllipse or avecChi2) then libere(fchi2);
      lineaireVar := not(indexX in dependPossible);
      for k := 1 to NbreParam do begin
          DeriveeForm(fonctionTheorique[m],Parametres[k],
@@ -764,7 +872,7 @@ begin
 end; // ConstruitFonction
 
 procedure ConstruitDiff(m : codeIntervalle);
-// pour dérivée seconde ou première : y'=f(y,x,a,b,c) ou y''=f(y,y',x,a,b,c)
+// pour dÃ©rivÃ©e seconde ou premiÃ¨re : y'=f(y,x,a,b,c) ou y''=f(y,y',x,a,b,c)
 var
    derf_y,derf_yprime : Pelement; { df/dy' et df/dy }
    l : integer;
@@ -792,8 +900,8 @@ begin
              if Parametres[l]=fonctionTheorique[m].calcul^.vary
                   then derf[m,l].valeurInitDer := 1
                   else derf[m,l].valeurInitDer := 0;
-//  valeur initiale fonction et dérivée nulle sauf pour
-//  y0 : fonction=1 ;  y'0 : dérivée=1 
+//  valeur initiale fonction et dÃ©rivÃ©e nulle sauf pour
+//  y0 : fonction=1 ;  y'0 : dÃ©rivÃ©e=1 
    end;// for l
    end;// with
    libere(derf_y);
@@ -801,7 +909,7 @@ begin
 end; // ConstruitDiff
 
 procedure ConstruitEquation(m : codeIntervalle);
-// pour équation f(y,x,a,b,c)=0
+// pour Ã©quation f(y,x,a,b,c)=0
 var
    derf_y : Pelement; { df/dy }
    l : integer;
