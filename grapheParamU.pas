@@ -677,7 +677,7 @@ begin
       if (indexModele<0) and (-indexModele<=NbreFonctionSuperGlb) then
           with fonctionSuperposeeGlb[-indexModele] do begin
              DebutC := 0;
-             GenereMGlb(valX,valY,min,max,monde[mondeX].graduation=gLog,FinC);
+             GenereMGlb(valX,valY,miniMod,maxiMod,monde[mondeX].graduation=gLog,FinC);
       end;
 end; // affecteSuperpose
 
@@ -686,11 +686,11 @@ begin // PaintBoxPaint
         tailleEcran := PaintBox.Height;
         if ([gmXY,gmModele]*modif)<>[] then setCoordonnee;
         if not grapheOK then exit;
+        chercheMonde;
+        if not monde[mondeX].defini then exit;
         if ModeleCalcule and
           (ModeleDefini in etatModele)
            then AffecteModele;
-        chercheMonde;
-        if not monde[mondeX].defini then exit;
         ModeleEnCours := true;
         if (NbreFonctionSuperGlb>0) and
             ModeleCalcule and
@@ -1010,11 +1010,12 @@ end;  // ChoixCurseurClick
 procedure TgrapheParam.AffecteModele;
 var i : integer;
 begin
+    ChercheMinMax;
     for i := 0 to pred(courbes.count) do with courbes.items[i] do
     if (indexModele>0) then begin
         with fonctionTheoriqueGlb[indexModele] do begin
              DebutC := 0;
-             GenereMGlb(valX,valY,min,max,monde[mondeX].graduation=gLog,FinC);
+             GenereMGlb(valX,valY,miniMod,maxiMod,monde[mondeX].graduation=gLog,FinC);
         end;
     end;
 end; // affecteModele
@@ -1026,7 +1027,7 @@ begin
     for i := 0 to pred(courbes.count) do with courbes.items[i] do
            if (indexModele>0) then with fonctionTheoriqueGlb[indexModele] do begin
               DebutC := 0;
-              GenereMGlb(valX,valY,min,max,monde[mondeX].graduation=gLog,FinC);
+              GenereMGlb(valX,valY,miniMod,maxiMod,monde[mondeX].graduation=gLog,FinC);
            end;
 end; // zoomModele
 
@@ -1116,7 +1117,7 @@ begin
         then begin
              ConstruitModele;
              for i := 1 to NbreParamGlb do
-                 nomParamGlb[i] := parametres[i].nom;
+                 nomParamGlb[i] := parametresGlb[i].nom;
              for i := succ(NbreParamGlb) to maxParametres do
                  nomParamGlb[i] := '';
         end

@@ -51,6 +51,10 @@ var i : codeParam;
     k : integer;
 begin
     for i := 1 to NbreParamGlb do begin
+        if U[i,i]=0 then begin
+           erreurCalcul := true;
+           exit;
+        end;
         if (i=j)
             then v := 1
             else v := 0;
@@ -60,6 +64,10 @@ begin
      end;{i}
 // passage à der2J
      for i := NbreParamGlb downto 1 do begin
+         if U[i,i]=0 then begin
+            erreurCalcul := true;
+            exit;
+         end;
          v := Y[i];
          for k := succ(i) to NbreParamGlb do
              v := v-U[i,k]*invder2J[j,k];
@@ -362,7 +370,7 @@ begin
             inc(NbreFonctionSuperGlb);
             trimComplet(LigneCourante);
             if fonctionSuperposeeGlb[NbreFonctionSuperGlb].compileM(
-                LigneCourante,posErreurLigne,longErreur) and
+                LigneCourante,posErreurLigne,longErreur,True) and
                (fonctionSuperposeeGlb[NbreFonctionSuperGlb].GenreC<>g_fonction)
                    then codeErreurC := erGenreModele;
         end
@@ -380,7 +388,7 @@ begin
             trimComplet(LigneCourante);
             with fonctionTheoriqueGlb[NbreModeleGlb] do begin
                  LigneMemo := i;
-                 if compileM(LigneCourante,posErreurLigne,longErreur)
+                 if compileM(LigneCourante,posErreurLigne,longErreur,True)
                     and (GenreC in [g_diff1,g_diff2])
                  then codeErreurC := erModeleSystDiff;
            end;

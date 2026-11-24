@@ -116,7 +116,7 @@ type
       isSysteme, ContientCalculGlb: boolean;
       constructor Create;
       function compileF(var posErreur, LongErreur: integer;
-         Ajuste: boolean; ordreEqua: integer): boolean;
+         Ajuste: boolean; ordreEqua: integer; isGlb: boolean = False): boolean;
       procedure genreFonction(var gf: TgenreGrandeur);
       procedure SetDependF;
       function ChercheDebutDepend: codeGrandeur;
@@ -196,7 +196,7 @@ type
       property couleurM: TAlphaColor read couleur write couleur;
       constructor Create;
       function compileM(const LigneCourante: String;
-         var posErreur, LongErreur: integer): boolean;
+         var posErreur, LongErreur: integer; isGlb: boolean = False): boolean;
       procedure GenereM(X, Y: vecteur; miniX, maxiX: double; logX: boolean;
          var PointFinal: integer);
       procedure GenereMGlb(X, Y: vecteur; miniX, maxiX: double; logX: boolean;
@@ -617,7 +617,7 @@ end;
 
 { noyau de l'analyseur }
 function Tfonction.compileF(var posErreur, LongErreur: integer;
-   Ajuste: boolean;ordreEqua: integer): boolean;
+   Ajuste: boolean;ordreEqua: integer; isGlb: boolean): boolean;
 
 {Analyse la chaine expression et renvoie le pointeur calcul sur l'arbre
 résultant de la compilation, en cas d'erreur posErreur renvoie la position
@@ -959,7 +959,14 @@ var
             raise ECompile.Create(erVarInterdite);
          exit;
       end; // grandeur connue
-         for i := 1 to NbreParam do
+      if isGlb then
+         for i := 1 to NbreParamGlb do
+            if IdentCourant = parametresGlb[i].nom then begin
+               trouve := True;
+               EmpileParamGlb(i);
+               exit;
+            end;
+      for i := 1 to NbreParam do
             if IdentCourant = parametres[i].nom then begin
                trouve := ParamToIndex(i) in dependPermis;
                if not trouve then begin
@@ -992,8 +999,21 @@ var
                   raise ECompile.Create(erParamInterdit);
                exit;
             end;
-      if Ajuste then
-         if (NbreParam < MaxParametres) then begin
+      if Ajuste then begin
+         if isGlb then begin
+            if NbreParamGlb < MaxParametres then begin
+               Trouve := True;
+               Inc(NbreParamGlb);
+               if IdentCourant <> parametresGlb[NbreParamGlb].nom then begin
+                  ParametresGlb[NbreParamGlb].nom := IdentCourant;
+                  ParametresGlb[NbreParamGlb].valCourante := Nan;
+               end;
+               EmpileParamGlb(NbreParamGlb);
+            end
+            else
+               raise ECompile.Create(erTropParam);
+         end
+         else if (NbreParam < MaxParametres) then begin
             Trouve := True;
             Inc(NbreParam);
             TransfertEffectue :=
@@ -1023,7 +1043,8 @@ var
             EmpileParam(NbreParam);
          end
          else
-            raise ECompile.Create(erTropParam)
+            raise ECompile.Create(erTropParam);
+      end
       else begin // not ajuste 
          if AnsiSameText(identCourant, 'POSMIN') or
             AnsiSameText(identCourant, 'POSMAX') then
@@ -2561,7 +2582,7 @@ begin
 end;// GenereEquation
 
 function Tmodele.CompileM(const LigneCourante: String;
-   var posErreur, LongErreur: integer): boolean;
+   var posErreur, LongErreur: integer; isGlb: boolean): boolean;
 var
    ordreEqua: integer;
 
@@ -2747,30 +2768,49 @@ var
          include(depend, i);
       for i := 1 to NbreParam do
          include(depend, ParamToIndex(i));
+      if isGlb then
+         for i := 1 to NbreParamGlb do
+            include(depend, ParamGlbToIndex(i));
       if modeAcquisition = AcqSimulation then
          include(depend, cDeltat);
-      Result := compileF(posErreur, longErreur, ajuste, ordreEqua);
+      Result := compileF(posErreur, longErreur, ajuste, ordreEqua, isGlb);
       if not Result then exit;
       genreFonction(gf); // vérifier gf
       if (genreC = g_euler) and (ordreEqua >= 0) then
          raise ECompile.Create(erModeleIncorrect);
-      if (genreC in [g_fonction, g_equation]) and (indexX <> grandeurInconnue) then
+      if (not isGlb) and (genreC in [g_fonction, g_equation]) and (indexX <> grandeurInconnue) then
            if grandeurs[indexX].genreG <> variable then
                   indexX := grandeurInconnue;
-      if (genreC in [g_fonction, g_equation]) and (indexX = grandeurInconnue) then
+      if (genreC in [g_fonction, g_equation]) and (indexX = grandeurInconnue) then begin
+         if isGlb then begin
+            for i := 0 to pred(NbreGrandeurs) do
+               if (i in depend) and (i <> indexY) and
+                  (grandeurs[i].genreG in [constante, variable]) then begin
+                  indexX := i;
+                  break;
+               end;
+            if indexX = grandeurInconnue then
+               for i := 1 to NbreParam do
+                  if (ParamToIndex(i) in depend) and (ParamToIndex(i) <> indexY) then begin
+                     indexX := ParamToIndex(i);
+                     break;
+                  end;
+         end else begin
+            for i := 0 to pred(NbreGrandeurs) do
+               if (i in depend) and (i <> indexY) and
+                  (grandeurs[i].genreG = variable) then begin
+                  indexX := i;
+                  break;
+               end;
+            if indexX = grandeurInconnue then
                for i := 0 to pred(NbreGrandeurs) do
-                  if (i in depend) and (i <> indexY) and
-                     (grandeurs[i].genreG = variable) then begin
+                  if (grandeurs[i].genreG = variable) and (i <> indexY) then
+                  begin
                      indexX := i;
                      break;
                   end;
-               if indexX = grandeurInconnue then
-                  for i := 0 to pred(NbreGrandeurs) do
-                     if (grandeurs[i].genreG = variable) and (i <> indexY) then
-                     begin
-                        indexX := i;
-                        break;
-                     end;
+         end;
+      end;
       case genreC of
          g_fonction: begin
             implicite := depend <= [indexX];
@@ -2797,7 +2837,7 @@ var
          else
             raise ECompile.Create(erModeleIncorrect);
       end;
-      if (genreC=g_fonction) and
+      if (not isGlb) and (genreC=g_fonction) and
          (ordreEqua >= 0) then begin
             SetParamInverse(calcul);
             SetSinusoide;

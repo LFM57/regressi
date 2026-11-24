@@ -1404,6 +1404,7 @@ object FRegressiMain: TFRegressiMain
           Size.Height = 121.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
+          OnChange = MemoModeleGlbChange
           OnKeyUp = CommentaireEditKeyUp
           Viewport.Width = 252.000000000000000000
           Viewport.Height = 121.000000000000000000
@@ -1630,6 +1631,7 @@ object FRegressiMain: TFRegressiMain
             Size.PlatformDefault = False
             TabOrder = 0
             Text = 'Outils gr.'
+            OnClick = CurseurGlbBtnClick
           end
         end
         object PaintBoxParam: TPaintBox

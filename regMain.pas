@@ -470,6 +470,8 @@ type
     procedure ZoomAutoGlbBtnClick(Sender: TObject);
     procedure ZoomGlbBtnClick(Sender: TObject);
     procedure ZoomArrGlbBtnClick(Sender: TObject);
+    procedure CurseurGlbBtnClick(Sender: TObject);
+    procedure MemoModeleGlbChange(Sender: TObject);
     procedure paramGlbGridCellButtonClick(Sender: TObject; ACol, ARow: Integer;
       ACell: TTMSFNCGridCell);
     procedure paramGlbGridCellEditSetData(Sender: TObject; ACol, ARow: Integer;
@@ -525,6 +527,7 @@ type
                    var OPeration: TDragOperation); override;
     procedure DragDrop(const Data: TDragObject; const Point: TPointF); override;
     procedure MajResultat;
+    procedure MajResultatGlb;
     procedure MajResultatLatex(p : codePage);
     procedure VerifGrec(Sender : TObject;var Key: Word;var KeyChar: Char;shift : TshiftState);
   end;
@@ -1576,7 +1579,7 @@ with grapheParam do begin
           MajVide : ResetForme;
           MajGrandeur : etatModele := [];
           MajUnites : exclude(etatModele,UniteParamDefinie);
-          MajUnitesParam : MajResultat;
+          MajUnitesParam : MajResultatGlb;
           MajFichier : exit;
       end;
       ModifParametre := TypeMaj in [MajSupprPage,MajModele];
@@ -1587,7 +1590,7 @@ with grapheParam do begin
           end;
       if ModifParametre and FCoordonneesPhys.ModeleEnCours then begin
            MajParametres;
-           MajResultat;
+           MajResultatGlb;
            include(Modif,gmValeurModele);
       end;
       case typeMaj of
@@ -1603,7 +1606,7 @@ with grapheParam do begin
          MajParametres;
          include(Modif,gmValeurModele);
          if ([ModeleDefini,ModeleConstruit] <= etatModele) and
-            ModeleCalcule then MajResultat;
+            ModeleCalcule then MajResultatGlb;
       end;
       if (Modif<>[]) and not MajFichierEnCours then
           paintBoxParam.repaint;
@@ -1846,7 +1849,9 @@ end;
 
 procedure TFRegressiMain.SelectItemClick(Sender: TObject);
 begin
-     graphe.ChoixCurseurClick(sender)
+     if WindowTab.ActiveTab = GrapheParamTab
+        then grapheParam.ChoixCurseurClick(sender)
+        else graphe.ChoixCurseurClick(sender);
 end;
 
 procedure TFRegressiMain.StatistiqueOpen;
@@ -2189,6 +2194,16 @@ begin
      end;
 end;
 
+procedure TFRegressiMain.MemoModeleGlbChange(Sender: TObject);
+begin
+     grapheParam.etatModele := [];
+     grapheParam.ModeleCalcule := false;
+     grapheParam.ModeleErrone := false;
+     MemoResultatGlb.lines.clear;
+     if length(MemoModeleGlb.text)>5 then
+        MemoResultatGlb.Lines.Add(stTest4);
+end;
+
 procedure TFRegressiMain.MemoModeleKeyUp(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
 begin
@@ -2436,6 +2451,18 @@ begin
      CurOrigineItem.enabled := not graphe.superposePage;
      P := TpointF.Create(curseurBtn.position.X,curseurBtn.position.y);
      P.Offset(0,3*curseurBtn.height+GrapheToolBar.Position.Y);
+     P := ClientToScreen(P);
+     curseurMenu.popup(P.x,P.y);
+     editBidon.setFocus;
+end;
+
+procedure TFRegressiMain.CurseurGlbBtnClick(Sender: TObject);
+var P : TPointF;
+begin
+     addModeleItem.enabled := false;
+     CurOrigineItem.enabled := false;
+     P := TpointF.Create(CurseurGlbBtn.position.X,CurseurGlbBtn.position.y);
+     P.Offset(0,3*CurseurGlbBtn.height);
      P := ClientToScreen(P);
      curseurMenu.popup(P.x,P.y);
      editBidon.setFocus;
@@ -3477,6 +3504,32 @@ with pages[pageCourante] do begin
     if debutCalcul>0 then RecalculP;
     end; // ModeleCalcule
 end end; // MajResultat
+
+procedure TFRegressiMain.MajResultatGlb;
+var m, i : integer;
+    PourCent : string;
+begin
+     MemoResultatGlb.lines.Clear;
+     if grapheParam.ModeleCalcule then begin
+        MemoResultatGlb.Lines.Add(stIntervalle95);
+        for m := 1 to NbreModeleGlb do with fonctionTheoriqueGlb[m] do begin
+            PourCent := chainePrec(PrecisionModeleGlb[m]);
+            MemoResultatGlb.Lines.Add(stEcartRelatif);
+            MemoResultatGlb.Lines.Add(PourCent+' sur '+enTete);
+            if Chi2ActifGlb
+               then MemoResultatGlb.Lines.Add('Chi2/(N-p)='+formatGeneral(chi2Relatif,precisionMin))
+               else MemoResultatGlb.Lines.Add(stSigmaY+addrY.formatNomEtUnite(sigmay));
+        end;
+        for i := 1 to NbreParamGlb do with parametresGlb[i] do begin
+            if isNan(studentParamGlb[i])
+               then MemoResultatGlb.Lines.Add(nom+' = '+formatValeurEtUnite(valCourante))
+               else MemoResultatGlb.Lines.Add(nom+' = '+formatValeurEtUnite(valCourante)+
+                    ' '#$00B1' '+formatValeurEtUnite(studentParamGlb[i]));
+            if (i - 1) < ParamGlbGrid.RowCount then
+               ParamGlbGrid.Cells[3, i - 1] := FormatGeneral(valCourante, 3);
+        end;
+     end;
+end; // MajResultatGlb
 
 procedure TFRegressiMain.MajResultatLatex(p : codePage);
 
