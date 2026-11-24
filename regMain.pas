@@ -817,7 +817,7 @@ begin
               if NomFichierData=''
                  then FileSaveAsItemClick(nil)
                  else FileSaveItemClick(nil);
-              result := true;
+              result := not modifFichier;
            end;
            mrNo : result := true;
            else result := false;
@@ -945,9 +945,17 @@ begin with saveDialog do begin
            fileName := ChangeFileExt(FileName,extension)
        end;
        if extension='.RW3'
-          then FichierRegressi.ecritWin(FileName)
+          then begin
+             FichierRegressi.ecritWin(FileName);
+             NomFichierData := FileName;
+             Caption := 'Regressi ['+NomFichierData+']';
+          end
           else if extension='.RXML'
-            then FichierRegressi.ecritXML(FileName)
+            then begin
+               FichierRegressi.ecritXML(FileName);
+               NomFichierData := FileName;
+               Caption := 'Regressi ['+NomFichierData+']';
+            end
             else FichierRegressi.ecritTableur(FileName);
        MRUadd(FileName);
        modifFichier := false;
@@ -2587,7 +2595,10 @@ procedure TFRegressiMain.FormClose(Sender: TObject;var Action: TCloseAction);
 var i : integer;
     Rini : TIniFile;
 begin
-    if not VerifSauve then exit;
+    if not VerifSauve then begin
+       Action := TCloseAction.caNone;
+       exit;
+    end;
     if Fvaleurs<>nil then Fvaleurs.Close;
     if FgrapheFFT<>nil then FgrapheFFT.Close;
     graphe.Reset;
