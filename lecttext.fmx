@@ -10,7 +10,7 @@ object LectureTexteDlg: TLectureTexteDlg
   FormFactor.Width = 1920
   FormFactor.Height = 1200
   FormFactor.Devices = [Desktop]
-  OnActivate = FormActivate
+  OnShow = FormShow
   Left = 136
   Top = 151
   DesignerMasterStyle = 0

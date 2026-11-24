@@ -228,8 +228,8 @@ type
              Shift: TShiftState; X,Y: single);override;
     procedure MouseMove(
              Shift: TShiftState;X,Y: single);override;
-    procedure MouseEnter;
-    procedure MouseLeave;
+    procedure DoMouseEnter; override;
+    procedure DoMouseLeave; override;
     procedure DblClick; override;
     procedure LoadXML(ANode : IXMLNode);
     procedure StoreXML(ANode : IXMLNode);
@@ -254,8 +254,8 @@ type
              Shift: TShiftState; X,Y: single);override;
     procedure MouseUp(Button: TMouseButton;
              Shift: TShiftState; X,Y: single);override;
-    procedure MouseEnter;
-    procedure MouseLeave;
+    procedure DoMouseEnter; override;
+    procedure DoMouseLeave; override;
     procedure affectePoint1(X,Y: single);
     procedure affectePoint2(X,Y: single);
     procedure affecteXY(X,Y: single);
@@ -4066,7 +4066,7 @@ begin
       isVertical := getBoolXML(ANode);
       exit;
    end;
-    if ANode.NodeName='isCadre' then begin
+    if (ANode.NodeName='withCadre') or (ANode.NodeName='isCadre') then begin
       avecCadre := getBoolXML(ANode);
       exit;
     end;
@@ -4096,9 +4096,10 @@ end;
 
 var i: Integer;
 begin
-if ANode.HasChildNodes then
-   for I := 0 to ANode.ChildNodes.Count - 1 do
-       LitEnfant(ANode.ChildNodes.Nodes[I]);
+  dataFile := True;
+  if ANode.HasChildNodes then
+     for I := 0 to ANode.ChildNodes.Count - 1 do
+         LitEnfant(ANode.ChildNodes.Nodes[I]);
 end;
 
 procedure TDessinLine.StoreXML(ANode : IXMLNode);
@@ -4207,9 +4208,10 @@ end;
 
 var i: Integer;
 begin
-if ANode.HasChildNodes then
-   for I := 0 to ANode.ChildNodes.Count - 1 do
-       LitEnfant(ANode.ChildNodes.Nodes[I]);
+  dataFile := True;
+  if ANode.HasChildNodes then
+     for I := 0 to ANode.ChildNodes.Count - 1 do
+         LitEnfant(ANode.ChildNodes.Nodes[I]);
 end;
 
 procedure TTamponTexteLigne.Load;
@@ -4319,6 +4321,7 @@ end;
 constructor TdessinText.CreateText(gr : TgrapheReg);
 begin
   inherited Create(gr.paintBox);
+  HitTest := True;
   color := claBlue;
   couleurFond := claWhite;
   vertTextAlign := TTextAlign.Leading;
@@ -5624,7 +5627,7 @@ procedure TDessinText.SetPourCent;
     if (PageCourante >= 1) and (PageCourante <= NbrePages) then begin
       posCode('S', -1);
       if posPourCent > 0 then begin
-        Delete(LigneTexte, posPourCent, 3);
+        Delete(LigneTexte, posPourCent, 2);
         Insert(pages[PageCourante].commentaireP, LigneTexte, posPourCent);
       end;
       for j := 1 to NbreParam do begin
@@ -5963,18 +5966,24 @@ begin
     inherited;
 end;
 
-procedure TDessinText.MouseEnter;
+procedure TDessinText.DoMouseEnter;
 begin
+   inherited;
    x0 := 0;
    y0 := 0;
-   agraphe.paintBox.cursor := crHandPoint;
+   if agraphe <> nil then
+     agraphe.paintBox.cursor := crHandPoint;
 end;
 
-procedure TDessinText.MouseLeave;
+procedure TDessinText.DoMouseLeave;
 begin
-   aGraphe.paintBox.cursor := crDefault;
+   inherited;
+   if aGraphe <> nil then begin
+     aGraphe.paintBox.cursor := crDefault;
+     if agraphe.DessinTextCourant = self then
+       agraphe.DessinTextCourant := nil;
+   end;
    opacity := 1;
-   agraphe.DessinTextCourant := nil;
 end;
 
 procedure TDessinText.DblClick;
@@ -6012,16 +6021,22 @@ begin
     inherited;
 end;
 
-procedure TDessinLine.MouseEnter;
+procedure TDessinLine.DoMouseEnter;
 begin
-    aGraphe.paintBox.cursor := crHandPoint;
+    inherited;
+    if aGraphe <> nil then
+      aGraphe.paintBox.cursor := crHandPoint;
 end;
 
-procedure TDessinLine.MouseLeave;
+procedure TDessinLine.DoMouseLeave;
 begin
-    aGraphe.paintBox.cursor := crDefault;
+    inherited;
+    if aGraphe <> nil then begin
+      aGraphe.paintBox.cursor := crDefault;
+      if aGraphe.dessinLineCourant = self then
+        aGraphe.dessinLineCourant := nil;
+    end;
     opacity := 1;
-    aGraphe.dessinLineCourant := nil;
 end;
 
 procedure TDessinLine.affecteXY(X,Y: single);

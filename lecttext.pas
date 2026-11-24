@@ -59,7 +59,7 @@ type
     LabelFond: TLabel;
     CouleurCombo: TTMSFNCColorPicker;
     opaqueColorBox: TTMSFNCColorPicker;
-    procedure FormActivate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure OKBtnClick(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
   private
@@ -76,10 +76,13 @@ uses AideU;
 
 {$R *.FMX}
 
-procedure TLectureTexteDlg.FormActivate(Sender: TObject);
+procedure TLectureTexteDlg.FormShow(Sender: TObject);
 begin with dessinLoc do begin
      PageControl.ActiveTab := TexteTab;
-     Edit.text := text;
+     if texteBrut <> '' then
+       Edit.text := texteBrut
+     else
+       Edit.text := text;
      Edit.SetFocus;
      PageGB.visible := (NbrePages>1);
      CadreCB.IsChecked  := avecCadre;
