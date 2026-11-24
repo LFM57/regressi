@@ -1,4 +1,4 @@
-unit newvar;
+ï»¿unit newvar;
 
 interface
 
@@ -133,7 +133,7 @@ type
 
 procedure TNewVarDlg.FormCloseQuery(Sender: TObject;var CanClose: Boolean);
 var g : tgrandeur;
-    posErreur,longErreur : integer;
+    posErreur,longErreur,index : integer;
     NewNom : string;
 
 procedure VerifExp(Agenre : TgenreGrandeur);
@@ -235,18 +235,21 @@ begin
        else afficheErreur(codeErreurC,0);
 end;
 
-Procedure MajOrdre; // à vérifier
+Procedure MajOrdre; // Ã  vÃ©rifier
 var i,p,iCalc : integer;
     tampon : tgrandeur;
 begin
+    if (index < 0) or (index >= NbreGrandeurs) then exit;
     for i := 0 to pred(NbreVariab) do begin
         iCalc := indexVariab[i];
-        if grandeurs[iCalc].fonct.genreC<>g_experimentale then begin
+        if (iCalc <> index) and (grandeurs[iCalc].fonct.genreC<>g_experimentale) then begin
            for p := 1 to NbrePages do
                pages[p].transfereVariabP(index,iCalc);
            tampon :=  grandeurs[iCalc];
            grandeurs[iCalc] := grandeurs[index];
            grandeurs[index] := tampon;
+           grandeurs[iCalc].indexG := iCalc;
+           grandeurs[index].indexG := index;
            break;
         end;
     end;
@@ -300,7 +303,7 @@ begin // FormCloseQuery
    if canClose
       then begin
            index := ajouteGrandeurE(G);
-           if GenreGrandeurRG.itemIndex=iVarExp then MajOrdre;
+           if (GenreGrandeurRG.itemIndex=iVarExp) and (index<>grandeurInconnue) then MajOrdre;
            if not (genreGrandeurRG.itemIndex in [iVarTexte,iParamTexte])
               then ReCalculE;
            ModifFichier := true;
