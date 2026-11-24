@@ -243,7 +243,7 @@ begin
     end;
     if nbre=0 then with coordonnee[1] do begin
           codeX := indexVariab[0];
-          nomY := grandeurs[0].nom;
+          nomX := grandeurs[0].nom;
           codeY := indexVariab[1];
           nomY := grandeurs[1].nom;
 //          nbre := 1;

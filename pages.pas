@@ -190,8 +190,9 @@ begin // ParamEtPrec
          end;
    Decimales := Precision-1;
    valeurDix := valeurParam[k]*CoeffValeur;
-   if valeurDix>=10 then dec(Decimales);
-   if valeurDix>=100 then dec(Decimales);
+   if abs(valeurDix)>=10 then dec(Decimales);
+   if abs(valeurDix)>=100 then dec(Decimales);
+   if Decimales<0 then Decimales := 0;
    tampon := FloatToStrF(valeurDix,ffFixed,Precision,Decimales);
    if avecPrecision then if precOK
       then begin
@@ -216,7 +217,7 @@ end end; // ParamEtPrec
 Function Tpage.ParamNum(k : codeGrandeur) : String;
 var puissValeur : shortInt;
     CoeffValeur,valeurDix : double;
-    Precision,Decimales : byte;
+    Precision,Decimales : integer;
     tampon : String;
     PrecOk : boolean;
     valeurLoc,precLoc : double;
@@ -243,12 +244,15 @@ begin // ParamNum
                   then Precision := PrecisionMax;
          end
          else Precision := PrecisionMax div 2;
-   PuissValeur := 3*floor(log10(abs(valeurLoc))/3);
+   if valeurLoc<>0
+      then PuissValeur := 3*floor(log10(abs(valeurLoc))/3)
+      else PuissValeur := 0;
    CoeffValeur := dix(-puissValeur);
    Decimales := Precision-1;
    valeurDix := valeurLoc*CoeffValeur;
-   if valeurDix>=10 then dec(Decimales);
-   if valeurDix>=100 then dec(Decimales);
+   if abs(valeurDix)>=10 then dec(Decimales);
+   if abs(valeurDix)>=100 then dec(Decimales);
+   if Decimales<0 then Decimales := 0;
    tampon := FloatToStrF(valeurDix,ffFixed,Precision,Decimales);
    if puissValeur<>0 then
       tampon := tampon+pointMedian+'10'+puissToStr(puissValeur);

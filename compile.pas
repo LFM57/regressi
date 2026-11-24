@@ -1135,6 +1135,7 @@ var
    var
       code: codeFonctionGlb;
       vx, vy: Tgrandeur;
+      posCouranteDx: integer;
 
       procedure AnalyseFlottant(var xx: double);
       var
@@ -1348,7 +1349,9 @@ var
       begin
          if not isParentheseO then
             raise ECompile.Create(erParO);
-         utilisation := Expression[pred(PointeurExp)] = ',';
+         i := pred(PointeurExp);
+         while (i>=1) and (i<=length(Expression)) and (Expression[i]=' ') do inc(i);
+         utilisation := (i>=1) and (i<=length(Expression)) and ((Expression[i]=',') or (Expression[i]=';'));
          if utilisation then begin
             AnalyseGrandeur(vv, True); {x}
             if not isVirgule then
@@ -1602,8 +1605,15 @@ var
             (CaracCourant <> #0) then
             raise ECompile.Create(erFonctionGlbIsole);
       end;
-      if (identCourant = 'd') and (expression[pred(PointeurExp)] = '(') then { d(x)/d(t) ? }
-         CompileDxDt;
+      if identCourant = 'd' then begin { d(x)/d(t) ? }
+         if (pred(PointeurExp)>=1) then begin
+            posCouranteDx := pred(PointeurExp);
+            while (posCouranteDx<=length(Expression)) and (Expression[posCouranteDx]=' ') do
+               inc(posCouranteDx);
+            if (posCouranteDx<=length(Expression)) and (Expression[posCouranteDx]='(') then
+               CompileDxDt;
+         end;
+      end;
    end; // ChercheFonctionGlb
 
    procedure AnalyseTest;
@@ -2678,7 +2688,7 @@ var
          if posCourante > 0 then begin // t/T
             inc(posCourante, 1+length(grandeurs[0].nom));
             nomP := '';
-            while (posCourante < length(expressionUC)) and
+            while (posCourante <= length(expressionUC)) and
                   isCaracGrandeur(expressionUC[posCourante]) do begin
                nomP := nomp + expressionUC[posCourante];
                inc(posCourante);

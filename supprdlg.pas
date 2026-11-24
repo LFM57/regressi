@@ -148,12 +148,17 @@ begin
               G := Tgrandeur.create;
               G.Init( grandeurs[index].nom+'C', grandeurs[index].nomUnite,'PhaseC('+grandeurs[index].nom+')',variable);
               include(G.fonct.depend,index);
-              G.compileG(posErreur,longErreur,0);
-              indexNew := ajouteGrandeurE(G);
-              ReCalculE;
-              FValeurs.Memo.Lines.Add(grandeurs[indexNew].nom+'='+grandeurs[indexNew].fonct.expression);
-              FRegressiMain.WMRegMaj(MajGrandeur);
-              ModifFichier := true;
+              if G.compileG(posErreur,longErreur,0) then begin
+                 indexNew := ajouteGrandeurE(G);
+                 ReCalculE;
+                 FValeurs.Memo.Lines.Add(grandeurs[indexNew].nom+'='+grandeurs[indexNew].fonct.expression);
+                 FRegressiMain.WMRegMaj(MajGrandeur);
+                 ModifFichier := true;
+              end
+              else begin
+                 afficheErreur(codeErreurC,0);
+                 G.free;
+              end;
           end; // phase
           oTriVariable : begin
                FichierTrie := false;
@@ -163,6 +168,8 @@ begin
                      sauveGrandeur := grandeurs[0];
                      grandeurs[0] := grandeurs[index];
                      grandeurs[index] := sauveGrandeur;
+                     grandeurs[0].indexG := 0;
+                     grandeurs[index].indexG := index;
                      for p := 1 to NbrePages do
                          pages[p].TransfereVariabP(0,index);
                   end

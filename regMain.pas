@@ -1633,8 +1633,10 @@ begin
          if genreG=variable then
             ListeNom.Items.add(nom);
      listeNom.itemIndex := ListeNom.items.indexOf(statOptDlg.NomStat);
-     if listeNom.itemIndex<0 then
-        listeNom.itemIndex := 1;
+     if listeNom.itemIndex<0 then begin
+        if ListeNom.Items.Count>1 then listeNom.itemIndex := 1
+        else if ListeNom.Items.Count>0 then listeNom.itemIndex := 0;
+     end;
      listeNom.enabled := true;
      listeNomChange(nil);
 end;
@@ -1924,8 +1926,10 @@ begin
             if genreG=variable then
                ListeNom.Items.add(nom);
         listeNom.itemIndex := ListeNom.items.indexOf(statOptDlg.NomStat);
-        if listeNom.itemIndex<0 then
-           listeNom.itemIndex := 1;
+        if listeNom.itemIndex<0 then begin
+           if ListeNom.Items.Count>1 then listeNom.itemIndex := 1
+           else if ListeNom.Items.Count>0 then listeNom.itemIndex := 0;
+        end;
         listeNom.enabled := true;
         listeNomChange(nil);
         timerStat.enabled := true;

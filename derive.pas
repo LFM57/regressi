@@ -136,20 +136,11 @@ Function derive(F : Pelement) : TlisteDeriveeIncert;
         libere(tampon);
    end end;// deriveFonction
 
-   function deriveOperateur(F : Pelement) : TlisteDeriveeIncert;
-   var
-      listeG,listeD : TlisteDeriveeIncert;
-      derLoc : PderiveeIncert;
-      i,j : integer;
-      trouve : boolean;
-   Begin with F^ do Begin
-      if not charinset(codeOp,
-     	 ['+','-','#','@','=','<','>','O','X','A','*','/','^']) then begin
-         result := TlisteDeriveeIncert.Create;
-         exit;
-      end;
-      listeG := Derive(OperG);
-      listeD := Derive(OperD);
+   procedure AligneListes(listeG, listeD : TlisteDeriveeIncert);
+   var i, j : integer;
+       trouve : boolean;
+       derLoc : PderiveeIncert;
+   begin
       for i := 0 to pred(listeG.count) do begin
           trouve := false;
           for j := i to pred(listeD.count) do begin
@@ -176,6 +167,21 @@ Function derive(F : Pelement) : TlisteDeriveeIncert;
            derLoc.incertX := listeD[i].IncertX;
            listeG.add(derLoc);
       end;
+   end;
+
+   function deriveOperateur(F : Pelement) : TlisteDeriveeIncert;
+   var
+      listeG,listeD : TlisteDeriveeIncert;
+      i : integer;
+   Begin with F^ do Begin
+      if not charinset(codeOp,
+     	 ['+','-','#','@','=','<','>','O','X','A','*','/','^']) then begin
+         result := TlisteDeriveeIncert.Create;
+         exit;
+      end;
+      listeG := Derive(OperG);
+      listeD := Derive(OperD);
+      AligneListes(listeG, listeD);
       for i := 0 to pred(listeG.count) do
       case codeOp of
      	      '+','-','#','@','=','<','>','O','X','A' :
@@ -208,11 +214,45 @@ Function derive(F : Pelement) : TlisteDeriveeIncert;
       listeD.free;
       end end;// deriveOperateur
 
+   function deriveIf(F : Pelement) : TlisteDeriveeIncert;
+   var listeG,listeD : TlisteDeriveeIncert;
+       i : integer;
+   begin with F^ do begin
+      listeG := Derive(positif);
+      listeD := Derive(negatif);
+      AligneListes(listeG, listeD);
+      for i := 0 to pred(listeG.count) do
+          listeG[i].deriveX := genIf(copie(test),listeG[i].deriveX,listeD[i].deriveX);
+      result := listeG;
+      listeD.free;
+   end end;
+
+   function derivePW(F : Pelement) : TlisteDeriveeIncert;
+   var listeG,listeD : TlisteDeriveeIncert;
+       i : integer;
+       p,n : Pelement;
+   begin with F^ do begin
+      if PWthen<>nil then listeG := Derive(PWthen)
+      else listeG := TlisteDeriveeIncert.Create;
+      if PWtestElse<>nil then listeD := Derive(PWtestElse)
+      else listeD := TlisteDeriveeIncert.Create;
+      AligneListes(listeG, listeD);
+      for i := 0 to pred(listeG.count) do begin
+          if PWthen<>nil then p := listeG[i].deriveX else p := nil;
+          if PWtestElse<>nil then n := listeD[i].deriveX else n := nil;
+          listeG[i].deriveX := genPW(copie(PWtest),p,n);
+      end;
+      result := listeG;
+      listeD.free;
+   end end;
+
 var derLoc : PderiveeIncert;
 Begin // derive
      case f^.typeElement of
            operateur : result := deriveOperateur(F);
            fonction  : result := deriveFonction(F);
+           ifThenElse : result := deriveIf(F);
+           pieceWise : result := derivePW(F);
 	         Grandeur : begin
                  result := TlisteDeriveeIncert.Create;
                  new(derLoc);

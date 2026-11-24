@@ -183,7 +183,7 @@ begin
     LigneCompile := NomFonctionGlb[derivee]+
         '('+grandeurs[yy].nom+','+grandeurs[xx].nom;
     if ParametreDerivee.isChecked
-      then LigneCompile := LigneCompile+','+intToStr(round(LissageRG.value)+1)+',2';
+      then LigneCompile := LigneCompile+','+intToStr(round(LissageRG.value)+1)+','+intToStr(round(NbreSpinButton.Value));
     LigneCompile := LigneCompile+')';
     G.Init(nomEdit.text,uniteEdit.text,LigneCompile,variable);
     for i := 0 to pred(NbreGrandeurs) do include(G.fonct.depend,i);

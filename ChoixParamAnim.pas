@@ -1,4 +1,4 @@
-unit ChoixParamAnim;
+ï»¿unit ChoixParamAnim;
 
 interface
 
@@ -72,8 +72,8 @@ end;
 procedure TParamAnimationDlg.FormCreate(Sender: TObject);
 begin
      ParamGrid.ColumnCount := 6;
-     ParamGrid.cells[0,0] := 'Paramètre';
-     ParamGrid.cells[1,0] := 'Début';
+     ParamGrid.cells[0,0] := 'ParamÃ¨tre';
+     ParamGrid.cells[1,0] := 'DÃ©but';
      ParamGrid.cells[2,0] := 'Fin';
      ParamGrid.cells[3,0] := 'Pas';
      ParamGrid.cells[4,0] := 'Actif';
@@ -126,11 +126,12 @@ begin
                   if valeurA<debutA then valeurA := debutA;
                   if valeurA>finA then valeurA := finA;
              end
-             else begin { linéaire }
+             else begin { linÃ©aire }
                  VerifMinMaxReal(DebutA,FinA);
-                 if (finA-debutA)/pasA>MaxPasAnimation
+                 if (pasA<=0) or ((finA-debutA)/pasA>MaxPasAnimation)
                     then pasA := (finA-debutA)/MaxPasAnimation;
-                 if (finA-debutA)/pasA<2 then pasA := (finA-debutA)/5;
+                 if (pasA<=0) or ((finA-debutA)/pasA<2) then pasA := (finA-debutA)/5;
+                 if pasA<=0 then pasA := 1;
                  if valeurA<debutA then valeurA := debutA;
                  if valeurA>finA then valeurA := finA;
              end;

@@ -579,15 +579,15 @@ begin // SetNomUnite
       inverse := False;
       if Pos('1E', FnomUnite) = 1 then begin
          index := 3;
-         while (index < LongUnite) and
-            FnomUnite[index].isDigit and
-            charInSet(FnomUnite[index],['-', '+']) do
+         while (index <= LongUnite) and
+            (FnomUnite[index].isDigit or
+             charInSet(FnomUnite[index],['-', '+'])) do
             Inc(index);
          if index > 3 then begin
-            stValeur := copy(FnomUnite, 1, pred(index));
+            stValeur := copy(FnomUnite, 3, index - 3);
             puissance := StrToInt(StValeur);
          end;
-         if FnomUnite[index] = ' ' then
+         if (index <= LongUnite) and (FnomUnite[index] = ' ') then
             Inc(index);
       end; { 1E+xx }
       Ucourant := Tunite.Create;
@@ -672,7 +672,7 @@ function Tunite.NomAff(puissValeur: integer): string;
            (nom[1]=muMin)) and
          (charInSet(nom[2],caracDebutUnite) or
          (nom[2]=OmegaMaj)) then begin
-         case FnomUnite[1] of
+         case nom[1] of
             'a': P  := P - 18;
             'f': P  := P - 15;
             'p': P  := P - 12;
@@ -736,7 +736,7 @@ function Tunite.NomAff(puissValeur: integer): string;
            (nom[1]=muMin)) and
          (charInSet(nom[2],caracDebutUnite) or
          (nom[2]=OmegaMaj)) then begin
-         case FnomUnite[1] of
+         case nom[1] of
             'z': P  := P - 21;
             'a': P  := P - 18;
             'f': P  := P - 15;
@@ -1117,7 +1117,7 @@ begin
    UniteConnue[21] := Tunite.Create;
    UniteConnue[21].setUniteComplet('Wb', 0, 2, 1, -2, -1, 0, 0, 0);
    UniteConnue[22] := Tunite.Create;
-   UniteConnue[22].setUniteComplet('lm', 0, 0, -2, 0, 0, 0, 0, 1);
+   UniteConnue[22].setUniteComplet('lm', 0, 0, 0, 0, 0, 0, 0, 1);
    UniteConnue[23] := Tunite.Create;
    UniteConnue[23].setUniteComplet('N/m', 0, 0, 1, -2, 0, 0, 0, 0);
    UniteConnue[24] := Tunite.Create;
@@ -1129,13 +1129,13 @@ begin
    UniteConnue[27] := Tunite.Create;
    UniteConnue[27].setUniteComplet('S/m', 0, -3, -1, 3, 2, 0, 0, 0);
    UniteConnue[28] := Tunite.Create;
-   UniteConnue[28].setUniteComplet('W/m.K)', 0, 1, 1, -3, 0, -1, 0, 0);
+   UniteConnue[28].setUniteComplet('W/m.K', 0, 1, 1, -3, 0, -1, 0, 0);
    UniteConnue[29] := Tunite.Create;
-   UniteConnue[29].setUniteComplet('C.m', 0, 1, 0, 0, 0, 0, 0, 0);
+   UniteConnue[29].setUniteComplet('C.m', 0, 1, 0, 1, 1, 0, 0, 0);
    UniteConnue[30] := Tunite.Create;
    UniteConnue[30].setUniteComplet(OmegaMaj + 'm', 0, 3, 1, -3, -2, 0, 0, 0);
    UniteConnue[31] := Tunite.Create;
-   UniteConnue[31].setUniteComplet('N.m', 0, 1, 0, 1, 1, 0, 0, 0);
+   UniteConnue[31].setUniteComplet('N.m', 0, 2, 1, -2, 0, 0, 0, 0);
    UniteConnue[32] := Tunite.Create;
    UniteConnue[32].setUniteComplet('A/m', 0, -1, 0, 0, 1, 0, 0, 0);
    UniteConnue[33] := Tunite.Create;
@@ -1178,7 +1178,7 @@ begin
    UniteToleree[11] := Tunite.Create; // Poiseuille = Pa.s
    UniteToleree[11].setUniteComplet('Pl',0, -1, 1, -1, 0, 0, 0, 0);
    UniteToleree[12] := Tunite.Create;  // dioptrie
-   UniteToleree[12].setUniteComplet('ƒ', 0,-1, 0, 0, 0, 0, 0, 0);
+   UniteToleree[12].setUniteComplet(deltaMin, 0,-1, 0, 0, 0, 0, 0, 0);
    UniteToleree[13] := Tunite.Create;  // unité astronomique L
    UniteToleree[13].setUniteComplet('ua', 0,1, 0, 0, 0, 0, 0, 0);
    UniteToleree[13].dimensionPart[_ua] := 1;
@@ -1613,7 +1613,7 @@ begin
    if negatif then tampon := '-' + tampon;
    if (imax>0) and
       (pos(FormatSettings.decimalSeparator,tampon)>0) and
-      (pos('E',result)<=0) then begin
+      (pos('E',tampon)<=0) then begin
            for i := 1 to imax do
                tampon := tampon+'0';
    end;

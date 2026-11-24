@@ -533,8 +533,8 @@ begin
     except
          on EMathError do
             if x<0
-               then valeur :=  -pi/2
-               else valeur :=  +pi/2
+               then valeur :=  pi
+               else valeur :=  0
    end;
    acos := angleUtilisateur(valeur);
 end;
@@ -834,8 +834,14 @@ end;
 Function Binomial(a : double;n,m : integer) : double;
 var z,F1,F2 : double;
 begin
+    if (n<=0) or (m<0) or (m>n) then begin
+       result := 0;
+       exit;
+    end;
     if m=0
-       then z := power(1-a/n,n-m)
+       then z := power(1-a/n,n)
+       else if m=n
+       then z := power(a/n,n)
        else begin
           F1 := power(a/n,m);
           F2 := power(1-a/n,n-m);
@@ -1350,7 +1356,7 @@ end;
 
 begin // DeriveePonctuelle
     if (N<=NbrePointDerivee) or
-       (isNan(X[index]) and
+       (isNan(X[index]) or
         isNan(Y[index])) then begin
        result := Nan;
        exit;
@@ -1415,7 +1421,7 @@ end;
 const degreDer = 2;
 begin // DeriveeSecondePonctuelle
     if (N<=NbrePointDerivee) or
-       (isNan(X[index]) and
+       (isNan(X[index]) or
         isNan(Y[index])) then begin
        result := Nan;
        exit;
@@ -1604,7 +1610,7 @@ begin
      if high(env)<N then setLength(env,N+1);
      CalculCoeff(1);
      i := 0;
-     while (X[i]<tlim) do begin
+     while (i<N) and (X[i]<tlim) do begin
         Env[i] := valeur(i,t,f);
         inc(i);
      end;
@@ -1643,7 +1649,7 @@ var t : double;
     Complementaire : boolean;
 begin
     complementaire := alpha>0.5;
-    if not complementaire then alpha := 1-alpha;
+    if complementaire then alpha := 1-alpha;
     t := sqrt(-2*ln(alpha));
     num := c1+c2*t;
     num := c0+t*num;
@@ -1651,7 +1657,7 @@ begin
     den := d1+den*t;
     den := 1+den*t;
     result := t-num/den;
-    if complementaire then result := 1-result
+    if complementaire then result := -result
 end;
 
 Function Chi2Inverse(alpha : double;m : integer) : double;
@@ -1662,20 +1668,22 @@ end;
 
 Procedure TestChi295(m : integer;var min,max : double);
 { m grand }
-var alpha : double;
+var alpha,s : double;
 begin
      alpha := student95(m);
-     min := sqr(alpha+sqrt(2*m-1))/2/m;
-     max := sqr(-alpha+sqrt(2*m-1))/2/m;
+     s := sqrt(2*m-1);
+     if s>alpha then min := sqr(s-alpha)/2/m else min := 0;
+     max := sqr(s+alpha)/2/m;
 end;
 
 Procedure TestChi299(m : integer;var min,max : double);
 { vrai pour m grand }
-var alpha : double;
+var alpha,s : double;
 begin
      alpha := student99(m);
-     min := sqr(alpha+sqrt(2*m-1))/2/m;
-     max := sqr(-alpha+sqrt(2*m-1))/2/m;
+     s := sqrt(2*m-1);
+     if s>alpha then min := sqr(s-alpha)/2/m else min := 0;
+     max := sqr(s+alpha)/2/m;
 end;
 
 Function IntegraleSimpson(a,b : double;f : fonctionMath;n : integer) : double;
@@ -1777,7 +1785,7 @@ begin
     coeff := 1/sqrt(pi);
     if nn<0 then begin
        nn := abs(nn);
-       if (nn div 2)=1 then coeff := -coeff;
+       if Odd(nn) then coeff := -coeff;
     end;
     if abs(x)>(30-2*nn)
        then result := 0

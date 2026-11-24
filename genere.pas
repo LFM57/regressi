@@ -1438,7 +1438,7 @@ begin with F^ do begin
 end end; // constNum
 
 Procedure calculMoyenne;
-var i,idebut,ifin : integer;
+var i,idebut,ifin,nPts : integer;
     z,min,max : double;
     s1,s2,valeurLoc : double;
 begin with F^ do begin
@@ -1473,12 +1473,13 @@ begin with F^ do begin
        s2 := s2+sqr(z);
        s1 := s1+z;
    end;
+   nPts := ifin-idebut+1;
    case codeFglb of
         maximum : valeurGlb := max;
         minimum : valeurGlb := min;
-        moyenne : valeurGlb := s1/nmesCourant;
+        moyenne : if nPts>0 then valeurGlb := s1/nPts;
         somme : valeurGlb := s1;
-        ecartType : valeurGlb := sqrt((s2-sqr(s1)/nmesCourant)/pred(nmesCourant));
+        ecartType : if nPts>1 then valeurGlb := sqrt(System.Math.Max(0.0,(s2-sqr(s1)/nPts)/pred(nPts)));
     end;
     affecteVariableE(0);
 end end; // CalculMoyenne
@@ -1505,7 +1506,7 @@ begin with F^ do begin
    case codeFglb of
         maximum : valeurGlb := max;
         minimum : valeurGlb := min;
-        moyenneFFT : valeurGlb := s1/nbreFFTcourant;
+        moyenneFFT : valeurGlb := s1/(nbreFFTcourant div 2);
         sommeFFT : valeurGlb := s1;
     end;
     affecteVariableE(0);
@@ -1767,7 +1768,7 @@ begin with F^ do begin // calculFonctionGlb
             case codeFglb of
                 cCnp : CalculFonctionGlb := Cnp(round(freqLoc),round(rapportCyclique));
                 cGauss : CalculFonctionGlb := Gauss(varX.valCourante,freqLoc,rapportCyclique);
-                cBinomial : CalculFonctionGlb := Binomial(varX.valCourante,round(freqLoc),round(rapportCyclique));
+                cBinomial : CalculFonctionGlb := Binomial(rapportCyclique*round(freqLoc),round(freqLoc),round(varX.valCourante));
                 dGaussMean : CalculFonctionGlb := derGaussMean(varX.valCourante,freqLoc,rapportCyclique);
                 cPhaseModulo : CalculFonctionGlb := PhaseModulo(varX.valCourante,freqLoc,rapportCyclique);
                 dGaussSigma : CalculFonctionGlb := derGaussSigma(varX.valCourante,freqLoc,rapportCyclique);

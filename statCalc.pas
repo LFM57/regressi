@@ -233,21 +233,24 @@ begin
    Zscore := Nan;
    if FNbre<2 then exit;
    for i := 0 to pred(FNbre) do begin
+       if isNan(Donnees[i]) or isNan(effectif[i]) or (effectif[i]<=0) then continue;
        Fntotal := Fntotal+round(effectif[i]);
        moyenne := moyenne+Effectif[i]*Donnees[i];
        sigma := sigma+Effectif[i]*sqr(Donnees[i]);
        if Donnees[i]<Min then Min := Donnees[i];
        if Donnees[i]>Max then Max := Donnees[i];
    end;
+   if Fntotal<2 then exit;
    iMilieu := Fntotal div 2;
    i := 0;
    n := 0;
    repeat
-       n := n+round(effectif[i]);
-       if n>=iMilieu
+       if (not isNan(effectif[i])) and (effectif[i]>0) then
+          n := n+round(effectif[i]);
+       if (n>=iMilieu) or (i>=pred(FNbre))
          then Mediane := Donnees[i]
          else inc(i);
-   until n>=iMilieu;
+   until (n>=iMilieu) or (i>=pred(FNbre));
    sigma := sqrt(System.Math.Max(0.0,(sigma-sqr(moyenne)/Fntotal)/pred(Fntotal)));
    sigmaMoyenne := sigma/sqrt(Fntotal);
    moyenne := moyenne/Fntotal;
@@ -503,10 +506,17 @@ begin
 end;
 
 Procedure TcalculStatistique.SetValeur(Valeur : vecteur;Nmes : integer;wTri : boolean);
+var i,n : integer;
 begin
-     FNbre := Nmes;
-     CopyVecteur(Donnees,Valeur);
+     setLength(Donnees,Puiss2Sup(length(valeur)));
      setLength(effectif,Puiss2Sup(length(valeur)));
+     n := 0;
+     for i := 0 to pred(Nmes) do
+         if not isNan(Valeur[i]) then begin
+            Donnees[n] := Valeur[i];
+            inc(n);
+         end;
+     FNbre := n;
      AvecTri := wTri;
      Calcul;
 end;

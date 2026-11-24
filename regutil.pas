@@ -1486,6 +1486,20 @@ begin
         result := '';
         exit;
      end;
+     if nombre*coeff=0 then begin
+        result := '0';
+        exit;
+     end;
+     if abs(nombre*coeff)<1e-16 then begin
+        result := FloatToStrF(nombre*coeff,ffExponent,2,1);
+        posE := pos('E',result);
+        if posE>0 then begin
+           puiss := copy(result,posE+1,length(result)-posE);
+           i := strToInt(puiss);
+           result := copy(result,1,posE-1)+pointMedian+'10'+puissToStr(i);
+        end;
+        exit;
+     end;
      result := FloatToStrF(nombre*coeff,ffFixed,2,18);
      posE := pos('E',result);
      longueur := length(result);
@@ -1539,8 +1553,9 @@ begin
          end;
    Decimales := Precision-1;
    valeurDix := valeur*CoeffValeur;
-   if valeurDix>=10 then dec(Decimales);
-   if valeurDix>=100 then dec(Decimales);
+   if abs(valeurDix)>=10 then dec(Decimales);
+   if abs(valeurDix)>=100 then dec(Decimales);
+   if Decimales<0 then Decimales := 0;
    tampon := FloatToStrF(valeurDix,ffFixed,Precision,Decimales);
    if puissValeur<>0 then
       tampon:=tampon+pointMedian+'10'+puissToStr(puissValeur);

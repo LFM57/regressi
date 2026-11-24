@@ -1,4 +1,4 @@
-unit PropCourbe;
+ï»¿unit PropCourbe;
 
 interface
 
@@ -123,7 +123,7 @@ begin
     NbreDeriveeSB.value := NbrePointDerivee;
     Gder := [];
     for i := 1 to pred(NbreGrandeurs) do begin
-        if grandeurs[i].fonct.genreC=g_derivee then include(GDer,i);
+        if grandeurs[i].fonct.genreC in [g_derivee,g_deriveeSeconde] then include(GDer,i);
         if grandeurs[i].fonct.genreC=g_enveloppe then include(GDer,i);
     end;
     codeX := Acourbe.varX.indexG;
@@ -142,9 +142,9 @@ begin with Grid do begin
        RowCount := 5;
        ColumnWidths[0] := 140;
        ColumnWidths[1] := 160;
-       cells[0,0] := 'Période';
-       cells[0,1] := 'Fréquence';
-       cells[0,2] := 'Crête à crête';
+       cells[0,0] := 'PÃ©riode';
+       cells[0,1] := 'FrÃ©quence';
+       cells[0,2] := 'CrÃªte Ã  crÃªte';
        cells[0,3] := 'Efficace';
        cells[0,4] := 'Moyenne';
        varF := Tunite.create;
@@ -152,7 +152,7 @@ end end;
 
 procedure TPropCourbeForm.MaJ;
 begin with aCourbe do begin
-   courbeEdit.text := 'Caractéristiques de '+varY.nom+'('+varX.nom+')';
+   courbeEdit.text := 'CaractÃ©ristiques de '+varY.nom+'('+varX.nom+')';
    courbeEdit.fontColor := acourbe.couleur;
    calcul;
    varF.RecopieUnite(varX);

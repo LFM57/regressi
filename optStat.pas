@@ -141,7 +141,10 @@ begin
             ListeGr.Items.add(grandeurs[i].nom);
          end;
      listeGr.itemIndex := listeGr.items.indexOf(NomStat);
-     if listeGr.itemIndex<0 then listeGr.itemIndex := 1;
+     if listeGr.itemIndex<0 then begin
+        if listeGr.Items.Count>1 then listeGr.itemIndex := 1
+        else if listeGr.Items.Count>0 then listeGr.itemIndex := 0;
+     end;
      EffectifCB.itemIndex := effectifCB.items.indexOf(NomEffectif);
      if EffectifCB.itemIndex<0 then effectifCB.itemIndex := 0;
      EditAmplitude.text := FormatReg(statCourante.ecartDist);
@@ -201,7 +204,10 @@ end;
 procedure TStatOptDlg.OKBtnClick(Sender: TObject);
 begin
      statCourante := pages[pageCourante].stat;
-     if listeGr.itemIndex<0 then listeGr.itemIndex := 1;
+     if listeGr.itemIndex<0 then begin
+        if listeGr.Items.Count>1 then listeGr.itemIndex := 1
+        else if listeGr.Items.Count>0 then listeGr.itemIndex := 0;
+     end;
      NomStat := listeGr.items[listeGr.itemIndex];
      if effectifCB.itemIndex<0 then effectifCB.itemIndex := 0;     
      NomEffectif := EffectifCB.items[effectifCB.itemIndex];
