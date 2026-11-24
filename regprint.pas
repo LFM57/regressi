@@ -101,7 +101,7 @@ begin
              GrapheFourierCB.IsChecked then
              FgrapheFFT.ImprimerGraphe(debutImp);
           if (statOptDlg<>nil) and
-             GrapheStatCB.IsChecked then statOptDlg.Imprimer;
+             GrapheStatCB.IsChecked then statOptDlg.Imprimer(debutImp);
           Printer.EndDoc;
      except
           on E: Exception do begin

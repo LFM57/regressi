@@ -1761,7 +1761,7 @@ end;
 
 procedure TFgrapheFFT.ImprimerGraphe(var bas : single);
 begin
-       grapheTemps.versImprimante(bas);
+       grapheFrequence.versImprimante(bas);
 end;
 
 procedure TFGrapheFFT.LigneItemClick(Sender: TObject);
