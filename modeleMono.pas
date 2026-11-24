@@ -1,6 +1,6 @@
 ﻿// modeleMono.pas include de graphvar
 
-Procedure TgrapheVariab.EffectueModeleMono(m : integer);
+Procedure TgrapheVariab.EffectueModeleMono(m : integer; withMessage : boolean);
 const LambdaMin = 1e-4;
       LambdaMax = 1e4;
 var Lambda : double;
@@ -137,7 +137,7 @@ begin with pages[pageCourante],fonctionTheorique[m] do begin
       if fin[m]>=nmes then fin[m] := pred(nmes);
       NbrePointsModele := succ(fin[m]-debut[m]);
       if (NbrePointsModele<NbreParamModele) then begin
-           afficheErreur(erNombrePetit,0);
+           if withMessage then afficheErreur(erNombrePetit,0);
            exit;
       end;
       NbrePointsModele := NbrePointsModele-NbreParamModele;
@@ -150,7 +150,7 @@ begin with pages[pageCourante],fonctionTheorique[m] do begin
             else SommeCarreY := SommeCarreY + sqr(valeur);
       end;
       if NbrePointsModele<1 then begin
-           afficheErreur(erNombrePetit,0);
+           if withMessage then afficheErreur(erNombrePetit,0);
            exit;
       end;
       jPrecedent := 2*sommeCarreY;
@@ -368,7 +368,7 @@ begin with pages[pageCourante] do begin
         sauveValeurParam := ValeurParam;
         calculPrecision;
         if erreurCalcul then begin
-           TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
+           if withMessage then TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
            TMsgDlgType.mtError,[TMsgDlgBtn.mbOk],TMsgDlgBtn.mbOk,HELP_ErreurDomaineDefinition,nil);
            valeurParam := sauveValeurParam;
            exit;
@@ -379,7 +379,7 @@ begin with pages[pageCourante] do begin
                else valeurParam[k] := valeurParam[k]+incParam[k];
         CalculJ;
         if erreurParam then begin
-           TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
+           if withMessage then TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
            TMsgDlgType.mtError,[TMsgDlgBtn.mbOk],TMsgDlgBtn.mbOk,HELP_ErreurDomaineDefinition,nil);
            valeurParam := sauveValeurParam;
            exit;
@@ -404,11 +404,11 @@ begin with pages[pageCourante] do begin
        ValeurParam := sauveValeurParam;
        CalculJ;
        if not stable then begin
-          afficheErreur(erDivergence,HELP_DivergenceModelisation);
+          if withMessage then afficheErreur(erDivergence,HELP_DivergenceModelisation);
           exit;
        end;
     end;
-    if (i1>Maxi_i1) then afficheErreur(erTimeOut,HELP_Timeout);
+    if (i1>Maxi_i1) and withMessage then afficheErreur(erTimeOut,HELP_Timeout);
     result := true;
     Lambda := 0;
     calculPrecision;
@@ -432,7 +432,7 @@ begin with pages[pageCourante] do begin
         chi2Precedent := chi2[m];
         calculPrecision;
         if erreurCalcul then begin
-           TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
+           if withMessage then TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
            TMsgDlgType.mtError,[TMsgDlgBtn.mbOk],TMsgDlgBtn.mbOk,HELP_ErreurDomaineDefinition,nil);
            valeurParam := sauveValeurParam;
            exit;
@@ -443,7 +443,7 @@ begin with pages[pageCourante] do begin
                else valeurParam[k] := valeurParam[k]+incParam[k];
         CalculJ;
         if erreurParam then begin
-           TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
+           if withMessage then TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
            TMsgDlgType.mtError,[TMsgDlgBtn.mbOk],TMsgDlgBtn.mbOk,HELP_ErreurDomaineDefinition,nil);
            valeurParam := sauveValeurParam;
            exit;
@@ -468,10 +468,12 @@ begin with pages[pageCourante] do begin
       if erreurCalcul or erreurParam or diverge
            then begin
               ValeurParam := sauveValeurParam;
-              if erreurCalcul or erreurParam
-                 then TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
-                 TMsgDlgType.mtError,[TMsgDlgBtn.mbOk],TMsgDlgBtn.mbOk,HELP_EcartModelisationExperience,nil)
-                 else afficheErreur(erDivergence,HELP_DivergenceModelisation);
+              if withMessage then begin
+                 if erreurCalcul or erreurParam
+                    then TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
+                    TMsgDlgType.mtError,[TMsgDlgBtn.mbOk],TMsgDlgBtn.mbOk,HELP_EcartModelisationExperience,nil)
+                    else afficheErreur(erDivergence,HELP_DivergenceModelisation);
+              end;
                exit;
            end
            else sauveValeurParam := ValeurParam;
@@ -480,7 +482,7 @@ begin with pages[pageCourante] do begin
            calculJ;
       end;
    until (i1>Maxi_i1) or stable;
-   if (i1>Maxi_i1) then afficheErreur(erTimeOut,HELP_Timeout);
+   if (i1>Maxi_i1) and withMessage then afficheErreur(erTimeOut,HELP_Timeout);
    result := true;
    calculPrecision;
 end end; // EffectueGaussNewton
@@ -498,7 +500,7 @@ with pages[pageCourante],fonctionTheorique[m] do begin
     if not InitCalculJ then exit;
     CalculJ;
     if erreurCalcul or ErreurParam then begin
-       TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
+       if withMessage then TDialogService.MessageDialog(ErDomaine+' : '+derniereErreur,
        TMsgDlgType.mtError,[TMsgDlgBtn.mbOk],TMsgDlgBtn.mbOk,HELP_ErreurDomaineDefinition,nil);
        exit;
     end;

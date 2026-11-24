@@ -3613,13 +3613,13 @@ begin
      pages[pageCourante].VerifIntervalles;
      VerifParametres;
      if graphe.modeleDependant or not ajuste
-        then graphe.EffectueModele(ajuste,true)
+        then graphe.EffectueModele(ajuste, not monteCarloActif)
         else begin
           for m := 1 to NbreModele do
-              graphe.EffectueModeleMono(m);
+              graphe.EffectueModeleMono(m, not monteCarloActif);
           graphe.calcIntersection;
         end;
-     if ajuste and not pages[pageCourante].modeleCalcule then graphe.EffectueModele(false,true);
+     if ajuste and not pages[pageCourante].modeleCalcule then graphe.EffectueModele(false, not monteCarloActif);
      if (OmEchelle in graphe.OptionModele) then
         graphe.monde[mondeX].Defini := false;
      finProc :
@@ -3801,7 +3801,7 @@ begin
 end;
 
 procedure TFRegressiMain.MonteCarloItemClick(Sender: TObject);
-var i,j,k,m : integer;
+var i,j,k,m,nOK : integer;
     StatParam : array of TcalculStatistique;
     sauveValeur : array of Tvecteur;
     g : TGrandeur;
@@ -3810,84 +3810,99 @@ var i,j,k,m : integer;
     dy,dt : double;
     indexG : codeGrandeur;
 begin
-    for j := 0 to pred(NbreVariab) do
+    for j := 0 to MaxMaxGrandeurs do
+        incertitudeConnue[j] := false;
+    for j := 0 to pred(NbreGrandeurs) do
         incertitudeConnue[j] := pages[pageCourante].isIncertitudeDefinie(j);
     for j := 1 to NbreModele do with fonctionTheorique[j] do begin
-        if not(incertitudeConnue[indexY]) or
+        if not(incertitudeConnue[indexY]) and
            not(incertitudeConnue[indexX]) then begin
                afficheErreur('Incertitudes non définies',0);
                exit;
          end;
     end;
     MonteCarloActif := true;
-    setLength(statParam,NbreParam+1);
-    for j := 1 to NbreParam do begin
-        statParam[j] := TcalculStatistique.create;
-        statParam[j].nbre := NbreMC;
-        setLength(statParam[j].Donnees,NbreMC);
-    end;
-    setLength(sauveValeur, NbreGrandeurs);
-    pages[pageCourante].affecteVariableP(false);
-    for j := 0 to pred(NbreVariabExp) do begin
-        indexG := indexVariabExp[j];
-        copyVecteur(sauveValeur[indexG],grandeurs[indexG].valeur);
-    end;
-    for i := 0 to pred(NbreMC) do begin
-         for j := 0 to pred(NbreVariabExp) do begin
-             indexG := indexVariabExp[j];
-             if incertitudeConnue[indexG] then begin
-                G := grandeurs[indexG];
-                for k := 0 to pred(pages[pageCourante].nmes) do
-                    G.valeur[k] := randG(sauveValeur[indexG][k],G.ValIncert[k]);
-             end;
-         end;
-         pages[pageCourante].recalculP; // MonteCarlo sur grandeurs calculées
-         LanceModele(true);
-         for j := 1 to NbreParam do
-             statParam[j].donnees[i] := parametres[j].valCourante;
-    end;
-    for j := 0 to pred(NbreVariabExp) do begin
-        indexG := indexVariabExp[j];
-        for k := 0 to pred(pages[pageCourante].nmes) do
-            grandeurs[indexG].valeur[k] := sauveValeur[indexG][k];
-        sauveValeur[indexG] := nil;
-    end;
-    pages[pageCourante].recalculP; // les grandeurs calculées reprennent leur valeurs iniitiales
-    memoResultat.Lines.Clear;
-    memoResultat.Lines.Add('Méthode de Monte-Carlo');
-    memoResultat.Lines.Add(intToStr(NbreMC)+' itérations');
-    memoResultat.Lines.Add('u(x)=incertitude-type sur x');
-    for j := 1 to NbreParam do begin
-        statParam[j].calcul;
-        memoResultat.Lines.add(parametres[j].nom+'='+parametres[j].formatValeurEtUnite(statParam[j].moyenne));
-        memoResultat.Lines.add('u('+parametres[j].nom+')='+parametres[j].formatValeurEtUnite(statParam[j].sigma));
-        pages[pageCourante].valeurParam[j] := statParam[j].moyenne;
-        parametres[j].valCourante := statParam[j].moyenne;
-        statParam[j].free;
-    end;
-    for m := 1 to NbreModele do with fonctionTheorique[m] do begin
-        somme := 0;
-        for k := pages[pageCourante].debut[m] to pages[pageCourante].fin[m] do begin
-           AffecteVariableE(k);
-           z := calcule(calcul);
-           try
-              dy := grandeurs[indexY].ValIncert[k];
-              if isNan(dy) then dy := 0;
-              dt := grandeurs[indexX].ValIncert[k];
-              if isNan(dt)
-                 then dt := 0
-                 else dt := dt*graphe.valeurDeriveeX[m,k];
-              coeffChi2 := 1/(sqr(dy)+sqr(dt));
-           except
-              coeffChi2 := 1;
+    try
+      setLength(statParam,NbreParam+1);
+      for j := 1 to NbreParam do begin
+          statParam[j] := TcalculStatistique.create;
+          statParam[j].nbre := NbreMC;
+          setLength(statParam[j].Donnees,NbreMC);
+      end;
+      setLength(sauveValeur, NbreGrandeurs);
+      pages[pageCourante].affecteVariableP(false);
+      for j := 0 to pred(NbreVariabExp) do begin
+          indexG := indexVariabExp[j];
+          copyVecteur(sauveValeur[indexG],grandeurs[indexG].valeur);
+      end;
+      nOK := 0;
+      for i := 0 to pred(NbreMC) do begin
+           for j := 0 to pred(NbreVariabExp) do begin
+               indexG := indexVariabExp[j];
+               if incertitudeConnue[indexG] then begin
+                  G := grandeurs[indexG];
+                  for k := 0 to pred(pages[pageCourante].nmes) do
+                      if not isNan(G.ValIncert[k]) then
+                         G.valeur[k] := randG(sauveValeur[indexG][k],G.ValIncert[k])
+                      else
+                         G.valeur[k] := sauveValeur[indexG][k];
+               end;
            end;
-           z := sqr(z-grandeurs[indexY].valeur[k])*coeffChi2;
-           somme := somme+z;
-        end;
-        somme := somme/NbrePointsModele;
-        memoResultat.Lines.add('Chi2/(N-p)='+formatGeneral(somme,precisionMin))
+           pages[pageCourante].recalculP; // MonteCarlo sur grandeurs calculées
+           LanceModele(true);
+           if pages[pageCourante].ModeleCalcule then begin
+              for j := 1 to NbreParam do
+                  statParam[j].donnees[nOK] := pages[pageCourante].valeurParam[j];
+              inc(nOK);
+           end;
+      end;
+      for j := 0 to pred(NbreVariabExp) do begin
+          indexG := indexVariabExp[j];
+          for k := 0 to pred(pages[pageCourante].nmes) do
+              grandeurs[indexG].valeur[k] := sauveValeur[indexG][k];
+          sauveValeur[indexG] := nil;
+      end;
+      pages[pageCourante].recalculP; // les grandeurs calculées reprennent leur valeurs iniitiales
+      memoResultat.Lines.Clear;
+      memoResultat.Lines.Add('Méthode de Monte-Carlo');
+      memoResultat.Lines.Add(intToStr(nOK)+'/'+intToStr(NbreMC)+' itérations');
+      memoResultat.Lines.Add('u(x)=incertitude-type sur x');
+      for j := 1 to NbreParam do begin
+          statParam[j].nbre := nOK;
+          if nOK > 1 then begin
+             statParam[j].calcul;
+             memoResultat.Lines.add(parametres[j].nom+'='+parametres[j].formatValeurEtUnite(statParam[j].moyenne));
+             memoResultat.Lines.add('u('+parametres[j].nom+')='+parametres[j].formatValeurEtUnite(statParam[j].sigma));
+             pages[pageCourante].valeurParam[j] := statParam[j].moyenne;
+          end;
+          statParam[j].free;
+      end;
+      pages[pageCourante].affecteConstParam;
+      for m := 1 to NbreModele do with fonctionTheorique[m] do begin
+          somme := 0;
+          for k := pages[pageCourante].debut[m] to pages[pageCourante].fin[m] do begin
+             AffecteVariableE(k);
+             z := calcule(calcul);
+             try
+                dy := grandeurs[indexY].ValIncert[k];
+                if isNan(dy) then dy := 0;
+                dt := grandeurs[indexX].ValIncert[k];
+                if isNan(dt)
+                   then dt := 0
+                   else dt := dt*graphe.valeurDeriveeX[m,k];
+                coeffChi2 := 1/(sqr(dy)+sqr(dt));
+             except
+                coeffChi2 := 1;
+             end;
+             z := sqr(z-grandeurs[indexY].valeur[k])*coeffChi2;
+             somme := somme+z;
+          end;
+          if NbrePointsModele > 0 then somme := somme/NbrePointsModele;
+          memoResultat.Lines.add('Chi2/(N-p)='+formatGeneral(somme,precisionMin))
+      end;
+    finally
+      MonteCarloActif := false;
     end;
-    MonteCarloActif := false;
 end;
 
 end.

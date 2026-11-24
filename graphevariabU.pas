@@ -110,7 +110,7 @@ type
       procedure CompileModele(var PosErreur,LongErreur : integer);
       procedure ConstruitModele;
       Procedure EffectueModele(Ajuste,WithMessage : boolean);
-      Procedure EffectueModeleMono(m : integer);
+      Procedure EffectueModeleMono(m : integer; withMessage : boolean = true);
       procedure RazBornesClick;
       procedure ImprModeleBtnClick;
       procedure ChoixCurseurClick(sender : Tobject);
