@@ -94,22 +94,30 @@ var
    i,j,k,Nsinc : integer;
    imin,imax : integer;
    yy,deltaX,w : double;
+
+   function sincRad(val : double) : double;
+   begin
+      if isZero(val,1e-6)
+         then result := 1
+         else result := sin(val)/val;
+   end;
+
 begin
     copyVecteur(Xspline,X);
     copyVecteur(Yspline,Y);
     if (N<ordreMaxSinc) then exit;
     if ordre>ordreMaxSinc then ordre := ordreMaxSinc;
     if ordre<2 then ordre := 2;
-    while ((N*ordre)>Nmax) and
+    while (((N-1)*ordre+1)>Nmax) and
           (ordre>2) do dec(ordre);
-    Nsinc := N*ordre;
+    Nsinc := (N-1)*ordre+1;
     if Nsinc>Nmax then exit;
     setLength(Xspline,Nsinc+1);
     setLength(Yspline,Nsinc+1);
     Nij[0] := 1;
 		for j := 1 to NijMax do begin // calcul du noyau
         yy := pi*j/ordre;
-        Nij[j] := sinc(yy)*sinc(yy/a);
+        Nij[j] := sincRad(yy)*sincRad(yy/a);
     end;
     deltaX := (X[N-1]-X[0])/(N-1)/ordre;
 // calcul de Xspline, Yspline
@@ -150,6 +158,7 @@ begin
    if ordreG<3 then ordreG := 3;
    coeff := 1/ordreG;
    copyVecteur(Yg,Y);
+   if N <= 2*ordreG+1 then exit;
    ecart := 0;
    for j := 1 to N-1 do dY[j] := y[j]-y[j-1];
    for j := 1 to 2*ordreG do ecart := ecart+abs(dY[j]);
@@ -165,7 +174,7 @@ begin
        ecart := ecart+abs(dy[j])+abs(dy[j+1]);
    end;
    for j := N-ordreG to N-2 do begin
-       ecart := ecart-dy[j]-dy[j+1];
+       ecart := ecart-abs(dy[j])-abs(dy[j+1]);
        if (dy[j]*dy[j+1]<0) and
           ((abs(dy[j])>ecart*coeff) or
            (abs(dy[j+1])>ecart*coeff)) then begin
@@ -173,15 +182,15 @@ begin
               dy[j] := yg[j]-yg[j-1];
               dy[j+1] := y[j+1]-yg[j];
        end;
-       ecart := ecart+dy[j]+dy[j+1];
+       ecart := ecart+abs(dy[j])+abs(dy[j+1]);
    end;
    if (abs(dy[N-1])>abs(dy[N-2])*1.5) or
       (abs(dy[N-1])<abs(dy[N-2])*0.5) then
         Yg[N-1] := Yg[N-2]+dY[N-2];
    ecart := 0;
-   for j := 1 to 2*ordreG do ecart := ecart+dY[j];
+   for j := 1 to 2*ordreG do ecart := ecart+abs(dY[j]);
    for j := 1 to ordreG-1 do begin
-       ecart := ecart-dy[j]-dy[j+1];
+       ecart := ecart-abs(dy[j])-abs(dy[j+1]);
        if (dy[j]*dy[j+1]<0) and
           ((abs(dy[j])>ecart*coeff) or
            (abs(dy[j+1])>ecart*coeff)) then begin
@@ -189,7 +198,7 @@ begin
               dy[j] := yg[j]-yg[j-1];
               dy[j+1] := y[j+1]-yg[j];
        end;
-       ecart := ecart+dy[j]+dy[j+1];
+       ecart := ecart+abs(dy[j])+abs(dy[j+1]);
    end;
    if (abs(dy[1])>abs(dy[2])*1.5) or
       (abs(dy[1])<abs(dy[2])*0.5) then
@@ -202,14 +211,15 @@ const OrdreMax = 32;
 var j : integer;
     a : extended;
 begin  // MoyGlissante
+   if N<=0 then exit;
    if ordre>ordreMax then ordre := ordreMax;
    if ordre<ordreMin then ordre := ordreMin;
    setLength(dy,N+1);
    RemoveGlitche;
    a := exp(-1/ordre);
-   Ylisse[0] := Y[0];
+   Ylisse[0] := Yg[0];
    for j := 1 to pred(N) do
-       Ylisse[j] := Y[j]*(1-a)+a*Ylisse[j-1];
+       Ylisse[j] := Yg[j]*(1-a)+a*Ylisse[j-1];
  // (1-a) de manière à avoir une réponse de 1 à une entrée de 1
    yg := nil;
    dy := nil;

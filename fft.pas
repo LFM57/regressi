@@ -314,8 +314,9 @@ end;
 Function sincard(x : double) : double;
 begin
    try
-      result := 1/x;
-      result := sin(x)*result;
+      if isZero(x,1e-6)
+         then result := 1
+         else result := sin(x)/x;
    except
       result := 1
    end;
@@ -335,7 +336,7 @@ begin
     if ampli[j1-1]>ampli[j1+1] then j2 := j1-1 else j2 := j1+1;
     F0 := 1-(ampli[j1]/(ampli[j2]+ampli[j1]));
 // F0>0 est ici l'écart / maxi du sinc
-    A0 := ampli[j1]/sinc(pi*F0);
+    A0 := ampli[j1]/sincard(pi*F0);
     phase0 := MyArctan2(Yi[j1],Yr[j1]);
 // la non synchronisation crée également un déphasage de pi*(f0-f)*T
 // T = 1/deltaf = 1 en numéro
