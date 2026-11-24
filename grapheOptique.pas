@@ -85,10 +85,22 @@ begin
      MondeX.mini := valeurX[debutG];
      MondeX.maxi := valeurX[finG];
      with LimiteCourbe do begin
-         mondeX.A := (right-left)/(mondeX.Maxi-mondeX.Mini);
-         mondeX.B := left-mondeX.Mini*mondeX.A;
-         mondeY.A := (top-bottom)/(mondeY.Maxi-mondeY.Mini);
-         mondeY.B := bottom-mondeY.Mini*mondeY.A;
+         if mondeX.Maxi=mondeX.Mini then begin
+            mondeX.A := 0;
+            mondeX.B := left;
+         end
+         else begin
+            mondeX.A := (right-left)/(mondeX.Maxi-mondeX.Mini);
+            mondeX.B := left-mondeX.Mini*mondeX.A;
+         end;
+         if mondeY.Maxi=mondeY.Mini then begin
+            mondeY.A := 0;
+            mondeY.B := bottom;
+         end
+         else begin
+            mondeY.A := (top-bottom)/(mondeY.Maxi-mondeY.Mini);
+            mondeY.B := bottom-mondeY.Mini*mondeY.A;
+         end;
      end;
 end;// ChercheMonde
 

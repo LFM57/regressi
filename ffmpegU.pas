@@ -359,7 +359,7 @@ begin
      if pages[pageCourante].nmes=0 then FRegressiMain.FileNewSimulationItemClick(Sender);
      if FProbe<>nil then FProbe.Active := false;
      videRepertoire;
-     if ChronoForm<>nil then ChronoForm.Free;
+     FreeAndNil(ChronoForm);
      setBorne(bsNone);
      timerPlay.Enabled := false;
      PlayBtn.Text := 'Play';
@@ -777,7 +777,6 @@ procedure TraceFleche(dX,dY : single);
 
 begin // traceOrigine
          imageCanvas.stroke.color :=  couleurAxeCB.SelectedColor;
-         imageCanvas.stroke.color :=  claBlue;
          TraceFleche(0,signeY);
          TraceFleche(1,0);
          imageCanvas.drawLine(PointRepere[bsEchelle1],PointRepere[bsechelle2],1);
@@ -804,10 +803,11 @@ begin // Dessine
               TraceCroix(correctionRS.XY[j,i]);
            end;
        end;
-       for j := 1 to PointCourant do begin
-           imageCanvas.stroke.color := CouleurPoint[j]; // or System.UITypes.TAlphaColorRec.Alpha;
-           TraceCroix(correctionRS.XY[j,pred(nmesVideo)]);
-       end;
+       if nmesVideo>0 then
+          for j := 1 to PointCourant do begin
+              imageCanvas.stroke.color := CouleurPoint[j]; // or System.UITypes.TAlphaColorRec.Alpha;
+              TraceCroix(correctionRS.XY[j,pred(nmesVideo)]);
+          end;
     end; // tracePoints
     ImageCanvas.EndScene;
 end; // Dessine

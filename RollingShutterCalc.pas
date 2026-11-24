@@ -137,11 +137,13 @@ end; // Interpole
 procedure TCorrectionRS.CalculRollingShutter;
 var i, j: integer;
 begin
-     if FRSValue=0 then begin
+     if (FRSValue=0) or (FNbre<3) then begin
         for i := 0 to pred(FNbre) do
             for j := 1 to FNbrePoints do begin
                 xyC[j,i] := xy[j,i];
-                tempsRS[j,i] := temps[i]-temps[0];
+                if (FRSValue<>0) and (Fhauteur<>0)
+                   then tempsRS[j,i] := (temps[i]-temps[0])+FRSValue*xy[j,i].y/Fhauteur
+                   else tempsRS[j,i] := temps[i]-temps[0];
             end;
      end
      else begin

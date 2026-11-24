@@ -229,7 +229,11 @@ begin // SauveData
               pages[pageCourante].valeurVar[indexL,i0] := grapheO.intensite[i];
        end;
        graphe.coordonnee[1].nomX := 'x';
-       graphe.coordonnee[1].nomY := 'I';
+       if lumBtn.isPressed then graphe.coordonnee[1].nomY := 'I'
+       else if redBtn.isPressed then graphe.coordonnee[1].nomY := 'R'
+       else if greenBtn.isPressed then graphe.coordonnee[1].nomY := 'G'
+       else if blueBtn.isPressed then graphe.coordonnee[1].nomY := 'B'
+       else graphe.coordonnee[1].nomY := 'I';
        graphe.coordonnee[1].Trace := [trLigne];
        graphe.coordonnee[1].Ligne := LiDroite;
        graphe.configCharge := true;
@@ -324,6 +328,7 @@ end;
 procedure TOptiqueBitmapForm.FormMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Single);
 begin
+    if nomFichier='' then exit;
     if borneSelect=bsNone then
        setBorne(GetBorne(x,y));
     e_pointRepere[BorneSelect].x := x;
@@ -335,6 +340,7 @@ procedure TOptiqueBitmapForm.FormMouseMove(Sender: TObject; Shift: TShiftState; 
   Y: Single);
 var BS : TstyleDragOptique;
 begin // MouseMove
+  if nomFichier='' then exit;
   if borneSelect=bsNone
     then begin
        BS := GetBorne(x,y);
@@ -353,6 +359,7 @@ end;
 procedure TOptiqueBitmapForm.FormMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Single);
 begin
+  if nomFichier='' then exit;
   e_pointRepere[BorneSelect].x := x;
   e_pointRepere[BorneSelect].y := y;
   ecranVersImage;
@@ -393,6 +400,7 @@ end;
 procedure TOptiqueBitmapForm.IntensitePBMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Single);
 begin
+    if nomFichier='' then exit;
     if borneX=dxNone then
        setBornePB(GetBornePB(x,y));
     if borneX<>dxNone then begin
@@ -411,6 +419,7 @@ procedure TOptiqueBitmapForm.IntensitePBMouseMove(Sender: TObject;
 var BS : TstyleDragX;
     oldX : single;
 begin
+    if nomFichier='' then exit;
     if borneX=dxNone then begin
        BS := GetBornePB(x,y);
        if BS=dxNone
@@ -427,6 +436,7 @@ end;
 procedure TOptiqueBitmapForm.IntensitePBMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Single);
 begin
+  if nomFichier='' then exit;
   grapheO.e_pointX[BorneX] := x;
   if BorneX<>dxNone then begin
       setBornePB(dxNone);
@@ -756,7 +766,7 @@ begin
         exit;
      end;
      try
-     longueurRef := StrToFloat(EchelleEdit.text)*coeffUnite;
+     longueurRef := StrToFloatWin(EchelleEdit.text)*coeffUnite;
      except
          showMessage('Erreur échelle');
          EchelleEdit.Text := '10';
@@ -817,8 +827,9 @@ begin // CalculIntensite
          grapheO.vert[i] := power(grapheO.vert[i]/255/Nbre,gamma);
          grapheO.bleu[i] := power(grapheO.bleu[i]/255/Nbre,gamma);
      end;
-     for i := Debut to Fin do
-         grapheO.Intensite[i] := grapheO.Intensite[i]/intensiteMax;
+     if intensiteMax>0 then
+        for i := Debut to Fin do
+            grapheO.Intensite[i] := grapheO.Intensite[i]/intensiteMax;
      intensitePB.repaint;
      affichePosition;
      panelParam.Enabled := true;
@@ -837,7 +848,9 @@ var
 begin // P2 = extrémité de la flèche ; P1-P2 = direction
       dx := P2.X-P1.X;
       dy := P2.y-P1.y;
-      d := Magnet/sqrt(sqr(dX) + sqr(dY));
+      d := sqrt(sqr(dX) + sqr(dY));
+      if d=0 then exit;
+      d := Magnet/d;
       dX := round(d * dX);
       dY := round(d * dY);
       SetLength(Points, 3);

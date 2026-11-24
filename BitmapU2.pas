@@ -208,7 +208,7 @@ begin // SauveData
        graphe.configCharge := true;
        graphe.useDefaut := false;
        NomFichierData := '';
-       ModeAcquisition := AcqChrono;
+       ModeAcquisition := AcqCourbes;
        FRegressiMain.WMRegMaj(MajFichier);
        ModifFichier := true;
        FRegressiMain.windowTab.ActiveTab := FRegressiMain.grapheTab;
@@ -658,12 +658,18 @@ begin
             PointRepere[bsEchelleX].x := 0;
        PixelX := PointRepere[bsEchelleX].distance(PointRepere[bsOrigine]);
        PixelY := PointRepere[bsEchelleY].distance(PointRepere[bsOrigine]);
-       if echelleX=eLog
-            then  penteX := log10(MaxiX/MiniX)/PixelX
-            else  penteX := (MaxiX-MiniX)/PixelX;
-       if echelleY=eLog
-            then penteY := log10(MaxiY/MiniY)/PixelY
-            else penteY := (MaxiY-MiniY)/PixelY;
+       if PixelX>0 then begin
+          if echelleX=eLog
+               then  penteX := log10(MaxiX/MiniX)/PixelX
+               else  penteX := (MaxiX-MiniX)/PixelX;
+       end
+       else penteX := 1;
+       if PixelY>0 then begin
+          if echelleY=eLog
+               then penteY := log10(MaxiY/MiniY)/PixelY
+               else penteY := (MaxiY-MiniY)/PixelY;
+       end
+       else penteY := 1;
        if orthonorme then penteX := penteY;
 end;
 

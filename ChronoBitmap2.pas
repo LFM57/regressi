@@ -198,7 +198,7 @@ begin // SauveData
        graphe.configCharge := true;
        graphe.useDefaut := false;
        NomFichierData := '';
-       ModeAcquisition := AcqCourbes;
+       ModeAcquisition := AcqChrono;
        FRegressiMain.WMRegMaj(MajFichier);
        ModifFichier := true;
        FRegressiMain.windowTab.ActiveTab := FRegressiMain.grapheTab;
@@ -308,6 +308,7 @@ begin
          XY[NmesVideo] := pointRepere[bsMesure];
          inc(NmesVideo);
          RegressiBtn.enabled := nmesVideo>2;
+         UndoBtn.enabled := nmesVideo>0;
          dessine;
          nouveauPoint := false;
      end;
@@ -350,6 +351,7 @@ begin
          XY[NmesVideo] := pointRepere[bsMesure];
          inc(NmesVideo);
          RegressiBtn.enabled := nmesVideo>2;
+         UndoBtn.enabled := nmesVideo>0;
          dessine;
          nouveauPoint := false;
      end;
@@ -376,6 +378,7 @@ begin
          XY[NmesVideo] := pointRepere[bsMesure];
          inc(NmesVideo);
          RegressiBtn.enabled := nmesVideo>2;
+         UndoBtn.enabled := nmesVideo>0;
          dessine;
          nouveauPoint := false;
      end;
@@ -588,7 +591,9 @@ begin
            DeltatEdit.SetFocus;
            deltat := 0.04; // 25 images / s
         end;
-        pente := LongueurEchelle/EchelleEnPixel;
+        if EchelleEnPixel>0
+           then pente := LongueurEchelle/EchelleEnPixel
+           else pente := 1;
 end;
 
 procedure TChronoBitmapForm.getValeur(i : integer;var valx,valy : double);
