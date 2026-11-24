@@ -304,7 +304,7 @@ end;
             SigneAligneY := +1;
             PointCourant := monde[m].pointDebut;
             repeat
-               windowXY(PointCourant,0,mondeY,Ps);
+               windowXY(PointCourant,PointCourant,mondeY,Ps);
                grandeGraduation := (Ticks mod monde[m].NTicks)=0;
                if grandeGraduation
                   then CreatePen(TStrokeDash.Solid,penWidthGrad,couleurGrille)

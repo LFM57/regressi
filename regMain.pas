@@ -2726,11 +2726,13 @@ procedure TFRegressiMain.PaintBox1MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Single);
 var P : TPointF;
 begin
-   if (ssRight in Shift) then begin
-      P := PaintBox1.LocalToScreen(TPointF.Create(X, Y));
-      MenuAxes.popup(P.x, P.y);
-   end
-   else graphe.PaintBoxMouseDown(Sender,Button,Shift,X, Y)
+   graphe.PaintBoxMouseDown(Sender,Button,Shift,X, Y);
+   if (Button = TMouseButton.mbRight) or (ssRight in Shift) then begin
+      if not (graphe.curseur in [curReticule, curReticuleData]) then begin
+         P := PaintBox1.LocalToScreen(TPointF.Create(X, Y));
+         MenuAxes.popup(P.x, P.y);
+      end;
+   end;
 end;
 
 procedure TFRegressiMain.PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;

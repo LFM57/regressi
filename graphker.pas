@@ -2431,9 +2431,11 @@ begin with courbes[index] do begin
               valeurY[n] := valeurY[k];
               Inc(n);
             end;
+          valX := nil;
+          valY := nil;
           if optionLigne=LiSpline
-             then CalculBspline(valeurX, valeurY, OrdreSinc, n, valx, valy)
-             else InterpoleSinc(valeurX, valeurY, OrdreLissage, n, valx, valy);
+             then CalculBspline(valeurX, valeurY, OrdreLissage, n, valx, valy)
+             else InterpoleSinc(valeurX, valeurY, OrdreSinc, n, valx, valy);
           finC := pred(n);
           debutC := 0;
           valeurX := nil;
@@ -2450,8 +2452,8 @@ end; end; // AffecteSplineSinc
 
 procedure RestaureSplineSinc; // pour récipérer les points expérimentaux
 begin with courbes[index] do begin
-        CopyVecteur(valX, pages[page].valeurVar[varX.indexG]);
-        CopyVecteur(valY, pages[page].valeurVar[varY.indexG]);
+        valX := pages[page].valeurVar[varX.indexG];
+        valY := pages[page].valeurVar[varY.indexG];
         debutC := 0;
         finC := pred(pages[page].nmes);
 end end; // restaureSplineSinc
@@ -2641,6 +2643,7 @@ end end; // restaureSplineSinc
     i,j: integer;
     maxiY, miniY,maxi,mini: single;
     idebut, ifin: integer;
+    hasValid: boolean;
   begin // traceLignes
   with courbes[index] do begin
       maxiY := monde[iMondeC].courbeBottom + marge;
@@ -2653,7 +2656,7 @@ end end; // restaureSplineSinc
           P.x := windowX(valX[idebut]);
       end;
       P.x := windowX(valX[ifin]);
-      while (P.x<limiteCourbe.left) and (ifin > debutC) do begin
+      while (P.x>limiteCourbe.right) and (ifin > debutC) do begin
           Dec(ifin);
           P.x := windowX(valX[ifin]);
       end;
@@ -2672,18 +2675,22 @@ end end; // restaureSplineSinc
       while i <= iFin do begin
          maxi := miniY;
          mini := maxiY;
+         hasValid := False;
          for j := 0 to pas-1 do begin
              WindowRT(valX[i+j], valY[i+j], iMondeC, P);
              if (P.Y>0) then begin
+                hasValid := True;
                 if p.y < mini then mini := P.Y;
                 if P.y > maxi then maxi := P.Y;
              end;
          end;
-         Fpath.moveTo(TpointF.Create(P.X,mini));
-         Fpath.lineTo(TpointF.Create(P.X,maxi));
-         if NbreExtrapole < NbreExtrapoleMax then begin
-            valExtrapole[NbreExtrapole] := P;
-            inc(NbreExtrapole);
+         if hasValid then begin
+            Fpath.moveTo(TpointF.Create(P.X,mini));
+            Fpath.lineTo(TpointF.Create(P.X,maxi));
+            if NbreExtrapole < NbreExtrapoleMax then begin
+               valExtrapole[NbreExtrapole] := P;
+               inc(NbreExtrapole);
+            end;
          end;
          Inc(i, pas);
       end; // boucle i
@@ -2793,8 +2800,10 @@ end end; // restaureSplineSinc
       Pdelta: TpointF;
       p1,p2 : TPointF;
     begin
+      if (dX = 0) and (dY = 0) then exit;
       createPen(TStrokeDash.Dash, 1, couleurV);
       p1 := Pcourant;
+      p2 := p1;
       try
         if abs(dY) > abs(dX)
            then coeff := MondeVecteur[mondeAcc].maxi / dY
@@ -2804,6 +2813,7 @@ end end; // restaureSplineSinc
         coeff := coeff / EchelleVecteur;
         MondeVecteur[mondeAcc].getEntier(dX * coeff, dY * coeff, Pdelta);
         p2.offset(Pdelta.x, Pdelta.y);
+        canvas.DrawLine(p1, p2, 1);
       except // dX=0 ou dY=0
       end;
       createPen(TStrokeDash.Solid, penWidth, couleurV);
@@ -2822,6 +2832,7 @@ end end; // restaureSplineSinc
 // P1 = bout de la flèche
       canvas.drawLine(Pcourant,p1,1);
       d := round(sqrt(sqr(Pdelta.x) + sqr(Pdelta.y)));
+      if d < 1 then exit;
       Pdelta := Pdelta*h/d;
 // P2 = centre de la base de la flèche
       P2 := P1;
@@ -2988,7 +2999,7 @@ end end; // restaureSplineSinc
       createSolidBrush(couleurLoc);
       i := debutC;
       repeat
-          WindowRT(valX[debutC], 0, iMondeC, P);
+          WindowRT(valX[i], 0, iMondeC, P);
           y0 := P.y;
           xpred := P.x;
           inc(i);
@@ -5528,7 +5539,7 @@ var
       Inc(indexZero2);
     // On repasse par "zéro" dans le sens opposé
     indexZero2 := indexZero2 + 7;
-    while (indexZero2 > finC) and
+    while (indexZero2 < finC) and
           ((valY[indexZero2] - valeurMoy) * signe <= 0) do
       Inc(indexZero2);
     // On repasse par "zéro" dans le même sens
@@ -5997,8 +6008,8 @@ var ecartX,ecartY : single;
 begin
    opacity := 0.5;
    stroke.thickness :=  stroke.thickness+3;
-   ecartX := x/width;
-   ecarty := y/height;
+   if width > 0 then ecartX := x/width else ecartX := 0.5;
+   if height > 0 then ecarty := y/height else ecarty := 0.5;
    selection := sdNone;
    if (ecartX<0.2) and (ecartY<0.2)
       then selection := sdPoint1
@@ -6156,21 +6167,24 @@ procedure TDessinLine.Paint;
       Finalize(Points);
     end;
 
-var dX,dY,a,b : double;
+var dX,dY,a,b,rad : double;
     str : string;
     pfin : TpointF;
-    L,H : single;
+    L,H,dxPix,dyPix : single;
     x1,y1,x2,y2 : double;
 begin
     inherited;
     Agraphe.windowRT(xReal,yReal, iMonde, pfin);
     x1 := xReal;
     y1 := yReal;
-    pfin.Offset(width,height);
+    rad := DegToRad(rotationAngle);
+    dxPix := width * cos(rad) - height * sin(rad);
+    dyPix := width * sin(rad) + height * cos(rad);
+    pfin.Offset(dxPix, dyPix);
     Agraphe.mondeRT(pfin, iMonde, x2, y2);
     case TexteLigne of
       tlNone : str := '';
-      tlEcartY: if height<>0 then begin
+      tlEcartY: if abs(dyPix) >= 1 then begin
             with Agraphe.monde[MondeY] do
               case Graduation of
                 gLog: dY := log10(y2 / y1);
@@ -6180,7 +6194,7 @@ begin
               end;
             str := DeltaMaj+Agraphe.monde[mondeY].axe.formatNomEtUnite(dY);
       end;
-      tlEcartX: if width<>0 then begin
+      tlEcartX: if abs(dxPix) >= 1 then begin
             with Agraphe.monde[mondeX] do
               case Graduation of
                 gLog: dX := log10(x2 / x1);
@@ -6189,7 +6203,7 @@ begin
               end;
             str := DeltaMaj+Agraphe.monde[mondeX].axe.formatNomEtUnite(dX);
       end;
-      tlPente: if width<>0 then begin
+      tlPente: if abs(dxPix) >= 1 then begin
             Agraphe.setUnitePente(MondeY);
             with Agraphe.monde[MondeY] do
               case Graduation of
@@ -6204,11 +6218,12 @@ begin
                 gLin: dX := x2 - x1;
                 else dX := 1;
               end;
-            str := Agraphe.unitePente.formatPente(dY / dX);
+            if dX <> 0 then
+              str := Agraphe.unitePente.formatPente(dY / dX);
           end;
-      tlEquation: if width < 1
+      tlEquation: if (abs(dxPix) < 1) or (x2 = x1)
           then str := Agraphe.monde[mondeX].axe.formatNomEtUnite((x1 + x2) / 2)
-          else if height < 1
+          else if abs(dyPix) < 1
           then str := Agraphe.monde[MondeY].axe.formatNomEtUnite((y1 + y2) / 2)
           else begin
             a := (y2 - y1) / (x2 - x1);

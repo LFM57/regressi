@@ -490,7 +490,7 @@ with transfert do begin
      if (LigneRG.itemIndex=1) and not ModelePermis then LigneRG.itemIndex := 0;
      ModeleItem.Enabled := ModelePermis;
      if (LigneRG.itemIndex=2) and (pages[pageCourante].nmes>maxVecteurDefaut) then LigneRG.itemIndex := 0;
-     splineItem.Enabled := pages[pageCourante].nmes>maxVecteurDefaut;
+     splineItem.Enabled := pages[pageCourante].nmes<=maxVecteurDefaut;
      finModeleBtn.visible := modeleEnCours;
      if modeleEnCours then begin
           ligneCB.IsChecked := true;
@@ -838,7 +838,7 @@ procedure TFcoordonneesPhys.GraduationXChange(Sender: TObject);
 begin
      transfert.grad[mondeX] := Tgraduation(GraduationX.itemIndex);
      OrthonormeCB.enabled := (transfert.grad[mondeX]=gLin) and
-                             (OgPolaire in transfert.OptionGr);
+                             not (OgPolaire in transfert.OptionGr);
      zeroXCB.visible := not(PolaireCB.IsChecked) and
                         (transfert.grad[mondeX]=gLin);
      ZoomAutoBtnClick(sender);
@@ -852,7 +852,7 @@ begin
      if m>mondeSans then m := mondeSans;
      transfert.grad[m] := Tgraduation(GraduationY.itemIndex);
      OrthonormeCB.enabled := (transfert.grad[m]=gLin) and
-                  (OgPolaire in transfert.OptionGr);
+                  not (OgPolaire in transfert.OptionGr);
      zeroYCB.visible := not(PolaireCB.IsChecked) and
                            (transfert.grad[m]=gLin);
      minidBEdit.Visible := transfert.grad[m]=gdB;

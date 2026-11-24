@@ -951,16 +951,21 @@ begin // MouseDown
    origin.x := x;
    origin.Y := y;
    if (Button=TMouseButton.mbRight) then begin
-      iPropCourbe := CourbeProche(origin);
-      if iPropCourbe<0 then iPropCourbe := 0;
-      if ((courbes[iPropCourbe].indexModele=0) or
-          courbes[iPropCourbe].courbeExp) and
-         (courbes[iPropCourbe].page=pageCourante)
-         then begin
-           FRegressiMain.ProprieteCourbe.visible := true;
-           with courbes[iPropCourbe] do
-                FRegressiMain.ProprieteCourbe.Text := stCaracDe+varY.nom+'=f('+varX.nom+')';
-         end;
+      FRegressiMain.ProprieteCourbe.visible := false;
+      if courbes.Count > 0 then begin
+         iPropCourbe := CourbeProche(origin);
+         if iPropCourbe<0 then iPropCourbe := 0;
+         if ((courbes[iPropCourbe].indexModele=0) or
+             courbes[iPropCourbe].courbeExp) and
+            (courbes[iPropCourbe].page=pageCourante) and
+            (courbes[iPropCourbe].varX<>nil) and
+            (courbes[iPropCourbe].varY<>nil)
+            then begin
+              FRegressiMain.ProprieteCourbe.visible := true;
+              with courbes[iPropCourbe] do
+                   FRegressiMain.ProprieteCourbe.Text := stCaracDe+varY.nom+'=f('+varX.nom+')';
+            end;
+      end;
       FRegressiMain.IncertItem.IsChecked  := TraceEllipse;
       FRegressiMain.LegendeItem.IsChecked := ShowLegend;
       exit; // clic droit donc menu contextuel
@@ -1210,22 +1215,7 @@ begin // MouseUp
   convertitXY(sender,x,y);
   origin.x := x;
   origin.Y := y;
-  if Button=TMouseButton.mbRight then begin
-      P.create(x,y);
-      iPropCourbe := CourbeProche(p);
-      if (iPropCourbe>=0) and
-         ((courbes[iPropCourbe].indexModele=0) or
-           courbes[iPropCourbe].courbeExp) and
-         (courbes[iPropCourbe].page=pageCourante) then begin
-            FRegressiMain.ProprieteCourbeClick(nil);
-         end// caractéristiques de la courbe
-         else
-         if not (curseur in [curReticule,curReticuleData] )
-             then FRegressiMain.MenuAxes.popUp(
-                 P.X+FRegressiMain.panelCentral.position.x,
-                 P.y+FRegressiMain.panelCentral.position.y);
-     exit;
-  end; // bouton droit
+  if Button=TMouseButton.mbRight then exit; // menu contextuel déjà géré dans MouseDown
   if FLegendDragging then begin
      FLegendDragging := False;
      paintBox.Cursor := crDefault;
@@ -1724,8 +1714,7 @@ begin // SetCoordonnee
                          courbes[i].varX,courbes[i].varY,pageCourante);
                     courbeAdd.IndexModele := -1;
                     fonctionSuperposee[1].indexX := courbes[i].varX.indexG;
-                    with coordonnee[i] do
-                        courbeAdd.setStyle(couleurModele[-1],styleT,motif);
+                    courbeAdd.setStyle(couleurModele[-1], courbes[i].styleT, courbes[i].motif);
                     courbeAdd.Trace := [trLigne];
                     courbeAdd.Adetruire := true;
                  end;   
