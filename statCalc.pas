@@ -198,7 +198,7 @@ begin
        if Donnees[i]<Min then Min := Donnees[i];
        if Donnees[i]>Max then Max := Donnees[i];
    end;
-   sigma := sqrt(Max(0.0,(sigma-sqr(moyenne)/FNbre)/pred(FNbre)));
+   sigma := sqrt(System.Math.Max(0.0,(sigma-sqr(moyenne)/FNbre)/pred(FNbre)));
    sigmaMoyenne := sigma/sqrt(FNbre);
    moyenne := moyenne/FNbre;
    t99 := Sigma*Student99(FNbre-1)/sqrt(FNbre);
@@ -248,7 +248,7 @@ begin
          then Mediane := Donnees[i]
          else inc(i);
    until n>=iMilieu;
-   sigma := sqrt(Max(0.0,(sigma-sqr(moyenne)/Fntotal)/pred(Fntotal)));
+   sigma := sqrt(System.Math.Max(0.0,(sigma-sqr(moyenne)/Fntotal)/pred(Fntotal)));
    sigmaMoyenne := sigma/sqrt(Fntotal);
    moyenne := moyenne/Fntotal;
    t99 := Sigma*Student99(Fntotal-1)/sqrt(Fntotal);
@@ -283,7 +283,7 @@ begin
       sigma := sigma/100;
       Fntotal := 100;
    end;
-   sigma := sqrt(Max(0.0,sigma-sqr(moyenne)));
+   sigma := sqrt(System.Math.Max(0.0,sigma-sqr(moyenne)));
    sigmaMoyenne := sigma/sqrt(FNbre);
    t99 := 3*Sigma;
    t95 := 2*Sigma;
