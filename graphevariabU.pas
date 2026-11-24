@@ -1470,8 +1470,8 @@ begin with pages[page] do begin
                      (fonctionTheorique[2].indexY=iX)) or
                     ((fonctionTheorique[1].indexY=iX) and
                      (fonctionTheorique[2].indexY=iY))) then begin
-                               setLength(x,NmesMax+1);
-                               setLength(y,NmesMax+1);
+                               setLength(x,System.Math.Max(NmesMax+1,2048));
+                               setLength(y,System.Math.Max(NmesMax+1,2048));
                                courbeAdd := AjouteCourbe(x,y,m,nmes,
                                           grandeurs[iX],grandeurs[iY],page);
                                AvecModele := true;

@@ -3561,36 +3561,49 @@ const
    NbreInter = 18; // Nombre de points par intervalle
    NbreMax = NbreMin + (NbreInter) * (NbreMin div 2); // <= 2047
 var
-   i, j: integer;
+   i, j, nMin, maxCap: integer;
    Ymin, Ymax, YsecondeMin: double;
    Xmin, Xmax, XsecondeMin: double;
+   hasMinMax: boolean;
 begin
-   setLength(T, 2048);
-   grandeurs[cIndice].valCourante := 0;
-   deltaT := (MaxiT - MiniT) / NbreMin;
-   CalculLoc(0, NbreMin, MiniT - deltaT, MaxiT);
-   Ymin := y[0];
-   Xmin := x[0];
-   Ymax := y[0];
-   Xmax := x[0];
-   for i := 1 to NbreMin do begin
-      if y[i] > ymax then
-         ymax := y[i]
-      else if y[i] < ymin then
-         ymin := y[i];
-      if x[i] > xmax then
-         xmax := x[i]
-      else if x[i] < xmin then
-         xmin := x[i];
+   maxCap := Length(X);
+   if Length(Y) < maxCap then maxCap := Length(Y);
+   if maxCap > 2048 then maxCap := 2048;
+   if maxCap <= 1 then begin
+      PointFinal := -1;
+      exit;
    end;
+   setLength(T, maxCap);
+   grandeurs[cIndice].valCourante := 0;
+   nMin := NbreMin;
+   if nMin >= maxCap then nMin := maxCap - 1;
+   deltaT := (MaxiT - MiniT) / nMin;
+   CalculLoc(0, nMin, MiniT - deltaT, MaxiT);
+   hasMinMax := False;
+   Ymin := 0; Ymax := 0; Xmin := 0; Xmax := 0;
+   for i := 0 to nMin do
+      if (not isNan(y[i])) and (not isNan(x[i])) then begin
+         if not hasMinMax then begin
+            Ymin := y[i]; Ymax := y[i];
+            Xmin := x[i]; Xmax := x[i];
+            hasMinMax := True;
+         end else begin
+            if y[i] > ymax then ymax := y[i]
+            else if y[i] < ymin then ymin := y[i];
+            if x[i] > xmax then xmax := x[i]
+            else if x[i] < xmin then xmin := x[i];
+         end;
+      end;
    YsecondeMin := (Ymax - Ymin) / 128;
    XsecondeMin := (Xmax - Xmin) / 128;
 // dX*dX*y"(x)<4 pixels sachant que ymax-ymin=512 pixels et dX=2 pixels
-   PointFinal := succ(NbreMin);
+   PointFinal := succ(nMin);
    i := 1;
    deltaT := (MaxiT - MiniT) / NbreMax;
-   repeat
+   while (i < nMin) and (PointFinal + pred(NbreInter) < maxCap) do begin
       if not isNan(y[i]) and not isNan(x[i]) and
+         not isNan(y[pred(i)]) and not isNan(y[succ(i)]) and
+         not isNan(x[pred(i)]) and not isNan(x[succ(i)]) and
          ((abs(y[succ(i)] + y[pred(i)] - 2 * y[i]) > YsecondeMin) or
          (abs(x[succ(i)] + x[pred(i)] - 2 * x[i]) > XsecondeMin)) then begin
          CalculLoc(PointFinal, PointFinal + pred(NbreInter),
@@ -3601,11 +3614,11 @@ begin
          Inc(i, 2);
       end
       else
-         Inc(i)
-   until i >= NbreMin;
+         Inc(i);
+   end;
    Dec(PointFinal);
    i := 0;
-   repeat // ôte SansSignif
+   while i <= PointFinal do begin // ôte SansSignif
       if isNan(y[i]) or isNan(x[i]) then begin
          Dec(PointFinal);
          for j := i to pointFinal do begin
@@ -3615,9 +3628,9 @@ begin
          end;
       end
       else
-         Inc(i)
-   until i = PointFinal;
-   Trier; // classe les points ajoutés
+         Inc(i);
+   end;
+   if PointFinal > 0 then Trier; // classe les points ajoutés
    T := nil;
 end; // GenereModeleParametrique
 
