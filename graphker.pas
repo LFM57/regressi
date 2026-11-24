@@ -814,9 +814,12 @@ var NomFichierDebut : string;
               then Lcouleur := GetCouleurPages(page)
               else Lcouleur := couleur;
           if (trLigne in trace) and (indexModele<>0) then begin
-             if indexModele>0
+             if (indexModele > 0) and (indexModele <= NbreModele)
                 then lignePlot := fonctionTheorique[indexModele].expressionLatex(exposantXstr)
-                else lignePlot := fonctionSuperposee[-indexModele].expressionLatex(exposantXstr);
+             else if (indexModele < 0) and (-indexModele <= NbreFonctionSuper)
+                then lignePlot := fonctionSuperposee[-indexModele].expressionLatex(exposantXstr)
+             else
+                lignePlot := '';
              if lignePlot<>'' then begin
                  if exposantYstr<>'' then lignePlot := '('+lignePlot+')'+exposantYStr;
                  lignePlot := '\addplot['+
@@ -2260,7 +2263,8 @@ var
             end
             else begin // modélisation
                largeur := 1;
-               couleurLoc := couleurModele[indexModele];
+               if (indexModele >= -MaxIntervalles) and (indexModele <= MaxIntervalles) then
+                 couleurLoc := couleurModele[indexModele];
                canvas.stroke.Color := couleurLoc;
             end;
             createSolidBrush(couleurLoc);
@@ -3385,8 +3389,6 @@ begin
       if (not hasLine) and (not hasPoint) then Continue;
       if superposePage and (page <> 0) and (reperePage = SPcouleur) then
         entryColor := GetCouleurPages(page)
-      else if (indexModele <> 0) and (not courbeExp) then
-        entryColor := CouleurModele[indexModele]
       else
         entryColor := couleur;
       if superposePage and (page <> 0) and (reperePage = SPstyle) then
