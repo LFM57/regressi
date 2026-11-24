@@ -149,7 +149,7 @@ var
   NomCurseur:  array[curZoomAv..curBornes] of  string = ('Zoom', 'Bornes');
 
 type
-  Tidentification = (identNone, identAnimation, identRaie);
+  Tidentification = (identNone, identAnimation, identRaie, identModele);
   TmodifGraphe       = (gmEchelle, gmOptions, gmXY, gmValeurs,
                         gmModele, gmPage, gmValeurModele);
   TselectLigne       = (sdNone, sdPoint1, sdPoint2, sdCentre);
@@ -4293,8 +4293,13 @@ begin
   numPage := StrToInt(valeurs[0]);
   if valeurs.count>1 then
      iMonde := strToInt(valeurs[1]);
-  if valeurs.count>2 then
-    identification := Tidentification(strToInt(valeurs[2]));
+  if valeurs.count>2 then begin
+    zint := strToInt(valeurs[2]);
+    if (zint >= Ord(Low(Tidentification))) and (zint <= Ord(High(Tidentification))) then
+      identification := Tidentification(zint)
+    else
+      identification := identNone;
+  end;
   if valeurs.count>3 then begin
     zint := strToInt(valeurs[3]);
     TexteLigne := TtexteLigne(zint);

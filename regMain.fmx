@@ -478,6 +478,7 @@ object FRegressiMain: TFRegressiMain
                 end
                 object addModeleItem: TMenuItem
                   Text = 'Afficher le mod'#232'le'
+                  OnClick = addModeleItemClick
                 end
               end
               object MenuAxes: TPopupMenu

@@ -377,6 +377,7 @@ type
     procedure VitesseItemClick(Sender: TObject);
     procedure OptionsModeleBtnClick(Sender: TObject);
     procedure CurOrigineItemClick(Sender: TObject);
+    procedure addModeleItemClick(Sender: TObject);
     procedure MemoModeleChange(Sender: TObject);
     procedure SaveGraphItemClick(Sender: TObject);
     procedure CopyGraphItem(Sender: TObject);
@@ -2450,6 +2451,68 @@ begin
     graphe.initCurseurModele;
 end;
 
+procedure TFRegressiMain.addModeleItemClick(Sender: TObject);
+var
+  Dessin: TDessinText;
+  i, m: integer;
+  aTexte: string;
+  posX, posY: single;
+begin
+  if (graphe = nil) or (not graphe.grapheOK) or (pageCourante <= 0) or
+     (not pages[pageCourante].modeleCalcule) or (NbreModele <= 0) then
+    Exit;
+  aTexte := '';
+  for m := 1 to NbreModele do begin
+    if aTexte <> '' then
+      aTexte := aTexte + sLineBreak;
+    aTexte := aTexte + '%M' + IntToStr(m);
+  end;
+  for i := 1 to NbreParam do begin
+    if aTexte <> '' then
+      aTexte := aTexte + sLineBreak;
+    aTexte := aTexte + '%P' + IntToStr(i);
+  end;
+  if aTexte = '' then
+    Exit;
+  Dessin := nil;
+  for i := 0 to pred(graphe.dessinTexts.Count) do
+    if graphe.dessinTexts[i].identification = identModele then begin
+      Dessin := graphe.dessinTexts[i];
+      Break;
+    end;
+  if Dessin = nil then begin
+    Dessin := TDessinText.CreateText(graphe);
+    with Dessin do begin
+      identification := identModele;
+      avecCadre := true;
+      isOpaque := true;
+      couleurFond := claWhite;
+      color := couleurTexte;
+      if (color and $FF000000) = 0 then
+        color := claBlack;
+      font.Size := 12;
+      texteBrut := aTexte;
+      text := aTexte;
+      posX := graphe.LimiteCourbe.Left + 12;
+      posY := graphe.LimiteCourbe.Top + 12;
+      if (posX < 8) or (posX >= graphe.paintBox.Width - 20) then
+        posX := 24;
+      if (posY < 8) or (posY >= graphe.paintBox.Height - 20) then
+        posY := 24;
+      affecteXY(posX, posY);
+    end;
+    graphe.dessinTexts.Add(Dessin);
+  end else begin
+    Dessin.texteBrut := aTexte;
+    Dessin.text := aTexte;
+    Dessin.SetPourCent;
+    Dessin.RecalcTextBounds;
+    Dessin.BringToFront;
+  end;
+  ModifFichier := true;
+  graphe.paintBox.Repaint;
+end;
+
 procedure TFRegressiMain.CurOrigineItemClick(Sender: TObject);
 begin
      graphe.setPenBrush(curOrigine);
@@ -2463,7 +2526,7 @@ end;
 procedure TFRegressiMain.CurseurBtnClick(Sender: TObject);
 var P : TPointF;
 begin
-     addModeleItem.enabled := pages[pageCourante].modeleCalcule;
+     addModeleItem.enabled := (pageCourante > 0) and pages[pageCourante].modeleCalcule and (NbreModele > 0);
      CurOrigineItem.enabled := not graphe.superposePage;
      P := TpointF.Create(curseurBtn.position.X,curseurBtn.position.y);
      P.Offset(0,3*curseurBtn.height+GrapheToolBar.Position.Y);
