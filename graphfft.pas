@@ -1291,9 +1291,13 @@ var abitmap : Tbitmap;
 begin
     if saveDialog.Execute then begin
        aBitmap := ZoneClipBoard.MakeScreenshot;
-       nomFichier := SaveDialog.fileName;
-       nomFichier := changeFileExt(nomFichier,'.png');
-       ABitmap.saveToFile(nomFichier);
+       try
+          nomFichier := SaveDialog.fileName;
+          nomFichier := changeFileExt(nomFichier,'.png');
+          ABitmap.saveToFile(nomFichier);
+       finally
+          aBitmap.Free;
+       end;
     end;
 end;
 
@@ -1310,9 +1314,13 @@ var abitmap : Tbitmap;
 begin
    if saveDialog.Execute then begin
        aBitmap := ZoneClipBoard.MakeScreenshot;
-       nomFichier := SaveDialog.fileName;
-       nomFichier := changeFileExt(nomFichier,'.png');
-       abitmap.saveToFile(nomFichier)
+       try
+          nomFichier := SaveDialog.fileName;
+          nomFichier := changeFileExt(nomFichier,'.png');
+          abitmap.saveToFile(nomFichier);
+       finally
+          aBitmap.Free;
+       end;
    end;
 end;
 

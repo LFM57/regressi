@@ -368,7 +368,9 @@ begin
         end;
     end;
     if (S<>nil) and (S.undo=UsupprVariabTexte) then begin
-        S.SauveTexte[numero] := TstringList.create;
+        if S.SauveTexte[numero]=nil
+           then S.SauveTexte[numero] := TstringList.create
+           else S.SauveTexte[numero].Clear;
         for j := 0 to pred(nmes) do
             S.SauveTexte[numero].add(texteVar[index,j]);
     end;

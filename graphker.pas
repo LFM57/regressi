@@ -4278,6 +4278,7 @@ var z : single;
     valeurs : TstringList;
 begin
   valeurs := TstringList.create;
+  try
   valeurs.delimiter := ' ';
   imax := NbreLigneWin(ligneWin) - NbreLigneDessin;
   xReal := litFloatRW3; {1}
@@ -4339,6 +4340,9 @@ begin
   if isTexte
      then creeTexte
      else creeLigne;
+  finally
+     valeurs.free;
+  end;
 end;
 
 constructor TdessinText.CreateText(gr : TgrapheReg);
@@ -5935,7 +5939,9 @@ end;
 Procedure TGrapheReg.NotifyText(sender:TObject;const item :TDessinText;action : TCollectionNotification);
 begin
    if action=cnRemoved then begin
-      paintBox.RemoveObject(item);
+      if item=DessinTextCourant then DessinTextCourant := nil;
+      if paintBox<>nil then paintBox.RemoveObject(item);
+      item.Free;
    end;
    if action=cnAdded then begin
       paintBox.AddObject(item);
@@ -5943,14 +5949,17 @@ begin
       paintBox.Repaint;
    end;
    if action=cnExtracted then begin
-      paintBox.RemoveObject(item);
+      if item=DessinTextCourant then DessinTextCourant := nil;
+      if paintBox<>nil then paintBox.RemoveObject(item);
    end;
 end;
 
 Procedure TGrapheReg.NotifyLine(sender:TObject;const item :TDessinLine;action : TCollectionNotification);
 begin
    if action=cnRemoved then begin
-      paintBox.RemoveObject(item);
+      if item=DessinLineCourant then DessinLineCourant := nil;
+      if paintBox<>nil then paintBox.RemoveObject(item);
+      item.Free;
    end;
    if action=cnAdded then begin
       paintBox.AddObject(item);
@@ -5958,7 +5967,8 @@ begin
       paintBox.Repaint;
    end;
    if action=cnExtracted then begin
-      paintBox.RemoveObject(item);
+      if item=DessinLineCourant then DessinLineCourant := nil;
+      if paintBox<>nil then paintBox.RemoveObject(item);
    end;
 end;
 

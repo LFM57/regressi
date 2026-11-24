@@ -56,7 +56,6 @@ implementation
 procedure TAboutBox.FormCreate(Sender: TObject);
 begin
      ReleaseBtn.Visible := false;
-     ReleaseBtn.Visible := true;
 end;
 
 (*

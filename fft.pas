@@ -968,5 +968,9 @@ Finalization
      wr := nil;
      wi := nil;
      kf := nil;
+     if son<>nil then begin
+        Dispose(son);
+        son := nil;
+     end;
 end.
 

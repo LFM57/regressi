@@ -249,11 +249,8 @@ type
     FrenchAction: TAction;
     EditBidon: TEdit;
     VideoItem: TMenuItem;
-    timerLoupe: TTimer;
     ExemplesItem: TMenuItem;
     ImageItem: TMenuItem;
-    ArduinoItem: TMenuItem;
-    OscilloArduinoItem: TMenuItem;
     ChronoPhotoMenu: TMenuItem;
     PanelAnimation: TPanel;
     TimerAnimation: TTimer;
@@ -420,11 +417,8 @@ type
     procedure EditBidonKeyDown(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
     procedure VideoItemClick(Sender: TObject);
-    procedure TimerLoupeTimer(Sender: TObject);
     procedure ExemplesItemClick(Sender: TObject);
     procedure ImageItemClick(Sender: TObject);
-    procedure ArduinoItemClick(Sender: TObject);
-    procedure OscilloArduinoItemClick(Sender: TObject);
     procedure ChronoPhotoMenuClick(Sender: TObject);
     procedure GBAnimationClick(Sender: TObject);
     procedure GBAnimationDblClick(Sender: TObject);
@@ -540,7 +534,7 @@ implementation
 uses about, varkeyb, options, newvar, supprDlg,
      graphFft, regPrint, reglatex, selPage, optStat, statCalc, optionsFiltrageU,
      optModele, optionsvitesse, PropCourbe, modif, modeleGr, choixmodele,
-     optFFT, regFile, LoupeU, curModeleU, BitmapU2, chronoBitmap2, optiqueBitmap
+     optFFT, regFile, curModeleU, BitmapU2, chronoBitmap2, optiqueBitmap
 {$IFDEF HAS_FFMPEG}
      , ffmpegU
 {$ENDIF}
@@ -896,7 +890,15 @@ if FileExists(AFileName)
      if extension='.RW3'
         then VerifLecture := FichierRegressi.litWin
         else if extension='.CSV'
-             then VerifLecture := fichierRegressi.litCSV(nomFichierData,true)
+             then begin
+                VerifLecture := fichierRegressi.litCSV(nomFichierData,true);
+                if not VerifLecture then begin
+                   resetEnTete;
+                   VerifLecture := fichierRegressi.LitCSVHorizontal(nomFichierData,true);
+                end;
+             end
+             else if (extension='.CMBL') or (extension='.GMBL')
+             then VerifLecture := fichierRegressi.LitLogger(nomFichierData)
              else if extension='.WAV'
              then VerifLecture := fichierRegressi.litWav(nomFichierData)
              else if extension='.RXML'
@@ -1949,16 +1951,6 @@ begin
      end;
 end;
 
-procedure TFRegressiMain.TimerLoupeTimer(Sender: TObject);
-begin
-{$IFDEF MSWindows}
-      if (loupeForm<>nil) and
-          loupeForm.visible and
-          not loupeForm.avecSouris then
-            loupeForm.aForm.Active := true
-{$ENDIF}
-end;
-
 procedure TFRegressiMain.TimerAnimationTimer(Sender: TObject);
 begin
     timerAnimation.enabled := false;
@@ -2652,17 +2644,6 @@ begin
       optiqueBitmapForm.show;
 end;
 
-procedure TFRegressiMain.OscilloArduinoItemClick(Sender: TObject);
-begin
-      if not verifSauve then exit;
-      (*
-      if ArduinoOscilloForm=nil then
-         application.createForm(TArduinoOscilloForm,arduinoOscilloForm);
-      CentreForm(arduinoOscilloForm);
-      arduinoOscilloForm.show;
-      *)
-end;
-
 procedure TFRegressiMain.OptionsItemClick(Sender: TObject);
 var i : integer;
 begin
@@ -3172,9 +3153,13 @@ var abitmap : Tbitmap;
 begin
     if grapheSaveDialog.Execute then begin
        aBitmap := ZoneClipBoardStat.MakeScreenshot;
-       nomFichier := grapheSaveDialog.fileName;
-       nomFichier := changeFileExt(nomFichier,'.png');
-       abitmap.saveToFile(nomFichier);
+       try
+          nomFichier := grapheSaveDialog.fileName;
+          nomFichier := changeFileExt(nomFichier,'.png');
+          abitmap.saveToFile(nomFichier);
+       finally
+          aBitmap.Free;
+       end;
     end;
 end;
 
@@ -3184,9 +3169,13 @@ var abitmap : Tbitmap;
 begin
     if grapheSaveDialog.Execute then begin
        aBitmap := ZoneClipBoard.MakeScreenshot;
-       nomFichier := grapheSaveDialog.fileName;
-       nomFichier := changeFileExt(nomFichier,'.png');
-       abitmap.saveToFile(nomFichier);
+       try
+          nomFichier := grapheSaveDialog.fileName;
+          nomFichier := changeFileExt(nomFichier,'.png');
+          abitmap.saveToFile(nomFichier);
+       finally
+          aBitmap.Free;
+       end;
     end;
 end;
 
@@ -3333,17 +3322,6 @@ begin
    timerAnimation.enabled := false;
    graphe.modif := [gmXY];
    paintBox1.repaint;
-end;
-
-procedure TFRegressiMain.ArduinoItemClick(Sender: TObject);
-begin
-      if not verifSauve then exit;
-      (*
-      if ArduinoForm=nil then
-         application.createForm(TArduinoForm,arduinoForm);
-      CentreForm(arduinoForm);
-      arduinoForm.show;
-      *)
 end;
 
 procedure TFregressiMain.LanceCompileModele;

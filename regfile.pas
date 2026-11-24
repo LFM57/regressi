@@ -3684,16 +3684,15 @@ begin // LitFichierWin
      ModeAcquisition := AcqClavier;
      Convert_RW3_to_Mac(NomFichierData,NomFichierTampon);
      fichierRW3 := TStringList.create;
+     valeurs := TStringList.create;
+     try
+     try
      fichierRW3.loadFromFile(nomFichierTampon,TEncoding.Ansi);
      finFichierWin := false;
-     valeurs := TStringList.create;
      valeurs.delimiter := ' ';
-     try
      if not enTeteRW3 then begin
             afficheErreur(erFormat,0);
-            fichierRW3.free;
-            LectureFichier := false;
-            exit
+            exit;
      end;
      litFichierRW3;
      for i := pred(NbreVariabTexte) downto 0 do begin
@@ -3713,8 +3712,11 @@ begin // LitFichierWin
          codeErreurF := erReadFile;
          result := false;
      end;
-     fichierRW3.free;
-     LectureFichier := false;
+     finally
+         valeurs.free;
+         fichierRW3.free;
+         LectureFichier := false;
+     end;
 end; // LitWin
 
 Procedure TFichierRegressi.AjouteWin(NomFichier : string);
@@ -3952,12 +3954,15 @@ var i : integer;
     p : codePage;
     dataCsv : TstringList;
     XmlDoc: TXMLDocument;
+    XmlDocIntf: IXMLDocument;
     Document: IXMLNode;
     Node1, Node2 : IXMLNode;
 begin
      dataCsv := TstringList.create;
+     try
      dataCsv.StrictDelimiter := True;
      XMLDoc := TXMLDocument.Create(nil);
+     XmlDocIntf := XMLDoc;
      XMLDoc.active := true;
      XMLDoc.Options := [doNodeAutoIndent];
 
@@ -4136,12 +4141,19 @@ begin
         WriteBoolXML(Node1,'CourbeBinome',courbeBinomeCB.IsChecked);
      end;
      XMLDoc.saveToFile(NomFichier);
-     dataCsv.free;
+     finally
+        Node1 := nil;
+        Node2 := nil;
+        Document := nil;
+        XmlDocIntf := nil;
+        dataCsv.free;
+     end;
 end; // EcritXML
 
 function TFichierRegressi.LitXML(const NomFichier : String;nouveauFichier : boolean) : boolean;
 var
     XmlDoc: TXmlDocument; // Xml document
+    XmlDocIntf: IXMLDocument;
     indexCourant : integer; // de la grandeur
     modeleCourant : integer;
     pageBase : integer;
@@ -4596,7 +4608,9 @@ end else
 chaines := TStringList.create;
 chaines.StrictDelimiter := True;
 chaines.Delimiter := crCR;
-XMLDoc := TXMLDocument.Create(application.MainForm);
+XMLDoc := TXMLDocument.Create(nil);
+XmlDocIntf := XMLDoc;
+try
 try
 XmlDoc.FileName := NomFichier;
 if (XmlDoc.DOMVendor=nil) and (DomVendors.count>0)
@@ -4619,8 +4633,11 @@ except
     result := false;
     if nouveauFichier then resetEnTete;
 end;
-chaines.free;
-LectureFichier := false;
+finally
+   XmlDocIntf := nil;
+   chaines.free;
+   LectureFichier := false;
+end;
 end; // LitXML
 
 (*
@@ -4952,6 +4969,7 @@ end; // LitCSVHorizontal
 function TFichierRegressi.LitLogger(const NomFichier : String) : boolean;
 var
     FXmlDoc: TXmlDocument;
+    FXmlDocIntf: IXMLDocument;
     Ident,LDecodeVariab : array[0..maxGrandeurs] of integer;
     Symbole,Comment,CommentInit : array[0..maxGrandeurs] of string;
     DataExp : array[0..maxGrandeurs] of boolean;
@@ -5263,6 +5281,7 @@ begin // LitLogger
      NbreValeurs := MaxVecteurDefaut;
      setLength(valeur,NbreValeurs);
      FXmlDoc := TXMLDocument.Create(nil);
+     FXmlDocIntf := FXmlDoc;
      try
        try
          if (FXmlDoc.DOMVendor=nil) and (DomVendors.count>0) then
@@ -5277,7 +5296,7 @@ begin // LitLogger
          resetEnTete;
        end;
      finally
-       FXmlDoc.Free;
+       FXmlDocIntf := nil;
      end;
 end; // LitLogger
 

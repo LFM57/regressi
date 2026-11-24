@@ -306,6 +306,8 @@ end;
 procedure TOptiqueBitmapForm.FormDestroy(Sender: TObject);
 begin
     bitmapCourant.free;
+    grapheO.free;
+    axeDesX.free;
 end;
 
 procedure TOptiqueBitmapForm.setBorne(aBorne : TStyleDragOptique);

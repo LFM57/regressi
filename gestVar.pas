@@ -1609,7 +1609,6 @@ end; //  IndexGrandeurInitiale
 Procedure supprimeGrandeurE(index : codeGrandeur);
 var i : integer;
     S : Tsauvegarde;
-    p : codePage;
 begin
     if index>maxGrandeurs then exit;
     S := nil;
@@ -1626,10 +1625,8 @@ begin
     if (grandeurs[index].fonct.genreC=g_texte) and
        (grandeurs[index].genreG in [variable,constante]) then begin
        S := tsauvegarde.create;
-       if grandeurs[index].genreG=variable then begin
+       if grandeurs[index].genreG=variable then
           S.undo := UsupprVariabTexte;
-          for p := 1 to NbrePages do S.sauveTexte[p] := TstringList.create;
-       end;
        if grandeurs[index].genreG=constante then begin
           S.undo := UsupprConstTexte;
           S.sauveTexteUnique := TstringList.create;

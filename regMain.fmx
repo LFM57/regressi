@@ -107,7 +107,7 @@ object FRegressiMain: TFRegressiMain
     DefaultExt = 'rxml'
     Filter = 
       'Regressi|*.rxml|Regressi Windows|*.rw3|Tableur csv|*.csv|Fichier' +
-      ' son WAV|*.wav|Texte (Tab)|*.txt'
+      ' son WAV|*.wav|Texte (Tab)|*.txt|Logger Pro|*.cmbl;*.gmbl'
     Options = [ofEnableSizing]
     Left = 288
     Top = 288
@@ -1740,16 +1740,6 @@ object FRegressiMain: TFRegressiMain
           Text = 'Interf'#233'rences'
           OnClick = OptiqueItemClick
         end
-        object ArduinoItem: TMenuItem
-          Locked = True
-          Text = 'Arduino'
-          OnClick = ArduinoItemClick
-        end
-        object OscilloArduinoItem: TMenuItem
-          Locked = True
-          Text = 'Oscillo Arduino'
-          OnClick = OscilloArduinoItemClick
-        end
       end
       object FileOpenItem: TMenuItem
         Locked = True
@@ -2313,13 +2303,6 @@ object FRegressiMain: TFRegressiMain
     OnTimer = TimerStatTimer
     Left = 588
     Top = 356
-  end
-  object timerLoupe: TTimer
-    Enabled = False
-    Interval = 100
-    OnTimer = TimerLoupeTimer
-    Left = 456
-    Top = 248
   end
   object TimerAnimation: TTimer
     Enabled = False
