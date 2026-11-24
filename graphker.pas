@@ -1072,11 +1072,11 @@ begin
     gdB: begin
       if (variabMin < minidB) then
         variabMin := minidB;
-      if 20 * Log10(variabMin) < Mini then
+      if isNan(Mini) or (20 * Log10(variabMin) < Mini) then
         Mini := Log10(variabMin) * 20;
       if (variabMax < minidB) then
         variabMax := minidB * 100;
-      if 20 * Log10(variabMax) > Maxi then
+      if isNan(Maxi) or (20 * Log10(variabMax) > Maxi) then
         Maxi := Log10(variabMax) * 20;
       if Mini < (Maxi - 120) then
         Mini := Maxi - 120;
@@ -2950,10 +2950,10 @@ end end; // restaureSplineSinc
       traceDeltay := traceEllipse and (varY <> nil) and (IncertY <> nil);
       for i := debutC to finC do if pages[page].pointActif[i] then begin
         WindowRT(valX[i], valY[i], iMondeC, P);
-        if Tracedeltax
+        if Tracedeltax and (i < Length(IncertX)) and (not IsNan(IncertX[i]))
            then dxi := abs(round(CoeffEllipse * IncertX[i] * monde[MondeX].A))
            else dxi := 0;
-        if Tracedeltay
+        if Tracedeltay and (i < Length(IncertY)) and (not IsNan(IncertY[i]))
            then dyi := abs(round(CoeffEllipse * IncertY[i] * monde[iMondeC].A))
            else dyi := 0;
         if dxi + dyi = 0 then begin
