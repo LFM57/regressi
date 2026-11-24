@@ -2015,6 +2015,8 @@ var i : integer;
     p : integer;
     OptionsXML,CoordXML : IXMLNode;
 begin
+   writeIntegerXML(ANode,'GRADUATIONX',ord(monde[mondeX].Graduation));
+   writeIntegerXML(ANode,'ZEROX',ord(monde[mondeX].ZeroInclus));
    for i := 1 to NbreOrdonnee do with coordonnee[i] do begin
        CoordXML := ANode.AddChild('COORD');
        CoordXML.Attributes[stIndex] := intToStr(i);
@@ -2252,9 +2254,20 @@ begin // loadXMLInReg
         coordonnee[coordCourante].iMondeC := indiceMonde(zByte);
         exit;
       end;
+      if ANode.NodeName='GRADUATIONX' then begin
+         zByte := GetIntegerXML(ANode);
+         monde[mondeX].graduation := Tgraduation(zByte);
+         exit;
+      end;
+      if ANode.NodeName='ZEROX' then begin
+         zBool := GetBoolXML(ANode);
+         monde[mondeX].zeroInclus := zBool;
+         exit;
+      end;
       if ANode.NodeName='GRADUATION' then begin
          zByte := GetIntegerXML(ANode);
-         monde[coordCourante].graduation := Tgraduation(zByte);
+         if (coordCourante>=1) and (coordCourante<=MaxOrdonnee) then
+            monde[coordonnee[coordCourante].iMondeC].graduation := Tgraduation(zByte);
          exit;
       end;
       if ANode.NodeName='OPTIONS' then begin
@@ -2263,7 +2276,8 @@ begin // loadXMLInReg
       end;
       if ANode.NodeName='ZERO' then begin
          zBool := GetBoolXML(ANode);
-         monde[coordCourante].zeroInclus := zBool;
+         if (coordCourante>=1) and (coordCourante<=MaxOrdonnee) then
+            monde[coordonnee[coordCourante].iMondeC].zeroInclus := zBool;
          exit;
       end;
       if ANode.NodeName='MAXIT' then begin
@@ -2566,7 +2580,7 @@ begin // litConfig
                 monde[pred(i)].zeroInclus := litBooleanRW3 else
       if pos('MAXI',ligneWin)<>0 then
            for i := 1 to imax do with monde[pred(i)] do begin
-               minDefaut := litFloatRW3;
+               maxDefaut := litFloatRW3;
                MajDefaut := true;
            end else
       if pos('MINI',ligneWin)<>0 then

@@ -3042,7 +3042,7 @@ begin // ecritEnTete
    end;
    ecritSection(NbreVariabExp,'SIGNIF VAR');
    for i := 0 to pred(NbreVariabExp) do
-       ecritLigneRW3U(grandeurs[indexVariab[i]].fonct.expression);
+       ecritLigneRW3U(grandeurs[indexVariabExp[i]].fonct.expression);
    avecIncert := false;
    for i := 0 to pred(NbreVariabExp) do with grandeurs[indexVariabExp[i]] do
        if grandeurs[indexVariabExp[i]].IncertCalc.expression<>'' then begin
@@ -3164,6 +3164,7 @@ var ligneWinaLire : boolean;
 
 Procedure litValeur(imax : LongInt);
 var i,j,nmesC : LongInt;
+    tousNan : boolean;
 begin with pages[pageCourante] do begin
     nmes := imax;
     nmesC := 0;
@@ -3186,9 +3187,17 @@ begin with pages[pageCourante] do begin
         ligneWinAlire := (Length(LigneWin)>0) and
                          not charInSet(ligneWin[1],[symbReg2,symbReg]);
     end;
-    for i := 0 to pred(NbreVariabExp) do
-        if isNan(valeurVar[i,pred(nmes)]) then
-             nmes := nmes-1;
+    while (nmes>0) and (NbreVariabExp>0) do begin
+        tousNan := true;
+        for i := 0 to pred(NbreVariabExp) do
+            if not isNan(valeurVar[i,pred(nmes)]) then begin
+               tousNan := false;
+               break;
+            end;
+        if tousNan
+           then nmes := nmes-1
+           else break;
+    end;
 end end;
 
 Procedure litIncertVariab(imax : integer);
@@ -3409,14 +3418,13 @@ end;
 procedure litMeca(Nbre : integer);
 var i : integer;
     k : integer;
-    nomPos : string;
 begin
      for i := 0 to pred(Nbre) do with grandeurs[i] do begin
          k := strToInt(ligneWin[1]);
          genreMecanique := TgenreMecanique(k);
          if genreMecanique>gm_position then begin
             nomVarPosition := copy(ligneWin,3,length(ligneWin));
-            k := indexNom(nomPos);
+            k := indexNom(nomVarPosition);
             if k=grandeurInconnue then nomvarPosition := '';
          end;
          litLigneWin

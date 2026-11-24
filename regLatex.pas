@@ -142,6 +142,7 @@ end;
 var i : integer;
     page : integer;
     avecCouleur : boolean;
+    sauveResultat : TStringList;
 begin
     SaveDialog.DefaultExt := 'tex';
     SaveDialog.Filter := 'Fichiers LaTeX (*.tex)|*.tex';
@@ -153,7 +154,7 @@ begin
        try
        if GrandeursCB.IsChecked  then imprimeVariables;
 // Modélisation
-       if GridParamCB.isChecked then AjouteGrid(FValeurs.GridParam);
+       ImprimeParam;
        if ModeleVariabCB.IsChecked then begin
               AjouteLigne(stModelisation);
               avecCouleur := (NbreModele+NbreFonctionSuper)>1;
@@ -165,11 +166,18 @@ begin
               for page := 1 to NbrePages do
                  if pages[page].active then begin
                     AjouteLigne(pages[page].TitrePage);
-                    FRegressiMain.MajResultatLatex(page); // pour mettre TexteResultatModele au format Latex
-                    AjouteLigne('\begin{itemize}');
-                    for i := 0 to pred(pages[page].TexteResultatModele.Count) do
-                        AjouteLigneItem(pages[page].TexteResultatModele[i]);
-                    AjouteLigne('\end{itemize}');
+                    sauveResultat := TStringList.Create;
+                    try
+                       sauveResultat.Assign(pages[page].TexteResultatModele);
+                       FRegressiMain.MajResultatLatex(page); // pour mettre TexteResultatModele au format Latex
+                       AjouteLigne('\begin{itemize}');
+                       for i := 0 to pred(pages[page].TexteResultatModele.Count) do
+                           AjouteLigneItem(pages[page].TexteResultatModele[i]);
+                       AjouteLigne('\end{itemize}');
+                    finally
+                       pages[page].TexteResultatModele.Assign(sauveResultat);
+                       sauveResultat.Free;
+                    end;
                  end;
           end;
 // Graphe

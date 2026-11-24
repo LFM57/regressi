@@ -173,11 +173,16 @@ var coeff : double;
     aBitmap : Tbitmap;
 begin
     aBitmap := agraphe.ZoneClipBoard.MakeScreenshot;
-    aBitmap.SaveToFile(nomTamponPdf);
-    coeff := aBitmap.Height/abitmap.Width;
-    Editor.AddImage(nomTamponPDF,largeur,round(coeff*largeur));
-    Editor.AddLineBreak;
-    abitmap.free;
+    try
+       if (aBitmap.Width>0) and (aBitmap.Height>0) then begin
+          aBitmap.SaveToFile(nomTamponPdf);
+          coeff := aBitmap.Height/abitmap.Width;
+          Editor.AddImage(nomTamponPDF,largeur,round(coeff*largeur));
+          Editor.AddLineBreak;
+       end;
+    finally
+       abitmap.free;
+    end;
 end;
 
 var page : codePage;

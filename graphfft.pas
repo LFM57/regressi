@@ -1192,6 +1192,7 @@ begin
    writeIntegerXML(ANode,'TypeOrdonnee',ord(ordonneeFFTgr));
    writeBoolXML(ANode,'ContinuInclus',continuInclus);
    writeBoolXML(ANode,'TempsBtn',TempsBtn.isPressed);
+   writeIntegerXML(ANode,'HauteurTemps',round(PaintBoxTemps.height));
    writeIntegerXML(ANode,'DecadedB',DecadeDB);
    writeIntegerXML(ANode,'NbreHarmAff',NbreHarmoniqueAff);
 //   writeFloat('PasTempsSonagramme',pasTempsSonagramme);
@@ -1444,7 +1445,7 @@ begin
             TempsBtn.isPressed := getBoolXML(ANode);
             exit
       end;
-     if ANode.NodeName='azerty' then begin
+     if (ANode.NodeName='HauteurTemps') or (ANode.NodeName='azerty') then begin
            PaintBoxTemps.height := getIntegerXML(ANode);
            exit
      end;
@@ -1480,7 +1481,7 @@ begin
           grandeurs[cFrequence].nom := ANode.text;
           exit;
      end;
-     if ANode.NodeName='DESSIN' then begin
+     if (ANode.NodeName='TEXTE') or (ANode.NodeName='DESSIN') then begin
          Adessin := TdessinText.create(paintBoxFrequence);
          Adessin.aGraphe := grapheFrequence;
          Adessin.loadXML(ANode);

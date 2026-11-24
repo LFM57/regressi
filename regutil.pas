@@ -142,11 +142,11 @@ const
         nuR = AnsiChar(138);
         piR = AnsiChar(139);piMajR = AnsiChar(154);
         thetaR = AnsiChar(140);thetaMajR = AnsiChar(155);
-        rhoRW3 = AnsiChar(141); rhoR = AnsiChar(151);
+        rhoRW3 = AnsiChar(141); rhoR = AnsiChar(137);
         sigmaR = AnsiChar(142);sigmaMajR = AnsiChar(156);
-        tauRW3 = AnsiChar(143);tauR = AnsiChar(154);
+        tauRW3 = AnsiChar(143);tauR = AnsiChar(145);
         omegaRW3 = AnsiChar(144);omegaMajRW3 = AnsiChar(157);
-        omegaR = AnsiChar(158);omegaMajR = AnsiChar(155);
+        omegaR = AnsiChar(146);omegaMajR = AnsiChar(161);
         xiR = AnsiChar(147);xiMajR = AnsiChar(158);
         psiR = AnsiChar(148);psiMajR = AnsiChar(159);
         zetaR = AnsiChar(149);
@@ -1024,7 +1024,7 @@ begin
          '+'  : calcOperateur := PG+PD;
          '-'  : calcOperateur := PG-PD;
          '/'  : calcOperateur := PG/PD;
-         '*'  : calcOperateur := PG*PD;
+         '*', pointMedian, cdot : calcOperateur := PG*PD;
          '^'  : calcOperateur := Power(PG,PD);
          else CalcOperateur := 0;
    end;
@@ -1083,7 +1083,8 @@ Var
   T1,T2    : double;
 Begin
   AnalyseFacteur;
-  While (caracCourant='*') or (caracCourant='/') do Begin
+  While (caracCourant='*') or (caracCourant='/') or
+        (caracCourant=pointMedian) or (caracCourant=cdot) do Begin
        C:=caracCourant;
        suivant;
        AnalyseFacteur;
@@ -1762,10 +1763,10 @@ function litLigneWinU : string;
 const
   NouveauCode : array[128..188] of Char =
     (alphaMin,betaMin,
-     chiMin,deltaMin,epsilonMin,phiMin,gammaMin,etaMin,lambdaMin,char(#137),nuMin,piMin,
-     thetaMin,rhoMin,sigmaMin,tauMin,omegaMin,char(#145),char(#146),xiMin,psiMin,zetaMin,
-     deltaMaj,rhoMin,gammaMaj,lambdaMaj,tauMin,omegaMaj,sigmaMaj,omegaMaj,omegaMin,psiMaj,
-     char(#160),char(#161),char(#162),char(#163),Char($00B3),char(#165),char(#166),char(#167),char(#168),Char($2074),
+     chiMin,deltaMin,epsilonMin,phiMin,gammaMin,etaMin,lambdaMin,rhoMin,nuMin,piMin,
+     thetaMin,rhoMin,sigmaMin,tauMin,omegaMin,tauMin,omegaMin,xiMin,psiMin,zetaMin,
+     deltaMaj,phiMaj,gammaMaj,lambdaMaj,piMaj,thetaMaj,sigmaMaj,omegaMaj,xiMaj,psiMaj,
+     char(#160),omegaMaj,char(#162),char(#163),Char($00B3),char(#165),char(#166),char(#167),char(#168),Char($2074),
      MoinsExp,#171,Char($2076),Char($2077),Char($2078),char(#175),char(#176),#177,Char($00B2),Char($00B3),
      char(#180),muMin,char(#182),char(#183),PlusExp,Char($00B9),Char($2070),#187,Char($0079));
 
@@ -1792,7 +1793,7 @@ begin
                     '¢' : ligneWin := ligneWin+'â';
                     'ª' : ligneWin := ligneWin+'ê';
                     '®' : ligneWin := ligneWin+'î';
-                  //  '¼' : ligneWin := ligneWin+'ô';
+                    AnsiChar(180) : ligneWin := ligneWin+'ô';
                     '»' : ligneWin := ligneWin+'û';
 
                     '¤' : ligneWin := ligneWin+'ä';
@@ -2211,7 +2212,7 @@ begin
                       'ù' : caracR := AnsiChar(249);
                       'û' : caracR := AnsiChar(251);
                       'ü' : caracR := AnsiChar(252);
-                      'ô' : caracR := AnsiChar(252);
+                      'ô' : caracR := AnsiChar(244);
                       MoinsExp: caracR := moinsExpR;
                       PlusExp: caracR := plusExpR;
                       InfEgal: caracR := infEgalR;
@@ -2261,8 +2262,7 @@ function ColorToInt(c : TAlphaColor) : integer;
 var couleur : TAlphaColorRec;
 begin
     couleur.color := c;
-    couleur.A := $00;
-    result := integer(couleur);
+    result := integer(couleur.R) or (integer(couleur.G) shl 8) or (integer(couleur.B) shl 16);
 end;
 
 procedure ecritColorRW3(c : TAlphaColor);
@@ -2283,14 +2283,19 @@ function IntToColor(i : integer) : TAlphaColor;
 var red,green,blue : integer;
     couleur : TAlphaColorRec;
 begin
-    couleur.color := TAlphaColor(i);
     try
-    red := Couleur.R;
-    green := Couleur.G;
-    blue := Couleur.B;
-    if (red+green+blue)>650 then couleur.color := claBlack; // trop proche du blanc
-    Couleur.A := $FF; // pas de transparence
-    result := couleur.color;
+    red := i and $FF;
+    green := (i shr 8) and $FF;
+    blue := (i shr 16) and $FF;
+    if (red+green+blue)>650 then
+       result := claBlack // trop proche du blanc
+    else begin
+       couleur.A := $FF; // pas de transparence
+       couleur.R := red;
+       couleur.G := green;
+       couleur.B := blue;
+       result := couleur.color;
+    end;
     except
        result := claBlack;
     end;
@@ -2710,9 +2715,14 @@ Initialization
      HelpHtml := System.IOUtils.TPath.combine(recupereBundle,'Aide/Regressi.html');
      ExemplesPath := System.IOUtils.TPath.combine(recupereBundle,'StartUp');
 {$ELSE} // Windows
-     HelpFile := System.IOUtils.TPath.combine(homePath,'regressi.pdf');
-     HelpHtml := System.IOUtils.TPath.combine(DocumentsPath,'Aide');
-     HelpHtml := System.IOUtils.TPath.combine(helpHtml,'Regressi.html');
+     HelpFile := System.IOUtils.TPath.combine(applicationPath,'Aide\Regressi.pdf');
+     if not FileExists(HelpFile) then
+        HelpFile := System.IOUtils.TPath.combine(homePath,'regressi.pdf');
+     HelpHtml := System.IOUtils.TPath.combine(applicationPath,'Aide\Regressi.html');
+     if not FileExists(HelpHtml) then begin
+        HelpHtml := System.IOUtils.TPath.combine(DocumentsPath,'Aide');
+        HelpHtml := System.IOUtils.TPath.combine(helpHtml,'Regressi.html');
+     end;
      ExemplesPath := System.IOUtils.TPath.combine(homePath,'Exemples');
 {$ENDIF}
      RegistreReg := System.IOUtils.TPath.combine(supportPath,'Regressi.ini');

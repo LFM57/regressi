@@ -241,6 +241,8 @@ type
     dataFile : boolean;
     public
     xReal,yReal : double;
+    widthReal,heightReal : double;
+    hasWidthReal : boolean;
     selection : TSelectLigne;
     motifLigne : TMotifLigne;
     texteLigne : TTexteLigne;
@@ -4123,6 +4125,7 @@ begin
   writeFloatXML(ANode,'W',width);
   writeIntegerXML(ANode,'Monde',iMonde);
   writeIntegerXML(ANode,'TexteLigne',ord(TexteLigne));
+  writeIntegerXML(ANode,'Motif',ord(motifLigne));
   writeColorXML(ANode,stCouleur,stroke.color);
   writeIntegerXML(ANode,'PenStyle',ord(stroke.dash));
   writeIntegerXML(ANode,'PenWidth',round(stroke.thickness));
@@ -4208,8 +4211,12 @@ begin
     if ANode.NodeName='withRappel' then begin
         exit;
     end;
-    if ANode.NodeName='Motif' then begin
+    if ANode.NodeName='TexteLigne' then begin
         TexteLigne := TTexteLigne(getIntegerXML(ANode));
+        exit;
+    end;
+    if ANode.NodeName='Motif' then begin
+        motifLigne := TmotifLigne(getIntegerXML(ANode));
         exit;
     end;
     if ANode.NodeName='Texte' then begin
@@ -4234,6 +4241,9 @@ begin
   Aligne.dataFile := true;
   Aligne.xReal := xReal;
   Aligne.yReal := yReal;
+  Aligne.widthReal := widthReal;
+  Aligne.heightReal := heightReal;
+  Aligne.hasWidthReal := (widthReal<>0) or (heightReal<>0);
   Aligne.iMonde := iMonde;
   Aligne.TexteLigne := texteLigne;
   Aligne.dashLigne := dashLigne;
@@ -4281,15 +4291,15 @@ begin
   if valeurs.count>1 then
      iMonde := strToInt(valeurs[1]);
   if valeurs.count>2 then
-    identification := Tidentification(strToInt(valeurs[1]));
+    identification := Tidentification(strToInt(valeurs[2]));
   if valeurs.count>3 then begin
-    zint := strToInt(valeurs[1]);
+    zint := strToInt(valeurs[3]);
     TexteLigne := TtexteLigne(zint);
   end;
   if valeurs.count>4 then
-     numPoint := strToInt(valeurs[1]);
+     numPoint := strToInt(valeurs[4]);
   if valeurs.count>5 then begin
-    zLong := strToInt(valeurs[1]);
+    zLong := strToInt(valeurs[5]);
     color := IntToColor(zLong);
   end;
   litLigneWin;// 7
@@ -4300,6 +4310,8 @@ begin
   if valeurs.count>1 then begin
     zint := strToInt(valeurs[1]);
     stroke.kind := TBrushKind(zint);
+  end;
+  if valeurs.count>2 then begin
     z := strToInt(valeurs[2]);
     stroke.Thickness := z;
   end;
@@ -5102,11 +5114,16 @@ begin
 end;
 
 procedure TdessinLine.Maj;
-var P : TpointF;
+var P,P2 : TpointF;
 begin
    agraphe.WindowRT(xReal, yReal, iMonde, P);
    if (Abs(position.X - P.X) > 0.5) or (Abs(position.Y - P.Y) > 0.5) then
       position.point := P;
+   if hasWidthReal then begin
+      agraphe.WindowRT(xReal + widthReal, yReal + heightReal, iMonde, P2);
+      AffectePoint2(P2.X, P2.Y);
+      hasWidthReal := false;
+   end;
 end;
 
 procedure TGrapheReg.MajDessins;

@@ -120,7 +120,7 @@ Begin // TranslateExpression
                           (Operd.pvar.genreG=paramNormal) then begin
                          indexP := indexNom(operd.Pvar.nom);
                          indexP := indexToParam(indexP);
-                         if ParamInverse[indexP]
+                         if (indexP<>grandeurInconnue) and ParamInverse[indexP]
                              then result := '\frac{'+X+'}{'+Y+'}'
                              else result := X+'\cdot '+Y;
                     end
@@ -195,7 +195,7 @@ begin with grandeurs[index] do begin
           g_fonction,g_derivee,g_equation,g_filtrage, g_definitionFiltre :
               AjouteLigneLatex(debutLigne+translateExpression(fonct.calcul)+' \]');
           g_experimentale,g_texte : if fonct.expression<>'' then
-              AjouteLigne(debutLigne+fonct.expression);
+              AjouteLigne(debutLigne+fonct.expression+' \]');
           g_diff1 : ajouteLigneLatex('\[ \frac{ \mathrm{d} '+NomL+'}{ \mathrm{d} '+nomX+'}='+
               translateExpression(fonct.calcul.operandGlb)+' \]');
           g_diff2 : ajouteLigneLatex('\[ \frac{ \mathrm{d} ^2'+nomL+'}{ \mathrm{d} '+nomX+'^2}='+
@@ -209,7 +209,7 @@ begin with grandeurs[index] do begin
           g_deriveeSeconde : begin
             sigma := translateNomMath(fonct.calcul.varY.nom);
             vm := translateNomMath(fonct.calcul.varX.nom);
-            AjouteLigneLatex(debutLigne+'\frac{ \mathrm{d} ^2'+sigma+'}{ \mathrm{d} '+vm+'^2}');
+            AjouteLigneLatex(debutLigne+'\frac{ \mathrm{d} ^2'+sigma+'}{ \mathrm{d} '+vm+'^2} \]');
           end;
           g_euler : ;
           else if fonct.expression<>'' then
