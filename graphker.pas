@@ -208,6 +208,7 @@ type
     iMonde : indiceMonde;
     dataFile : boolean;
     isVertical,isCentre : boolean;
+    function ResolveMonde: indiceMonde;
     public
     xReal,yReal : double;
     avecCadre: boolean;
@@ -221,6 +222,7 @@ type
     procedure Maj;
     procedure affecteXY(X,Y: single);
     procedure SetPourCent;
+    procedure RecalcTextBounds;
     procedure Paint; override;
     procedure MouseDown(Button: TMouseButton;
              Shift: TShiftState; X,Y: single);override;
@@ -4345,22 +4347,42 @@ begin
   end;
 end;
 
+function TdessinText.ResolveMonde: indiceMonde;
+var
+  m: indiceMonde;
+begin
+  Result := iMonde;
+  if (aGraphe = nil) then
+    Exit;
+  if (Result >= mondeY) and (Result <= High(indiceMonde)) and
+     aGraphe.monde[Result].defini and (aGraphe.monde[Result].A <> 0) then
+    Exit;
+  for m := mondeY to High(indiceMonde) do
+    if aGraphe.monde[m].defini and (aGraphe.monde[m].A <> 0) then begin
+      Result := m;
+      Exit;
+    end;
+  Result := mondeY;
+end;
+
 constructor TdessinText.CreateText(gr : TgrapheReg);
 begin
   inherited Create(gr.paintBox);
   HitTest := True;
+  Visible := True;
   color := claBlue;
   couleurFond := claWhite;
   vertTextAlign := TTextAlign.Leading;
   horzTextAlign := TTextAlign.Leading;
-  autoSize := true;
+  autoSize := false;
   wordWrap := false;
   font.Size := 14;
   identification := identNone;
+  Agraphe := gr;
   iMonde := mondeY;
+  iMonde := ResolveMonde;
   TexteBrut := '';
   opacity := 1;
-  Agraphe := gr;
 end;
 
 procedure TdessinLine.SetMoveDown(move : TMouseMoveEvent; down,up : TMouseEvent);
@@ -4405,8 +4427,12 @@ begin
        Application.CreateForm(TLectureTexteDlg, LectureTexteDlg);
     lectureTexteDlg.DessinLoc := self;
     centreForm(lectureTexteDlg);
-    Result := lectureTexteDlg.showModal = mrOk;
-    if Result then TexteBrut := Text;
+    Result := (lectureTexteDlg.showModal = mrOk) and (Trim(Text) <> '');
+    if Result then begin
+       TexteBrut := Text;
+       SetPourCent;
+       RecalcTextBounds;
+    end;
 end;
 
 procedure TGrapheReg.GetCurseurProche(P:TpointF; Force: boolean);
@@ -5111,10 +5137,17 @@ end;
 procedure TdessinText.Maj;
 var P : TpointF;
 begin
-   agraphe.WindowRT(xReal, yReal, iMonde, p);
-   if (Abs(position.X - p.X) > 0.5) or (Abs(position.Y - p.Y) > 0.5) then
-      position.point := p;
+   iMonde := ResolveMonde;
+   if (aGraphe <> nil) and aGraphe.monde[mondeX].defini and aGraphe.monde[iMonde].defini and
+      (aGraphe.monde[mondeX].A <> 0) and (aGraphe.monde[iMonde].A <> 0) and
+      (not IsNan(xReal)) and (not IsNan(yReal)) then begin
+      agraphe.WindowRT(xReal, yReal, iMonde, p);
+      if (not IsNan(p.X)) and (not IsNan(p.Y)) and
+         ((Abs(position.X - p.X) > 0.5) or (Abs(position.Y - p.Y) > 0.5)) then
+         position.point := p;
+   end;
    SetPourCent;
+   RecalcTextBounds;
 end;
 
 procedure TdessinLine.Maj;
@@ -5625,76 +5658,85 @@ end; // Tcourbe.Calcul
 
 procedure TDessinText.SetPourCent;
   var
-    posPourCent: integer;
-    LigneTexte:  string;
+    LigneTexte: string;
 
-    procedure SetConst(index: integer);
+    procedure ReplaceToken(const token, repl: string);
+    var
+      p, startIdx, tokLen: integer;
+      upperTok: string;
     begin
-      Delete(LigneTexte, posPourCent, 3); // %Cx
-      Insert(Grandeurs[index].formatNomEtUnite(Pages[PageCourante].ValeurConst[index]), LigneTexte, posPourCent);
+      upperTok := AnsiUpperCase(token);
+      tokLen := Length(upperTok);
+      if tokLen = 0 then Exit;
+      startIdx := 1;
+      while startIdx <= Length(LigneTexte) do begin
+        p := Pos(upperTok, AnsiUpperCase(LigneTexte), startIdx);
+        if p <= 0 then Break;
+        Delete(LigneTexte, p, tokLen);
+        Insert(repl, LigneTexte, p);
+        startIdx := p + Length(repl);
+      end;
     end;
 
-    procedure SetParam(i : integer);
+    function FormatParam(i: integer): string;
+    var
+      avecPrec: boolean;
+      valLoc, precLoc: double;
     begin
-      Delete(LigneTexte, posPourCent, 3); // %Px
-      Insert(pages[PageCourante].paramEtPrec(i,false), LigneTexte, posPourCent);
+      with pages[PageCourante] do begin
+        valLoc := Abs(valeurParam[i]);
+        precLoc := incertParam[i];
+        avecPrec := ParamAjustes and (not IsNan(precLoc)) and (precLoc > 0) and
+                    (valLoc > precLoc / 10) and (valLoc < 1e8 * precLoc);
+        Result := paramEtPrec(i, avecPrec);
+      end;
     end;
 
-    procedure PosCode(code: string; numero: integer);
+    function FormatModeleExpr(const expr: string): string;
+    var
+      k: integer;
+      prevCh: Char;
     begin
-      code := '%' + code;
-      if numero >= 0 then
-         code := code + char(Ord('0') + numero);
-      posPourCent := pos(code, AnsiUpperCase(LigneTexte));
+      Result := '';
+      for k := 1 to Length(expr) do begin
+        if expr[k] = '*' then
+          Result := Result + pointMedian
+        else if expr[k] = '+' then begin
+          if k > 1 then prevCh := expr[k - 1] else prevCh := #0;
+          if (prevCh = 'e') or (prevCh = 'E') then
+            Result := Result + '+'
+          else
+            Result := Result + ' + ';
+        end else
+          Result := Result + expr[k];
+      end;
     end;
 
   var
-   j: integer;
-   posEt: integer;
+    j: integer;
+    exprStr: string;
   begin
     if TexteBrut <> '' then
       LigneTexte := texteBrut
     else
       LigneTexte := Text;
+    if (aGraphe <> nil) and (not IsNan(xReal)) and (aGraphe.monde[mondeX].axe <> nil) then
+      ReplaceToken('%X', aGraphe.monde[mondeX].axe.formatNomEtUnite(xReal));
+    if (aGraphe <> nil) and (not IsNan(yReal)) and (aGraphe.monde[iMonde].axe <> nil) then
+      ReplaceToken('%Y', aGraphe.monde[iMonde].axe.formatNomEtUnite(yReal));
     if (PageCourante >= 1) and (PageCourante <= NbrePages) then begin
-      posCode('S', -1);
-      if posPourCent > 0 then begin
-        Delete(LigneTexte, posPourCent, 2);
-        Insert(pages[PageCourante].commentaireP, LigneTexte, posPourCent);
-      end;
-      for j := 1 to NbreParam do begin
-        posCode('P', j);
-        if posPourCent > 0 then SetParam(j);
-      end;
+      ReplaceToken('%S', pages[PageCourante].commentaireP);
+      for j := NbreParam downto 1 do
+        ReplaceToken('%P' + IntToStr(j), FormatParam(j));
     end;
-    for j := 1 to NbreModele do with FonctionTheorique[j] do begin
-      posCode('M', j);
-      if posPourCent > 0 then begin
-         Delete(LigneTexte, posPourCent, 3);
-         Insert(grandeurs[indexY].nom+'('+grandeurs[indexX].nom+')='+expression, LigneTexte, posPourCent);
-         // cdot nécessite Arial Unicode mais les lettres grecques sont atroces
-         repeat
-               posEt := pos('*',ligneTexte);
-               if posEt>0 then ligneTexte[posEt] := pointMedian;
-         until posEt=0;
-         repeat
-               posEt := pos('+',ligneTexte);
-               if posEt>0 then  ligneTexte[posEt] := '@';
-         until posEt=0;
-         repeat
-               posEt := pos('@',ligneTexte);
-               if posEt>0 then begin
-                  delete(ligneTexte,posET,1);
-                  insert(' + ',ligneTexte,posEt);
-               end;
-         until posEt=0;
-      end;
+    for j := NbreModele downto 1 do with FonctionTheorique[j] do begin
+      exprStr := grandeurs[indexY].nom + '(' + grandeurs[indexX].nom + ') = ' + FormatModeleExpr(expression);
+      ReplaceToken('%M' + IntToStr(j), exprStr);
     end;
     if (PageCourante >= 1) and (PageCourante <= NbrePages) then begin
-      for j := 0 to pred(NbreConst) do begin
-        posCode('C', j + 1);
-        if posPourCent > 0 then setConst(indexConst[j]);
-      end;
+      for j := pred(NbreConst) downto 0 do
+        ReplaceToken('%C' + IntToStr(j + 1),
+          Grandeurs[indexConst[j]].formatNomEtUnite(Pages[PageCourante].ValeurConst[indexConst[j]]));
     end;
     Text := LigneTexte;
 end; // SetPourCent
@@ -5945,6 +5987,8 @@ begin
    end;
    if action=cnAdded then begin
       paintBox.AddObject(item);
+      item.SetPourCent;
+      item.RecalcTextBounds;
       item.bringToFront;
       paintBox.Repaint;
    end;
@@ -5975,17 +6019,23 @@ end;
 procedure TDessinText.MouseDown(Button: TMouseButton;
   Shift: TShiftState; X, Y: Single);
 begin
-   x0 := x;
-   y0 := y;
-   opacity := 0.5;
-   aGraphe.dessinTextCourant := self;
+   if Button = TMouseButton.mbLeft then begin
+     x0 := x;
+     y0 := y;
+     opacity := 0.5;
+     aGraphe.dessinTextCourant := self;
+   end;
    inherited;
 end;
 
 procedure TDessinText.MouseUp(Button: TMouseButton;
   Shift: TShiftState; X, Y: Single);
 begin
-    aGraphe.mondeRT(position.point, iMonde, xReal, yReal);
+    opacity := 1;
+    iMonde := ResolveMonde;
+    if (aGraphe <> nil) and aGraphe.monde[mondeX].defini and aGraphe.monde[iMonde].defini and
+       (aGraphe.monde[mondeX].A <> 0) and (aGraphe.monde[iMonde].A <> 0) then
+       aGraphe.mondeRT(position.point, iMonde, xReal, yReal);
     inherited;
 end;
 
@@ -6026,7 +6076,11 @@ end;
 
 procedure TDessinText.DblClick;
 begin
-    if litOption then aGraphe.paintBox.Repaint;
+    if litOption then begin
+       SetPourCent;
+       RecalcTextBounds;
+       aGraphe.paintBox.Repaint;
+    end;
 end;
 
 procedure TDessinLine.MouseDown(Button: TMouseButton;
@@ -6142,25 +6196,145 @@ procedure TDessinText.AffecteXY(X,Y: single);
 begin
     position.x := x;
     position.y := y;
-    aGraphe.mondeRT(position.point,iMonde,xReal,yReal)
+    iMonde := ResolveMonde;
+    if (aGraphe <> nil) and aGraphe.monde[mondeX].defini and aGraphe.monde[iMonde].defini and
+       (aGraphe.monde[mondeX].A <> 0) and (aGraphe.monde[iMonde].A <> 0) then
+       aGraphe.mondeRT(position.point,iMonde,xReal,yReal);
+end;
+
+procedure TDessinText.RecalcTextBounds;
+var
+  R: TRectF;
+  padX, padY: Single;
+  hasBox: Boolean;
+  newW, newH: Single;
+  saveFontSize: Single;
+begin
+  if (color and $FF000000) = 0 then
+    color := claBlack;
+  hasBox := avecCadre or ((couleurFond <> claWhite) and ((couleurFond and $FF000000) <> 0));
+  if hasBox then begin
+    padX := 6;
+    padY := 4;
+  end else begin
+    padX := 2;
+    padY := 1;
+  end;
+  if (Text = '') or (Layout = nil) then begin
+    Width := 2 * padX + 4;
+    Height := Font.Size + 2 * padY + 4;
+    Exit;
+  end;
+  Layout.BeginUpdate;
+  try
+    if (aGraphe <> nil) and (aGraphe.paintBox <> nil) and (aGraphe.paintBox.Canvas <> nil) then
+      Layout.LayoutCanvas := aGraphe.paintBox.Canvas;
+    Layout.Color := Color;
+    Layout.Font.Assign(Font);
+    Layout.Text := Text;
+    Layout.WordWrap := False;
+    Layout.HorizontalAlign := TTextAlign.Leading;
+    Layout.VerticalAlign := TTextAlign.Leading;
+    Layout.TopLeft := TPointF.Create(0, 0);
+    Layout.MaxSize := TPointF.Create(10000, 10000);
+  finally
+    Layout.EndUpdate;
+  end;
+  R := Layout.TextRect;
+  newW := R.Width + Max(0.0, R.Left) + 2 * padX + 4;
+  newH := R.Height + Max(0.0, R.Top) + 2 * padY + 2;
+  if (newW < 2 * padX + 8) and (aGraphe <> nil) and (aGraphe.paintBox <> nil) and (aGraphe.paintBox.Canvas <> nil) then begin
+    saveFontSize := aGraphe.paintBox.Canvas.Font.Size;
+    try
+      aGraphe.paintBox.Canvas.Font.Size := Font.Size;
+      newW := aGraphe.paintBox.Canvas.TextWidth(Text) + 2 * padX + 6;
+      newH := aGraphe.paintBox.Canvas.TextHeight(Text) + 2 * padY + 4;
+    finally
+      aGraphe.paintBox.Canvas.Font.Size := saveFontSize;
+    end;
+  end;
+  if newW < 16 then newW := 16;
+  if newH < Font.Size + 6 then newH := Font.Size + 6;
+  if (Abs(Width - newW) > 0.5) or (Abs(Height - newH) > 0.5) then begin
+    Width := newW;
+    Height := newH;
+  end;
 end;
 
 procedure TDessinText.Paint;
-var R : TrectF;
+var
+  R: TRectF;
+  bgColor: TAlphaColor;
+  padX, padY: Single;
+  saveFillKind, saveStrokeKind: TBrushKind;
+  saveFillColor, saveStrokeColor: TAlphaColor;
+  saveStrokeThickness: Single;
+  saveStrokeDash: TStrokeDash;
 begin
-   R := TrectF.create(0,0,width,height);
-   if avecCadre then begin
-      canvas.Stroke.Color := color;
-      canvas.Stroke.Thickness := 1;
-      canvas.drawRect(R,0,0,AllCorners,1);
-   end;
-   if couleurFond<>claWhite then begin
-      canvas.Fill.Color := couleurFond;
-      canvas.Fill.kind := TBrushKind.Solid;
-      canvas.fillRect(R,0,0,AllCorners,1);
-   end
-   else canvas.Fill.kind := TBrushKind.None;
-   inherited;
+  if (color and $FF000000) = 0 then
+    color := claBlack;
+  if (Width < 4) or (Height < 4) then
+    RecalcTextBounds;
+  if (couleurFond <> claWhite) and ((couleurFond and $FF000000) <> 0) then
+    bgColor := couleurFond
+  else if avecCadre then
+    bgColor := $F2FFFFFF
+  else
+    bgColor := claNull;
+  if avecCadre or (bgColor <> claNull) then begin
+    padX := 6;
+    padY := 4;
+  end else begin
+    padX := 2;
+    padY := 1;
+  end;
+  R := TRectF.Create(0.5, 0.5, Max(1.0, Width - 0.5), Max(1.0, Height - 0.5));
+  saveFillKind := Canvas.Fill.Kind;
+  saveFillColor := Canvas.Fill.Color;
+  saveStrokeKind := Canvas.Stroke.Kind;
+  saveStrokeColor := Canvas.Stroke.Color;
+  saveStrokeThickness := Canvas.Stroke.Thickness;
+  saveStrokeDash := Canvas.Stroke.Dash;
+  try
+    if bgColor <> claNull then begin
+      Canvas.Fill.Kind := TBrushKind.Solid;
+      Canvas.Fill.Color := bgColor;
+      Canvas.FillRect(R, 3, 3, AllCorners, AbsoluteOpacity);
+    end else
+      Canvas.Fill.Kind := TBrushKind.None;
+    if avecCadre then begin
+      Canvas.Stroke.Kind := TBrushKind.Solid;
+      Canvas.Stroke.Dash := TStrokeDash.Solid;
+      Canvas.Stroke.Color := color;
+      Canvas.Stroke.Thickness := 1;
+      Canvas.DrawRect(R, 3, 3, AllCorners, AbsoluteOpacity);
+    end;
+  finally
+    Canvas.Fill.Kind := saveFillKind;
+    Canvas.Fill.Color := saveFillColor;
+    Canvas.Stroke.Kind := saveStrokeKind;
+    Canvas.Stroke.Color := saveStrokeColor;
+    Canvas.Stroke.Thickness := saveStrokeThickness;
+    Canvas.Stroke.Dash := saveStrokeDash;
+  end;
+  if Layout = nil then Exit;
+  Layout.BeginUpdate;
+  try
+    Layout.LayoutCanvas := Canvas;
+    Layout.Color := Color;
+    Layout.Font.Assign(Font);
+    Layout.Text := Text;
+    Layout.WordWrap := False;
+    Layout.HorizontalAlign := HorzTextAlign;
+    Layout.VerticalAlign := VertTextAlign;
+    Layout.TopLeft := TPointF.Create(padX, padY);
+    Layout.Opacity := AbsoluteOpacity;
+    Layout.RightToLeft := TFillTextFlag.RightToLeft in FillTextFlags;
+    Layout.MaxSize := TPointF.Create(Max(1.0, Width - 2 * padX), Max(1.0, Height - 2 * padY));
+  finally
+    Layout.EndUpdate;
+  end;
+  Layout.RenderLayout(Canvas);
 end;
 
 procedure TDessinLine.Paint;

@@ -342,6 +342,7 @@ object LectureTexteDlg: TLectureTexteDlg
             Color = claWhite
           end>
         Mode = csmExtended
+        OnColorSelected = CouleurComboColorSelected
         SelectedColor = claRed
         SelectedItemIndex = 16
       end
@@ -490,6 +491,7 @@ object LectureTexteDlg: TLectureTexteDlg
             Color = claWhite
           end>
         Mode = csmExtended
+        OnColorSelected = opaqueColorBoxColorSelected
       end
     end
   end

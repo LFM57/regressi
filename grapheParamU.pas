@@ -301,7 +301,7 @@ procedure TgrapheParam.PaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
 
 procedure AffecteDessinText;
 begin
- if dessinTextCourant<>nil then
+ if dessinTextCourant<>nil then begin
    dessinTextCourant.affecteXY(x,y);
    if dessinTextCourant.litOption
    then begin
@@ -310,7 +310,8 @@ begin
    end
    else dessinTextCourant.free;
    dessinTextCourant := nil;
-   setPenBrush(curSelect);
+ end;
+ setPenBrush(curSelect);
 end; // AffecteDessinText
 
 begin // MouseDown
