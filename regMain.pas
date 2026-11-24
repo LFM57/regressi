@@ -1722,7 +1722,8 @@ begin
      case ModeAcquisition of
           AcqClavier,acqSimulation : if ajoutePage then begin
              for i := 1 to NbreConstExp do
-                Pages[NbrePages].valeurConst[i] := pages[pred(NbrePages)].valeurConst[i];
+                Pages[NbrePages].valeurConst[indexConstExp[i-1]] :=
+                   pages[pred(NbrePages)].valeurConst[indexConstExp[i-1]];
              if modeAcquisition=acqSimulation then
                 Pages[NbrePages].nmes := pages[pred(NbrePages)].nmes;// ??
              pageCourante := nbrePages;
@@ -2027,9 +2028,14 @@ end;
 procedure TFRegressiMain.TBAnimationChange(Sender: TObject);
 begin
      if majFichierEnCours then exit;
-     AnimationTB.hint := 'Intervalle : '+IntToStr(round(AnimationTB.value))+'ms';
-     graphe.SliderAnimationChange(sender);
-     paintBox1.repaint;
+     if Sender=AnimationTB then begin
+        timerAnimation.interval := round(AnimationTB.value);
+        AnimationTB.hint := 'Intervalle : '+IntToStr(round(AnimationTB.value))+'ms';
+     end
+     else begin
+        graphe.SliderAnimationChange(sender);
+        paintBox1.repaint;
+     end;
 end;
 
 procedure TFRegressiMain.TrigoBtnClick(Sender: TObject);
@@ -2231,9 +2237,11 @@ end;
 procedure TFRegressiMain.EditBidonKeyDown(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
 begin
-    if (keyChar=' ')  then BarreEspace;
-    keyChar := #0;
-    key := 0;
+    if (keyChar=' ') then begin
+       BarreEspace;
+       keyChar := #0;
+       key := 0;
+    end;
 end;
 
 procedure TFRegressiMain.EditionItemClick(Sender: TObject);
@@ -2246,7 +2254,7 @@ begin
       case S.undo of
            UsupprPage : undoItem.Text  := stUndo+'page';
            UsupprPoint : undoItem.Text  := stUndo+'points';
-           UsupprConst,UsupprVariab :
+           UsupprConst,UsupprVariab,UsupprConstTexte,UsupprVariabTexte :
               undoItem.Text  := stUndo+S.GrandeurSauvee.nom;
       end;
    end;
@@ -2909,13 +2917,25 @@ procedure TFRegressiMain.ParamGridCellButtonClick(Sender: TObject; ACol,
 procedure ModifParam(paramCourant : integer;coeff : double);
 begin
      with pages[pageCourante] do begin
-         ValeurParam[paramCourant] :=
+         if ValeurParam[paramCourant]=0 then begin
+            if coeff>=1.5 then ValeurParam[paramCourant] := 1
+            else if coeff>1 then ValeurParam[paramCourant] := 0.1
+            else if coeff>0.7 then ValeurParam[paramCourant] := -0.1
+            else if coeff>0 then ValeurParam[paramCourant] := -1;
+         end
+         else ValeurParam[paramCourant] :=
               ValeurParam[paramCourant]*coeff;
          ParamGrid.Cells[3,paramCourant-1] :=
               formatGeneral(valeurParam[paramCourant],3);
      end;
-     ParamGrid.Enabled := not TraceAutoCB.isChecked;
-     if TraceAutoCB.isChecked then lanceModele(false)
+     if TraceAutoCB.isChecked then begin
+        ParamGrid.Enabled := false;
+        try
+           lanceModele(false);
+        finally
+           ParamGrid.Enabled := true;
+        end;
+     end;
 end;
 
 const
@@ -3077,19 +3097,21 @@ end;
 procedure TFRegressiMain.UndoItemClick(Sender: TObject);
 var S : tsauvegarde;
 begin
+   if PileSauvegarde.count=0 then exit;
    S := PileSauvegarde.pop;
    S.restaure;
    case S.undo of
       UsupprPage : WMRegMaj(MajAjoutPage);
       UsupprPoint : WMRegMaj(MajAjoutValeur);
-      UsupprConst : WMRegMaj(MajGrandeur);
-      UsupprVariab : WMRegMaj(MajGrandeur);
+      UsupprConst,UsupprConstTexte : WMRegMaj(MajGrandeur);
+      UsupprVariab,UsupprVariabTexte : WMRegMaj(MajGrandeur);
    end;
    S.free;
 end;
 
 procedure TFRegressiMain.RecupItemClick(Sender: TObject);
 begin
+    if (NomFichierData='') or not FileExists(NomFichierData) then exit;
     closeAll;
     FinOuvertureFichier(FichierRegressi.litWin);
     NomFichierData := '';
@@ -3690,7 +3712,9 @@ end;
 procedure TFregressiMain.DragOver(const Data: TDragObject; const Point: TPointF;
   var OPeration: TDragOperation);
 begin
- // if FHandleDragDirectly  then Accept := True  else inherited;
+  if FHandleDragDirectly
+     then OPeration := TDragOperation.Copy
+     else inherited;
 end;
 
 procedure TFregressiMain.DragDrop(const Data: TDragObject; const Point: TPointF);

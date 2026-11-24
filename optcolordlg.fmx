@@ -11,7 +11,7 @@ object OptionCouleurDlg: TOptionCouleurDlg
   FormFactor.Width = 1920
   FormFactor.Height = 1200
   FormFactor.Devices = [Desktop]
-  OnActivate = FormActivate
+  OnShow = FormShow
   Left = 452
   Top = 210
   DesignerMasterStyle = 0

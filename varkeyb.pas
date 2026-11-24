@@ -171,10 +171,16 @@ begin
      GridConst.StopEdit;
      for i := 1 to pred(GridVariab.RowCount) do
          if not Ajoute(i,gridVariab,variable) then exit;
+     if NbreVariab=0 then begin
+        resetEnTete;
+        afficheErreur(erNomVide,0);
+        GridVariab.FocusedCell := makeCell(0,1);
+        GridVariab.SetFocus;
+        exit;
+     end;
      for i := 1 to pred(GridConst.RowCount) do
          if not Ajoute(i,gridConst,constante) then exit;
      modalResult := mrOK;
-     FichierTrie := DataTrieGlb;
      AjoutePage;
      pages[pageCourante].AffecteVariableP(false);
      ModifFichier := true;

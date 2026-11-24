@@ -130,7 +130,7 @@ type
     FondReticuleColor: TTMSFNCColorPicker;
     FondColor: TTMSFNCColorPicker;
     GrilleColor: TTMSFNCColorPicker;
-    procedure FormActivate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure SetModif(Sender: TObject);
     procedure OKBtnClick(Sender: TObject);
     procedure PointComboChange(Sender: TObject);
@@ -163,7 +163,7 @@ implementation
 
 uses regMain, AideU;
 
-procedure TOptionCouleurDlg.FormActivate(Sender: TObject);
+procedure TOptionCouleurDlg.FormShow(Sender: TObject);
 
 procedure AffecteCouleur(abox : TcolorComboBox);
 begin
@@ -217,6 +217,8 @@ begin
     CouleurTexte := FondColor.selectedColor;
     if ReticuleCB.itemIndex>=0 then
        PstyleReticule := TStrokeDash(ReticuleCB.itemIndex);
+    if TangenteCB.itemIndex>=0 then
+       styleTangente := TStrokeDash(TangenteCB.itemIndex);
     penWidthEcran:= widthEcranSE.value;
     if traitRB.ischecked then reperePage := spStyle;
     if couleurRB.ischecked then reperePage := spcouleur;
@@ -264,12 +266,13 @@ end;
 procedure TOptionCouleurDlg.ResetBtnClick(Sender: TObject);
 var i,j : integer;
 begin
-     for i := 0 to pred(NbreCouleur) do begin
+     for i := 0 to MaxPages do begin
          j := (i mod 4) +1;
          CouleurPages[i] := couleurInit[j];
          MotifPages[i] := motifInit[j];
          PstylePages[i] := PstyleInit[j];
      end;
+     PageSEChange(Sender);
 end;
 
 procedure TOptionCouleurDlg.ColorModeleChange(Sender: TObject);

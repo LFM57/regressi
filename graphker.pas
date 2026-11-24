@@ -91,7 +91,6 @@ const
   BrushCouleurSelect = TAlphaColor($FFD62728);
   CouleurAxeX        = TAlphaColor($FF374151);
   CouleurCadre       = TAlphaColor($FFD1D5DB);
-  styleTangente      = TStrokeDash.Solid;
   NbreLigneDessin = 14;
   maxPagesGr = MaxPages;
 
@@ -108,6 +107,7 @@ var
   UseFaussesCouleurs: boolean = True;
   DimPointVGA:        integer = 4; // dimension du point en pixel VGA
   PStyleReticule:     TStrokeDash = TStrokeDash.Solid;
+  styleTangente:      TStrokeDash = TStrokeDash.Solid;
   CouleurVitesseImposee: boolean = True;
   StyleIncertitude:   TStyleIncertitude = siBarresEtEllipse;
 

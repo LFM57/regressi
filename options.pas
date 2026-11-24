@@ -81,7 +81,7 @@ type
     Label2: TLabel;
     procedure NbreSpinButtonDownClick(Sender: TObject);
     procedure NbreSpinButtonUpClick(Sender: TObject);
-    procedure FormActivate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure OKBtnClick(Sender: TObject);
     procedure NbreEditChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -124,7 +124,7 @@ begin
      end;
 end;
 
-procedure TOptionsDlg.FormActivate(Sender: TObject);
+procedure TOptionsDlg.FormShow(Sender: TObject);
 begin
        inherited;
        widthEcranSE.value := penWidthEcran;
@@ -162,11 +162,14 @@ begin
     Rini := TIniFile.create(registreReg);
     try
     Rini.WriteInteger('PenStyle','Reticule',ord(PstyleReticule));
+    Rini.WriteInteger('PenStyle','Tangente',ord(styleTangente));
+    Rini.WriteBool('Graphe','Reticule',withReticule);
     Rini.WriteInteger('Color','Reticule',colorToInt(couleurReticule));
     Rini.WriteInteger('Color','FondReticule',colorToInt(FondReticule));
     Rini.writeInteger('Dérivée','Nombre',NbrePointDerivee);
     Rini.writeBool('Dérivée','Extrapole',ExtrapoleDerivee);
     Rini.writeInteger('Calcul','OrdreFiltrage',OrdreFiltrage);
+    Rini.writeInteger('Calcul','OrdreLissage',OrdreLissage);
     Rini.writeBool('Calcul','Cosinus',ModeleCosinus);
     Rini.writeInteger('Point','Taille',dimPointVGA);
     Rini.writeInteger('Color','Axe',colorToInt(couleurGrille));
@@ -282,11 +285,14 @@ exit;
   try
   ModeleCosinus := Rini.ReadBool('Calcul','Cosinus',ModeleCosinus);
   PstyleReticule := TStrokeDash(Rini.ReadInteger('PenStyle','Reticule',0));
+  styleTangente := TStrokeDash(Rini.ReadInteger('PenStyle','Tangente',ord(styleTangente)));
+  withReticule := Rini.ReadBool('Graphe','Reticule',withReticule);
   LitColor(Rini,'Reticule',CouleurReticule);
   couleurFoncee(CouleurReticule);
   LitColor(Rini,'FondReticule',FondReticule);
   couleurClaire(FondReticule);
   OrdreFiltrage := Rini.ReadInteger('Calcul','OrdreFiltrage',OrdreFiltrage);
+  OrdreLissage := Rini.ReadInteger('Calcul','OrdreLissage',OrdreLissage);
   CoeffEllipse := Rini.ReadInteger('Graphe','CoeffEllipse',1);
   if coeffEllipse=2 then coeffEllipse := 1.96; // 95 %
   if coeffEllipse=3 then coeffEllipse := 2.58; // 99 %
@@ -401,6 +407,9 @@ begin
     end;
     WriteInteger('Color','FondMarque',ColorToInt(FondReticule));
     WriteInteger('Graphe','Tangente',ord(LigneRappelTangente));
+    WriteInteger('PenStyle','Tangente',ord(styleTangente));
+    WriteBool('Graphe','Reticule',withReticule);
+    WriteInteger('Calcul','OrdreLissage',OrdreLissage);
     writeBool('Graphe','OptionsXY',avecOptionsXY);
     writeBool('Graphe','Grille',OgQuadrillage in OptionGrapheDefault);
     writeBool('Graphe','ZeroIdem',OgMemeZero in OptionGrapheDefault);

@@ -10,7 +10,7 @@ object OptionsDlg: TOptionsDlg
   FormFactor.Width = 1920
   FormFactor.Height = 1200
   FormFactor.Devices = [Desktop]
-  OnActivate = FormActivate
+  OnShow = FormShow
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   Left = 339

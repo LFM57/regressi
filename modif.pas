@@ -112,7 +112,7 @@ end end;
 
 procedure TModifDlg.OKBtnClick(Sender: TObject);
 
-Procedure SetNom;
+Function SetNom : boolean;
 var newNom,oldNom : string;
     longueurNom : integer;
 
@@ -120,26 +120,41 @@ Function ModifExpression(tampon : string) : string;
 var posNom,suiteNom : integer;
     debutCorrect,FinCorrect : boolean;
 begin
-     posNom := system.strUtils.PosEx(oldNom,tampon,0);
+     if LongueurNom=0 then begin
+        result := tampon;
+        exit;
+     end;
+     posNom := system.strUtils.PosEx(oldNom,tampon,1);
      while posNom>0 do begin
            debutCorrect := (posNom=1) or
                charinset(tampon[pred(posNom)],['=',' ','(','''','*','+','-','/']);
            suiteNom := posNom+LongueurNom;
            finCorrect := (suiteNom=length(tampon)+1) or
-                  charinset(tampon[suiteNom],['*','+','-','/',':',')','^',',']);
+                  charinset(tampon[suiteNom],['*','+','-','/',':',')','^',',',' ']);
            if debutCorrect and finCorrect then begin
                 delete(tampon,posNom,LongueurNom);
                 insert(NewNom,tampon,posNom);
-           end;
-           posNom := PosEx(oldNom,tampon,posNom);
+                posNom := system.strUtils.PosEx(oldNom,tampon,posNom+length(NewNom));
+           end
+           else posNom := system.strUtils.PosEx(oldNom,tampon,posNom+1);
       end;
       result := tampon;
 end;
 
 var i : integer;
 begin
+       result := true;
        oldNom := grandeurModif.nom;
        newNom := editNom.text;
+       trimComplet(newNom);
+       if newNom=oldNom then exit;
+       if not NomCorrect(newNom,indexV) then begin
+          afficheErreur(codeErreurC,0);
+          editNom.setFocus;
+          ModalResult := mrNone;
+          result := false;
+          exit;
+       end;
        LongueurNom := length(oldNom);
        for i := 0 to pred(Fvaleurs.memo.lines.count) do
            Fvaleurs.memo.lines[i] := ModifExpression(Fvaleurs.memo.lines[i]);
@@ -209,9 +224,9 @@ end; // SetIncertitude
 begin
      if not setIncertitude then exit;
      if not setUnites then exit;
+     if editNom.enabled and (grandeurModif.nom<>EditNom.Text) and not setNom then exit;
      with grandeurModif do begin
          formatU := TnombreFormat(PrecisionCB.itemIndex);
-         if editNom.enabled and (nom<>EditNom.Text) then setNom;
          fonct.expression := EditComm.text;
          precisionU := round(precisionSE.value);
          AffSignif := AffSignifCB.isChecked;
@@ -219,21 +234,34 @@ begin
 end; // OKBtnClick
 
 procedure TModifDlg.PrecisionCBChange(Sender: TObject);
-const
-     text : array[1..5] of string =
-          ('chiffres','décimales','chiffres',
-           'bits','bits');
-     Min : array[1..5] of integer = (2,0,2,1,1);
-     Max : array[1..5] of integer = (12,12,12,8,8);
 begin
-     LabelPrecision.visible := (PrecisionCB.itemIndex>0) and
-                               (PrecisionCB.itemIndex<6);
-     PrecisionSE.visible := LabelPrecision.visible;
-     if LabelPrecision.visible then begin
-         LabelPrecision.Text  := 'Nombre de '+text[PrecisionCB.itemIndex];
-         PrecisionSE.min := min[PrecisionCB.itemIndex];
-         PrecisionSE.max := max[PrecisionCB.itemIndex];
+     if PrecisionCB.itemIndex<0 then begin
+        LabelPrecision.visible := false;
+        PrecisionSE.visible := false;
+        exit;
      end;
+     case TnombreFormat(PrecisionCB.itemIndex) of
+          fExponent : begin
+             LabelPrecision.visible := true;
+             LabelPrecision.Text := 'Nombre de chiffres';
+             PrecisionSE.min := 2;
+             PrecisionSE.max := 12;
+          end;
+          fFixed : begin
+             LabelPrecision.visible := true;
+             LabelPrecision.Text := 'Nombre de décimales';
+             PrecisionSE.min := 0;
+             PrecisionSE.max := 12;
+          end;
+          fBinary, fHexa : begin
+             LabelPrecision.visible := true;
+             LabelPrecision.Text := 'Nombre de bits';
+             PrecisionSE.min := 1;
+             PrecisionSE.max := 8;
+          end;
+          else LabelPrecision.visible := false;
+     end;
+     PrecisionSE.visible := LabelPrecision.visible;
 end;
 
 procedure TModifDlg.RazIncertitudeBtnClick(Sender: TObject);

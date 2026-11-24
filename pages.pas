@@ -645,8 +645,11 @@ begin
           Pages[NumeroPage].nmes := oldNmes+nbre;
           for j := 1 to NbreGrandeursSauvees do begin
               index := IndexNom(nomData[j]);
-              for i := 0 to pred(nbre) do
+              if index<>grandeurInconnue then
+              for i := 0 to pred(nbre) do begin
                   Pages[NumeroPage].valeurVar[index,oldNmes+i] := valeurVect[j,i];
+                  Pages[NumeroPage].incertVar[index,oldNmes+i] := incertVect[j,i];
+              end;
           end;
           pages[NumeroPage].TriAFaire := true;
           pages[NumeroPage].Tri;
@@ -656,7 +659,7 @@ begin
           index := AjouteGrandeurE(GrandeurSauvee);
           for p := 1 to NbrePages do begin
               pages[p].valeurConst[index] := valeurUnique[p];
-              pages[p].incertConst[index] := valeurUnique[p];
+              pages[p].incertConst[index] := incertUnique[p];
           end;
        end;
        UsupprVariab : begin
