@@ -172,6 +172,21 @@ begin
     if suivantA2 then result := result + 'Â';
 end;
 
+Function LigneDeChiffres(const s : String) : boolean;
+var j : integer;
+    AvecChiffres : boolean;
+begin
+    Result := false;
+    AvecChiffres := false;
+    for j := 1 to length(s) do
+        if charinset(s[j],chiffreEtc) or
+           (charinset(s[j],caracPrefixe) and (j>1) and
+           s[j-1].isDigit)
+           then avecChiffres := true
+           else if not charinset(s[j],separateur) then exit;
+    result := avecChiffres;
+end;
+
 function TFichierRegressi.LitCSV(const NomFichier : String;NouveauFichier : boolean) : boolean;
 var
     nom,unite : array[codeGrandeur] of string;
@@ -1683,21 +1698,6 @@ begin
      except
      end;
 end; // EcritTableur
-
-Function LigneDeChiffres(const s : String) : boolean;
-var j : integer;
-    AvecChiffres : boolean;
-begin
-    Result := false;
-    AvecChiffres := false;
-    for j := 1 to length(s) do
-        if charinset(s[j],chiffreEtc) or
-           (charinset(s[j],caracPrefixe) and (j>1) and
-           s[j-1].isDigit)
-           then avecChiffres := true
-           else if not charinset(s[j],separateur) then exit;
-    result := avecChiffres;
-end;
 
 procedure TFichierRegressi.ChercheTab;
 

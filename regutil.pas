@@ -297,6 +297,7 @@ const
               phiMin+phiMaj+chiMin+psiMin+psiMaj+omegaMin+omegaMaj;
 
         ChiffreEtc : tSysCharSet = ['0'..'9','+','-','e','E','.',','];
+        CaracNombre : tSysCharSet = ['0'..'9','+','-','e','E','.',',','/',':'];
         CaracDateTime : tSysCharSet = ['0'..'9','/',':',' '];
         CharGetFloat : tSysCharSet = ['0'..'9','+','-','e','E','.',',','*','/','^',
             'P','p','I','i',piMin,piMaj,'m','µ','n','f','k','M','G','T',
