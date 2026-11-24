@@ -2319,7 +2319,12 @@ end;
 
 procedure TFRegressiMain.IncertItemClick(Sender: TObject);
 begin
-  TraceEllipse := IncertItem.isChecked;
+  if Sender is TMenuItem then
+    TraceEllipse := (Sender as TMenuItem).IsChecked
+  else
+    TraceEllipse := not TraceEllipse;
+  IncertItem.IsChecked := TraceEllipse;
+  ModeleIncertItem.IsChecked := TraceEllipse;
   paintBox1.repaint;
 end;
 

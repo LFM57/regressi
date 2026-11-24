@@ -1967,7 +1967,7 @@ var
     decaleLoc: single;
     P0,P: TpointF;
     zeroSpectre : double;
-    motifLoc: Tmotif;
+    baseMotif, motifLoc: Tmotif;
 
     procedure InitSpectre;
     var P1,P2 : TpointF;
@@ -2025,44 +2025,73 @@ var
         hasErrX, hasErrY : boolean;
         capSize, dotR, ex1, ey1, ex2, ey2 : single;
         errRect : TRectF;
+
+      procedure DrawMarker(aMotif: Tmotif; ensureFill: boolean);
+      begin with courbes[index] do
+        case aMotif of
+          mCroix: begin
+            SegmentXY(P.x-dimPoint,P.y, P.x+dimPoint, P.y);
+            SegmentXY(P.x,p.y- dimPoint, P.x,p.Y+dimPoint);
+          end;
+          mCroixDiag: begin
+            segmentXY(P.x- dimPoint,P.y - dimPoint,P.x+dimPoint,P.y+dimPoint);
+            segmentXY(P.x+dimPoint,P.y - dimPoint,P.x- dimPoint,P.y+ dimPoint);
+          end;
+          mCercle:
+            MyDrawEllipse(P.x- dimPoint,P.y - dimPoint,P.x+dimPoint + 1,P.Y+dimPoint + 1);
+          mCerclePlein: begin
+            if ensureFill then CreateSolidBrush(couleurLoc);
+            MyFillEllipse(P.x- dimPoint,P.y - dimPoint,P.x+dimPoint + 1,P.Y+dimPoint + 1);
+            if ensureFill then Canvas.Fill.Kind := TBrushKind.None;
+          end;
+          mCarre: MyDrawRectXY(P.x- dimPoint,P.Y-dimPoint,P.x+dimPoint,P.Y+dimPoint);
+          mCarrePlein: begin
+            if ensureFill then CreateSolidBrush(couleurLoc);
+            MyFillRectXY(P.x- dimPoint,P.Y-dimPoint,P.x+dimPoint,P.Y+dimPoint);
+            if ensureFill then Canvas.Fill.Kind := TBrushKind.None;
+          end;
+          mLosange,mLosangePlein: begin
+            FPath := TPathData.Create;
+            P1 := P;
+            P1.Offset(-dimPoint,0);
+            Fpath.moveTo(P1);
+            P1 := P;
+            P1.Offset(0,-dimPoint);
+            Fpath.lineTo(P1);
+            P1 := P;
+            P1.Offset(dimPoint,0);
+            Fpath.lineto(P1);
+            P1 := P;
+            P1.Offset(0,dimPoint);
+            Fpath.lineTo(P1);
+            Fpath.closePath;
+            if aMotif=mLosangePlein then begin
+              if ensureFill then CreateSolidBrush(couleurLoc);
+              Canvas.FillPath(FPath, 1);
+              if ensureFill then Canvas.Fill.Kind := TBrushKind.None;
+            end;
+            Canvas.DrawPath(FPath, 1);
+            FPath.Free;
+          end;
+          mReticule: begin
+            WindowRT(monde[mondeX].mini,monde[iMondeC].mini, iMondeC, P0);
+            WindowRT(monde[mondeX].maxi,monde[iMondeC].maxi, iMondeC, P1);
+            if P.y<>P0.y then Segment(TpointF.create(P0.x, P.y), P);
+            if P.x<>P0.x then Segment(TpointF.create(P.x, P0.y), P);
+            MyDrawEllipse(P.x- dimPoint,P.y - dimPoint,P.x+dimPoint + 1,P.y+dimPoint + 1);
+          end;
+          mLigneH: Segment(TpointF.create(P.x - dimPoint, P.y), TpointF.create(P.x + dimPoint, P.y));
+        end;
+      end;
+
     begin with courbes[index] do begin
         WindowRT(valX[i], valY[i], iMondeC, P);
         if (P.x > 0) and (P.y >= miniY) and (P.y <= maxiY) then
           if pages[page].PointActif[i] then
             case MotifLoc of
-              mCroix: begin
-                SegmentXY(P.x-dimPoint,P.y, P.x+dimPoint, P.y);
-                SegmentXY(P.x,p.y- dimPoint, P.x,p.Y+dimPoint);
-              end;
-              mCroixDiag: begin
-                segmentXY(P.x- dimPoint,P.y - dimPoint,P.x+dimPoint,P.y+dimPoint);
-                segmentXY(P.x+dimPoint,P.y - dimPoint,P.x- dimPoint,P.y+ dimPoint);
-              end;
-              mCercle:
-                MyDrawEllipse(P.x- dimPoint,P.y - dimPoint,P.x+dimPoint + 1,P.Y+dimPoint + 1);
-              mCerclePlein:
-                MyFillEllipse(P.x- dimPoint,P.y - dimPoint,P.x+dimPoint + 1,P.Y+dimPoint + 1);
-              mCarre: MyDrawRectXY(P.x- dimPoint,P.Y-dimPoint,P.x+dimPoint,P.Y+dimPoint);
-              mCarrePlein: MyFillRectXY(P.x- dimPoint,P.Y-dimPoint,P.x+dimPoint,P.Y+dimPoint);
-              mLosange,mLosangePlein: begin
-                FPath := TPathData.Create;
-                P1 := P;
-                P1.Offset(-dimPoint,0);
-                Fpath.moveTo(P1);
-                P1 := P;
-                P1.Offset(0,-dimPoint);
-                Fpath.lineTo(P1);
-                P1 := P;
-                P1.Offset(dimPoint,0);
-                Fpath.lineto(P1);
-                P1 := P;
-                P1.Offset(0,dimPoint);
-                Fpath.lineTo(P1);
-                Fpath.closePath;
-                if motifLoc=mLosangePlein then Canvas.FillPath(FPath, 1);
-                Canvas.DrawPath(FPath, 1);
-                FPath.Free;
-              end;
+              mCroix, mCroixDiag, mCercle, mCerclePlein, mCarre, mCarrePlein,
+              mLosange, mLosangePlein, mReticule, mLigneH:
+                DrawMarker(MotifLoc, False);
               mSpectre: begin
                 segmentXY(P.x, zeroSpectre,P.x + decaleLoc,zeroSpectre-decaleLoc); // ligne de rappel
                 segmentXY(P.x + decaleLoc, zeroSpectre - decaleLoc,P.x+decaleLoc,P.y-decaleLoc); // harmonique
@@ -2075,74 +2104,116 @@ var
                    MyFillRectXY(P.x - largeurHisto, P0.y, P.x + largeurHisto, P.y);
                    MyDrawRectXY(P.x - largeurHisto, P0.y, P.x + largeurHisto, P.y);
                  end;
-              mReticule: begin
-                WindowRT(monde[mondeX].mini,monde[iMondeC].mini, iMondeC, P0);
-                WindowRT(monde[mondeX].maxi,monde[iMondeC].maxi, iMondeC, P1);
-                if P.y<>P0.y then Segment(TpointF.create(P0.x, P.y), P);
-                if P.x<>P0.x then Segment(TpointF.create(P.x, P0.y), P);
-                MyDrawEllipse(P.x- dimPoint,P.y - dimPoint,P.x+dimPoint + 1,P.y+dimPoint + 1);
-              end;
-              mLigneH: Segment(TpointF.create(P.x - dimPoint, P.y), TpointF.create(P.x + dimPoint, P.y));
-              mIncert: if ((varX = nil) or (IncertX = nil)) and
-                          ((varY = nil) or (IncertY = nil))
-                then MyDrawRectXY(P.x- dimPoint,P.Y- dimPoint,P.x+dimPoint,P.Y+ dimPoint)
-                else begin
-                  if (varX <> nil) and (IncertX <> nil)
-                     then dxErr := Abs(CoeffEllipse * IncertX[i])
-                     else dxErr := 0;
-                  if (varY <> nil) and (IncertY <> nil)
-                     then dyErr := Abs(CoeffEllipse * IncertY[i])
-                     else dyErr := 0;
-                  WindowRT(valX[i] + dxErr, valY[i] - dyErr, iMondeC, P2);
-                  WindowRT(valX[i] - dxErr, valY[i] + dyErr, iMondeC, P1);
-                  hasErrX := (dxErr > 0) and (Abs(P2.X - P1.X) >= 1.5);
-                  hasErrY := (dyErr > 0) and (Abs(P2.Y - P1.Y) >= 1.5);
-                  if (not hasErrX) and (not hasErrY) then begin
-                    dotR := dimPoint * 0.6;
-                    if dotR < 2 then dotR := 2;
-                    CreateSolidBrush(couleurLoc);
-                    MyFillEllipse(P.x - dotR, P.y - dotR, P.x + dotR, P.y + dotR);
-                    Canvas.Fill.Kind := TBrushKind.None;
-                  end else begin
-                    if hasErrX and hasErrY and (StyleIncertitude in [siEllipse, siBarresEtEllipse]) then begin
-                      ex1 := P1.X; ex2 := P2.X;
-                      if ex1 > ex2 then begin dotR := ex1; ex1 := ex2; ex2 := dotR; end;
-                      ey1 := P1.Y; ey2 := P2.Y;
-                      if ey1 > ey2 then begin dotR := ey1; ey1 := ey2; ey2 := dotR; end;
-                      errRect := TRectF.Create(ex1, ey1, ex2, ey2);
-                      CreateSolidBrush(TAlphaColor((couleurLoc and $00FFFFFF) or $28000000));
-                      Canvas.FillEllipse(errRect, 1);
-                      Canvas.Fill.Kind := TBrushKind.None;
-                      CreatePen(TStrokeDash.Solid, 1, TAlphaColor((couleurLoc and $00FFFFFF) or $99000000));
-                      Canvas.DrawEllipse(errRect, 1);
-                    end;
-                    if (StyleIncertitude in [siBarres, siBarresEtEllipse]) or
-                       (hasErrX xor hasErrY) then begin
-                      capSize := dimPoint;
-                      if capSize < 3 then capSize := 3;
-                      if capSize > 6 then capSize := 6;
-                      dotR := penWidth * 0.75;
-                      if dotR < 1 then dotR := 1;
+              mIncert: begin
+                if (varX <> nil) and (IncertX <> nil) and (i < Length(IncertX)) and (not IsNan(IncertX[i]))
+                   then dxErr := Abs(CoeffEllipse * IncertX[i])
+                   else dxErr := 0;
+                if (varY <> nil) and (IncertY <> nil) and (i < Length(IncertY)) and (not IsNan(IncertY[i]))
+                   then dyErr := Abs(CoeffEllipse * IncertY[i])
+                   else dyErr := 0;
+                if (dxErr = 0) and (dyErr = 0) then begin
+                  hasErrX := False;
+                  hasErrY := False;
+                end else if OgPolaire in OptionGraphe then begin
+                  hasErrX := False;
+                  hasErrY := False;
+                  dotR := penWidth * 0.75;
+                  if dotR < 1 then dotR := 1;
+                  if dxErr > 0 then begin
+                    WindowRT(valX[i] - dxErr, valY[i], iMondeC, P1);
+                    WindowRT(valX[i] + dxErr, valY[i], iMondeC, P2);
+                    if (not IsNan(P1.X)) and (not IsNan(P1.Y)) and
+                       (not IsNan(P2.X)) and (not IsNan(P2.Y)) and
+                       (Hypot(P2.X - P1.X, P2.Y - P1.Y) >= 1.5) then begin
+                      hasErrX := True;
                       CreatePen(TStrokeDash.Solid, dotR, couleurLoc);
-                      if hasErrX then begin
-                        SegmentXY(P1.X, P.Y, P2.X, P.Y);
-                        SegmentXY(P1.X, P.Y - capSize, P1.X, P.Y + capSize);
-                        SegmentXY(P2.X, P.Y - capSize, P2.X, P.Y + capSize);
-                      end;
-                      if hasErrY then begin
-                        SegmentXY(P.X, P1.Y, P.X, P2.Y);
-                        SegmentXY(P.X - capSize, P1.Y, P.X + capSize, P1.Y);
-                        SegmentXY(P.X - capSize, P2.Y, P.X + capSize, P2.Y);
-                      end;
+                      Segment(P1, P2);
                     end;
+                  end;
+                  if dyErr > 0 then begin
+                    WindowRT(valX[i], valY[i] - dyErr, iMondeC, P1);
+                    WindowRT(valX[i], valY[i] + dyErr, iMondeC, P2);
+                    if (not IsNan(P1.X)) and (not IsNan(P1.Y)) and
+                       (not IsNan(P2.X)) and (not IsNan(P2.Y)) and
+                       (Hypot(P2.X - P1.X, P2.Y - P1.Y) >= 1.5) then begin
+                      hasErrY := True;
+                      CreatePen(TStrokeDash.Solid, dotR, couleurLoc);
+                      Segment(P1, P2);
+                    end;
+                  end;
+                  if hasErrX or hasErrY then begin
                     dotR := dimPoint * 0.55;
                     if dotR < 2 then dotR := 2;
                     CreateSolidBrush(couleurLoc);
                     MyFillEllipse(P.x - dotR, P.y - dotR, P.x + dotR, P.y + dotR);
                     Canvas.Fill.Kind := TBrushKind.None;
                     CreatePen(TStrokeDash.Solid, penWidth, couleurLoc);
+                  end else if baseMotif <> mIncert then
+                    DrawMarker(baseMotif, True)
+                  else begin
+                    dotR := dimPoint * 0.6;
+                    if dotR < 2 then dotR := 2;
+                    CreateSolidBrush(couleurLoc);
+                    MyFillEllipse(P.x - dotR, P.y - dotR, P.x + dotR, P.y + dotR);
+                    Canvas.Fill.Kind := TBrushKind.None;
                   end;
-                end // Incertitude
+                  exit;
+                end else begin
+                  WindowRT(valX[i] + dxErr, valY[i] - dyErr, iMondeC, P2);
+                  WindowRT(valX[i] - dxErr, valY[i] + dyErr, iMondeC, P1);
+                  hasErrX := (dxErr > 0) and (not IsNan(P1.X)) and (not IsNan(P2.X)) and (Abs(P2.X - P1.X) >= 1.5);
+                  hasErrY := (dyErr > 0) and (not IsNan(P1.Y)) and (not IsNan(P2.Y)) and (Abs(P2.Y - P1.Y) >= 1.5);
+                end;
+                if (not hasErrX) and (not hasErrY) then begin
+                  if baseMotif <> mIncert then
+                    DrawMarker(baseMotif, True)
+                  else begin
+                    dotR := dimPoint * 0.6;
+                    if dotR < 2 then dotR := 2;
+                    CreateSolidBrush(couleurLoc);
+                    MyFillEllipse(P.x - dotR, P.y - dotR, P.x + dotR, P.y + dotR);
+                    Canvas.Fill.Kind := TBrushKind.None;
+                  end;
+                end else begin
+                  if hasErrX and hasErrY and (StyleIncertitude in [siEllipse, siBarresEtEllipse]) then begin
+                    ex1 := P1.X; ex2 := P2.X;
+                    if ex1 > ex2 then begin dotR := ex1; ex1 := ex2; ex2 := dotR; end;
+                    ey1 := P1.Y; ey2 := P2.Y;
+                    if ey1 > ey2 then begin dotR := ey1; ey1 := ey2; ey2 := dotR; end;
+                    errRect := TRectF.Create(ex1, ey1, ex2, ey2);
+                    CreateSolidBrush(TAlphaColor((couleurLoc and $00FFFFFF) or $28000000));
+                    Canvas.FillEllipse(errRect, 1);
+                    Canvas.Fill.Kind := TBrushKind.None;
+                    CreatePen(TStrokeDash.Solid, 1, TAlphaColor((couleurLoc and $00FFFFFF) or $99000000));
+                    Canvas.DrawEllipse(errRect, 1);
+                  end;
+                  if (StyleIncertitude in [siBarres, siBarresEtEllipse]) or
+                     (hasErrX xor hasErrY) then begin
+                    capSize := dimPoint;
+                    if capSize < 3 then capSize := 3;
+                    if capSize > 6 then capSize := 6;
+                    dotR := penWidth * 0.75;
+                    if dotR < 1 then dotR := 1;
+                    CreatePen(TStrokeDash.Solid, dotR, couleurLoc);
+                    if hasErrX then begin
+                      SegmentXY(P1.X, P.Y, P2.X, P.Y);
+                      SegmentXY(P1.X, P.Y - capSize, P1.X, P.Y + capSize);
+                      SegmentXY(P2.X, P.Y - capSize, P2.X, P.Y + capSize);
+                    end;
+                    if hasErrY then begin
+                      SegmentXY(P.X, P1.Y, P.X, P2.Y);
+                      SegmentXY(P.X - capSize, P1.Y, P.X + capSize, P1.Y);
+                      SegmentXY(P.X - capSize, P2.Y, P.X + capSize, P2.Y);
+                    end;
+                  end;
+                  dotR := dimPoint * 0.55;
+                  if dotR < 2 then dotR := 2;
+                  CreateSolidBrush(couleurLoc);
+                  MyFillEllipse(P.x - dotR, P.y - dotR, P.x + dotR, P.y + dotR);
+                  Canvas.Fill.Kind := TBrushKind.None;
+                  CreatePen(TStrokeDash.Solid, penWidth, couleurLoc);
+                end;
+              end // Incertitude
             end // case motif
           else begin // point inactif
             CreatePen(TStrokeDash.Solid, 1, claSilver);
@@ -2161,8 +2232,9 @@ var
       CreatePen(TStrokeDash.Solid, penWidth, couleurLoc);// par défaut
       if superposePage and (motif <= mCarrePlein) and
          (page <> 0) and (SPmotif=reperePage)
-            then motifLoc := motifPages[page mod MaxPages]
-            else motifLoc := motif;
+            then baseMotif := motifPages[page mod MaxPages]
+            else baseMotif := motif;
+      motifLoc := baseMotif;
       if TraceEllipse and not
         (motifLoc in [mSpectre, mHisto, mBarreD, mBarreG]) then
         motifLoc := mIncert;

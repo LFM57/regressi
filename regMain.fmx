@@ -946,6 +946,7 @@ object FRegressiMain: TFRegressiMain
               OnClick = IntersectionItemClick
             end
             object ModeleIncertItem: TMenuItem
+              AutoCheck = True
               Text = 'Incertitudes et '#967#178
               OnClick = IncertItemClick
             end
