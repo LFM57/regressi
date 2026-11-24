@@ -3280,9 +3280,6 @@ begin // graphe.draw
   if ReticuleOrigine.Visible
      then ReticuleOrigine.bringToFront;
   grapheOK := grapheOK and (courbes.Count > 0) and (pageCourante>0);
-  if grapheOK then
-     for i := 0 to Equivalences[pageCourante].Count-1 do
-         equivalences[pageCourante][i].paint;
  // canvas.Font.Family := FonteRegressi;
   layout.layoutCanvas := canvas;
 //  layout.Font.Family := FonteRegressi;
@@ -3321,6 +3318,8 @@ begin // graphe.draw
   for c := 0 to pred(Courbes.Count) do
       traceCourbe(c);
   MajDessins;
+  for i := 0 to Equivalences[pageCourante].Count-1 do
+      equivalences[pageCourante][i].paint;
   if graduationZeroX or graduationZeroY then drawAxis(False);
   DrawTitresAxeY;
   DrawLegend;
@@ -5479,6 +5478,7 @@ end;
 
 procedure TgrapheReg.CreatePen(aStyle : TStrokeDash;aWidth  : single;couleur : TAlphaColor);
 begin
+   canvas.Stroke.Kind := TBrushKind.Solid;
    canvas.Stroke.Dash := astyle;
    canvas.stroke.Color := couleur;
    canvas.stroke.Thickness := awidth;

@@ -1241,14 +1241,15 @@ begin // CompileP
               MajValeurConstGlb(i,posDebutLigne);
               posDebutLigne := posDebutLigne+length(memo.lines[i])+1; // +1=LF
           end;
-          if memoActif then begin // curseur en fin de mémo
+          if memoActif and (FRegressiMain.windowTab.ActiveTab = FRegressiMain.ValeursTab) then begin // curseur en fin de mémo
              memo.setFocus;
              Memo.gotoTextEnd;
           end;
           memo.selLength := 0;
           memo.repaint; // ??
           if ErreurConstante or ErreurForward then exit;  // ??
-          if feuillets.ActiveTab=ExpSheet then memo.setFocus;
+          if (FRegressiMain.windowTab.ActiveTab = FRegressiMain.ValeursTab) and
+             (feuillets.ActiveTab=ExpSheet) then memo.setFocus;
           modifFichier := modifFichier or (NbreGrandeurs<>oldNbreGrandeurs);
           FregressiMain.WMRegMaj(MajGrandeur);
         end

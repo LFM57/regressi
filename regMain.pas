@@ -1132,11 +1132,15 @@ begin with graphe do begin
                end;
                 // supprime
                if trouveI then begin
+                  if equivalenceCourante = aEquivalence then
+                     equivalenceCourante := nil;
                   equivalences[pageCourante].Remove(aEquivalence);
+                  aEquivalence.Free;
                   trouve := true;
                end
                else inc(i);
-            end;// with newEq
+            end
+            else inc(i); // with newEq
          end; // while
          if trouve then PaintBox.repaint;
          result := trouve;
@@ -1172,6 +1176,10 @@ begin // BarreEspace
          PaintBox.repaint;
    end;// curReticule
    curReticuleData : with graphe do begin
+        if (curseurCourant >= 1) and (curseurCourant <= 2) then
+           posSouris := curseurOsc[curseurCourant].Pc
+        else
+           posSouris := curseurOsc[1].Pc;
         if supprime(posSouris,curseurOsc[1].mondeC) then exit;
         for j := 1 to 2 do with curseurOsc[j] do
         if mondeC<>mondeX then begin
@@ -1881,7 +1889,7 @@ end;
 procedure TFRegressiMain.WindowTabChange(Sender: TObject);
 var i : integer;
 begin
-     if windowTab.ActiveTab<>ValeursTab then
+     if (windowTab.ActiveTab<>ValeursTab) and recompiler then
         Fvaleurs.recalculer;
      if windowTab.ActiveTab=GrapheTab then ;
      if windowTab.ActiveTab=GrapheParamTab then ;
