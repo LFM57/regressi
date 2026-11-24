@@ -792,7 +792,7 @@ begin // PaintBoxMouseMove
             hintLoc := hOrigine;
             ReticuleOrigine.centre := origin;
         end;
-        curEquivalence : begin
+        curEquivalence : if (indexCourbeEquivalence >= 0) and (indexCourbeEquivalence < courbes.Count) then begin
            iproche := PointProche(origin,indexCourbeEquivalence,true,ligneRappelTangente=lrTangente);
            if iProche>=0 then begin
               WindowRT(courbes[indexCourbeEquivalence].valX[iproche],
@@ -877,7 +877,17 @@ begin
          FRegressiMain.Cercle.width := 2*tailleEq;
          FRegressiMain.Cercle.height := 2*tailleEq;
      end;
-     if curseur=curSelect then FRegressiMain.SelectItem.IsChecked  := true;
+     with FRegressiMain do begin
+       SelectItem.IsChecked := (curseur = curSelect);
+       CurTexteItem.IsChecked := (curseur = curTexte);
+       CurLigneItem.IsChecked := (curseur = curLigne);
+       CurGommesItem.IsChecked := (curseur = curEfface);
+       CurReticuleItem.IsChecked := (curseur = curReticule);
+       curDataItem.IsChecked := (curseur = curReticuleData);
+       CurOrigineItem.IsChecked := (curseur = curOrigine);
+       CurReticuleModeleItem.IsChecked := (curseur = curReticuleModele);
+       TangenteItem.IsChecked := (curseur = curEquivalence);
+     end;
 end; // SetPenBrush
 
 procedure TgrapheResidu.PaintBoxPaint(miniX,maxiX: double);
@@ -999,9 +1009,13 @@ begin // MouseDown
               FPanLastPos := origin;
               setPenBrush(curMove);
        end; // curSelect
-       curEquivalence : if (lrEquivalence=ligneRappelTangente) then begin
+       curEquivalence : if (ligneRappelTangente in [lrEquivalence, lrTangente]) and
+                           (indexCourbeEquivalence >= 0) and (indexCourbeEquivalence < courbes.Count) then begin
            iproche := PointProche(origin,indexCourbeEquivalence,true,ligneRappelTangente=lrTangente);
-           if iProche>=0 then AjouteEquivalence(iProche,true);
+           if iProche>=0 then begin
+              AjouteEquivalence(iProche,true);
+              paintBox.repaint;
+           end;
            setPointCourant(iProche,indexCourbeEquivalence);
        end;
        curReticuleData : begin
@@ -2802,18 +2816,56 @@ end;// VecteursItemClick
 
 procedure TgrapheVariab.ChoixCurseurClick(sender : TObject);
 var  newCurseur : Tcurseur;
-     codeDerivee : integer;
+     codeDerivee, i, k : integer;
+     existedBefore, savedRecompiler : boolean;
+     nomDer : string;
 begin // ChoixCurseurClick
      newCurseur := Tcurseur((sender as Tcomponent).tag);
      (sender as TmenuItem).IsChecked := true;
      if (newCurseur=curEquivalence) then begin
-         codeDerivee := indexDerivee(monde[mondeY].axe,monde[mondeX].axe,true,true);
-         if codeDerivee=grandeurInconnue
-            then setPenBrush(curSelect)
-            else setPenBrush(curEquivalence);
-        ligneRappelCourante := lrEquivalence;
-        ligneRappelTangente := lrEquivalence;
-        exit;
+         if (courbes.Count = 0) or (monde[mondeY].axe = nil) or (monde[mondeX].axe = nil) then begin
+            setPenBrush(curSelect);
+            exit;
+         end;
+         indexCourbeEquivalence := -1;
+         for i := 0 to pred(courbes.Count) do
+            if (courbes[i].page = pageCourante) and (courbes[i].iMondeC = mondeY) and (courbes[i].varY <> nil) then begin
+               indexCourbeEquivalence := i;
+               if courbes[i].courbeExp then break;
+            end;
+         if indexCourbeEquivalence < 0 then
+            indexCourbeEquivalence := 0;
+         mondeDerivee := courbes[indexCourbeEquivalence].iMondeC;
+         if monde[mondeDerivee].axe = nil then mondeDerivee := mondeY;
+         if monde[mondeDerivee].axe = nil then begin
+            setPenBrush(curSelect);
+            exit;
+         end;
+         existedBefore := (indexDerivee(monde[mondeDerivee].axe, monde[mondeX].axe, false, false) <> grandeurInconnue);
+         codeDerivee := indexDerivee(monde[mondeDerivee].axe, monde[mondeX].axe, true, true);
+         if codeDerivee=grandeurInconnue then begin
+            setPenBrush(curSelect);
+            exit;
+         end;
+         if (not existedBefore) and (FValeurs <> nil) then begin
+            nomDer := 'd' + monde[mondeDerivee].axe.nom;
+            if (IndexNom(nomDer) <> grandeurInconnue) or (not NomCorrect(nomDer, grandeurInconnue)) then begin
+               k := 1;
+               repeat
+                  nomDer := 'der' + IntToStr(k) + '_' + monde[mondeDerivee].axe.nom;
+                  inc(k);
+               until (IndexNom(nomDer) = grandeurInconnue) and NomCorrect(nomDer, grandeurInconnue);
+            end;
+            grandeurs[codeDerivee].nom := nomDer;
+            savedRecompiler := Recompiler;
+            FValeurs.Memo.Lines.Add(nomDer + '=Diff(' + monde[mondeDerivee].axe.nom + ',' + monde[mondeX].axe.nom + ')');
+            Recompiler := savedRecompiler;
+         end;
+         if not (ligneRappelTangente in [lrEquivalence, lrTangente]) then
+            ligneRappelTangente := lrEquivalence;
+         ligneRappelCourante := ligneRappelTangente;
+         setPenBrush(curEquivalence);
+         exit;
      end;
      if (NewCurseur=curReticuleData) then begin
         setPenBrush(curSelect);
@@ -3264,7 +3316,8 @@ end end;
 
 procedure gereEquivalence(ajout : boolean);
 begin
-     if equivalenceCourante<>nil then with equivalenceCourante do begin
+     if (equivalenceCourante<>nil) and
+        (indexCourbeEquivalence >= 0) and (indexCourbeEquivalence < courbes.Count) then with equivalenceCourante do begin
           windowRT(Ve,pHe,mondeY,P);
           i := PointProche(P,indexCourbeEquivalence,true,ligneRappelTangente=lrTangente);
           if ajout and (i>=0) then begin
@@ -3303,7 +3356,8 @@ begin
            setPenBrush(CurSelect);
            exit;
         end;
-        curEquivalence : if equivalenceCourante<>nil then with equivalenceCourante do begin
+        curEquivalence : if (equivalenceCourante<>nil) and
+                            (indexCourbeEquivalence >= 0) and (indexCourbeEquivalence < courbes.Count) then with equivalenceCourante do begin
            windowRT(Ve,pHe,mondeY,P);
            i := PointProche(P,indexCourbeEquivalence,true,ligneRappelTangente=lrTangente);
            if (key=vkReturn) and (i>=0) then begin

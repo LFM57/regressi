@@ -1073,12 +1073,20 @@ begin
    end;
 end;
 
-var i,j : integer;
+var i,j,nMax : integer;
 begin // DeriveeLisse
     Ndiv2 := NbrePointDeriveeLisse div 2;
     setLength(xl,NbrePointDeriveeLisse+1);
     setLength(yl,NbrePointDeriveeLisse+1);
     setLength(yder,NbrePointDeriveeLisse+1);
+    nMax := Length(X);
+    if Length(Y) < nMax then nMax := Length(Y);
+    if (nMax < 3) or (index < 0) or (index >= nMax) then begin
+       for i := 0 to NbrePointDeriveeLisse do begin
+          xl[i] := Nan; yl[i] := Nan; yder[i] := Nan;
+       end;
+       exit;
+    end;
     degreDeriveeL := 2;
     (*
     if NbrePointDeriveeL>5
@@ -1088,6 +1096,14 @@ begin // DeriveeLisse
     ordre := degreDeriveeL+1;
     puissMax := 2*degreDeriveeL;
     ecart := NbrePointDeriveeL div 2;
+    if ecart > index then ecart := index;
+    if ecart > (nMax - 1 - index) then ecart := nMax - 1 - index;
+    if ecart < 1 then begin
+       for i := 0 to NbrePointDeriveeLisse do begin
+          xl[i] := X[index]; yl[i] := Y[index]; yder[i] := 0;
+       end;
+       exit;
+    end;
     initXY;
     affecteCoeff;
     x0 := x[index];

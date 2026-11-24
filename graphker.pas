@@ -308,10 +308,11 @@ type
     private
     pente: double;
     modelisee: boolean;
-    varY: Tgrandeur;
+    nomVarY: string;
     aGraphe: TgrapheReg;
     couleur: TAlphaColor;
     index1,index2: integer;
+    function GetVarY : Tgrandeur;
     function TexteY : string;
     function TexteX : string;
     function TextePente : string;

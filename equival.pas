@@ -1,5 +1,21 @@
 ﻿// equival.pas = include graphker
 
+function Tequivalence.GetVarY : Tgrandeur;
+var idx : integer;
+begin
+     result := nil;
+     if nomVarY <> '' then begin
+        idx := indexNom(nomVarY);
+        if idx <> grandeurInconnue then
+           result := grandeurs[idx];
+     end;
+     if (result = nil) and (aGraphe <> nil) then begin
+        result := aGraphe.monde[mondepH].axe;
+        if result = nil then
+           result := aGraphe.monde[mondeY].axe;
+     end;
+end;
+
 procedure TgrapheReg.traceUneCourbe(xvecteur,yvecteur : vecteur;N,Neq : integer;AColor : TAlphaColor);
 var i,j : integer;
      P : TPointF;
@@ -138,12 +154,12 @@ begin with agraphe do begin
           try
           if pente>0
              then begin
-                x1 := ve+(yMin-pHe)/pente;
-                x2 := ve+(yMax-pHe)/pente;
+                x1 := x+(yMin-y)/pente;
+                x2 := x+(yMax-y)/pente;
              end
              else begin
-                x1 := ve+(yMax-pHe)/pente;
-                x2 := ve+(yMin-pHe)/pente;
+                x1 := x+(yMax-y)/pente;
+                x2 := x+(yMin-y)/pente;
              end;
          if x1<xMin then x1 := xMin;
          if x2>xMax then x2 := xMax;
@@ -152,8 +168,8 @@ begin with agraphe do begin
              x2 := xMax;
          end;
     end;
-    windowXY(x1,y+pente*(x1-x),agraphe.MondeDerivee,point1);
-    windowXY(x2,y+pente*(x2-x),agraphe.MondeDerivee,point2);
+    windowXY(x1,y+pente*(x1-x),mondepH,point1);
+    windowXY(x2,y+pente*(x2-x),mondepH,point2);
     segment(point1,point2);
     try
     if abs(point2.x-point1.x)>abs(point2.y-point1.y)
@@ -167,7 +183,7 @@ begin with agraphe do begin
            dx := round(largeur/sqrt(1+K*K));
            dy := -round(K*dx);
       end;
-    windowXY(x,y,agraphe.MondeDerivee,point2);
+    windowXY(x,y,mondepH,point2);
     segmentXY(point2.x+dx,point2.y+dy,point2.x-dx,point2.y-dy);
     except
     end;
@@ -176,33 +192,45 @@ end end;
 procedure ChercheEquivalence(veAp,pheAp : double);
 
 function ChercheEqui(i : integer) : boolean;
-var v3,pH3,penteCourbe : double;
+var v3,pH3,penteCourbe,dx : double;
 // intersection droite (veeAp pHeAp penteTg) et (v3 ph3 penteCourbe)
 begin
+     result := false;
+     if (i < 0) or (succ(i) >= pages[pageCourante].nmes) then exit;
+     dx := aGraphe.monde[mondeX].axe.valeur[succ(i)]-aGraphe.monde[mondeX].axe.valeur[i];
+     if dx = 0 then exit;
      penteCourbe :=
-        (aGraphe.monde[MondeY].axe.valeur[succ(i)]-aGraphe.monde[mondeY].axe.valeur[i])/
-        (aGraphe.monde[mondeX].axe.valeur[succ(i)]-aGraphe.monde[mondeX].axe.valeur[i]);
+        (aGraphe.monde[mondepH].axe.valeur[succ(i)]-aGraphe.monde[mondepH].axe.valeur[i])/dx;
+     if pente = penteCourbe then exit;
      v3 := aGraphe.monde[mondeX].axe.valeur[i];
-     ph3 := agraphe.monde[mondeY].axe.valeur[i];
+     ph3 := agraphe.monde[mondepH].axe.valeur[i];
      ve := (pH3-penteCourbe*v3-pHeAp+pente*veAp)/(pente-penteCourbe);
      pHe := pH3+penteCourbe*(ve-v3);
      result := ((ve-agraphe.monde[mondeX].axe.valeur[succ(i)])*
                (ve-agraphe.monde[mondeX].axe.valeur[i])<=0) and
-               ((phe-agraphe.monde[mondeY].axe.valeur[succ(i)])*
-               (phe-agraphe.monde[mondeY].axe.valeur[i])<=0);
+               ((phe-agraphe.monde[mondepH].axe.valeur[succ(i)])*
+               (phe-agraphe.monde[mondepH].axe.valeur[i])<=0);
 end; // ChercheEqui
 
-var imax,i : integer;
+var imax,i,nLim : integer;
     trouve : boolean;
 begin  // ChercheEquivalence
+     nLim := pages[pageCourante].nmes - 2;
+     if nLim < 0 then begin
+        ve := veAp;
+        phe := pheAp;
+        exit;
+     end;
      i := index1;
      imax := index2;
      if imax<i then swap(i,imax);
-     repeat
+     if i < 0 then i := 0;
+     if imax > nLim then imax := nLim;
+     trouve := false;
+     while (not trouve) and (i <= imax) do begin
         trouve := ChercheEqui(i);
-// result si vee entre les deux points
         if not trouve then inc(i);
-     until trouve or (i>iMax);
+     end;
      if not trouve then begin
         ve := veAp;
         phe := pheAp;
@@ -212,7 +240,7 @@ end; // ChercheEquivalence
 procedure AffineEquivalence;
 var xvecteur1,yvecteur1,derivee1,xvecteur2,yvecteur2,derivee2 : vecteur;
     i,N2,N2Modele : integer;
-    nbrePointDeriveeL : integer;
+    nbrePointDeriveeL, nmesLoc, maxEcart : integer;
     ecart,ecartRef : double;
     ecartGrand : boolean;
 
@@ -309,10 +337,22 @@ begin with modeleApres do begin
 end end;
 
 begin
-    NbrePointDeriveeL := 2*(index2 - index1) div 3;
+    if (agraphe.monde[mondeX].axe = nil) or (agraphe.monde[mondepH].axe = nil) then exit;
+    nmesLoc := pages[pageCourante].nmes;
+    if Length(agraphe.monde[mondeX].axe.valeur) < nmesLoc then
+       nmesLoc := Length(agraphe.monde[mondeX].axe.valeur);
+    if Length(agraphe.monde[mondepH].axe.valeur) < nmesLoc then
+       nmesLoc := Length(agraphe.monde[mondepH].axe.valeur);
+    if (nmesLoc < 3) or (index1 < 0) or (index1 >= nmesLoc) or
+       (index2 < 0) or (index2 >= nmesLoc) then exit;
+    maxEcart := Min(Min(index1, nmesLoc - 1 - index1), Min(index2, nmesLoc - 1 - index2));
+    if maxEcart < 1 then exit;
+    NbrePointDeriveeL := 2*abs(index2 - index1) div 3;
     if not odd(NbrePointDeriveeL) then inc(NbrePointDeriveeL);
     if NbrePointDeriveeL<3 then NbrePointDeriveeL := 3;
     if NbrePointDeriveeL>7 then NbrePointDeriveeL := 7;
+    if (NbrePointDeriveeL div 2) > maxEcart then
+       NbrePointDeriveeL := 2 * maxEcart + 1;
     DeriveeLisse(agraphe.monde[mondeX].axe.valeur,
                  agraphe.monde[mondepH].axe.valeur,
                  nbrePointDeriveeL,
@@ -516,7 +556,7 @@ begin
      x1 := v1;
      y1 := ph1;
      mondepH := mondeY;
-     varY := nil;
+     nomVarY := '';
      isIntersection := false;
      couleur := GetCouleurPages(c);
      modelisee := false;
@@ -531,7 +571,7 @@ begin
      x2 := 0;  y2 := 0;
      x1 := 0;  y1 := 0;
      mondepH := mondeY;
-     varY := nil;
+     nomVarY := '';
      isIntersection := false;
      couleur := GetCouleurPages(pageCourante);
      modelisee := false;
@@ -540,7 +580,7 @@ end;
 constructor Tequivalence.Create(gr : TgrapheReg);
 begin
      agraphe := gr;
-     varY := nil;
+     nomVarY := '';
      isIntersection := false;
      modelisee := false;
      mondepH := mondeY;
@@ -556,29 +596,34 @@ Function ChercheVpHModele : boolean;
 var veAp,pHeAp : double;
 
 procedure ChercheEqui(i : integer);
-var v3,pH3,penteCourbe : double;
+var v3,pH3,penteCourbe,dx : double;
 // intersection droite (veeAp pHeAp pentetg) et (v3 ph3 pentecourbe)
 begin with courbes[indexCourbeEquivalence] do begin
-     penteCourbe :=
-        (valY[succ(i)]-valY[i])/
-        (valX[succ(i)]-valX[i]);
+     if (i < 0) or (succ(i) > finC) then exit;
+     dx := valX[succ(i)]-valX[i];
+     if dx = 0 then exit;
+     penteCourbe := (valY[succ(i)]-valY[i])/dx;
+     if penteTg = penteCourbe then exit;
      v3 := valX[i];
      ph3 := valY[i];
      vee := (pH3-penteCourbe*v3-pHeAp+penteTg*veAp)/(penteTg-penteCourbe);
      pHee := pH3+penteCourbe*(vee-v3);
 end end; // ChercheEqui
 
-var i3,i3ap,iprec,isuiv : integer;
-    derRef : double;
+var i3,i3ap,iprec,isuiv,iPeak,kLeft,kRight : integer;
+    derRef,derMax,minL,minR,refLevel : double;
     k,kmax : integer;
-    VcroissantSelonI,Croissant : boolean;
+    VcroissantSelonI,Croissant,trouvePaire : boolean;
 begin with courbes[indexCourbeEquivalence] do begin
      result := false;
+     if (finC < 2) or (i < 0) or (i > finC) then exit;
      vee := monde[mondeX].Maxi;
      penteTg := valYder[i];
+     if IsNan(penteTg) then exit;
      derRef := abs(penteTg);
      i2 := i;
      croissant := true;
+     trouvePaire := false;
      iprec := i2-2;
      if iprec<0 then iprec := 0;
      isuiv := i2+2;
@@ -593,17 +638,49 @@ begin with courbes[indexCourbeEquivalence] do begin
         repeat dec(i2)
         until (i2<0) or
               (abs(valYder[i2])>derRef);
-        if i2<0 then exit;
-        repeat dec(i2);
-        until (i2<0) or
-               (abs(valYder[i2])<derRef);
-        if i2<0 then exit;
+        if i2>=0 then begin
+          repeat dec(i2);
+          until (i2<0) or
+                 (abs(valYder[i2])<derRef);
+          if i2>=0 then trouvePaire := true;
+        end;
      end
      else begin
          repeat inc(i2);
          until (i2>finC) or
           (abs(valYder[i2])<derRef);
-         if i2>=finC then exit;
+         if i2<finC then trouvePaire := true;
+     end;
+     if not trouvePaire then begin
+        // Utilisateur a cliqué près/sur le point d'inflexion : chercher deux flancs de même pente
+        iPeak := i;
+        while (iPeak + 1 <= finC) and (abs(valYder[iPeak + 1]) > abs(valYder[iPeak])) do inc(iPeak);
+        while (iPeak - 1 >= 0) and (abs(valYder[iPeak - 1]) > abs(valYder[iPeak])) do dec(iPeak);
+        derMax := abs(valYder[iPeak]);
+        if (derMax <= 0) or IsNan(derMax) then exit;
+        minL := derMax;
+        for kLeft := iPeak - 1 downto 0 do
+           if abs(valYder[kLeft]) < minL then begin
+              minL := abs(valYder[kLeft]);
+              if minL <= 0.35 * derMax then break;
+           end;
+        minR := derMax;
+        for kRight := iPeak + 1 to finC do
+           if abs(valYder[kRight]) < minR then begin
+              minR := abs(valYder[kRight]);
+              if minR <= 0.35 * derMax then break;
+           end;
+        refLevel := Max(minL, minR);
+        if refLevel >= 0.98 * derMax then exit;
+        kLeft := iPeak - 1;
+        while (kLeft > 0) and (abs(valYder[kLeft]) > refLevel) do dec(kLeft);
+        i := kLeft;
+        penteTg := valYder[i];
+        derRef := abs(penteTg);
+        i2 := iPeak + 1;
+        while (i2 < finC) and (abs(valYder[i2]) > derRef) do inc(i2);
+        if (i2 > finC) or (i2 <= iPeak) then exit;
+        croissant := true;
      end;
      if not croissant then swap(i,i2);
 // i2 : point après l'équivalence de même pente
@@ -618,7 +695,8 @@ begin with courbes[indexCourbeEquivalence] do begin
      i3 := i;
      repeat
        inc(i3)
-     until (valX[i3]>veAp) or (i3>i2); // hypothèse VcroissantSelonI
+     until (valX[i3]>veAp) or (i3>=i2); // hypothèse VcroissantSelonI
+     if i3 >= finC then i3 := finC - 1;
      i3ap := i3;
      k := 0;
      kmax := (i2-i) div 2;
@@ -626,15 +704,15 @@ begin with courbes[indexCourbeEquivalence] do begin
      repeat
         inc(k);
         chercheEqui(i3);
-        result := (vee-valX[succ(i3)])*
-                  (vee-valX[i3])<=0;
+        result := (i3 >= 0) and (succ(i3) <= finC) and
+                  ((vee-valX[succ(i3)])*(vee-valX[i3])<=0);
 { result si vee entre les deux points }
         if not Result then begin
            if vee>valX[i3]
               then if VcroissantSelonI then inc(i3) else dec(i3)
               else if VcroissantSelonI then dec(i3) else inc(i3);
         end;
-     until result or (k>kmax) or (i3>i2) or (i3<i);
+     until result or (k>kmax) or (i3>=i2) or (i3<i) or (succ(i3)>finC);
      if not result then chercheEqui(i3Ap);
 // on remet à la valeur approchée la plus raisonnable
      result := (vee<monde[mondeX].maxi) and (vee>monde[mondeX].mini);
@@ -644,88 +722,145 @@ Function ChercheVpH : boolean;
 var veAp,pHeAp : double;
 
 procedure ChercheEqui(i : integer);
-var v3,pH3,penteCourbe : double;
+var v3,pH3,penteCourbe,dx : double;
 // intersection droite (veeAp pHeAp pentetg) et (v3 ph3 pentecourbe)
 begin
+     if (i < 0) or (succ(i) >= pages[pageCourante].nmes) then exit;
+     dx := monde[mondeX].axe.valeur[succ(i)]-monde[mondeX].axe.valeur[i];
+     if dx = 0 then exit;
      penteCourbe :=
-        (monde[MondeY].axe.valeur[succ(i)]-monde[mondeY].axe.valeur[i])/
-        (monde[mondeX].axe.valeur[succ(i)]-monde[mondeX].axe.valeur[i]);
+        (monde[mondeDerivee].axe.valeur[succ(i)]-monde[mondeDerivee].axe.valeur[i])/dx;
+     if penteTg = penteCourbe then exit;
      v3 := monde[mondeX].axe.valeur[i];
-     ph3 := monde[mondeY].axe.valeur[i];
+     ph3 := monde[mondeDerivee].axe.valeur[i];
      vee := (pH3-penteCourbe*v3-pHeAp+penteTg*veAp)/(penteTg-penteCourbe);
      pHee := pH3+penteCourbe*(vee-v3);
 end;// ChercheEqui
 
-var i3,iprec,isuiv : integer;
-    derRef : double;
+var i3,iprec,isuiv,iPeak,kLeft,kRight,nmesLoc : integer;
+    derRef,derMax,minL,minR,refLevel,dDer,dX : double;
     k,kmax : integer;
-    VcroissantSelonI,Croissant : boolean;
+    VcroissantSelonI,Croissant,trouvePaire : boolean;
 begin
      result := false;
+     nmesLoc := pages[pageCourante].nmes;
+     if (nmesLoc < 3) or (i < 0) or (i >= nmesLoc) then exit;
      vee := monde[mondeX].Maxi;
      penteTg := grandeurs[codeDerivee].valeur[i];
+     if IsNan(penteTg) then exit;
      derRef := abs(penteTg);
      i2 := i;
      croissant := true;
+     trouvePaire := false;
      iprec := i2-2;
      if iprec<0 then iprec := 0;
      isuiv := i2+2;
-     if isuiv>=pages[pageCourante].nmes
-        then isuiv := pred(pages[pageCourante].nmes);
+     if isuiv>=nmesLoc
+        then isuiv := pred(nmesLoc);
      with monde[mondeX].axe do VcroissantSelonI :=
           valeur[isuiv]>valeur[iprec];
      repeat inc(i2)
-     until (i2>=pages[pageCourante].nmes) or
+     until (i2>=nmesLoc) or
            (abs(grandeurs[codeDerivee].valeur[i2])>derRef);
-     if i2>=pages[pageCourante].nmes then begin
+     if i2>=nmesLoc then begin
         croissant := false;
         i2 := i;
         repeat dec(i2)
         until (i2<0) or
               (abs(grandeurs[codeDerivee].valeur[i2])>derRef);
-        if i2<0 then exit;
-        repeat dec(i2);
-        until (i2<0) or
-               (abs(grandeurs[codeDerivee].valeur[i2])<derRef);
-        if i2<0 then exit;
+        if i2>=0 then begin
+          repeat dec(i2);
+          until (i2<0) or
+                 (abs(grandeurs[codeDerivee].valeur[i2])<derRef);
+          if i2>=0 then trouvePaire := true;
+        end;
      end
      else begin
          repeat inc(i2);
-         until (i2>=pages[pageCourante].nmes) or
+         until (i2>=nmesLoc) or
           (abs(grandeurs[codeDerivee].valeur[i2])<derRef);
-         if i2>=pages[pageCourante].nmes then exit;
+         if i2<nmesLoc then trouvePaire := true;
+     end;
+     if not trouvePaire then begin
+        // Utilisateur a cliqué près/sur le point d'inflexion : chercher deux flancs de même pente
+        iPeak := i;
+        while (iPeak + 1 < nmesLoc) and (abs(grandeurs[codeDerivee].valeur[iPeak + 1]) > abs(grandeurs[codeDerivee].valeur[iPeak])) do inc(iPeak);
+        while (iPeak - 1 >= 0) and (abs(grandeurs[codeDerivee].valeur[iPeak - 1]) > abs(grandeurs[codeDerivee].valeur[iPeak])) do dec(iPeak);
+        derMax := abs(grandeurs[codeDerivee].valeur[iPeak]);
+        if (derMax <= 0) or IsNan(derMax) then exit;
+        minL := derMax;
+        for kLeft := iPeak - 1 downto 0 do
+           if abs(grandeurs[codeDerivee].valeur[kLeft]) < minL then begin
+              minL := abs(grandeurs[codeDerivee].valeur[kLeft]);
+              if minL <= 0.35 * derMax then break;
+           end;
+        minR := derMax;
+        for kRight := iPeak + 1 to pred(nmesLoc) do
+           if abs(grandeurs[codeDerivee].valeur[kRight]) < minR then begin
+              minR := abs(grandeurs[codeDerivee].valeur[kRight]);
+              if minR <= 0.35 * derMax then break;
+           end;
+        refLevel := Max(minL, minR);
+        if refLevel >= 0.98 * derMax then exit;
+        kLeft := iPeak - 1;
+        while (kLeft > 0) and (abs(grandeurs[codeDerivee].valeur[kLeft]) > refLevel) do dec(kLeft);
+        i := kLeft;
+        penteTg := grandeurs[codeDerivee].valeur[i];
+        derRef := abs(penteTg);
+        i2 := iPeak + 1;
+        while (i2 < pred(nmesLoc)) and (abs(grandeurs[codeDerivee].valeur[i2]) > derRef) do inc(i2);
+        if (i2 >= nmesLoc) or (i2 <= iPeak) then exit;
+        croissant := true;
      end;
      if not croissant then swap(i,i2);
 // i2 : point après l'équivalence de même pente 
      v11 := monde[mondeX].axe.valeur[i];
-     ph11 := monde[mondeY].axe.valeur[i];
-     v22 := monde[mondeX].axe.valeur[i2]+(penteTg-grandeurs[codeDerivee].valeur[i2])*
-        (monde[mondeX].axe.valeur[i2]-monde[mondeX].axe.valeur[pred(i2)])/
-        (grandeurs[codeDerivee].valeur[i2]-grandeurs[codeDerivee].valeur[pred(i2)]);
-     ph22 := monde[mondeY].axe.valeur[i2]+(v22-monde[mondeX].axe.valeur[i2])*
-        (monde[mondeY].axe.valeur[i2]-monde[mondeY].axe.valeur[pred(i2)])/
-        (monde[mondeX].axe.valeur[i2]-monde[mondeX].axe.valeur[pred(i2)]);
+     ph11 := monde[mondeDerivee].axe.valeur[i];
+     if (i2 > 0) and (i2 < nmesLoc) then begin
+        dDer := grandeurs[codeDerivee].valeur[i2]-grandeurs[codeDerivee].valeur[pred(i2)];
+        dX := monde[mondeX].axe.valeur[i2]-monde[mondeX].axe.valeur[pred(i2)];
+        if (dDer <> 0) and (not IsNan(dDer)) then
+           v22 := monde[mondeX].axe.valeur[i2]+(penteTg-grandeurs[codeDerivee].valeur[i2])*dX/dDer
+        else
+           v22 := monde[mondeX].axe.valeur[i2];
+        if (dX <> 0) and (not IsNan(dX)) then
+           ph22 := monde[mondeDerivee].axe.valeur[i2]+(v22-monde[mondeX].axe.valeur[i2])*
+              (monde[mondeDerivee].axe.valeur[i2]-monde[mondeDerivee].axe.valeur[pred(i2)])/dX
+        else
+           ph22 := monde[mondeDerivee].axe.valeur[i2];
+     end else begin
+        v22 := monde[mondeX].axe.valeur[i2];
+        ph22 := monde[mondeDerivee].axe.valeur[i2];
+     end;
 // valeur approchée de ve pHe
      veAp := (v11+v22)/2;
      pHeAp := (pH11+pH22)/2;
 // cherche intersection avec courbe
      i3 := (i+i2) div 2;
+     if i3 >= pred(nmesLoc) then i3 := nmesLoc - 2;
+     if i3 < 0 then i3 := 0;
      k := 0;
      kmax := abs(i3-i2);
      if kmax>16 then kmax := 16;
      repeat
         inc(k);
         chercheEqui(i3);
-        result := (vee-monde[mondeX].axe.valeur[succ(i3)])*
-                  (vee-monde[mondeX].axe.valeur[i3])<=0;
+        result := (i3 >= 0) and (succ(i3) < nmesLoc) and
+                  ((vee-monde[mondeX].axe.valeur[succ(i3)])*
+                   (vee-monde[mondeX].axe.valeur[i3])<=0);
 // result si vee entre les deux points
         if not Result then begin
            if vee>monde[mondeX].axe.valeur[i3]
                then if VcroissantSelonI then inc(i3) else dec(i3)
                else if VcroissantSelonI then dec(i3) else inc(i3);
         end;
-     until result or (k>kmax) or (i3>i2) or (i3<i);
-     if not result then chercheEqui((i+i2) div 2);
+     until result or (k>kmax) or (i3>i2) or (i3<i) or (succ(i3)>=nmesLoc);
+     if not result then begin
+        i3 := (i+i2) div 2;
+        if i3 >= pred(nmesLoc) then i3 := nmesLoc - 2;
+        if i3 < 0 then i3 := 0;
+        chercheEqui(i3);
+     end;
 // on remet à la valeur approchée la plus raisonnable
      result := (vee<monde[mondeX].maxi) and (vee>monde[mondeX].mini);
 end; // ChercheVpH
@@ -753,7 +888,10 @@ var t : integer;
     NewEquivalence : Tequivalence;
     dx,dy : double;
     NMax : integer;
+    yVar : Tgrandeur;
 begin // AjouteEquivalence
+     if (monde[mondeDerivee].axe = nil) or (monde[mondeX].axe = nil) then exit;
+     if (indexCourbeEquivalence < 0) or (indexCourbeEquivalence >= courbes.Count) then exit;
      codeDerivee := indexDerivee(monde[mondeDerivee].axe,monde[mondeX].axe,true,true);
      if codeDerivee=grandeurInconnue then exit;
      IsModelisee := not(courbes[indexCourbeEquivalence].courbeExp) and
@@ -769,9 +907,10 @@ begin // AjouteEquivalence
      with monde[mondeDerivee] do dy := (maxi-mini)/128;
      for t := 0 to Pred(equivalences[pageCourante].count) do
          with equivalences[pageCourante].items[t] do begin
-             if varY=nil then varY := monde[mondeY].axe;
-             if (abs(x1-monde[mondeX].axe.valeur[i])<dx) and
-                (abs(y1-varY.valeur[i])<dy) then begin
+             yVar := GetVarY;
+             if (yVar <> nil) and
+                (abs(x1-monde[mondeX].axe.valeur[i])<dx) and
+                (abs(y1-yVar.valeur[i])<dy) then begin
                   if effaceDouble then begin
                      Draw;
                      equivalences[pageCourante].Delete(t);
@@ -785,6 +924,7 @@ begin // AjouteEquivalence
          index2 := i2;
          modelisee := IsModelisee;
          mondepH := mondeDerivee;
+         nomVarY := monde[mondeDerivee].axe.nom;
          ligneRappel := [ligneRappelCourante];
          x2 := v22;
          y2 := ph22;
@@ -809,9 +949,11 @@ end; // AjouteEquivalence
 
 Procedure Tequivalence.SetValeurEquivalence(i : integer);
 var codeDerivee : integer;
+    yVar : Tgrandeur;
 begin with Agraphe do begin
      if modelisee
         then begin
+           if (indexCourbeEquivalence < 0) or (indexCourbeEquivalence >= courbes.Count) then exit;
            ve := courbes[indexCourbeEquivalence].valX[i];
            pHe := courbes[indexCourbeEquivalence].valY[i];
            try
@@ -822,10 +964,11 @@ begin with Agraphe do begin
            end;
         end
         else begin
-           if varY=nil then varY := monde[mondeY].axe;
-           codeDerivee := indexDerivee(varY,monde[mondeX].axe,true,true);
+           yVar := GetVarY;
+           if (yVar = nil) or (monde[mondeX].axe = nil) then exit;
+           codeDerivee := indexDerivee(yVar,monde[mondeX].axe,true,true);
            ve := monde[mondeX].axe.valeur[i];
-           pHe := varY.valeur[i];
+           pHe := yVar.valeur[i];
            if codeDerivee=grandeurInconnue
              then pente := 0
              else pente := Grandeurs[codeDerivee].valeur[i];
@@ -1060,40 +1203,46 @@ Function ChercheVpH : boolean;
 var veAp,pHeAp : double;
 
 procedure ChercheEqui(i : integer);
-var v3,pH3,penteCourbe : double;
+var v3,pH3,penteCourbe,dx : double;
 // intersection droite (veeAp pHeAp pentetg) et (v3 ph3 pentecourbe)
 begin
+     if (i < 0) or (succ(i) >= pages[pageCourante].nmes) then exit;
+     dx := aGraphe.monde[mondeX].axe.valeur[succ(i)]-aGraphe.monde[mondeX].axe.valeur[i];
+     if dx = 0 then exit;
      penteCourbe :=
-        (aGraphe.monde[MondeY].axe.valeur[succ(i)]-aGraphe.monde[mondeY].axe.valeur[i])/
-        (aGraphe.monde[mondeX].axe.valeur[succ(i)]-aGraphe.monde[mondeX].axe.valeur[i]);
+        (aGraphe.monde[mondepH].axe.valeur[succ(i)]-aGraphe.monde[mondepH].axe.valeur[i])/dx;
+     if pente = penteCourbe then exit;
      v3 := aGraphe.monde[mondeX].axe.valeur[i];
-     ph3 := agraphe.monde[mondeY].axe.valeur[i];
+     ph3 := agraphe.monde[mondepH].axe.valeur[i];
      ve := (pH3-penteCourbe*v3-pHeAp+pente*veAp)/(pente-penteCourbe);
      pHe := pH3+penteCourbe*(ve-v3);
 end; // ChercheEqui
 
-var i2,i3,iprec,isuiv : integer;
-    derRef : double;
+var i2,i3,iprec,isuiv,nmesLoc : integer;
+    derRef,dDer,dX : double;
     k,kmax : integer;
     VcroissantSelonI,Croissant : boolean;
 begin with agraphe do begin
      result := false;
+     nmesLoc := pages[pageCourante].nmes;
+     if (nmesLoc < 3) or (index1 < 0) or (index1 >= nmesLoc) then exit;
      ve := monde[mondeX].Maxi;
      pente := grandeurs[codeDerivee].valeur[index1];
+     if IsNan(pente) then exit;
      derRef := abs(pente);
      i2 := index1;
      croissant := true;
      iprec := i2-2;
      if iprec<0 then iprec := 0;
      isuiv := i2+2;
-     if isuiv>=pages[pageCourante].nmes
-        then isuiv := pred(pages[pageCourante].nmes);
+     if isuiv>=nmesLoc
+        then isuiv := pred(nmesLoc);
      with monde[mondeX].axe do VcroissantSelonI :=
           valeur[isuiv]>valeur[iprec];
      repeat inc(i2)
-     until (i2>=pages[pageCourante].nmes) or
+     until (i2>=nmesLoc) or
            (abs(grandeurs[codeDerivee].valeur[i2])>derRef);
-     if i2>=pages[pageCourante].nmes then begin
+     if i2>=nmesLoc then begin
         croissant := false;
         i2 := index1;
         repeat dec(i2)
@@ -1107,53 +1256,74 @@ begin with agraphe do begin
      end
      else begin
          repeat inc(i2);
-         until (i2>=pages[pageCourante].nmes) or
+         until (i2>=nmesLoc) or
           (abs(grandeurs[codeDerivee].valeur[i2])<derRef);
-         if i2>=pages[pageCourante].nmes then exit;
+         if i2>=nmesLoc then exit;
      end;
      if not croissant then swap(index1,i2);
 // i2 : point après l'équivalence de même pente
      x1 := monde[mondeX].axe.valeur[index1];
-     y1 := monde[mondeY].axe.valeur[index1];
-     x2 := monde[mondeX].axe.valeur[i2]+(pente-grandeurs[codeDerivee].valeur[i2])*
-        (monde[mondeX].axe.valeur[i2]-monde[mondeX].axe.valeur[pred(i2)])/
-        (grandeurs[codeDerivee].valeur[i2]-grandeurs[codeDerivee].valeur[pred(i2)]);
-     y2 := monde[mondeY].axe.valeur[i2]+(x2-monde[mondeX].axe.valeur[i2])*
-        (monde[mondeY].axe.valeur[i2]-monde[mondeY].axe.valeur[pred(i2)])/
-        (monde[mondeX].axe.valeur[i2]-monde[mondeX].axe.valeur[pred(i2)]);
+     y1 := monde[mondepH].axe.valeur[index1];
+     if (i2 > 0) and (i2 < nmesLoc) then begin
+        dDer := grandeurs[codeDerivee].valeur[i2]-grandeurs[codeDerivee].valeur[pred(i2)];
+        dX := monde[mondeX].axe.valeur[i2]-monde[mondeX].axe.valeur[pred(i2)];
+        if (dDer <> 0) and (not IsNan(dDer)) then
+           x2 := monde[mondeX].axe.valeur[i2]+(pente-grandeurs[codeDerivee].valeur[i2])*dX/dDer
+        else
+           x2 := monde[mondeX].axe.valeur[i2];
+        if (dX <> 0) and (not IsNan(dX)) then
+           y2 := monde[mondepH].axe.valeur[i2]+(x2-monde[mondeX].axe.valeur[i2])*
+              (monde[mondepH].axe.valeur[i2]-monde[mondepH].axe.valeur[pred(i2)])/dX
+        else
+           y2 := monde[mondepH].axe.valeur[i2];
+     end else begin
+        x2 := monde[mondeX].axe.valeur[i2];
+        y2 := monde[mondepH].axe.valeur[i2];
+     end;
 // valeur approchée de ve pHe
      veAp := (x1+x2)/2;
      pHeAp := (y1+y2)/2;
 // cherche intersection avec courbe
      i3 := (index1+i2) div 2;
+     if i3 >= pred(nmesLoc) then i3 := nmesLoc - 2;
+     if i3 < 0 then i3 := 0;
      k := 0;
      kmax := abs(i3-i2);
      if kmax>16 then kmax := 16;
      repeat
         inc(k);
         chercheEqui(i3);
-        result := (ve-monde[mondeX].axe.valeur[succ(i3)])*
-                  (ve-monde[mondeX].axe.valeur[i3])<=0;
+        result := (i3 >= 0) and (succ(i3) < nmesLoc) and
+                  ((ve-monde[mondeX].axe.valeur[succ(i3)])*
+                   (ve-monde[mondeX].axe.valeur[i3])<=0);
 // result si vee entre les deux points
         if not Result then begin
            if ve>monde[mondeX].axe.valeur[i3]
                then if VcroissantSelonI then inc(i3) else dec(i3)
                else if VcroissantSelonI then dec(i3) else inc(i3);
         end;
-     until result or (k>kmax) or (i3>i2) or (i3<index1);
-     if not result then chercheEqui((index1+i2) div 2);
+     until result or (k>kmax) or (i3>i2) or (i3<index1) or (succ(i3)>=nmesLoc);
+     if not result then begin
+        i3 := (index1+i2) div 2;
+        if i3 >= pred(nmesLoc) then i3 := nmesLoc - 2;
+        if i3 < 0 then i3 := 0;
+        chercheEqui(i3);
+     end;
 // on remet à la valeur approchée la plus raisonnable
      result := (ve<monde[mondeX].maxi) and (ve>monde[mondeX].mini);
 end end; // ChercheVpH
 
 var i : integer;
+    yVar : Tgrandeur;
 begin //equivalence.modifDerivee
+     if (agraphe.monde[agraphe.mondeDerivee].axe = nil) or
+        (agraphe.monde[mondeX].axe = nil) then exit;
      codeDerivee := indexDerivee(agraphe.monde[agraphe.mondeDerivee].axe,
                                  aGraphe.monde[mondeX].axe,true,true);
      aGraphe.indexCourbeEquivalence := -1;
-     if varY=nil then varY := aGraphe.monde[mondepH].axe;
+     yVar := GetVarY;
      for i  := 0 to pred(agraphe.courbes.count) do
-         if agraphe.courbes[i].varY=varY then
+         if (yVar <> nil) and (agraphe.courbes[i].varY=yVar) then
               aGraphe.indexCourbeEquivalence := i;
      if codeDerivee=grandeurInconnue then exit;
      if aGraphe.indexCourbeEquivalence<0 then exit;

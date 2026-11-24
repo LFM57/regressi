@@ -456,11 +456,15 @@ object FRegressiMain: TFRegressiMain
                 end
                 object CurReticuleModeleItem: TMenuItem
                   Tag = 16
+                  GroupIndex = 1
+                  RadioItem = True
                   Text = 'R'#233'ticule mod'#232'le'
                   OnClick = SelectItemClick
                 end
                 object TangenteItem: TMenuItem
                   Tag = 10
+                  GroupIndex = 1
+                  RadioItem = True
                   Text = 'Equivalence'
                   OnClick = SelectItemClick
                 end
