@@ -5,7 +5,7 @@ object StatOptDlg: TStatOptDlg
   BorderIcons = [biSystemMenu, biHelp]
   BorderStyle = Single
   Caption = 'Statistique'
-  ClientHeight = 397
+  ClientHeight = 332
   ClientWidth = 452
   Position = ScreenCenter
   FormFactor.Width = 1920
@@ -128,15 +128,34 @@ object StatOptDlg: TStatOptDlg
     Size.PlatformDefault = False
     StyledSettings = [Size, Style, FontColor]
   end
-  object CibleCB: TCheckBox
+  object Label1: TLabel
     Position.X = 8.000000000000000000
-    Position.Y = 202.000000000000000000
-    Size.Width = 55.000000000000000000
+    Position.Y = 200.000000000000000000
+    Size.Width = 60.000000000000000000
     Size.Height = 17.000000000000000000
     Size.PlatformDefault = False
+    Text = 'R'#233'f'#233'rence'
     TabOrder = 9
-    Text = 'Cible'
-    OnClick = CibleCBClick
+  end
+  object Label2: TLabel
+    Position.X = 8.000000000000000000
+    Position.Y = 226.000000000000000000
+    Size.Width = 150.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Incertitude-type r'#233'f'#233'rence'
+    TabOrder = 15
+  end
+  object editIncertCible: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 16
+    TextSettings.Font.Size = 13.000000000000000000
+    Position.X = 165.000000000000000000
+    Position.Y = 223.000000000000000000
+    Size.Width = 90.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+    StyledSettings = [Size, Style, FontColor]
   end
   object NomGroupe: TGroupBox
     Position.X = 230.000000000000000000
@@ -173,47 +192,38 @@ object StatOptDlg: TStatOptDlg
   end
   object GrapheGB: TGroupBox
     Align = Bottom
-    Position.Y = 234.000000000000000000
+    Position.Y = 254.000000000000000000
     Size.Width = 452.000000000000000000
     Size.Height = 78.000000000000000000
     Size.PlatformDefault = False
     Text = 'Affichage graphique'
     TabOrder = 12
     object int2SigmaCB: TCheckBox
-      Position.X = 104.000000000000000000
-      Position.Y = 16.000000000000000000
+      Position.X = 102.000000000000000000
+      Position.Y = 31.000000000000000000
       Size.Width = 50.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
       Text = #177'2 '#963
     end
-    object int3SigmaCB: TCheckBox
-      Position.X = 104.000000000000000000
-      Position.Y = 36.000000000000000000
-      Size.Width = 50.000000000000000000
+    object int1umCB: TCheckBox
+      Position.X = 8.000000000000000000
+      Position.Y = 53.000000000000000000
+      Size.Width = 73.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
-      Text = #177'3 '#963
+      Text = #177' u(m)'
     end
-    object t95CB: TCheckBox
+    object Int2umCB: TCheckBox
       Position.X = 8.000000000000000000
-      Position.Y = 16.000000000000000000
+      Position.Y = 28.000000000000000000
       Size.Width = 90.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
-      Text = 'ICm '#224' 95 %'
-    end
-    object t99CB: TCheckBox
-      Position.X = 8.000000000000000000
-      Position.Y = 36.000000000000000000
-      Size.Width = 90.000000000000000000
-      Size.Height = 17.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 3
-      Text = 'ICm '#224' 99 %'
+      Text = #177'2 u(m)'
     end
     object CourbeGaussCB: TCheckBox
       Position.X = 276.000000000000000000
@@ -221,26 +231,17 @@ object StatOptDlg: TStatOptDlg
       Size.Width = 150.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 4
+      TabOrder = 3
       Text = 'Courbe de Gauss'
     end
     object DistributionCB: TCheckBox
-      Position.X = 8.000000000000000000
-      Position.Y = 56.000000000000000000
+      Position.X = 160.000000000000000000
+      Position.Y = 14.000000000000000000
       Size.Width = 90.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 5
+      TabOrder = 4
       Text = 'Distribution'
-    end
-    object MedianeCB: TCheckBox
-      Position.X = 160.000000000000000000
-      Position.Y = 16.000000000000000000
-      Size.Width = 112.000000000000000000
-      Size.Height = 17.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 6
-      Text = 'M'#233'diane'
     end
     object MoyenneCB: TCheckBox
       Position.X = 160.000000000000000000
@@ -248,8 +249,8 @@ object StatOptDlg: TStatOptDlg
       Size.Width = 112.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 7
-      Text = 'Moyenne m'
+      TabOrder = 5
+      Text = 'Moyenne'
     end
     object CourbePoissonCB: TCheckBox
       Position.X = 276.000000000000000000
@@ -257,7 +258,7 @@ object StatOptDlg: TStatOptDlg
       Size.Width = 165.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 8
+      TabOrder = 6
       Text = 'Distribution de Poisson'
     end
     object GrilleCB: TCheckBox
@@ -266,7 +267,7 @@ object StatOptDlg: TStatOptDlg
       Size.Width = 112.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 9
+      TabOrder = 7
       Text = 'Trac'#233' de grille'
     end
     object CourbeBinomeCB: TCheckBox
@@ -275,42 +276,17 @@ object StatOptDlg: TStatOptDlg
       Size.Width = 150.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 10
+      TabOrder = 8
       Text = 'Distribution binomiale'
     end
     object Int1SigmaCB: TCheckBox
-      Position.X = 104.000000000000000000
+      Position.X = 102.000000000000000000
       Position.Y = 56.000000000000000000
       Size.Width = 50.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 11
+      TabOrder = 9
       Text = #177' '#963
-    end
-  end
-  object GroupBox1: TGroupBox
-    Align = Bottom
-    Position.Y = 312.000000000000000000
-    Size.Width = 452.000000000000000000
-    Size.Height = 85.000000000000000000
-    Size.PlatformDefault = False
-    Text = 'Notation'
-    TabOrder = 13
-    object Memo1: TMemo
-      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
-      DataDetectorTypes = []
-      Lines.Strings = (
-        'ICmxx : intervalle de confiance sur la moyenne '#224' xx %'
-        #963' : '#233'cart type'
-        'inexactitude : '#233'cart entre cible et moyenne'
-        'CV : coefficient de variation  = ecart type / moyenne')
-      Align = Client
-      Size.Width = 452.000000000000000000
-      Size.Height = 85.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 0
-      Viewport.Width = 452.000000000000000000
-      Viewport.Height = 85.000000000000000000
     end
   end
   object EffectifGB: TGroupBox

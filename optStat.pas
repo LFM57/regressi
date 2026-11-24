@@ -1,4 +1,4 @@
-unit optStat;
+Ôªøunit optStat;
 
 interface
 
@@ -48,24 +48,19 @@ type
     NombreSpin: TSpinBox;
     LabelNombre: TLabel;
     LabelAmplitude: TLabel;
-    EditAmplitude: TEdit;
+  EditAmplitude: TEdit;
     EditCible: TEdit;
-    CibleCB: TCheckBox;
     NomGroupe: TGroupBox;
     LabelDebut: TLabel;
     EditDebut: TEdit;
     GrapheGB: TGroupBox;
     int2SigmaCB: TCheckBox;
-    int3SigmaCB: TCheckBox;
-    t95CB: TCheckBox;
-    t99CB: TCheckBox;
+    int1umCB: TCheckBox;
+    Int2umCB: TCheckBox;
     CourbeGaussCB: TCheckBox;
     DistributionCB: TCheckBox;
-    MedianeCB: TCheckBox;
     MoyenneCB: TCheckBox;
     CourbePoissonCB: TCheckBox;
-    GroupBox1: TGroupBox;
-    Memo1: TMemo;
     EffectifGB: TGroupBox;
     EffectifCB: TComboBox;
     GrilleCB: TCheckBox;
@@ -73,12 +68,14 @@ type
     Int1SigmaCB: TCheckBox;
     ClasseGroupe: TListBox;
     ListeGr: TListBox;
+    Label1: TLabel;
+    editIncertCible: TEdit;
+    Label2: TLabel;
     procedure ClasseGroupeClick(Sender: TObject);
     procedure OKBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure CibleCBClick(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
   private
      PoissonPermis : boolean;
@@ -87,7 +84,9 @@ type
   public
      FrequenceGrDefault : Tgrandeur;
      NomStat,NomEffectif,erreurStat : string;
-     procedure Imprimer;
+     procedure Imprimer; overload;
+     procedure ImprimerBeginEnd;
+     procedure Imprimer(var bas : single); overload;
      procedure ImprimerGraphe(var bas : single);
      procedure ecritConfig;
      procedure litConfig;
@@ -107,11 +106,6 @@ const
       largeurNombreEntier = 50;
       largeurNombreReel = 70;
       largeurTitre = 95;
-
-procedure TStatOptDlg.CibleCBClick(Sender: TObject);
-begin
-     EditCible.Visible := cibleCB.isChecked;
-end;
 
 procedure TStatOptDlg.ClasseGroupeClick(Sender: TObject);
 begin
@@ -152,7 +146,12 @@ begin
      if EffectifCB.itemIndex<0 then effectifCB.itemIndex := 0;
      EditAmplitude.text := FormatReg(statCourante.ecartDist);
      EditDebut.text :=  FormatReg(statCourante.debutDist);
-     EditCible.text := FormatReg(statCourante.cible);
+     if isNan(statCourante.cible)
+        then EditCible.text := ''
+        else EditCible.text := FormatReg(statCourante.cible);
+     if not isNan(statCourante.ecartTypeCible) and (statCourante.ecartTypeCible>0)
+        then editIncertCible.text := FormatReg(statCourante.ecartTypeCible)
+        else editIncertCible.text := '';
      ClasseGroupe.OnChange := nil;
      ClasseGroupe.itemIndex := ord(statCourante.classeStat);
      ClasseGroupe.OnChange := ClasseGroupeClick;
@@ -169,7 +168,6 @@ end;
 
 procedure TStatOptDlg.ResetListe;
 begin
-     EditCible.Visible := cibleCB.isChecked;
      LabelNombre.Visible := false;
      LabelAmplitude.Visible := false;
      EditAmplitude.Visible := false;
@@ -195,7 +193,7 @@ begin
           end;
           4 : begin
              EffectifGB.Visible := true;
-             EffectifGB.Text  := 'FrÈquence';
+             EffectifGB.Text  := 'Fr√©quence';
           end;
      end;
 end;
@@ -220,23 +218,36 @@ begin
                   else indexStat := indexVariab[1];
      end;
      case statCourante.classeStat of
-              csNombreImpose : statCourante.NbreClasse := round(NombreSpin.Value);
-              csEcartImpose : begin
+          csNombreImpose : statCourante.NbreClasse := round(NombreSpin.Value);
+          csEcartImpose : begin
                  try
                  statCourante.ecartDist := getFloat(EditAmplitude.text);
                  except end;
                  try
                  statCourante.debutDist := getFloat(EditDebut.text);
                  except end;
-              end;
+          end;
      end;
-     if CibleCB.ischecked
-            then begin
-               try
-               statCourante.cible := getFloat(EditCible.text)
-               except end;
-            end
-            else statCourante.cible := Nan;
+     if Trim(EditCible.text)=''
+        then statCourante.cible := Nan
+        else begin
+           try
+              statCourante.cible := getFloat(EditCible.text);
+           except
+              statCourante.cible := Nan;
+           end;
+        end;
+     if Trim(editIncertCible.text)=''
+        then statCourante.ecartTypeCible := 0
+        else begin
+           try
+              statCourante.ecartTypeCible := getFloat(editIncertCible.text);
+              if statCourante.ecartTypeCible<0 then
+                 statCourante.ecartTypeCible := 0;
+           except
+              statCourante.ecartTypeCible := 0;
+           end;
+        end;
 end;
 
 procedure TStatOptDlg.ImprimerGraphe(var bas : single);
@@ -244,13 +255,32 @@ begin
     FRegressiMain.grapheStat.versImprimante(bas)
 end;
 
+procedure TStatOptDlg.Imprimer(var bas : single);
+begin
+     try
+       ImprimerGraphe(bas);
+       if OKReg(OkImprTab,0) then begin
+          PrintLine(stStatistique+caption,bas);
+          PrintGrid(FRegressiMain.StatGrid,bas);
+          PrintGrid(FRegressiMain.DistGrid,bas);
+       end;
+     except
+     end;
+end;
+
 procedure TStatOptDlg.Imprimer;
+begin
+     ImprimerBeginEnd;
+end;
+
+procedure TStatOptDlg.ImprimerBeginEnd;
 var bas : single;
 begin
-       if OKReg(OkImprGr,0) then begin
+      if OKReg(OkImprGr,0) then begin
           try
-          beginPrintGr(bas);
-          FRegressiMain.GrapheStat.versImprimante(bas);
+          bas := 0;
+          Printer.BeginDoc;
+          ImprimerGraphe(bas);
           if OKReg(OkImprTab,0) then begin
              BeginPrintTxt(bas);
              PrintLine(stStatistique+caption,bas);
@@ -289,17 +319,17 @@ begin
       then nomEffectif := litLigneWinU
       else if pos('Options',ligneWin)<>0
           then begin
-               courbeGaussCB.IsChecked  := litBooleanWin;
+               courbeGaussCB.IsChecked  := litBooleanRW3;
                if imax>1 then
-                   distributionCB.IsChecked  := litBooleanWin;
+                   distributionCB.IsChecked  := litBooleanRW3;
                if imax>2 then begin
                    litLigneWin;
                    ClasseGroupe.ItemIndex := strToInt(ligneWin);
                end;
                if imax>3 then
-                   CourbePoissonCB.IsChecked  := litBooleanWin;
+                   CourbePoissonCB.IsChecked  := litBooleanRW3;
                if imax>4 then
-                   CourbeBinomeCB.IsChecked  := litBooleanWin;
+                   CourbeBinomeCB.IsChecked  := litBooleanRW3;
                for i := 6 to imax do litLigneWin;
           end
           else for i := 1 to imax do litLigneWin;
@@ -327,7 +357,7 @@ begin
 end;
 
 Procedure SetHistogramme;
-// TracÈ de l'histogramme de la variable alÈatoire
+// Trac√© de l'histogramme de la variable al√©atoire
 
 procedure SetCourbeGauss;
 Const Nth = 30;
@@ -479,16 +509,19 @@ end end;  // setCourbe
 
 Procedure AjouteLigneVert(x : double;Couleur : TAlphaColor);
 var Dessin : TdessinLine;
+    p1, p2 : TPointF;
 begin
    if (x<FRegressiMain.grapheStat.monde[mondeX].mini) or
       (x>FRegressiMain.grapheStat.monde[mondeX].maxi) then exit;
    Dessin := TdessinLine.createLine(FRegressiMain.grapheStat);
    with Dessin do begin
-        position.y := yLegende;
-        position.X := FRegressiMain.grapheStat.WindowX(x);
         Stroke.Dash := TStrokeDash.Solid;
         stroke.color := couleur;
         Agraphe := FRegressiMain.grapheStat;
+        Agraphe.windowRT(x, 0, mondeY, p1);
+        Agraphe.windowRT(x, Agraphe.monde[mondeY].maxi, mondeY, p2);
+        affectePoint1(p1.X, p1.Y);
+        affectePoint2(p2.X, p2.Y);
    end;
    FRegressiMain.GrapheStat.dessinLines.add(Dessin);
 end;
@@ -498,8 +531,8 @@ Procedure AjouteDeuxLignes(marge : double;const text : string;
 begin
       AjouteLigneVert(statCourante.moyenne-marge,couleur);
       AjouteLigneVert(statCourante.moyenne+marge,couleur);
-      AjouteLegende(statCourante.moyenne-marge*1.2,'m-'+text,couleur);
-      AjouteLegende(statCourante.moyenne+marge*1.2,'m+'+text,couleur);
+      AjouteLegende(statCourante.moyenne-marge,'m-'+text,couleur);
+      AjouteLegende(statCourante.moyenne+marge,'m+'+text,couleur);
       yLegende := yLegende + deltayLegende;
 end;
 
@@ -520,89 +553,75 @@ with FRegressiMain.grapheStat,statCourante do begin
       AjouteLigne(moyenne,stMoyenne+' '+
             grandeurs[indexStat].FormatValeurEtUnite(moyenne),
             claBlue);
-   if MedianeCB.IsChecked  then
-      AjouteLigne(mediane,stMediane+' '+
-            grandeurs[indexStat].FormatValeurEtUnite(mediane),
-            claRed);
    if not isNan(cible) then
       AjouteLigne(cible,stCible+' '+
             grandeurs[indexStat].FormatValeurEtUnite(cible),claGreen);
    if CourbeGaussCB.IsChecked  then setCourbeGauss;
    if CourbePoissonCB.IsChecked  then setCourbePoisson;
    if CourbeBinomeCB.IsChecked  then setCourbeBinomiale;
-   if t95CB.IsChecked  then
-       AjouteDeuxLignes(t95,'µ95',claBlue);
-   if t99CB.IsChecked  then
-       AjouteDeuxLignes(t99,'µ99',claRed);
+   if int1umCB.IsChecked  then
+       AjouteDeuxLignes(sigmaMoyenne,'u(m)',claRed);
+   if int2umCB.IsChecked  then
+       AjouteDeuxLignes(2*sigmaMoyenne,'2u(m)',claBlue);
    if int2SigmaCB.IsChecked  then
-       AjouteDeuxLignes(2*sigma,'2'+sigmaMin,claBlue);
-   if int3SigmaCB.IsChecked  then
-       AjouteDeuxLignes(3*sigma,'3'+sigmaMin,claRed);
+       AjouteDeuxLignes(2*sigma,'2s',claRed);
    if int1SigmaCB.IsChecked  then
-       AjouteDeuxLignes(sigma,sigmaMin,claGreen);
+       AjouteDeuxLignes(sigma,'s',claGreen);
 end end; // SetHistogramme
 
 Procedure AfficheStat;
-begin with statCourante,grandeurs[indexStat] do begin
-    FRegressiMain.StatGrid.beginUpdate;
-    if isNan(cible)
-       then FRegressiMain.StatGrid.rowCount := 9
-       else FRegressiMain.StatGrid.rowCount := 13;
-    FRegressiMain.panelStatGrid.height := FRegressiMain.StatGrid.rowCount*FRegressiMain.StatGrid.DefaultRowHeight+4;
-    FRegressiMain.StatGrid.ColumnWidths[0] := LargeurTitre;
-    FRegressiMain.StatGrid.ColumnWidths[1] := LargeurNombreReel;
-    FRegressiMain.StatGrid.width := largeurTitre+LargeurNombreReel+2;
-    if (classeStat in [csEffectifDonne,csFrequenceDonnee])
-       then begin
-            FRegressiMain.StatGrid.cells[0,0] := '';
-            FRegressiMain.StatGrid.cells[1,0] := '';
-       end
-       else begin
-            FRegressiMain.StatGrid.cells[0,0] := stTaille;
-            FRegressiMain.StatGrid.cells[1,0] := IntToStr(Ntotal);
-       end;
-    FRegressiMain.StatGrid.cells[0,1] := stEtendue+'mini';
-    FRegressiMain.StatGrid.cells[1,1] := formatValeurEtUnite(min);
-    FRegressiMain.StatGrid.cells[0,2] := stEtendue+'maxi';
-    FRegressiMain.StatGrid.cells[1,2] := formatValeurEtUnite(max);
-    if (classeStat in [csEffectifDonne,csFrequenceDonnee])
-       then begin
-          FRegressiMain.StatGrid.cells[0,3] := '';
-          FRegressiMain.StatGrid.cells[1,3] := '';
-       end
-       else begin
-          FRegressiMain.StatGrid.cells[0,3] := stMediane;
-          FRegressiMain.StatGrid.cells[1,3] := formatValeurEtUnite(mediane);
-       end;
-    FRegressiMain.StatGrid.cells[0,4] := stMoyenne;
-    FRegressiMain.StatGrid.cells[1,4] := formatValeurEtUnite(moyenne);
-    if classeStat=csFrequenceDonnee then begin
-        FRegressiMain.StatGrid.cells[0,5] := '';
-        FRegressiMain.StatGrid.cells[1,5] := '';
-        FRegressiMain.StatGrid.cells[0,6] := '';
-        FRegressiMain.StatGrid.cells[1,6] := '';
-    end
-    else begin
-    FRegressiMain.StatGrid.cells[0,5] := 'ICm 95% mini';
-    FRegressiMain.StatGrid.cells[1,5] := formatValeurEtUnite(moyenne-t95);
-    FRegressiMain.StatGrid.cells[0,6] := 'ICm 95% maxi';
-    FRegressiMain.StatGrid.cells[1,6] := formatValeurEtUnite(moyenne+t95);
+var r : integer;
+begin with statCourante,grandeurs[indexStat],FRegressiMain.StatGrid do begin
+    beginUpdate;
+    if isNan(cible) then
+       rowCount := 8
+    else if ecartTypeCible>0 then
+       rowCount := 11
+    else
+       rowCount := 10;
+    for r := 0 to pred(rowCount) do begin
+       cells[0,r] := '';
+       cells[1,r] := '';
     end;
-    FRegressiMain.StatGrid.cells[0,7] := stEcartType;
-    FRegressiMain.StatGrid.cells[1,7] := formatValeurEtUnite(sigma);
-    FRegressiMain.StatGrid.cells[0,8] := 'CV';
-    FRegressiMain.StatGrid.cells[1,8] := chainePrec(sigma/abs(moyenne));
+    FRegressiMain.panelStatGrid.height := rowCount*DefaultRowHeight+4;
+    ColumnWidths[0] := LargeurTitre;
+    ColumnWidths[1] := LargeurNombreReel;
+    width := largeurTitre+LargeurNombreReel+2;
+    if not (classeStat in [csEffectifDonne,csFrequenceDonnee]) then begin
+       cells[0,0] := stTaille;
+       cells[1,0] := IntToStr(Ntotal);
+    end;
+    cells[0,1] := stEtendue+'mini';
+    cells[1,1] := formatValeurEtUnite(min);
+    cells[0,2] := stEtendue+'maxi';
+    cells[1,2] := formatValeurEtUnite(max);
+    if not (classeStat in [csEffectifDonne,csFrequenceDonnee]) then begin
+       cells[0,3] := stMediane;
+       cells[1,3] := formatValeurEtUnite(mediane);
+    end;
+    cells[0,4] := stMoyenne;
+    cells[1,4] := formatValeurEtUnite(moyenne);
+    cells[0,5] := 'u(m)';
+    cells[1,5] := formatValeurEtUnite(sigmaMoyenne);
+    cells[0,6] := stEcartType+' s';
+    cells[1,6] := formatValeurEtUnite(sigma);
+    cells[0,7] := 'CV';
+    if not isZero(moyenne) then
+       cells[1,7] := chainePrec(sigma/abs(moyenne));
     if not isNan(cible) then begin
-       FRegressiMain.StatGrid.cells[0,9] := stCible;
-       FRegressiMain.StatGrid.cells[1,9] := formatReg(Cible);
-       FRegressiMain.StatGrid.cells[0,10] := stInexactitude;
-       FRegressiMain.StatGrid.cells[1,10] := '';
-       FRegressiMain.StatGrid.cells[0,11]  := '   '+StAbsolue;
-       FRegressiMain.StatGrid.cells[1,11] := formatValeurEtUnite(Moyenne-Cible);
-       FRegressiMain.StatGrid.cells[0,12] := '   '+StRelative;
-       FRegressiMain.StatGrid.cells[1,12] := ChainePrec(Abs((Moyenne-Cible)/Cible));
+       cells[0,8] := stCible;
+       cells[1,8] := formatReg(Cible);
+       r := 9;
+       if ecartTypeCible>0 then begin
+          cells[0,r] := 'u(r√©f)';
+          cells[1,r] := formatReg(ecartTypeCible);
+          inc(r);
+       end;
+       cells[0,r] := 'Z-score';
+       if not isNan(Zscore) then
+          cells[1,r] := formatReg(Zscore);
     end;
-    FRegressiMain.StatGrid.endUpdate;  // ne marche pas ?
+    endUpdate;
 end end;
 
 Procedure AfficheDist;
