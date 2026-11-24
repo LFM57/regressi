@@ -358,7 +358,7 @@ end;
 
 Function DerGaussSigma(X,Moyenne,Sigma : double) : double;
 begin
-    result := Gauss(X,Moyenne,Sigma)*sqr((x-moyenne)/sigma)/sigma
+    result := Gauss(X,Moyenne,Sigma)*(sqr((x-moyenne)/sigma)-1)/sigma
 end;
 
 Function isCorrect(aValue : double) : boolean;

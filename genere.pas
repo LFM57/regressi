@@ -250,6 +250,10 @@ end end; // calcOperateur
 procedure TuniteCalc.calcIf(F : Pelement);
 var u_p,u_n : TuniteCalc;
 begin with F^ do begin
+      if (TypeElement = PieceWise) and (PWtest = nil) then begin
+         calcUnite(PWtestElse);
+         exit;
+      end;
       u_p := TuniteCalc.create;
       u_n := TuniteCalc.create;
       try
@@ -1054,7 +1058,8 @@ begin
           FonctionGlb : Copie := GenFonctionGlbBis(codeFglb,copie(OperandGlb),
                  copie(OperandDebut),copie(OperandFin),
                  Varx,Vary,valeurGlb,ValeurInitDer);
-          IfThenElse,PieceWise : Copie :=  GenIf(copie(test),copie(positif),copie(negatif));
+          IfThenElse : Copie := GenIf(copie(test),copie(positif),copie(negatif));
+          PieceWise  : Copie := GenPW(copie(PWtest),copie(PWthen),copie(PWtestElse));
           Grandeur : Copie := GenVar(Pvar);
           GrandeurIndicee : Copie := GenGrandeurIndicee(Pvar,copie(IndexLigne),Numero);
           GrandeurEuler : Copie := GenGrandeurEuler(Pvar,copie(IndexLigneE)); // ??
@@ -1340,22 +1345,28 @@ begin with F^ do begin  // CherchePosVal
               else valeurGlb := Nan;
         end;
         posMin : begin
+           i := 0;
            valeurGlb := varX.valeur[0];
            ecartRef := valeurEq;
-           for i := 1 to pred(nmesCourant) do
-               if valeurEq<ecartRef then begin
+           for i := 1 to pred(nmesCourant) do begin
+               valeurC := valeurEq;
+               if (not IsNan(valeurC)) and (IsNan(ecartRef) or (valeurC<ecartRef)) then begin
                   valeurGlb := varX.valeur[i];
-                  ecartRef := valeurEq;
+                  ecartRef := valeurC;
                end;
+           end;
         end;
         posMax : begin
-           valeurGlb :=  varX.valeur[i];
+           i := 0;
+           valeurGlb := varX.valeur[0];
            ecartRef := valeurEq;
-           for i := 0 to pred(nmesCourant) do
-               if valeurEq>ecartRef then begin
+           for i := 1 to pred(nmesCourant) do begin
+               valeurC := valeurEq;
+               if (not IsNan(valeurC)) and (IsNan(ecartRef) or (valeurC>ecartRef)) then begin
                   valeurGlb := varX.valeur[i];
-                  ecartRef := valeurEq;
+                  ecartRef := valeurC;
                end;
+           end;
         end;
         else begin // posUp
            i := 0;
@@ -1986,12 +1997,12 @@ Function derive(F : Pelement ) : Pelement;
             cBessel : deriveFonctionGlb := pointeurZero; { Jn'=1/2 (Jn-1-Jn+1) }
             cBinomial : deriveFonctionGlb := pointeurZero;
             cGauss : begin
-                  if operandGlb^.Pvar=xx then begin { moyenne }
-                     deriveFonctionGlb := genOperateurSimpl('*',Derive(operand),
+                  if (operandGlb <> nil) and (operandGlb^.Pvar=xx) then begin { moyenne }
+                     deriveFonctionGlb := genOperateurSimpl('*',Derive(operandGlb),
                          GenFonctionGlb(dGaussMean,copie(operandGlb),copie(operandDebut),nil,varX,nil));
                      exit;
                   end;
-                  if operandDebut^.Pvar=xx then begin { sigma }
+                  if (operandDebut <> nil) and (operandDebut^.Pvar=xx) then begin { sigma }
                      deriveFonctionGlb := genOperateurSimpl('*',Derive(operandDebut),
                      GenFonctionGlb(dGaussSigma,copie(operandGlb),copie(operandDebut),nil,varX,nil));
                      exit;
