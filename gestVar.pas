@@ -354,7 +354,7 @@ begin
             val_p[index] := p[index] + deltat*val_pprime[index];
             val_pprime[index] := fp[index] + deltat*ffp[index];
           end;
-          tDiff1 : val_p[index] := val_p[index]+deltat*ffp[index];
+          tDiff1 : val_p[index] := p[index]+deltat*ffp[index];
           tFonction : val_p[index] := ffp[index];
        end;   
     end;

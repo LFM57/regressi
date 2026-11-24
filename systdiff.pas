@@ -1,5 +1,5 @@
-unit systdiff;
-// Calcul de système différentiel pour modélisation
+ï»¿unit systdiff;
+// Calcul de systÃ¨me diffÃ©rentiel pour modÃ©lisation
 
 interface
 
@@ -220,7 +220,7 @@ Procedure SystemeDiff2(EquaDiff : MatriceFonction;
       ResultParam : MatriceVecteur;mdebut,mfin : codeIntervalle);
 
  { calcul par Runge-Kunta d'ordre 4 de z(t) solution de z''=f(t,z,z')
-   système équivalent : z'=x  z''=x'=f(t,z,x) }
+   systÃ¨me Ã©quivalent : z'=x  z''=x'=f(t,z,x) }
 
 var i,j : integer;
     PrimeParam : MatriceReal;
@@ -301,6 +301,7 @@ var k : codeParam;
     m : codeIntervalle;
     Nbre,NbrePas : integer;
     t,pasT : double;
+    tmpParam : vecteur;
 begin //  SystemeDiff2
 with pages[pageCourante] do begin
      InitTableau(mdebut,mfin);
@@ -343,12 +344,18 @@ with pages[pageCourante] do begin
          end
      end;
      for m := mDebut to mFin do begin
+         setLength(tmpParam, fin[m] - debut[m] + 1);
+         for k := 1 to NbreParam do begin
+             for i := debut[m] to fin[m] do
+                 tmpParam[i-debut[m]] := ResultParam[m,k,(i-debut[m])*NbrePas];
+             for i := debut[m] to fin[m] do
+                 ResultParam[m,k,i] := tmpParam[i-debut[m]];
+         end;
+         tmpParam := nil;
          for i := debut[m] to fin[m] do begin
             j := (i-debut[m])*NbrePas;
             valeurTheorique[m,i] := Ytheorique[m,j];
             valeurLisse[fonctionTheorique[m].indexYp,i] := LissePrime[m,j];
-            for k := 1 to NbreParam do
-                ResultParam[m,k,i] := ResultParam[m,k,j];
          end;
          LissePrime[m] := nil;
          Ytheorique[m] := nil;
@@ -358,7 +365,7 @@ end end; // SystemeDiff2
 
 Procedure EquationDiff2(mdebut,mfin : codeIntervalle);
 { calcul par Runge-Kunta d'ordre 4 de z(t) solution de z''=f(t,z,z')
-  système équivalent : z'=x  z''=x'=f(t,z,x) }
+  systÃ¨me Ã©quivalent : z'=x  z''=x'=f(t,z,x) }
 
 var i : integer;
     LissePrime,Ytheorique : array[codeIntervalle] of vecteur;
@@ -391,7 +398,6 @@ end; { Calc }
 begin
      t := Xtheorique[i];
      deltatSur2 := (Xtheorique[succ(i)]-t)/2;
-     affecteVariableE(i);
      for m := mDebut to mFin do begin
          p[m] := Ytheorique[m,i];
          fp[m] := LissePrime[m,i];
@@ -464,7 +470,7 @@ end end;{EquationDiff2}
 Procedure ExtrapoleDiff2(page : codePage;PosInit : integer;Tmini,Tmaxi : double;
     var ValX : vecteur;var ValY,valYp : TvecteurExtrapole;mdebut,mfin : codeIntervalle);
 { calcul par Runge-Kunta d'ordre 4 de z(t) solution de z''=f(t,z,z')
-  système équivalent : z'=x  z''=x'=f(t,z,x) }
+  systÃ¨me Ã©quivalent : z'=x  z''=x'=f(t,z,x) }
 var i,iDebut : integer;
     deltat,Tinit : double;
 
@@ -519,8 +525,12 @@ begin {ExtrapoleDiff2} with pages[page] do begin
      affecteVariableE(posInit);
      tInit := grandeurs[0].valeur[posInit];
      if Tinit<Tmini then Tmini := Tinit;
+     if Tinit>Tmaxi then Tmaxi := Tinit;
+     if Tmaxi<=Tmini then Tmaxi := Tmini + 1;
      deltat := (Tmaxi-Tmini)/NmesMax;
      idebut := round((Tinit-Tmini)/Deltat);
+     if idebut<0 then idebut := 0;
+     if idebut>=NmesMax then idebut := pred(NmesMax);
      setLength(valX,NmesMax+1);
      for m := mDebut to mFin do with fonctionTheorique[m] do begin
          indexYp := GrandeurToIndex(addrYp);
@@ -528,7 +538,7 @@ begin {ExtrapoleDiff2} with pages[page] do begin
          setLength(valY[m],NmesMax+1);
          setLength(valYp[m],NmesMax+1);
          valY[m,iDebut] := calcul^.varX.valCourante; { valeur init }
-         valYp[m,iDebut] := calcul^.varY.valCourante; { dérivée init }
+         valYp[m,iDebut] := calcul^.varY.valCourante; { dÃ©rivÃ©e init }
      end;
      for i := 0 to pred(NmesMax) do valX[i] := Tinit+(i-iDebut)*deltat;
      try
@@ -603,8 +613,12 @@ with pages[page] do begin
     affecteVariableE(debut[mDebut]);
     tInit := grandeurs[0].valeur[posInit];
     if Tinit<Tmini then Tmini := Tinit;
+    if Tinit>Tmaxi then Tmaxi := Tinit;
+    if Tmaxi<=Tmini then Tmaxi := Tmini + 1;
     deltat := (Tmaxi-Tmini)/NmesMax;
     idebut := round((Tinit-Tmini)/Deltat);
+    if idebut<0 then idebut := 0;
+    if idebut>=NmesMax then idebut := pred(NmesMax);
     setLength(valX,NmesMax+1);
     for i := 0 to pred(NmesMax) do valX[i] := Tinit+(i-iDebut)*deltat;
     for m := mDebut to mFin do begin
