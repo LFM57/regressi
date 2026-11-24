@@ -2273,25 +2273,31 @@ var
       montant: boolean;
    begin
       with pages[pageCourante] do begin
-         Xtrie := indexX = 0;
-         if not Xtrie then begin
-            montant := valeurVar[indexX, 2] > valeurVar[indexX, 0];
+         Xtrie := (indexX = 0) and (nmes >= 2);
+         if (not Xtrie) and (nmes >= 2) then begin
+            montant := valeurVar[indexX, pred(nmes)] > valeurVar[indexX, 0];
+            Xtrie := True;
             if montant then begin
                for j := 1 to pred(nmes) do
-                  if valeurVar[indexX, j] < valeurVar[indexX, pred(j)] then
-                     exit;
+                  if valeurVar[indexX, j] < valeurVar[indexX, pred(j)] then begin
+                     Xtrie := False;
+                     break;
+                  end;
             end
             else begin
                for j := 1 to pred(nmes) do
-                  if valeurVar[indexX, j] > valeurVar[indexX, pred(j)] then
-                     exit;
+                  if valeurVar[indexX, j] > valeurVar[indexX, pred(j)] then begin
+                     Xtrie := False;
+                     break;
+                  end;
             end;
-            Xtrie := True;
          end;
-         if Xtrie then begin
-            t0 := valeurVar[0, 0];
+         if Xtrie and (nmes >= 2) and (valeurVar[indexX, pred(nmes)] <> valeurVar[indexX, 0]) then begin
+            t0 := valeurVar[indexX, 0];
             coeff_t := pred(nmes) / (valeurVar[indexX, pred(nmes)] - valeurVar[indexX, 0]);
-         end;
+         end
+         else
+            Xtrie := False;
          grandeurs[cIndice].valCourante := 0;
          dependMod := depend;
          exclude(dependMod, indexX);
@@ -2322,7 +2328,7 @@ var
                end;
             end;
          end;
-         dataOK := (i < 0) or (i >= nmes);
+         dataOK := (i >= 0) and (i < nmes);
          if dataOK then
             grandeurs[cIndice].valCourante := i;
          for j := 0 to pred(NbreGrandeurs) do
