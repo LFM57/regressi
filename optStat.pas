@@ -348,10 +348,14 @@ begin
          (xlegende>FRegressiMain.grapheStat.monde[mondeX].maxi) then exit;
       Dessin := TdessinText.createText(FRegressiMain.grapheStat);
       with Dessin do begin
-         text := text+' '+t+' ';
+         TexteBrut := ' '+t+' ';
+         text := TexteBrut;
          color := couleur;
          couleurFond := claWhite;
+         isOpaque := True;
          Agraphe := FRegressiMain.grapheStat;
+         xReal := xLegende;
+         yReal := yLegende;
       end;
       FRegressiMain.GrapheStat.dessinTexts.add(Dessin);
 end;
@@ -474,16 +478,25 @@ var Acourbe : Tcourbe;
     idebut,ifin : integer;
 begin with FRegressiMain.grapheStat,statCourante do begin
     idebut := 1;
-    while NbreDist[iDebut]=0 do inc(iDebut);
+    while (idebut<MaxHisto) and (NbreDist[iDebut]=0) do inc(iDebut);
     iFin := MaxHisto;
-    while NbreDist[iFin]=0 do dec(iFin);
+    while (iFin>idebut) and (NbreDist[iFin]=0) do dec(iFin);
+    if (iDebut>iFin) or (NbreDist[iDebut]=0) then begin
+       iDebut := 1;
+       iFin := 1;
+    end;
 // histogramme de la distribution experimentale
     Acourbe := AjouteCourbe(BornesDist,NbreDist,mondeY,iFin,
         grandeurs[indexStat],frequenceGr,pageCourante);
     monde[mondeX].mini := BornesDist[iDebut-1]-sigma/3;
     monde[mondeX].maxi := BornesDist[iFin]+sigma/3;
+    if monde[mondeX].maxi<=monde[mondeX].mini then begin
+       monde[mondeX].mini := monde[mondeX].mini - 1;
+       monde[mondeX].maxi := monde[mondeX].maxi + 1;
+    end;
     monde[mondeY].mini := 0;
     monde[mondeY].maxi := maxDist*1.05;
+    if monde[mondeY].maxi<=0 then monde[mondeY].maxi := 1;
     Acourbe.setStyle(couleurInit[1],TStrokeDash.Solid,mCroix);
     if classeStat in [csEffectifDonne,csFrequenceDonnee]
        then begin
@@ -508,22 +521,20 @@ begin with FRegressiMain.grapheStat,statCourante do begin
 end end;  // setCourbe
 
 Procedure AjouteLigneVert(x : double;Couleur : TAlphaColor);
-var Dessin : TdessinLine;
-    p1, p2 : TPointF;
+var vx, vy : vecteur;
+    Acourbe : Tcourbe;
 begin
    if (x<FRegressiMain.grapheStat.monde[mondeX].mini) or
       (x>FRegressiMain.grapheStat.monde[mondeX].maxi) then exit;
-   Dessin := TdessinLine.createLine(FRegressiMain.grapheStat);
-   with Dessin do begin
-        Stroke.Dash := TStrokeDash.Solid;
-        stroke.color := couleur;
-        Agraphe := FRegressiMain.grapheStat;
-        Agraphe.windowRT(x, 0, mondeY, p1);
-        Agraphe.windowRT(x, Agraphe.monde[mondeY].maxi, mondeY, p2);
-        affectePoint1(p1.X, p1.Y);
-        affectePoint2(p2.X, p2.Y);
-   end;
-   FRegressiMain.GrapheStat.dessinLines.add(Dessin);
+   SetLength(vx, 2);
+   SetLength(vy, 2);
+   vx[0] := x; vy[0] := 0;
+   vx[1] := x; vy[1] := FRegressiMain.grapheStat.monde[mondeY].maxi;
+   Acourbe := FRegressiMain.grapheStat.AjouteCourbe(vx, vy, mondeY, 2,
+       grandeurs[indexStat], nil, pageCourante);
+   Acourbe.setStyle(couleur, TStrokeDash.Dash, mCroix);
+   Acourbe.Adetruire := true;
+   Acourbe.trace := [trLigne];
 end;
 
 Procedure AjouteDeuxLignes(marge : double;const text : string;
@@ -533,22 +544,22 @@ begin
       AjouteLigneVert(statCourante.moyenne+marge,couleur);
       AjouteLegende(statCourante.moyenne-marge,'m-'+text,couleur);
       AjouteLegende(statCourante.moyenne+marge,'m+'+text,couleur);
-      yLegende := yLegende + deltayLegende;
+      yLegende := yLegende - deltayLegende;
 end;
 
 Procedure AjouteLigne(valeur : double;const text : string;couleur : TAlphaColor);
 begin
       AjouteLigneVert(valeur,couleur);
       AjouteLegende(valeur,text,couleur);
-      yLegende := yLegende + deltayLegende;
+      yLegende := yLegende - deltayLegende;
 end;
 
 begin // SetHistogramme
 with FRegressiMain.grapheStat,statCourante do begin
    if not(classeStat in [csEffectifDonne,csFrequenceDonnee]) then setPoints;
    setCourbe;
-   deltayLegende := paintBox.height/100;
-   yLegende := paintBox.height-deltayLegende;
+   deltayLegende := monde[mondeY].maxi*0.08;
+   yLegende := monde[mondeY].maxi*0.96;
    if MoyenneCB.IsChecked  then
       AjouteLigne(moyenne,stMoyenne+' '+
             grandeurs[indexStat].FormatValeurEtUnite(moyenne),
@@ -630,9 +641,14 @@ var i,idebut,ifin : integer;
 begin with FRegressiMain.DistGrid,statCourante do begin
      beginUpdate;
      idebut := 1;
-     while (NbreDist[idebut]=0) do inc(idebut);
+     while (idebut<MaxHisto) and (NbreDist[idebut]=0) do inc(idebut);
      ifin := MaxHisto;
-     while (NbreDist[ifin]=0) do dec(ifin);
+     while (ifin>idebut) and (NbreDist[ifin]=0) do dec(ifin);
+     if NbreDist[idebut]=0 then begin
+        RowCount := 1;
+        endUpdate;
+        exit;
+     end;
      RowCount := 2+iFin-iDebut;
      if grandeurs[indexStat].nomUnite<>''
          then begin
@@ -665,9 +681,14 @@ var i,idebut,ifin : integer;
 begin with FRegressiMain.DistGrid,statCourante do begin
      FRegressiMain.DistGrid.beginUpdate;
      idebut := 1;
-     while (NbreDist[idebut]=0) do inc(idebut);
+     while (idebut<MaxHisto) and (NbreDist[idebut]=0) do inc(idebut);
      ifin := MaxHisto;
-     while (NbreDist[ifin]=0) do dec(ifin);
+     while (ifin>idebut) and (NbreDist[ifin]=0) do dec(ifin);
+     if NbreDist[idebut]=0 then begin
+        RowCount := 1;
+        endUpdate;
+        exit;
+     end;
      RowCount := 2+iFin-iDebut;
      if grandeurs[indexStat].nomUnite<>''
          then cells[0,0] := stValeur+' ('+grandeurs[indexStat].nomUnite+')'
@@ -716,14 +737,16 @@ begin with FRegressiMain.DistGrid,statCourante do begin
      if grandeurs[indexStat].nomUnite<>''
          then cells[0,0] := stValeur+' ('+grandeurs[indexStat].nomUnite+')'
          else cells[0,0] := stValeur;
-     cells[1,0] := '';
+     if frequenceGr.nomUnite<>''
+         then cells[1,0] := frequenceGr.nom+' ('+frequenceGr.nomUnite+')'
+         else cells[1,0] := frequenceGr.nom;
      ColumnWidths[0] := largeurNombreReel;
      ColumnWidths[1] := largeurNombreEntier;
      FRegressiMain.DistGrid.width := largeurNombreReel+largeurNombreEntier+4;
      for i := 0 to pred(Nbre) do begin
         ligne := succ(i);
         cells[0,ligne] :=  grandeurs[indexStat].formatNombre(BornesDist[i],1);
-        cells[1,ligne] := '';
+        cells[1,ligne] :=  frequenceGr.formatNombre(Effectif[i],1);
      end;
      FRegressiMain.DistGrid.endUpdate;
 end end;
