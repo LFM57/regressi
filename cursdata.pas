@@ -6,6 +6,7 @@ Uses
   System.SysUtils,
   System.Types,
   System.UITypes,
+  System.UIConsts,
   System.Classes,
   System.IniFiles,
 
@@ -37,7 +38,7 @@ Uses
   FMX.TMSFNCUtils, FMX.TMSFNCGraphics,
   FMX.TMSFNCGraphicsTypes,
   FMX.TMSFNCCustomControl, FMX.TMSFNCCustomPicker,
-  FMX.TMSFNCColorPicker;
+  FMX.TMSFNCColorPicker, FMX.TMSFNCColorSelector;
 
 type
   TReticuleDataDlg = class(TForm)
@@ -59,8 +60,13 @@ type
     procedure OKBtnClick(Sender: TObject);
     procedure DeuxCurseursCBClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure ReticuleColorColorSelected(Sender: TObject; AColor: TAlphaColor);
     procedure HelpBtnClick(Sender: TObject);
   private
+    FReticuleColor: TAlphaColor;
+    FPickerInitColor: TAlphaColor;
+    FColorChanged: Boolean;
+    procedure SetPickerNearestColor(APicker: TTMSFNCColorPicker; AColor: TAlphaColor);
   public
      Agraphe : TgrapheReg;
   end;
@@ -97,10 +103,51 @@ begin
      inherited
 end;
 
+procedure TReticuleDataDlg.SetPickerNearestColor(APicker: TTMSFNCColorPicker; AColor: TAlphaColor);
+var
+  i, bestIdx: Integer;
+  targetRec, itemRec: TAlphaColorRec;
+  dist, bestDist, dr, dg, db: Integer;
+begin
+  APicker.SelectedColor := AColor;
+  if (APicker.SelectedColor and $FF000000) <> 0 then
+    Exit;
+  if APicker.Items.Count = 0 then
+    Exit;
+  targetRec := TAlphaColorRec(AColor);
+  bestIdx := 0;
+  bestDist := MaxInt;
+  for i := 0 to APicker.Items.Count - 1 do begin
+    itemRec := TAlphaColorRec(APicker.Items[i].Color);
+    dr := Integer(targetRec.R) - Integer(itemRec.R);
+    dg := Integer(targetRec.G) - Integer(itemRec.G);
+    db := Integer(targetRec.B) - Integer(itemRec.B);
+    dist := dr * dr + dg * dg + db * db;
+    if dist < bestDist then begin
+      bestDist := dist;
+      bestIdx := i;
+    end;
+  end;
+  APicker.SelectedItemIndex := bestIdx;
+end;
+
+procedure TReticuleDataDlg.ReticuleColorColorSelected(Sender: TObject; AColor: TAlphaColor);
+begin
+  if (AColor and $FF000000) <> 0 then begin
+    FReticuleColor := AColor;
+    FColorChanged := True;
+  end;
+end;
+
 procedure TReticuleDataDlg.FormShow(Sender: TObject);
 begin with Agraphe do begin
     ReticuleCB.IsChecked  := CurseurOsc[1].Complet;
-    ReticuleColor.selectedColor := couleurReticule;
+    FReticuleColor := couleurReticule;
+    if (FReticuleColor and $FF000000) = 0 then
+      FReticuleColor := claBlack;
+    FColorChanged := False;
+    SetPickerNearestColor(ReticuleColor, FReticuleColor);
+    FPickerInitColor := ReticuleColor.selectedColor;
     LigneCombo.itemIndex := ord(PstyleReticule);
     deltaXCB.IsChecked  := coDeltaX in optionCurseur;
     deltaYCB.IsChecked  := coDeltaY in optionCurseur;
@@ -113,7 +160,17 @@ end end;
 procedure TReticuleDataDlg.OKBtnClick(Sender: TObject);
 begin with Agraphe do begin
       PstyleReticule := TStrokeDash(LigneCombo.itemIndex);
-      couleurReticule := ReticuleColor.selectedColor;
+      if FColorChanged then
+        couleurReticule := FReticuleColor
+      else if ((ReticuleColor.selectedColor and $FF000000) <> 0) and
+              (ReticuleColor.selectedColor <> FPickerInitColor) then
+        couleurReticule := ReticuleColor.selectedColor
+      else if (FReticuleColor and $FF000000) <> 0 then
+        couleurReticule := FReticuleColor
+      else if (ReticuleColor.selectedColor and $FF000000) <> 0 then
+        couleurReticule := ReticuleColor.selectedColor
+      else
+        couleurReticule := claBlack;
       optionCurseur := [];
       if XCB.IsChecked then include(optionCurseur,coX);
       if YCB.IsChecked then include(optionCurseur,coY);

@@ -313,5 +313,6 @@ object ReticuleDataDlg: TReticuleDataDlg
         Color = claWhite
       end>
     Mode = csmExtended
+    OnColorSelected = ReticuleColorColorSelected
   end
 end
