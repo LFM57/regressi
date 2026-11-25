@@ -802,6 +802,7 @@ object OptionCouleurDlg: TOptionCouleurDlg
           item
             Color = claWhite
           end>
+        OnColorSelected = GrilleColorColorSelected
       end
     end
     object TabSheet1: TTabItem
@@ -920,6 +921,7 @@ object OptionCouleurDlg: TOptionCouleurDlg
             item
               Color = claWhite
             end>
+          OnColorSelected = CouleurTangenteColorSelected
         end
       end
       object GroupBox3: TGroupBox
@@ -1035,6 +1037,7 @@ object OptionCouleurDlg: TOptionCouleurDlg
             item
               Color = claWhite
             end>
+          OnColorSelected = ReticuleColorColorSelected
         end
         object FondReticuleColor: TTMSFNCColorPicker
           DisableFocusEffect = False
@@ -1105,6 +1108,7 @@ object OptionCouleurDlg: TOptionCouleurDlg
             item
               Color = claWhite
             end>
+          OnColorSelected = FondReticuleColorColorSelected
         end
       end
       object GroupBox1: TGroupBox
@@ -1184,6 +1188,7 @@ object OptionCouleurDlg: TOptionCouleurDlg
             item
               Color = claWhite
             end>
+          OnColorSelected = FondColorColorSelected
         end
       end
     end

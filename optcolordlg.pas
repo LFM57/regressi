@@ -6,6 +6,7 @@ Uses
   System.SysUtils,
   System.Types,
   System.UITypes,
+  System.UIConsts,
   System.Classes,
 
   FMX.StdCtrls,
@@ -147,8 +148,19 @@ type
       AColor: TAlphaColor);
     procedure CouleurComboCourbeColorSelected(Sender: TObject;
       AColor: TAlphaColor);
+    procedure GrilleColorColorSelected(Sender: TObject; AColor: TAlphaColor);
+    procedure CouleurTangenteColorSelected(Sender: TObject; AColor: TAlphaColor);
+    procedure ReticuleColorColorSelected(Sender: TObject; AColor: TAlphaColor);
+    procedure FondReticuleColorColorSelected(Sender: TObject; AColor: TAlphaColor);
+    procedure FondColorColorSelected(Sender: TObject; AColor: TAlphaColor);
     procedure HelpBtnClick(Sender: TObject);
   private
+    FGrilleColor, FTangenteColor, FReticuleColor, FFondReticuleColor, FTexteColor: TAlphaColor;
+    FPickerInitGrille, FPickerInitTangente, FPickerInitReticule, FPickerInitFondReticule, FPickerInitTexte: TAlphaColor;
+    FGrilleChanged, FTangenteChanged, FReticuleChanged, FFondReticuleChanged, FTexteChanged: Boolean;
+    procedure SetPickerNearestColor(APicker: TTMSFNCColorPicker; AColor: TAlphaColor);
+    function ResolvePickerColor(APicker: TTMSFNCColorPicker; AInitial, APickerInit: TAlphaColor;
+      AChanged: Boolean; AFallback: TAlphaColor): TAlphaColor;
   public
     Graphe : TgrapheReg;
     Modification : boolean;
@@ -162,6 +174,89 @@ implementation
 {$R *.FMX}
 
 uses regMain, AideU;
+
+procedure TOptionCouleurDlg.SetPickerNearestColor(APicker: TTMSFNCColorPicker; AColor: TAlphaColor);
+var
+  i, bestIdx: Integer;
+  targetRec, itemRec: TAlphaColorRec;
+  dist, bestDist, dr, dg, db: Integer;
+begin
+  APicker.SelectedColor := AColor;
+  if (APicker.SelectedColor and $FF000000) <> 0 then
+    Exit;
+  if APicker.Items.Count = 0 then
+    Exit;
+  targetRec := TAlphaColorRec(AColor);
+  bestIdx := 0;
+  bestDist := MaxInt;
+  for i := 0 to APicker.Items.Count - 1 do begin
+    itemRec := TAlphaColorRec(APicker.Items[i].Color);
+    dr := Integer(targetRec.R) - Integer(itemRec.R);
+    dg := Integer(targetRec.G) - Integer(itemRec.G);
+    db := Integer(targetRec.B) - Integer(itemRec.B);
+    dist := dr * dr + dg * dg + db * db;
+    if dist < bestDist then begin
+      bestDist := dist;
+      bestIdx := i;
+    end;
+  end;
+  APicker.SelectedItemIndex := bestIdx;
+end;
+
+function TOptionCouleurDlg.ResolvePickerColor(APicker: TTMSFNCColorPicker; AInitial, APickerInit: TAlphaColor;
+  AChanged: Boolean; AFallback: TAlphaColor): TAlphaColor;
+begin
+  if AChanged and ((AInitial and $FF000000) <> 0) then
+    Result := AInitial
+  else if ((APicker.SelectedColor and $FF000000) <> 0) and (APicker.SelectedColor <> APickerInit) then
+    Result := APicker.SelectedColor
+  else if (AInitial and $FF000000) <> 0 then
+    Result := AInitial
+  else if (APicker.SelectedColor and $FF000000) <> 0 then
+    Result := APicker.SelectedColor
+  else
+    Result := AFallback;
+end;
+
+procedure TOptionCouleurDlg.GrilleColorColorSelected(Sender: TObject; AColor: TAlphaColor);
+begin
+  if (AColor and $FF000000) <> 0 then begin
+    FGrilleColor := AColor;
+    FGrilleChanged := True;
+  end;
+end;
+
+procedure TOptionCouleurDlg.CouleurTangenteColorSelected(Sender: TObject; AColor: TAlphaColor);
+begin
+  if (AColor and $FF000000) <> 0 then begin
+    FTangenteColor := AColor;
+    FTangenteChanged := True;
+  end;
+end;
+
+procedure TOptionCouleurDlg.ReticuleColorColorSelected(Sender: TObject; AColor: TAlphaColor);
+begin
+  if (AColor and $FF000000) <> 0 then begin
+    FReticuleColor := AColor;
+    FReticuleChanged := True;
+  end;
+end;
+
+procedure TOptionCouleurDlg.FondReticuleColorColorSelected(Sender: TObject; AColor: TAlphaColor);
+begin
+  if (AColor and $FF000000) <> 0 then begin
+    FFondReticuleColor := AColor;
+    FFondReticuleChanged := True;
+  end;
+end;
+
+procedure TOptionCouleurDlg.FondColorColorSelected(Sender: TObject; AColor: TAlphaColor);
+begin
+  if (AColor and $FF000000) <> 0 then begin
+    FTexteColor := AColor;
+    FTexteChanged := True;
+  end;
+end;
 
 procedure TOptionCouleurDlg.FormShow(Sender: TObject);
 
@@ -180,14 +275,34 @@ begin
      CourbeSE.Max := MaxOrdonnee;
      if CourbeSE.Value < 1 then CourbeSE.Value := 1;
      if CourbeSE.Value > MaxOrdonnee then CourbeSE.Value := MaxOrdonnee;
-     CouleurTangente.selectedColor := graphker.CouleurTangente;
+     FTangenteColor := graphker.CouleurTangente;
+     if (FTangenteColor and $FF000000) = 0 then FTangenteColor := claRed;
+     FReticuleColor := CouleurReticule;
+     if (FReticuleColor and $FF000000) = 0 then FReticuleColor := claBlack;
+     FFondReticuleColor := FondReticule;
+     if (FFondReticuleColor and $FF000000) = 0 then FFondReticuleColor := claYellow;
+     FTexteColor := CouleurTexte;
+     if (FTexteColor and $FF000000) = 0 then FTexteColor := claBlue;
+     FGrilleColor := couleurGrille;
+     if (FGrilleColor and $FF000000) = 0 then FGrilleColor := claSilver;
+     FGrilleChanged := False;
+     FTangenteChanged := False;
+     FReticuleChanged := False;
+     FFondReticuleChanged := False;
+     FTexteChanged := False;
+     SetPickerNearestColor(CouleurTangente, FTangenteColor);
+     FPickerInitTangente := CouleurTangente.selectedColor;
      TangenteCB.itemIndex := ord(styleTangente);
-     ReticuleColor.selectedColor := CouleurReticule;
-     FondReticuleColor.selectedColor := FondReticule;
-     FondColor.selectedColor := CouleurTexte;
+     SetPickerNearestColor(ReticuleColor, FReticuleColor);
+     FPickerInitReticule := ReticuleColor.selectedColor;
+     SetPickerNearestColor(FondReticuleColor, FFondReticuleColor);
+     FPickerInitFondReticule := FondReticuleColor.selectedColor;
+     SetPickerNearestColor(FondColor, FTexteColor);
+     FPickerInitTexte := FondColor.selectedColor;
      ReticuleCB.itemIndex := ord(PstyleReticule);
      widthEcranSE.value := penWidthEcran;
-     GrilleColor.selectedColor := couleurGrille;
+     SetPickerNearestColor(GrilleColor, FGrilleColor);
+     FPickerInitGrille := GrilleColor.selectedColor;
      Modification := false;
      traitRB.IsChecked := reperePage=spStyle;
      motifRB.IsChecked := reperePage=spMotif;
@@ -210,11 +325,11 @@ end;
 procedure TOptionCouleurDlg.OKBtnClick(Sender: TObject);
 var c : integer;
 begin
-    CouleurGrille := GrilleColor.selectedColor;
-    graphker.CouleurTangente := CouleurTangente.selectedColor;
-    CouleurReticule := ReticuleColor.selectedColor;
-    FondReticule := FondReticuleColor.selectedColor;
-    CouleurTexte := FondColor.selectedColor;
+    CouleurGrille := ResolvePickerColor(GrilleColor, FGrilleColor, FPickerInitGrille, FGrilleChanged, claSilver);
+    graphker.CouleurTangente := ResolvePickerColor(CouleurTangente, FTangenteColor, FPickerInitTangente, FTangenteChanged, claRed);
+    CouleurReticule := ResolvePickerColor(ReticuleColor, FReticuleColor, FPickerInitReticule, FReticuleChanged, claBlack);
+    FondReticule := ResolvePickerColor(FondReticuleColor, FFondReticuleColor, FPickerInitFondReticule, FFondReticuleChanged, claYellow);
+    CouleurTexte := ResolvePickerColor(FondColor, FTexteColor, FPickerInitTexte, FTexteChanged, claBlue);
     if ReticuleCB.itemIndex>=0 then
        PstyleReticule := TStrokeDash(ReticuleCB.itemIndex);
     if TangenteCB.itemIndex>=0 then
@@ -244,23 +359,35 @@ begin
 end;
 
 procedure TOptionCouleurDlg.CouleurComboClick(Sender: TObject);
+var index: Integer;
 begin
-     CouleurPages[round(PageSE.value)] := CouleurComboPage.selectedColor
+     if (CouleurComboPage.selectedColor and $FF000000) = 0 then Exit;
+     index := round(PageSE.value);
+     if (index >= 0) and (index <= MaxPages) then
+       CouleurPages[index] := CouleurComboPage.selectedColor;
 end;
 
 procedure TOptionCouleurDlg.CouleurComboCourbeColorSelected(Sender: TObject;
   AColor: TAlphaColor);
+var index: Integer;
 begin
-     CouleurInit[round(CourbeSE.value)] := CouleurComboCourbe.selectedColor;
+     if (AColor and $FF000000) = 0 then Exit;
+     index := round(CourbeSE.value);
+     if (index < 1) or (index > MaxOrdonnee) then Exit;
+     CouleurInit[index] := AColor;
      if Graphe<>nil then
-        Graphe.coordonnee[round(CourbeSE.value)].couleur := CouleurComboCourbe.selectedColor;
+        Graphe.coordonnee[index].couleur := AColor;
      Modification := true;
 end;
 
 procedure TOptionCouleurDlg.CouleurComboPageColorSelected(Sender: TObject;
   AColor: TAlphaColor);
+var index: Integer;
 begin
-    CouleurPages[round(PageSE.value)] := CouleurComboPage.selectedColor
+    if (AColor and $FF000000) = 0 then Exit;
+    index := round(PageSE.value);
+    if (index >= 0) and (index <= MaxPages) then
+      CouleurPages[index] := AColor;
 end;
 
 procedure TOptionCouleurDlg.ResetBtnClick(Sender: TObject);
@@ -298,10 +425,14 @@ begin
 end;
 
 procedure TOptionCouleurDlg.CouleurComboBisClick(Sender: TObject);
+var index: Integer;
 begin
-     CouleurInit[round(CourbeSE.value)] := CouleurComboCourbe.selectedColor;
+     if (CouleurComboCourbe.selectedColor and $FF000000) = 0 then Exit;
+     index := round(CourbeSE.value);
+     if (index < 1) or (index > MaxOrdonnee) then Exit;
+     CouleurInit[index] := CouleurComboCourbe.selectedColor;
      if Graphe<>nil then
-        Graphe.coordonnee[round(CourbeSE.value)].couleur := CouleurComboCourbe.selectedColor;
+        Graphe.coordonnee[index].couleur := CouleurComboCourbe.selectedColor;
      Modification := true;
 end;
 
@@ -311,7 +442,7 @@ begin
      index := round(CourbeSE.value);
      if index < 1 then index := 1;
      if index > MaxOrdonnee then index := MaxOrdonnee;
-     CouleurComboCourbe.selectedColor := couleurInit[index];
+     SetPickerNearestColor(CouleurComboCourbe, couleurInit[index]);
      LigneComboBis.itemIndex := ord(PstyleInit[index]);
      PointComboBis.itemIndex := ord(motifInit[index]);
 end;
@@ -320,7 +451,9 @@ procedure TOptionCouleurDlg.PageSEChange(Sender: TObject);
 var index : integer;
 begin
      index := round(PageSE.value);
-     CouleurComboPage.selectedColor := couleurPages[index];
+     if index < 0 then index := 0;
+     if index > MaxPages then index := MaxPages;
+     SetPickerNearestColor(CouleurComboPage, couleurPages[index]);
      LigneCombo.itemIndex := ord(PstylePages[index]);
      PointCombo.itemIndex := ord(motifPages[index]);
 end;
