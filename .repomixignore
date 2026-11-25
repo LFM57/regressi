@@ -27,8 +27,7 @@ graphfft.Macintosh.fmx
 
 # 6. OPTIONAL: Uncomment the line below if the token count is still too high
 # (*.fmx files often contain massive hex-encoded icons/styles)
-# *.fmx
-#
+*.fmx
 
 about.fmx
 BitmapU.fmx
