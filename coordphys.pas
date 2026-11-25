@@ -6,6 +6,7 @@ uses
   System.SysUtils,
   System.Types,
   System.UITypes,
+  System.UIConsts,
   System.Classes,
 
   FMX.Types,
@@ -44,7 +45,8 @@ uses
   FMX.TMSFNCGraphicsTypes,
   FMX.TMSFNCCustomControl,
   FMX.TMSFNCCustomPicker,
-  FMX.TMSFNCColorPicker;
+  FMX.TMSFNCColorPicker,
+  FMX.TMSFNCColorSelector;
 
 type
 TFcoordonneesPhys = class(TForm)
@@ -188,6 +190,7 @@ TFcoordonneesPhys = class(TForm)
     Procedure majOptions;
     Procedure setNom;
     Procedure MajPages;
+    procedure SetPickerNearestColor(APicker: TTMSFNCColorPicker; AColor: TAlphaColor);
   public
      Transfert : TtransfertGraphe;
      modeleEnCours,modelePermis : boolean;
@@ -512,7 +515,7 @@ with transfert do begin
              OrdonneeGB.Text  := stOrdonnee;
         end;
      LigneCombo.itemIndex := ord(style[courbeCourante]);
-     CouleurCombo.selectedColor := Couleur[CourbeCourante];
+     SetPickerNearestColor(CouleurCombo, Couleur[CourbeCourante]);
      PointCombo.OnChange := nil;
      try
        if traceEllipse and not (motif[courbeCourante] in [mSpectre, mHisto, mBarreD, mBarreG])
@@ -873,8 +876,37 @@ begin
     Maj
 end;
 
+procedure TFcoordonneesPhys.SetPickerNearestColor(APicker: TTMSFNCColorPicker; AColor: TAlphaColor);
+var
+  i, bestIdx: Integer;
+  targetRec, itemRec: TAlphaColorRec;
+  dist, bestDist, dr, dg, db: Integer;
+begin
+  APicker.SelectedColor := AColor;
+  if (APicker.SelectedColor and $FF000000) <> 0 then
+    Exit;
+  if APicker.Items.Count = 0 then
+    Exit;
+  targetRec := TAlphaColorRec(AColor);
+  bestIdx := 0;
+  bestDist := MaxInt;
+  for i := 0 to APicker.Items.Count - 1 do begin
+    itemRec := TAlphaColorRec(APicker.Items[i].Color);
+    dr := Integer(targetRec.R) - Integer(itemRec.R);
+    dg := Integer(targetRec.G) - Integer(itemRec.G);
+    db := Integer(targetRec.B) - Integer(itemRec.B);
+    dist := dr * dr + dg * dg + db * db;
+    if dist < bestDist then begin
+      bestDist := dist;
+      bestIdx := i;
+    end;
+  end;
+  APicker.SelectedItemIndex := bestIdx;
+end;
+
 procedure TFcoordonneesPhys.CouleurComboChange(Sender: TObject);
 begin
+     if (CouleurCombo.selectedColor and $FF000000) = 0 then Exit;
      if pagesGB.visible and (couleurRB.ischecked)
         then couleurPages[PageActive] := CouleurCombo.selectedColor
         else begin
@@ -887,11 +919,12 @@ end;
 procedure TFcoordonneesPhys.CouleurComboColorSelected(Sender: TObject;
   AColor: TAlphaColor);
 begin
+     if (AColor and $FF000000) = 0 then Exit;
      if pagesGB.visible and (couleurRB.ischecked)
-        then couleurPages[PageActive] := CouleurCombo.selectedColor
+        then couleurPages[PageActive] := AColor
         else begin
-            couleurInit[CourbeCourante] := CouleurCombo.selectedColor;
-            Transfert.couleur[CourbeCourante] := CouleurCombo.selectedColor;
+            couleurInit[CourbeCourante] := AColor;
+            Transfert.couleur[CourbeCourante] := AColor;
         end;
      setNom;
 end;
@@ -986,7 +1019,7 @@ begin
        else CommentaireEdit.text := pages[pageActive].commentaireP;
     if traitRB.ischecked then LigneCombo.itemIndex := ord(PstylePages[PageActive]);
     if motifRB.ischecked then PointCombo.itemIndex := ord(motifPages[PageActive]);
-    if couleurRB.ischecked then CouleurCombo.selectedColor := couleurPages[PageActive];
+    if couleurRB.ischecked then SetPickerNearestColor(CouleurCombo, couleurPages[PageActive]);
 end;
 
 
