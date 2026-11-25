@@ -1,4 +1,4 @@
-unit optionsVitesse;
+﻿unit optionsVitesse;
 
 interface
 
@@ -6,6 +6,7 @@ uses
   System.SysUtils,
   System.Types,
   System.UITypes,
+  System.UIConsts,
   System.Classes,
 
   FMX.Types,
@@ -82,10 +83,19 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure CouleurVitesseClick(Sender: TObject);
     procedure CouleurAccelerationClick(Sender: TObject);
+    procedure CouleurVitesseColorSelected(Sender: TObject; AColor: TAlphaColor);
+    procedure CouleurAccelerationColorSelected(Sender: TObject; AColor: TAlphaColor);
     procedure FormShow(Sender: TObject);
     procedure HelpBtnClick(Sender: TObject);
   private
     ListeVar : TstrListe;
+    FVitesseColor: TAlphaColor;
+    FAccColor: TAlphaColor;
+    FPickerInitVitesse: TAlphaColor;
+    FPickerInitAcc: TAlphaColor;
+    FVitesseChanged: Boolean;
+    FAccChanged: Boolean;
+    procedure SetPickerNearestColor(APicker: TTMSFNCColorPicker; AColor: TAlphaColor);
   public
     grandeurX,grandeurY : Tgrandeur;
   end;
@@ -98,6 +108,52 @@ implementation
 uses AideU;
 
 {$R *.FMX}
+
+procedure TOptionsVitesseDlg.SetPickerNearestColor(APicker: TTMSFNCColorPicker; AColor: TAlphaColor);
+var
+  i, bestIdx: Integer;
+  targetRec, itemRec: TAlphaColorRec;
+  dist, bestDist, dr, dg, db: Integer;
+begin
+  APicker.SelectedColor := AColor;
+  if (APicker.SelectedColor and $FF000000) <> 0 then
+    Exit;
+  if APicker.Items.Count = 0 then
+    Exit;
+  targetRec := TAlphaColorRec(AColor);
+  bestIdx := 0;
+  bestDist := MaxInt;
+  for i := 0 to APicker.Items.Count - 1 do begin
+    itemRec := TAlphaColorRec(APicker.Items[i].Color);
+    dr := Integer(targetRec.R) - Integer(itemRec.R);
+    dg := Integer(targetRec.G) - Integer(itemRec.G);
+    db := Integer(targetRec.B) - Integer(itemRec.B);
+    dist := dr * dr + dg * dg + db * db;
+    if dist < bestDist then begin
+      bestDist := dist;
+      bestIdx := i;
+    end;
+  end;
+  APicker.SelectedItemIndex := bestIdx;
+end;
+
+procedure TOptionsVitesseDlg.CouleurVitesseColorSelected(Sender: TObject; AColor: TAlphaColor);
+begin
+  if (AColor and $FF000000) <> 0 then begin
+    FVitesseColor := AColor;
+    FVitesseChanged := True;
+    couleurMecanique[mondeVitesse] := AColor;
+  end;
+end;
+
+procedure TOptionsVitesseDlg.CouleurAccelerationColorSelected(Sender: TObject; AColor: TAlphaColor);
+begin
+  if (AColor and $FF000000) <> 0 then begin
+    FAccColor := AColor;
+    FAccChanged := True;
+    couleurMecanique[mondeAcc] := AColor;
+  end;
+end;
 
 procedure TOptionsVitesseDlg.OKBtnClick(Sender: TObject);
 
@@ -117,7 +173,7 @@ begin
              (genreMecanique=Agenre) and
              (nomVarPosition=Avariable.nom) then
                genreMecanique := gm_position;
-    end;           
+    end;
 end;
 
 begin
@@ -127,8 +183,28 @@ begin
     ProlongeVecteur := ProlongeCB.isChecked;
     ProjeteVecteur := ProjeteCB.isChecked;
     UseSelect := UseSelectCB.isChecked;
-    couleurMecanique[mondeVitesse] := CouleurVitesse.selectedColor;
-    couleurMecanique[mondeAcc] := CouleurAcceleration.selectedColor;
+    if FVitesseChanged then
+      couleurMecanique[mondeVitesse] := FVitesseColor
+    else if ((CouleurVitesse.selectedColor and $FF000000) <> 0) and
+            (CouleurVitesse.selectedColor <> FPickerInitVitesse) then
+      couleurMecanique[mondeVitesse] := CouleurVitesse.selectedColor
+    else if (FVitesseColor and $FF000000) <> 0 then
+      couleurMecanique[mondeVitesse] := FVitesseColor
+    else if (CouleurVitesse.selectedColor and $FF000000) <> 0 then
+      couleurMecanique[mondeVitesse] := CouleurVitesse.selectedColor
+    else
+      couleurMecanique[mondeVitesse] := claBlue;
+    if FAccChanged then
+      couleurMecanique[mondeAcc] := FAccColor
+    else if ((CouleurAcceleration.selectedColor and $FF000000) <> 0) and
+            (CouleurAcceleration.selectedColor <> FPickerInitAcc) then
+      couleurMecanique[mondeAcc] := CouleurAcceleration.selectedColor
+    else if (FAccColor and $FF000000) <> 0 then
+      couleurMecanique[mondeAcc] := FAccColor
+    else if (CouleurAcceleration.selectedColor and $FF000000) <> 0 then
+      couleurMecanique[mondeAcc] := CouleurAcceleration.selectedColor
+    else
+      couleurMecanique[mondeAcc] := claRed;
     Ajoute(grandeurX,vitesseX,gm_Vitesse);
     Ajoute(grandeurY,vitesseY,gm_Vitesse);
     Ajoute(grandeurX,accelerationX,gm_Acceleration);
@@ -169,15 +245,23 @@ begin
      ProlongeCB.IsChecked  := ProlongeVecteur;
      ProjeteCB.IsChecked  := ProjeteVecteur;
      NbreSE.value := NbreVecteurVitesseMax;
-     CouleurVitesse.selectedColor := couleurMecanique[mondeVitesse];
-     CouleurAcceleration.selectedColor := couleurMecanique[mondeAcc];
+     FVitesseColor := couleurMecanique[mondeVitesse];
+     if (FVitesseColor and $FF000000) = 0 then FVitesseColor := claBlue;
+     FAccColor := couleurMecanique[mondeAcc];
+     if (FAccColor and $FF000000) = 0 then FAccColor := claRed;
+     FVitesseChanged := False;
+     FAccChanged := False;
+     SetPickerNearestColor(CouleurVitesse, FVitesseColor);
+     FPickerInitVitesse := CouleurVitesse.selectedColor;
+     SetPickerNearestColor(CouleurAcceleration, FAccColor);
+     FPickerInitAcc := CouleurAcceleration.selectedColor;
      UseSelectCB.IsChecked  := UseSelect;
      CouleurPointCB.IsChecked  := not couleurVitesseImposee;
      ListeVar.Clear;
      for i := 1 to pred(NbreGrandeurs) do with grandeurs[i] do
          if genreG=variable then ListeVar.add(nom);
      labelX.Text  := 'Abscisse = '+grandeurX.nom;
-     labelY.Text  := 'Ordonn�e = '+grandeurY.nom;
+     labelY.Text  := 'Ordonnée = '+grandeurY.nom;
      Ajoute(grandeurX,vitesseX,gm_Vitesse);
      Ajoute(grandeurY,vitesseY,gm_Vitesse);
      Ajoute(grandeurX,accelerationX,gm_Acceleration);
@@ -186,12 +270,20 @@ end;
 
 procedure TOptionsVitesseDlg.CouleurVitesseClick(Sender: TObject);
 begin
-    couleurMecanique[mondeVitesse] := CouleurVitesse.selectedColor
+    if (CouleurVitesse.selectedColor and $FF000000) <> 0 then begin
+      FVitesseColor := CouleurVitesse.selectedColor;
+      FVitesseChanged := True;
+      couleurMecanique[mondeVitesse] := FVitesseColor;
+    end;
 end;
 
 procedure TOptionsVitesseDlg.CouleurAccelerationClick(Sender: TObject);
 begin
-     couleurMecanique[mondeAcc] := CouleurAcceleration.selectedColor
+    if (CouleurAcceleration.selectedColor and $FF000000) <> 0 then begin
+      FAccColor := CouleurAcceleration.selectedColor;
+      FAccChanged := True;
+      couleurMecanique[mondeAcc] := FAccColor;
+    end;
 end;
 
 

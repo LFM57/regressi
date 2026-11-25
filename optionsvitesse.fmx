@@ -363,6 +363,7 @@ object OptionsVitesseDlg: TOptionsVitesseDlg
             Color = claWhite
           end>
         Mode = csmExtended
+        OnColorSelected = CouleurAccelerationColorSelected
       end
     end
     object GroupBox1: TGroupBox
@@ -572,6 +573,7 @@ object OptionsVitesseDlg: TOptionsVitesseDlg
             Color = claWhite
           end>
         Mode = csmExtended
+        OnColorSelected = CouleurVitesseColorSelected
       end
     end
   end
